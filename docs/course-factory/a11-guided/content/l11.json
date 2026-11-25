@@ -2,14 +2,14 @@
   "guided": {
     "read": {
       "titleDe": "Tims Zettel für Freitag",
-      "titleEn": "Tim's note for Friday",
+      "titleEn": "Tim’s note for Friday",
       "instructionDe": "Lesen Sie Tims Zettel. Tippen Sie auf ein Wort für seine Bedeutung.",
-      "instructionEn": "Read Tim's note. Tap a word for its meaning.",
+      "instructionEn": "Read Tim’s note. Tap a word for its meaning.",
       "text": "Wochentag: Freitag\nUm sechs Uhr aufstehen, duschen, frühstücken\nLena anrufen – noch nicht gemacht!\nUm vier Uhr Lena abholen: Sie möchte mitkommen.\nDas Wörterbuch für Lena mitbringen!\nDann einkaufen: Brot, Kaffee und Wasser. Tee habe ich schon.\nUm sieben Uhr nach Hause. Abends bin ich müde.\nLetzte Woche: jeden Tag gearbeitet. Am Sonntag: bis neun schlafen!",
       "questions": [
         {
           "promptDe": "Was macht Tim um vier Uhr? Wählen Sie die Antwort.",
-          "promptEn": "What does Tim do at four o'clock? Choose the answer.",
+          "promptEn": "What does Tim do at four o’clock? Choose the answer.",
           "options": [
             "He calls Lena, and then they have breakfast.",
             "He picks Lena up, and then they go shopping.",
@@ -17,7 +17,7 @@
           ],
           "answer": "He picks Lena up, and then they go shopping.",
           "explanationDe": "Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.",
-          "explanationEn": "The note says: pick Lena up at four o'clock, then go shopping.",
+          "explanationEn": "The note says: pick Lena up at four o’clock, then go shopping.",
           "optionsDe": [
             "Er ruft Lena an, dann frühstücken sie.",
             "Er holt Lena ab, dann kaufen sie ein.",
@@ -163,7 +163,7 @@
   },
   "nextHook": {
     "de": "Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?",
-    "en": "Ana's birthday is coming up and she is planning a party. Who will she invite?"
+    "en": "Ana’s birthday is coming up and she is planning a party. Who will she invite?"
   },
   "notes": [
     "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 5–7 are one arrangement (shopping, coming along, the call); I cut after line 5 because line 6 both answers and asks, so 4–6 / 6–8 keeps each chunk to one exchange. A 3-line chunk 4–7 would leave line 7 with 8–9, which is a different topic.",

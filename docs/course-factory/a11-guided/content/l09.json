@@ -116,20 +116,20 @@
       {
         "from": 6,
         "to": 8,
-        "meaningLines": "92e1eb61",
+        "meaningLines": "c7826f5c",
         "meaning": {
-          "promptDe": "Paul hat auch Tee, Bier, Wein und Orangensaft. Was sagt Ana? Wählen Sie die Bedeutung.",
-          "promptEn": "Paul also has tea, beer, wine and orange juice. What does Ana say? Choose the meaning.",
+          "promptDe": "Was kommt sofort? Wählen Sie die Bedeutung.",
+          "promptEn": "What is coming right away? Choose the meaning.",
           "options": [
-            "Yes, please: she orders a glass of wine.",
-            "No, thank you: tomorrow she will have breakfast here.",
-            "No, thank you: she would like the bill."
+            "Coffee and cake, but no water.",
+            "Coffee, water and cake.",
+            "Tea, water and soup."
           ],
-          "answer": "No, thank you: tomorrow she will have breakfast here.",
+          "answer": "Coffee, water and cake.",
           "optionsDe": [
-            "Ja, bitte: Sie möchte ein Glas Wein.",
-            "Nein, danke: Morgen frühstückt sie hier.",
-            "Nein, danke: Sie möchte die Rechnung."
+            "Kaffee und Kuchen, aber kein Wasser.",
+            "Kaffee, Wasser und Kuchen.",
+            "Tee, Wasser und Suppe."
           ]
         },
         "say": {
@@ -139,20 +139,20 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "8962f100",
+        "meaningLines": "5d60ab9c",
         "meaning": {
-          "promptDe": "Was sagt Paul? Wählen Sie die Bedeutung.",
-          "promptEn": "What does Paul say? Choose the meaning.",
+          "promptDe": "Wann hat das Café auch Bier und Wein? Wählen Sie die Bedeutung.",
+          "promptEn": "When does the café have beer and wine too? Choose the meaning.",
           "options": [
-            "A cup of coffee and a cake are coming right away.",
-            "He is sorry: there is no cake today.",
-            "The coffee will take another twenty minutes."
+            "In the afternoon.",
+            "In the evening.",
+            "In the morning."
           ],
-          "answer": "A cup of coffee and a cake are coming right away.",
+          "answer": "In the evening.",
           "optionsDe": [
-            "Eine Tasse Kaffee und ein Kuchen kommen gleich.",
-            "Heute gibt es leider keinen Kuchen.",
-            "Der Kaffee kommt in zwanzig Minuten."
+            "Nachmittags.",
+            "Abends.",
+            "Morgens."
           ]
         },
         "say": {

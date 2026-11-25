@@ -380,7 +380,7 @@ export function lektionMinutesEstimate(l) {
 }
 
 /** What every checkpoint puts in front of the learner (buildCheckpoint.js); a test pins it to a built paper. */
-export const CHECKPOINT_COUNTS = { dictationLine: 3, readQuestion: 6, checkpointText: 4, practiceItem: 6, derivedItem: 2, writing: 1, readAloudLine: 2 };
+export const CHECKPOINT_COUNTS = { dictationLine: 2, readQuestion: 7, checkpointText: 4, practiceItem: 6, derivedItem: 2, writing: 1, readAloudLine: 2 };
 
 /** A checkpoint's time from its own steps, as a range. The 12 minutes of the path are the design target the plan counts with. */
 export function checkpointMinutesEstimate() {

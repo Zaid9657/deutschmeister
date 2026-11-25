@@ -37,15 +37,16 @@ test('both levels: disjoint Hören options and deferred feedback stop sequential
     let certain = 0; let expected = 0;
     for (const checkpoint of curriculum.checkpoints) for (let round = 0; round < 4; round += 1) {
       const items = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) }).filter((it) => it.section === 'hoeren');
-      const words = items.filter((it) => it.kind === 'wordChoice');
-      assert.equal(words.length, 2);
-      assert.equal(new Set(words.flatMap((it) => it.options)).size, 8);
+      // A1.1: three questions about heard texts, three answers each (a11.hoeren.js, 2026-11-25). A1.2: two word choices.
+      const words = items.filter((it) => it.kind === (level === 'a1.1' ? 'listenChoice' : 'wordChoice'));
+      assert.equal(words.length, level === 'a1.1' ? 3 : 2);
+      assert.equal(new Set(words.flatMap((it) => it.options)).size, words.reduce((n, it) => n + it.options.length, 0));
       const release = (it, answer, complete) => checkpointFeedback(it, answer, { graded: true, complete });
       const choices = sequentialChoices(words, release);
       const chance = words.reduce((sum, it) => sum + 1 / it.options.length, 0);
       const score = choices.reduce((sum, candidates, i) => sum + (candidates.includes(words[i].answer) ? 1 / candidates.length : 0), 0);
       assert.ok(score <= chance + 1, `${checkpoint.id}/${round}: sequential score ${score}, chance ${chance}`);
-      assert.equal(score, chance, 'uniform tie credit: no candidate eliminated by another item');
+      assert.ok(Math.abs(score - chance) < 1e-9, 'uniform tie credit: no candidate eliminated by another item');
       certain += choices.filter((c) => c.length === 1).length;
       expected += score;
       const answers = {};
@@ -61,8 +62,10 @@ test('both levels: disjoint Hören options and deferred feedback stop sequential
       }
     }
     assert.equal(certain, 0);
-    assert.equal(expected, 8);
-    console.log(`PASS: ${level} Hören — 16/16 disjoint papers; inference 0/16; sequential expected 8/32 (chance 8/32)`);
+    // Chance itself: two in four options on 16 papers (A1.2), three in three on 16 (A1.1).
+    const chance = level === 'a1.1' ? 16 : 8;
+    assert.ok(Math.abs(expected - chance) < 1e-9, `${level}: ${expected}`);
+    console.log(`PASS: ${level} Hören — 16/16 disjoint papers; inference 0; sequential expected ${chance} (chance ${chance})`);
   }
   const planted = [{ id: 'a', section: 'hoeren', options: ['a', 'b', 'c', 'd'], answer: 'a' },
     { id: 'b', section: 'hoeren', options: ['d', 'e', 'f', 'g'], answer: 'd' }];
@@ -139,8 +142,7 @@ test('new tile frames accept all annotated orders and reject every other permuta
     ['Ich schwimme jede Woche.', ['Ich schwimme jede Woche.', 'Jede Woche schwimme ich.']],
     ['Ich spiele am Wochenende Fußball.', ['Ich spiele am Wochenende Fußball.', 'Am Wochenende spiele ich Fußball.', 'Fußball spiele ich am Wochenende.', 'Ich spiele Fußball am Wochenende.']],
     ['Mein Hobby ist Sport.', ['Mein Hobby ist Sport.', 'Sport ist mein Hobby.']],
-    ['Das Café ist sehr gut.', ['Das Café ist sehr gut.', 'Sehr gut ist das Café.']],
-    ['Eine Tasse Kaffee und ein Kuchen kommen sofort.', ['Eine Tasse Kaffee und ein Kuchen kommen sofort.', 'Sofort kommen eine Tasse Kaffee und ein Kuchen.', 'Ein Kuchen und eine Tasse Kaffee kommen sofort.', 'Sofort kommen ein Kuchen und eine Tasse Kaffee.']],
+    ['Das Café ist gut.', ['Das Café ist gut.', 'Gut ist das Café.']], // Codex's reading agrees (2026-11-25)
     ['Ich sehe zehn Minuten fern.', ['Ich sehe zehn Minuten fern.', 'Zehn Minuten sehe ich fern.']],
     ['Der Kühlschrank hat kein Brot.', ['Der Kühlschrank hat kein Brot.', 'Kein Brot hat der Kühlschrank.']],
     ['Ich frage die Nachbarin.', ['Ich frage die Nachbarin.', 'Die Nachbarin frage ich.']],

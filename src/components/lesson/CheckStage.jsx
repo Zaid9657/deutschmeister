@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Check, Circle } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -151,25 +151,29 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   );
 }
 
-/** The final check: its turns one by one, then which can-dos were shown, with a retake at once. */
-export default function CheckStage({ stage, lektion, onBack, onDone }) {
+/**
+ * The final check: its turns one by one, then which can-dos were shown, with a retake at once. `resume` is where it
+ * stood before a reload and `onProgress` says where it stands now: verdicts and the chosen person, never an answer.
+ */
+export default function CheckStage({ stage, lektion, onBack, onDone, resume = null, onProgress = null }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
   const { user } = useAuth();
-  // ponytail: a reload restarts the check (six short turns) instead of storing its answers in the run snapshot.
   const [canSpeak] = useState(() => Boolean(user) && checkSpeakingSupport().supported);
-  const [retake, setRetake] = useState(0);
-  const [outcomes, setOutcomes] = useState([]);
-  const [answers, setAnswers] = useState([]);
+  const [retake, setRetake] = useState(resume?.retake || 0);
+  const [outcomes, setOutcomes] = useState(() => (resume?.outcomes || []).slice(0, (stage.check.turns || []).length));
+  const [answers, setAnswers] = useState(() => outcomes.map(() => ''));
+  const [chosenBefore, setChosenBefore] = useState(resume?.chosen || null);
   // The person the learner chose in a choice gap („meine Schwester"): the turns after it are about them.
   const chosen = useMemo(() => {
     const plain = checkTurns(stage.check, retake);
-    return answers.map((a, j) => chosenWord(plain[j], a)).find(Boolean) || null;
-  }, [stage.check, retake, answers]);
+    return answers.map((a, j) => chosenWord(plain[j], a)).find(Boolean) || chosenBefore;
+  }, [stage.check, retake, answers, chosenBefore]);
   const turns = useMemo(() => checkTurns(stage.check, retake, { chosen }), [stage.check, retake, chosen]);
   const canDo = shownLines(lektion, lang);
   const shown = canDoShown(turns, outcomes, canDo.length);
   const back = () => { setOutcomes(outcomes.slice(0, -1)); setAnswers(answers.slice(0, -1)); };
+  useEffect(() => { onProgress?.({ retake, outcomes, chosen }); }, [onProgress, retake, outcomes, chosen]);
 
   if (outcomes.length < turns.length) {
     const n = outcomes.length + 1;
@@ -180,7 +184,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
 
   const all = shown.every(Boolean);
   const parts = partsToRepeat(stage.check.repeat, shown, de ? 'de' : 'en');
-  const again = () => { setRetake(retake + 1); setOutcomes([]); setAnswers([]); };
+  const again = () => { setRetake(retake + 1); setOutcomes([]); setAnswers([]); setChosenBefore(null); };
   // What really comes after this Lektion (buildGuided's `stage.next`): Lektion 3 leads to a checkpoint, Lektion 12 has no Lektion 13.
   const next = stage.next || { kind: 'lektion', nr: lektion.nr + 1 };
   const nextName = t(`check.next.${next.kind}`, lang, { nr: next.nr });

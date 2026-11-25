@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 379,
+ "count": 506,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -651,6 +651,257 @@
    "minLektion": 2
   },
   {
+   "id": "extra-a11-l01-assessment-1-1-1",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wie ___ man Novak? (buchstabieren)",
+   "questionEn": "Fill the gap with the right form of “buchstabieren”.",
+   "options": null,
+   "answer": "buchstabiert",
+   "accepted": [
+    "buchstabiert"
+   ],
+   "explanationDe": "man buchstabiert, ich buchstabiere, wir buchstabieren: Die Endung passt zur Person.",
+   "explanationEn": "man buchstabiert, ich buchstabiere, wir buchstabieren: the ending goes with the person.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-1-6",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Ergänzen Sie mit einem Wort: Hallo Ben, wie geht es ___? (du)",
+   "questionEn": "Fill the gap with the word that goes with “du”.",
+   "options": null,
+   "answer": "dir",
+   "accepted": [
+    "dir"
+   ],
+   "explanationDe": "Zu „du“ gehört „dir“, zu „Sie“ gehört „Ihnen“ mit großem I.",
+   "explanationEn": "“du” goes with “dir”, “Sie” goes with “Ihnen” with a capital I.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-1",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Ergänzen Sie mit einem Wort: Frau Becker, wie ___ Sie mit Vornamen? (heißen)",
+   "questionEn": "Fill the gap with the right form of “heißen”.",
+   "options": null,
+   "answer": "heißen",
+   "accepted": [
+    "heißen"
+   ],
+   "explanationDe": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "explanationEn": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l01-assessment-2-2-5",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wie ___ man Krause? (buchstabieren)",
+   "questionEn": "Fill the gap with the right form of “buchstabieren”.",
+   "options": null,
+   "answer": "buchstabiert",
+   "accepted": [
+    "buchstabiert"
+   ],
+   "explanationDe": "man buchstabiert, ich buchstabiere, wir buchstabieren: Die Endung passt zur Person.",
+   "explanationEn": "man buchstabiert, ich buchstabiere, wir buchstabieren: the ending goes with the person.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-6",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Ergänzen Sie mit einem Wort: Welcher Buchstabe heißt Vau? ___",
+   "questionEn": "Fill the gap with one word.",
+   "options": null,
+   "answer": "V",
+   "accepted": [
+    "V"
+   ],
+   "explanationDe": "Die Namen der Buchstaben: V heißt Vau, W heißt We, J heißt Jot, Y heißt Ypsilon.",
+   "explanationEn": "The names of the letters: V is Vau, W is We, J is Jot, Y is Ypsilon.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-1",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich ___ Thomas Vogt. (heißen)",
+   "questionEn": "Fill the gap with the right form of “heißen”.",
+   "options": null,
+   "answer": "heiße",
+   "accepted": [
+    "heiße"
+   ],
+   "explanationDe": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "explanationEn": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-6",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Ergänzen Sie mit einem Wort: Guten Abend, Herr Vogt. Wie geht es ___? (Sie)",
+   "questionEn": "Fill the gap with the word that goes with “Sie”.",
+   "options": null,
+   "answer": "Ihnen",
+   "accepted": [
+    "Ihnen"
+   ],
+   "explanationDe": "Zu „du“ gehört „dir“, zu „Sie“ gehört „Ihnen“ mit großem I.",
+   "explanationEn": "“du” goes with “dir”, “Sie” goes with “Ihnen” with a capital I.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "caseSensitive": true,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-4-1",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Ergänzen Sie mit einem Wort: Und wie ___ es Frau Krause? (gehen)",
+   "questionEn": "Fill the gap with the right form of “gehen”.",
+   "options": null,
+   "answer": "geht",
+   "accepted": [
+    "geht"
+   ],
+   "explanationDe": "„Wie geht es …?“ fragt man mit „geht es“: Wie geht es dir? Wie geht es Ihnen?",
+   "explanationEn": "“Wie geht es …?” always has “geht es”: Wie geht es dir? Wie geht es Ihnen?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-2-4-5",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wie ___ Sie bitte? (heißen)",
+   "questionEn": "Fill the gap with the right form of “heißen”.",
+   "options": null,
+   "answer": "heißen",
+   "accepted": [
+    "heißen"
+   ],
+   "explanationDe": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "explanationEn": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie/Sie heißen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-4-6",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Ergänzen Sie mit einem Wort: Welcher Buchstabe heißt Jot? ___",
+   "questionEn": "Fill the gap with one word.",
+   "options": null,
+   "answer": "J",
+   "accepted": [
+    "J"
+   ],
+   "explanationDe": "Die Namen der Buchstaben: V heißt Vau, W heißt We, J heißt Jot, Y heißt Ypsilon.",
+   "explanationEn": "The names of the letters: V is Vau, W is We, J is Jot, Y is Ypsilon.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
    "id": "extra-a11-l01-11",
    "topic": "alphabet-pronunciation",
    "type": "fill_blank",
@@ -929,6 +1180,56 @@
    "hint": null,
    "minLektion": 1,
    "explanationEn": "The greeting is a fixed phrase: **Guten Tag**, always with **-n**. \"Gute Tag\" is the common mistake."
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-7",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / buchstabieren / man / Seidel]",
+   "questionEn": "Build the question. Start with “Wie”. Begin with “Wie”.",
+   "options": null,
+   "answer": "Wie buchstabiert man Seidel?",
+   "accepted": [
+    "Wie buchstabiert man Seidel?"
+   ],
+   "explanationDe": "man buchstabiert, ich buchstabiere, wir buchstabieren: Die Endung passt zur Person.",
+   "explanationEn": "man buchstabiert, ich buchstabiere, wir buchstabieren: the ending goes with the person.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-8",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / buchstabieren / Lorenz]",
+   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "options": null,
+   "answer": "Ich buchstabiere Lorenz.",
+   "accepted": [
+    "Ich buchstabiere Lorenz."
+   ],
+   "explanationDe": "man buchstabiert, ich buchstabiere, wir buchstabieren: Die Endung passt zur Person.",
+   "explanationEn": "man buchstabiert, ich buchstabiere, wir buchstabieren: the ending goes with the person.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-18",
@@ -1216,7 +1517,7 @@
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": "First the notebook is new (ein Heft); now both speakers know which one, so the definite article follows. Heft is neuter: **das Heft**."
+   "explanationEn": "First the exercise book is new (ein Heft); now both speakers know which one, so the definite article follows. Heft is neuter: **das Heft**."
   },
   {
    "id": "extra-a11-l05-11",
@@ -1319,6 +1620,181 @@
    "explanationEn": "Papier (paper) is a neuter noun, so the definite article is **das**: **das Papier**."
   },
   {
+   "id": "extra-a11-l05-assessment-2-1-2",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo sind ___ Hefte von Mia? (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die"
+   ],
+   "explanationDe": "Im Plural haben alle Nomen die.",
+   "explanationEn": "In the plural all nouns have die.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-2-2",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ Bleistift ist grün. (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Der bestimmte Artikel ist der (maskulin), die (feminin) oder das (neutral).",
+   "explanationEn": "The definite article is der (masculine), die (feminine) or das (neuter).",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-3-2-5",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ Tür ist braun. (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Der bestimmte Artikel ist der (maskulin), die (feminin) oder das (neutral).",
+   "explanationEn": "The definite article is der (masculine), die (feminine) or das (neuter).",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-3-2",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das Fenster ist alt. ___ ist braun. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es"
+   ],
+   "explanationDe": "Für der-Wörter sagt man er, für die-Wörter sie, für das-Wörter es, auch bei Sachen.",
+   "explanationEn": "A der-word is er, a die-word sie, a das-word es, for things too.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-4-3-6",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo ist ___ Karte für Ali? (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die"
+   ],
+   "explanationDe": "Der bestimmte Artikel ist der (maskulin), die (feminin) oder das (neutral).",
+   "explanationEn": "The definite article is der (masculine), die (feminine) or das (neuter).",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-4-2",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo ist ___ Bild? (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das"
+   ],
+   "explanationDe": "Der bestimmte Artikel ist der (maskulin), die (feminin) oder das (neutral).",
+   "explanationEn": "The definite article is der (masculine), die (feminine) or das (neuter).",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-3-4-6",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo sind ___ Schlüssel von Ben und Mia? (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die"
+   ],
+   "explanationDe": "Im Plural haben alle Nomen die.",
+   "explanationEn": "In the plural all nouns have die.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 5
+  },
+  {
    "id": "e0ac0425-9aea-44f8-8354-7c41cfbcb0d3",
    "topic": "definite-articles",
    "type": "multiple_choice",
@@ -1334,7 +1810,7 @@
    ],
    "answer": "die",
    "accepted": [],
-   "explanationDe": "Maskulin Singular → die im Plural.",
+   "explanationDe": "Ein maskulines Nomen hat im Plural den Artikel „die“.",
    "explanationEn": "In the plural every noun takes **die**, whatever its singular gender: der Stuhl → **die Stühle**.",
    "hint": null,
    "minLektion": 4
@@ -1355,7 +1831,7 @@
    ],
    "answer": "die",
    "accepted": [],
-   "explanationDe": "Neutral Singular → die im Plural.",
+   "explanationDe": "Ein neutrales Nomen hat im Plural den Artikel „die“.",
    "explanationEn": "In the plural every noun takes **die**, even a neuter one: das Auto → **die Autos**.",
    "hint": null,
    "minLektion": 10
@@ -1479,6 +1955,56 @@
    "explanationEn": "Wohnung is a feminine noun (nouns ending in **-ung** are feminine), so the article is **die**: **Die Wohnung ist hier.**"
   },
   {
+   "id": "extra-a11-l05-assessment-2-2-7",
+   "topic": "definite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Bücher]",
+   "questionEn": "Build the question. Start with “Wo”. Begin with “Wo”.",
+   "options": null,
+   "answer": "Wo sind die Bücher?",
+   "accepted": [
+    "Wo sind die Bücher?"
+   ],
+   "explanationDe": "Im Plural haben alle Nomen die.",
+   "explanationEn": "In the plural all nouns have die.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-3-8",
+   "topic": "definite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Welche Farbe“): [welche Farbe / haben / der Rucksack]",
+   "questionEn": "Build the question. Start with “Welche Farbe”. Begin with “Welche Farbe”.",
+   "options": null,
+   "answer": "Welche Farbe hat der Rucksack?",
+   "accepted": [
+    "Welche Farbe hat der Rucksack?"
+   ],
+   "explanationDe": "In einer Frage mit Fragewort steht zuerst das Fragewort, dann das Verb.",
+   "explanationEn": "In a question with a question word, the question word comes first, then the verb.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
    "id": "extra-a11-l05-17",
    "topic": "definite-articles",
    "type": "fill_blank",
@@ -1566,7 +2092,7 @@
    "difficulty": 2,
    "order": 203,
    "questionDe": "Hier sind ein Buch und ein Heft. ___ Buch ist rot. (bestimmter Artikel)",
-   "questionEn": "Here are a book and a notebook. The book is red.",
+   "questionEn": "Here are a book and an exercise book. The book is red.",
    "options": null,
    "answer": "Das",
    "accepted": [
@@ -1656,7 +2182,7 @@
    "accepted": [
     "ein"
    ],
-   "explanationDe": "Stuhl = maskulin → ein.",
+   "explanationDe": "„Stuhl“ ist maskulin, deshalb heißt es „ein“.",
    "explanationEn": "Stuhl is masculine (der Stuhl). For something new or unknown, masculine takes **ein**: **ein Stuhl**. Eine is for feminine nouns only.",
    "hint": null,
    "minLektion": 4
@@ -1679,7 +2205,7 @@
    "accepted": [
     "eine"
    ],
-   "explanationDe": "Schwester = feminin → eine.",
+   "explanationDe": "„Schwester“ ist feminin, deshalb heißt es „eine“.",
    "explanationEn": "Schwester is feminine (die Schwester), so the indefinite article is **eine**: **eine Schwester**.",
    "hint": null,
    "minLektion": 8
@@ -1702,7 +2228,7 @@
    "accepted": [
     "ein"
    ],
-   "explanationDe": "Bild = neutral → ein.",
+   "explanationDe": "„Bild“ ist neutral, deshalb heißt es „ein“.",
    "explanationEn": "Bild is neuter (das Bild). Neuter and masculine nouns both take **ein**: **ein Bild**.",
    "hint": null,
    "minLektion": 5
@@ -1725,7 +2251,7 @@
    "accepted": [
     "ein"
    ],
-   "explanationDe": "Auto = neutral → ein.",
+   "explanationDe": "„Auto“ ist neutral, deshalb heißt es „ein“.",
    "explanationEn": "Auto is neuter (das Auto), so it stays **ein**: **ein Auto**. Only masculine nouns change to einen after haben.",
    "hint": null,
    "minLektion": 10
@@ -1824,6 +2350,206 @@
    "hint": null,
    "minLektion": 6,
    "explanationEn": "Firma is feminine (die Firma), so the indefinite article is **eine**: **eine Firma**."
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-1-3",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich brauche ___ Bleistift. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach Verben wie brauchen, haben, kaufen wird maskulin ein zu einen: Ich brauche einen Computer.",
+   "explanationEn": "After verbs like brauchen, haben, kaufen, masculine ein becomes einen: Ich brauche einen Computer.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-3-1-6",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich kaufe ___ Computer. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach Verben wie brauchen, haben, kaufen wird maskulin ein zu einen: Ich brauche einen Computer.",
+   "explanationEn": "After verbs like brauchen, haben, kaufen, masculine ein becomes einen: Ich brauche einen Computer.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-2-3",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist ___ Firma in Köln. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "eine",
+   "accepted": [
+    "eine"
+   ],
+   "explanationDe": "ein steht vor der- und das-Wörtern, eine vor die-Wörtern.",
+   "explanationEn": "ein stands before der- and das-words, eine before die-words.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-4-2-6",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich habe ___ Termin. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach Verben wie brauchen, haben, kaufen wird maskulin ein zu einen: Ich brauche einen Computer.",
+   "explanationEn": "After verbs like brauchen, haben, kaufen, masculine ein becomes einen: Ich brauche einen Computer.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-3-3",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist ___ Büro, das ist eine Wohnung. (Verneinung)",
+   "questionEn": "Make the sentence negative: fill the gap with one word.",
+   "options": null,
+   "answer": "kein",
+   "accepted": [
+    "kein"
+   ],
+   "explanationDe": "kein verneint ein Nomen: Wir haben kein Handy.",
+   "explanationEn": "kein makes a noun negative: Wir haben kein Handy.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-3-4",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Ergänzen Sie mit einem Wort: Frau Lorenz braucht ___ Tasche. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "eine",
+   "accepted": [
+    "eine"
+   ],
+   "explanationDe": "ein steht vor der- und das-Wörtern, eine vor die-Wörtern.",
+   "explanationEn": "ein stands before der- and das-words, eine before die-words.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-4-3",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Ergänzen Sie mit einem Wort: Hier ist ___ Telefon für Sie. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "ein steht vor der- und das-Wörtern, eine vor die-Wörtern.",
+   "explanationEn": "ein stands before der- and das-words, eine before die-words.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-3-4-5",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Ergänzen Sie mit einem Wort: Herr Seidel hat ___ Telefon. (Verneinung)",
+   "questionEn": "Make the sentence negative: fill the gap with one word.",
+   "options": null,
+   "answer": "kein",
+   "accepted": [
+    "kein"
+   ],
+   "explanationDe": "kein verneint ein Nomen: Wir haben kein Handy.",
+   "explanationEn": "kein makes a noun negative: Wir haben kein Handy.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-12",
@@ -2178,6 +2904,81 @@
    "explanationEn": "Kollegin is feminine (the **-in** ending), so the article is **eine**: **Das ist eine Kollegin im Büro.**"
   },
   {
+   "id": "extra-a11-l06-assessment-2-1-8",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Chefin“): [die Chefin / brauchen / eine Uhr]",
+   "questionEn": "Build the sentence. Start with “Die Chefin”. Begin with “Die Chefin”.",
+   "options": null,
+   "answer": "Die Chefin braucht eine Uhr.",
+   "accepted": [
+    "Die Chefin braucht eine Uhr."
+   ],
+   "explanationDe": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "explanationEn": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-2-8",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Jonas“): [Jonas / brauchen / ein Heft]",
+   "questionEn": "Build the sentence. Start with “Jonas”. Begin with “Jonas”.",
+   "options": null,
+   "answer": "Jonas braucht ein Heft.",
+   "accepted": [
+    "Jonas braucht ein Heft."
+   ],
+   "explanationDe": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "explanationEn": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-4-7",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Kollege“): [der Kollege / brauchen / ein Regal]",
+   "questionEn": "Build the sentence. Start with “Der Kollege”. Begin with “Der Kollege”.",
+   "options": null,
+   "answer": "Der Kollege braucht ein Regal.",
+   "accepted": [
+    "Der Kollege braucht ein Regal."
+   ],
+   "explanationDe": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "explanationEn": "brauchen: ich brauche, du brauchst, er/sie braucht, wir brauchen, ihr braucht, sie/Sie brauchen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
    "id": "extra-a11-l06-15",
    "topic": "indefinite-articles",
    "type": "sentence_building",
@@ -2456,6 +3257,231 @@
    "hint": null,
    "minLektion": 4,
    "explanationEn": "Rucksack is a masculine noun, so its article is **der**: **der Rucksack**."
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-1-1",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ist ___ Rucksack neu? (der, die oder das?)",
+   "questionEn": "Fill the gap with der, die or das.",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der"
+   ],
+   "explanationDe": "Jedes Nomen hat ein Genus: Lernen Sie es mit der, die oder das.",
+   "explanationEn": "Every noun has a gender: learn it with der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-1-4",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Die Uhr ist alt. ___ kostet nur vier Euro. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Für der-Wörter sagt man er, für die-Wörter sie, für das-Wörter es, auch bei Sachen.",
+   "explanationEn": "A der-word is er, a die-word sie, a das-word es, for things too.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-assessment-3-1-5",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das Zimmer kostet ___ Euro. (94; Schreiben Sie die Zahl in Worten)",
+   "questionEn": "Write the number as a word, in German.",
+   "options": null,
+   "answer": "vierundneunzig",
+   "accepted": [
+    "vierundneunzig"
+   ],
+   "explanationDe": "Eine Zahl ist ein Wort. Ab einundzwanzig kommt zuerst die kleine Zahl: 36 ist sechsunddreißig.",
+   "explanationEn": "A number is one word. From 21 on the small number comes first: 36 is sechsunddreißig.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-2-1",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das macht zusammen ___ Euro. (36; Schreiben Sie die Zahl in Worten)",
+   "questionEn": "Write the number as a word, in German.",
+   "options": null,
+   "answer": "sechsunddreißig",
+   "accepted": [
+    "sechsunddreißig"
+   ],
+   "explanationDe": "Eine Zahl ist ein Wort. Ab einundzwanzig kommt zuerst die kleine Zahl: 36 ist sechsunddreißig.",
+   "explanationEn": "A number is one word. From 21 on the small number comes first: 36 is sechsunddreißig.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-2-4",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich kaufe ___ Tisch. (den, die oder das?)",
+   "questionEn": "Fill the gap with den, die or das.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen und verkaufen wird maskulin der zu den: Ich kaufe den Stuhl.",
+   "explanationEn": "After kaufen and verkaufen masculine der becomes den: Ich kaufe den Stuhl.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-3-1",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Ergänzen Sie mit einem Wort: Die Stühle ___ zusammen zehn Euro. (kosten)",
+   "questionEn": "Fill the gap with the right form of “kosten”.",
+   "options": null,
+   "answer": "kosten",
+   "accepted": [
+    "kosten"
+   ],
+   "explanationDe": "Eine Sache kostet, mehrere Sachen kosten.",
+   "explanationEn": "One thing kostet, several things kosten.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-assessment-3-3-6",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Ergänzen Sie mit einem Wort: Der Wecker ist gut. ___ kostet acht Euro. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er"
+   ],
+   "explanationDe": "Für der-Wörter sagt man er, für die-Wörter sie, für das-Wörter es, auch bei Sachen.",
+   "explanationEn": "A der-word is er, a die-word sie, a das-word es, for things too.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-1",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das Wörterbuch kostet ___ Euro. (17; Schreiben Sie die Zahl in Worten)",
+   "questionEn": "Write the number as a word, in German.",
+   "options": null,
+   "answer": "siebzehn",
+   "accepted": [
+    "siebzehn"
+   ],
+   "explanationDe": "Eine Zahl ist ein Wort. Ab einundzwanzig kommt zuerst die kleine Zahl: 36 ist sechsunddreißig.",
+   "explanationEn": "A number is one word. From 21 on the small number comes first: 36 is sechsunddreißig.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-4",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ Preis ist gut. (bestimmter Artikel)",
+   "questionEn": "Fill the gap with the definite article.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Der bestimmte Artikel ist der (maskulin), die (feminin) oder das (neutral).",
+   "explanationEn": "The definite article is der (masculine), die (feminine) or das (neuter).",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-22",
@@ -3076,6 +4102,81 @@
    "explanationEn": "In the plural every noun takes **die**, even a masculine one: der Tisch → **die Tische**. \"Sind\" confirms the plural."
   },
   {
+   "id": "extra-a11-l04-assessment-2-1-7",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Was“): [was / kosten / das Telefon]",
+   "questionEn": "Build the question. Start with “Was”. Begin with “Was”.",
+   "options": null,
+   "answer": "Was kostet das Telefon?",
+   "accepted": [
+    "Was kostet das Telefon?"
+   ],
+   "explanationDe": "Eine Sache kostet, mehrere Sachen kosten.",
+   "explanationEn": "One thing kostet, several things kosten.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-3-7",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Lampe“): [die Lampe / sein / nicht / teuer]",
+   "questionEn": "Build the sentence. Start with “Die Lampe”. Begin with “Die Lampe”.",
+   "options": null,
+   "answer": "Die Lampe ist nicht teuer.",
+   "accepted": [
+    "Die Lampe ist nicht teuer."
+   ],
+   "explanationDe": "Im Satz steht das Verb auf Platz zwei.",
+   "explanationEn": "In a sentence the verb stands in second place.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-8",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / verkaufen / den Rucksack]",
+   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "options": null,
+   "answer": "Ich verkaufe den Rucksack.",
+   "accepted": [
+    "Ich verkaufe den Rucksack."
+   ],
+   "explanationDe": "Nach kaufen und verkaufen wird maskulin der zu den: Ich kaufe den Stuhl.",
+   "explanationEn": "After kaufen and verkaufen masculine der becomes den: Ich kaufe den Stuhl.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
    "id": "extra-a11-l04-38",
    "topic": "nouns-gender",
    "type": "sentence_building",
@@ -3334,6 +4435,307 @@
    "explanationEn": "Kind is neuter (das Kind), so the pronoun is **es**: **Es ist noch jung.** The article decides, not whether it is a boy or girl."
   },
   {
+   "id": "extra-a11-l03-assessment-1-1-3",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist Herr Brandt. ___ ist Lehrer. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-1-5",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Ergänzen Sie mit einem Wort: Du ___ gut Deutsch. (sprechen)",
+   "questionEn": "Fill the gap with the right form of “sprechen”.",
+   "options": null,
+   "answer": "sprichst",
+   "accepted": [
+    "sprichst"
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-1-6",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Frau Brandt, buchstabieren ___ bitte!",
+   "questionEn": "Fill the gap with one word.",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Zu Herr und Frau gehört das höfliche Sie mit großem S.",
+   "explanationEn": "With Herr and Frau you use the polite Sie with a capital S.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "caseSensitive": true,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-3",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das Kind ist acht. ___ wohnt in Köln. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-5",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mia und Jonas, sprecht ___ Deutsch?",
+   "questionEn": "Fill the gap with one word.",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-2-6",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist der Vater von Ben. ___ heißt Thomas. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-3-3",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Das sind die Geschwister von Ali. ___ kommen morgen. (wir, ihr oder sie?)",
+   "questionEn": "Fill the gap with wir, ihr or sie.",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-3-5",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ auch Arabisch. (sprechen)",
+   "questionEn": "Fill the gap with the right form of “sprechen”.",
+   "options": null,
+   "answer": "sprecht",
+   "accepted": [
+    "sprecht"
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-3-3-5",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mein Vater ___ Englisch. (sprechen)",
+   "questionEn": "Fill the gap with the right form of “sprechen”.",
+   "options": null,
+   "answer": "spricht",
+   "accepted": [
+    "spricht"
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-3-6",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ gut Englisch. (sprechen)",
+   "questionEn": "Fill the gap with the right form of “sprechen”.",
+   "options": null,
+   "answer": "sprecht",
+   "accepted": [
+    "sprecht"
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-3",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Das ist die Schwester von Jonas. ___ wohnt auch hier. (er, sie oder es?)",
+   "questionEn": "Fill the gap with er, sie or es.",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-5",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ben und ich sind Brüder. ___ wohnen zusammen. (wir, ihr oder sie?)",
+   "questionEn": "Fill the gap with wir, ihr or sie.",
+   "options": null,
+   "answer": "Wir",
+   "accepted": [
+    "Wir"
+   ],
+   "explanationDe": "er ist maskulin, sie ist feminin, es ist neutral; Plural: sie. Zu du und du gehört ihr, zu ich und du gehört wir.",
+   "explanationEn": "er is masculine, sie feminine, es neuter; plural: sie. Several people you call du are ihr; you and others are wir.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
    "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
    "topic": "personal-pronouns",
    "type": "fill_blank",
@@ -3347,7 +4749,7 @@
    "accepted": [
     "Sie"
    ],
-   "explanationDe": "Die Tasche ist feminin, deshalb steht das Pronomen sie: die Tasche → sie.",
+   "explanationDe": "Die Tasche ist feminin, deshalb steht das Pronomen sie.",
    "explanationEn": "**Die Tasche** is feminine, so the pronoun is **sie**: die Tasche → sie.",
    "hint": null,
    "minLektion": 12
@@ -3405,7 +4807,7 @@
     "Sie",
     "sie"
    ],
-   "explanationDe": "Für mehrere Personen steht sie: die Eltern → sie.",
+   "explanationDe": "Für mehrere Personen steht „sie“.",
    "hint": null,
    "minLektion": 3,
    "explanationEn": "Father and mother are two people, so the pronoun is **sie** (they): **Sie sprechen Arabisch.** Note the plural verb ending -en."
@@ -3570,6 +4972,81 @@
    "explanationEn": "Mein Bruder und ich are two people including me, so the pronoun is **wir**: **Wir sprechen Deutsch.**"
   },
   {
+   "id": "extra-a11-l03-assessment-1-1-8",
+   "topic": "personal-pronouns",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ihr“): [ihr / sprechen / gut Arabisch]",
+   "questionEn": "Build the sentence. Start with “Ihr”. Begin with “Ihr”.",
+   "options": null,
+   "answer": "Ihr sprecht gut Arabisch.",
+   "accepted": [
+    "Ihr sprecht gut Arabisch."
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-8",
+   "topic": "personal-pronouns",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Sohn“): [der Sohn / sprechen / Arabisch]",
+   "questionEn": "Build the sentence. Start with “Der Sohn”. Begin with “Der Sohn”.",
+   "options": null,
+   "answer": "Der Sohn spricht Arabisch.",
+   "accepted": [
+    "Der Sohn spricht Arabisch."
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-8",
+   "topic": "personal-pronouns",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Kinder“): [die Kinder / sprechen / drei Sprachen]",
+   "questionEn": "Build the sentence. Start with “Die Kinder”. Begin with “Die Kinder”.",
+   "options": null,
+   "answer": "Die Kinder sprechen drei Sprachen.",
+   "accepted": [
+    "Die Kinder sprechen drei Sprachen."
+   ],
+   "explanationDe": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "explanationEn": "sprechen: ich spreche, du sprichst, er/sie spricht, wir sprechen, ihr sprecht, sie/Sie sprechen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
    "id": "d9887d31-0932-5143-b05e-3f903d659cd9",
    "topic": "possessive-articles",
    "type": "fill_blank",
@@ -3583,7 +5060,7 @@
    "accepted": [
     "mein"
    ],
-   "explanationDe": "Bruder ist maskulin (der-Wort) → mein, keine Endung.",
+   "explanationDe": "Bruder ist maskulin (der-Wort), deshalb heißt es „mein“, ohne Endung.",
    "explanationEn": "The owner is ich, so the word is **mein** (my). Bruder is masculine (der Bruder), so there is no ending: **mein Bruder**.",
    "hint": null,
    "minLektion": 3
@@ -3603,7 +5080,7 @@
     "Sein",
     "sein"
    ],
-   "explanationDe": "Auto ist neutral (das-Wort) → sein, keine Endung.",
+   "explanationDe": "Auto ist neutral (das-Wort), deshalb heißt es „sein“, ohne Endung.",
    "explanationEn": "The owner is er (he), so the word is **sein** (his). Auto is neuter (das Auto), so there is no ending: **Sein Auto**.",
    "hint": null,
    "minLektion": 10
@@ -3622,7 +5099,7 @@
    "accepted": [
     "ihre"
    ],
-   "explanationDe": "Tasche ist feminin → ihre. ihr bedeutet hier her (sie, Einzahl).",
+   "explanationDe": "Tasche ist feminin, deshalb heißt es „ihre“. „ihr“ gehört hier zu „sie“ (eine Frau).",
    "explanationEn": "The owner is sie (she), so the word is **ihr** (her). Tasche is feminine, and feminine nouns add **-e**: **ihre Tasche**.",
    "hint": null,
    "minLektion": 4
@@ -3641,7 +5118,7 @@
    "accepted": [
     "ihre"
    ],
-   "explanationDe": "Kinder ist Plural → ihre. ihr bedeutet hier their (sie, Plural).",
+   "explanationDe": "Kinder ist Plural, deshalb heißt es „ihre“. „ihr“ gehört hier zu „sie“ (mehrere Personen).",
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Kinder is plural, and plurals add **-e**: **ihre Kinder**.",
    "hint": null,
    "minLektion": 12
@@ -3660,7 +5137,7 @@
    "accepted": [
     "unser"
    ],
-   "explanationDe": "Land ist neutral → unser, keine Endung.",
+   "explanationDe": "Land ist neutral, deshalb heißt es „unser“, ohne Endung.",
    "explanationEn": "The owner is wir, so the word is **unser** (our). Land is neuter (das Land), so there is no ending: **unser Land**.",
    "hint": null,
    "minLektion": 12
@@ -3679,7 +5156,7 @@
    "accepted": [
     "dein"
    ],
-   "explanationDe": "Schlüssel ist maskulin → dein, keine Endung.",
+   "explanationDe": "Schlüssel ist maskulin, deshalb heißt es „dein“, ohne Endung.",
    "explanationEn": "The owner is du (informal you), so the word is **dein** (your). Schlüssel is masculine, so no ending: **dein Schlüssel**.",
    "hint": null,
    "minLektion": 5
@@ -3701,7 +5178,7 @@
    ],
    "answer": "Ihre",
    "accepted": [],
-   "explanationDe": "Adresse ist feminin → Ihre, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
+   "explanationDe": "Adresse ist feminin, deshalb heißt es „Ihre“, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
    "explanationEn": "The formal you (Sie) has the possessive **Ihr**, with a capital I. Adresse is feminine, so it adds **-e**: **Ihre Adresse**. Seine and eure belong to other owners.",
    "hint": null,
    "caseSensitive": true,
@@ -3724,10 +5201,86 @@
    ],
    "answer": "sein",
    "accepted": [],
-   "explanationDe": "Buch ist neutral → sein, keine Endung. es benutzt sein, genauso wie er.",
+   "explanationDe": "Buch ist neutral, deshalb heißt es „sein“, ohne Endung. „es“ benutzt sein, genauso wie er.",
    "explanationEn": "The owner is es (the child), and es uses **sein**, just like er. Buch is neuter, so there is no ending: **sein Buch**.",
    "hint": null,
    "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-1-3",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist Ben. Das ist ___ Geschenk. (er)",
+   "questionEn": "Fill the gap with the word that goes with “er”.",
+   "options": null,
+   "answer": "sein",
+   "accepted": [
+    "sein"
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-2-3",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo ist ___ Tasche, Mia? (du)",
+   "questionEn": "Fill the gap with the word that goes with “du”.",
+   "options": null,
+   "answer": "deine",
+   "accepted": [
+    "deine"
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-3-3",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Ergänzen Sie mit einem Wort: Frau Novak, ist das ___ Zug? (Sie)",
+   "questionEn": "Fill the gap with the word that goes with “Sie”.",
+   "options": null,
+   "answer": "Ihr",
+   "accepted": [
+    "Ihr"
+   ],
+   "explanationDe": "Zum höflichen Sie gehört Ihr mit großem I.",
+   "explanationEn": "The polite Sie goes with Ihr with a capital I.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "caseSensitive": true,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l12-01",
@@ -3850,6 +5403,31 @@
    "explanationEn": "The owner is du, so the word is **dein**. Mama is feminine (die Mama), and feminine nouns add **-e**: **Deine Mama**."
   },
   {
+   "id": "extra-a11-l12-assessment-4-4-3",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das sind ___ Gäste. (wir)",
+   "questionEn": "Fill the gap with the word that goes with “wir”.",
+   "options": null,
+   "answer": "unsere",
+   "accepted": [
+    "unsere"
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
    "id": "extra-a11-l12-07",
    "topic": "possessive-articles",
    "type": "fill_blank",
@@ -3868,6 +5446,31 @@
    "hint": null,
    "minLektion": 12,
    "explanationEn": "The owner is ich, so the word is **mein**. Papa is masculine (der Papa), so there is no ending: **Mein Papa**."
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-4-4",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Ergänzen Sie mit einem Wort: Sara feiert. ___ Gäste kommen am Freitag. (sie)",
+   "questionEn": "Fill the gap with the word that goes with “sie”.",
+   "options": null,
+   "answer": "Ihre",
+   "accepted": [
+    "Ihre"
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-11",
@@ -3903,7 +5506,7 @@
     "Mein",
     "mein"
    ],
-   "explanationDe": "Vater ist maskulin → mein, keine Endung.",
+   "explanationDe": "Vater ist maskulin, deshalb heißt es „mein“, ohne Endung.",
    "explanationEn": "The owner is ich, so the word is **mein** (my). Vater is masculine (der Vater), so there is no ending: **Mein Vater**.",
    "hint": null,
    "minLektion": 3
@@ -3923,7 +5526,7 @@
     "Meine",
     "meine"
    ],
-   "explanationDe": "Freundin ist feminin → meine.",
+   "explanationDe": "Freundin ist feminin, deshalb heißt es „meine“.",
    "explanationEn": "The owner is ich, so the word is **mein**. Freundin is feminine (die Freundin), and feminine nouns add **-e**: **Meine Freundin**.",
    "hint": null,
    "minLektion": 7
@@ -3942,7 +5545,7 @@
    "accepted": [
     "Das ist mein Bruder"
    ],
-   "explanationDe": "das + ist + mein Bruder (Bruder ist maskulin, keine Endung).",
+   "explanationDe": "Zuerst steht „das“, dann „ist“, dann „mein Bruder“ (Bruder ist maskulin, keine Endung).",
    "explanationEn": "Das comes first, the verb ist second, then the possessive and noun. Bruder is masculine, so mein has no ending: **Das ist mein Bruder.**",
    "hint": null,
    "minLektion": 3
@@ -3961,7 +5564,7 @@
    "accepted": [
     "Das ist seine Schwester"
    ],
-   "explanationDe": "das + ist + seine Schwester (Schwester ist feminin → seine, auch wenn der Besitzer männlich ist).",
+   "explanationDe": "Zuerst steht „das“, dann „ist“, dann „seine Schwester“ (Schwester ist feminin, deshalb heißt es „seine“, auch wenn der Besitzer männlich ist).",
    "explanationEn": "The owner is er, so **sein** (his). The ending follows the noun, not the owner: Schwester is feminine, so **-e**: **Das ist seine Schwester.**",
    "hint": null,
    "minLektion": 12
@@ -3980,7 +5583,7 @@
    "accepted": [
     "Das ist unser Auto"
    ],
-   "explanationDe": "das + ist + unser Auto (Auto ist neutral, keine Endung).",
+   "explanationDe": "Zuerst steht „das“, dann „ist“, dann „unser Auto“ (Auto ist neutral, keine Endung).",
    "explanationEn": "The owner is wir, so **unser** (our). Auto is neuter (das Auto), so there is no ending: **Das ist unser Auto.**",
    "hint": null,
    "minLektion": 12
@@ -3999,7 +5602,7 @@
    "accepted": [
     "Das ist Ihre Adresse"
    ],
-   "explanationDe": "das + ist + Ihre Adresse (Adresse ist feminin → Ihre; großes I markiert die Höflichkeitsform).",
+   "explanationDe": "Zuerst steht „das“, dann „ist“, dann „Ihre Adresse“ (Adresse ist feminin, deshalb heißt es „Ihre“; großes I markiert die Höflichkeitsform).",
    "explanationEn": "The formal you (Sie) has the possessive **Ihr**, always with a capital **I**. Adresse is feminine, so it adds **-e**: **Das ist Ihre Adresse.**",
    "hint": null,
    "caseSensitive": true,
@@ -4019,7 +5622,7 @@
    "accepted": [
     "ihr"
    ],
-   "explanationDe": "Vater ist maskulin → ihr, keine Endung. ihr bedeutet hier their.",
+   "explanationDe": "Vater ist maskulin, deshalb heißt es „ihr“, ohne Endung. „ihr“ gehört hier zu „sie“ (mehrere Personen).",
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Vater is masculine, so there is no ending: **ihr Vater**.",
    "hint": null,
    "minLektion": 3
@@ -4041,11 +5644,38 @@
    ],
    "answer": "Ihr",
    "accepted": [],
-   "explanationDe": "Name ist maskulin → Ihr, der Possessivartikel für Sie, ohne Endung. Ihre bräuchte ein feminines oder Plural-Nomen; sein und euer gehören zu anderen Besitzern.",
+   "explanationDe": "Name ist maskulin, deshalb heißt es „Ihr“, der Possessivartikel für Sie, ohne Endung. Ihre bräuchte ein feminines oder Plural-Nomen; sein und euer gehören zu anderen Besitzern.",
    "explanationEn": "Name is masculine → Ihr, the formal possessive for Sie, with no ending. Ihre would need a feminine or plural noun; sein and euer belong to different owners.",
    "hint": null,
    "caseSensitive": true,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-2-8",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Mein Bruder“): [mein Bruder / feiern / am Sonntag]",
+   "questionEn": "Build the sentence. Start with “Mein Bruder”. Begin with “Mein Bruder”.",
+   "options": null,
+   "answer": "Mein Bruder feiert am Sonntag.",
+   "accepted": [
+    "Mein Bruder feiert am Sonntag.",
+    "Am Sonntag feiert mein Bruder.",
+    "Am Sonntag feiert mein Bruder"
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-08",
@@ -4106,6 +5736,31 @@
    "hint": null,
    "minLektion": 12,
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Geschenke is plural, and plurals add **-e**: **Ihre Geschenke**."
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-4-8",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Meine Eltern“): [meine Eltern / kommen / später]",
+   "questionEn": "Build the sentence. Start with “Meine Eltern”. Begin with “Meine Eltern”.",
+   "options": null,
+   "answer": "Meine Eltern kommen später.",
+   "accepted": [
+    "Meine Eltern kommen später."
+   ],
+   "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
+   "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-12",
@@ -4519,6 +6174,206 @@
    "explanationEn": "After **ich** the verb takes the ending **-e**: les + e = **lese**. Gern comes after the verb: Ich lese gern."
   },
   {
+   "id": "extra-a11-l07-assessment-3-1-1",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Ergänzen Sie mit einem Wort: Du ___ gern Suppe. (kochen)",
+   "questionEn": "Fill the gap with the right form of “kochen”.",
+   "options": null,
+   "answer": "kochst",
+   "accepted": [
+    "kochst"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-1-4",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich ___ gern. (schwimmen)",
+   "questionEn": "Fill the gap with the right form of “schwimmen”.",
+   "options": null,
+   "answer": "schwimme",
+   "accepted": [
+    "schwimme"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l07-assessment-4-1-6",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Ergänzen Sie mit einem Wort: Herr Meyer ___ zu Hause. (arbeiten)",
+   "questionEn": "Fill the gap with the right form of “arbeiten”.",
+   "options": null,
+   "answer": "arbeitet",
+   "accepted": [
+    "arbeitet"
+   ],
+   "explanationDe": "Ein Stamm auf -t bekommt ein e dazu: du arbeitest, er arbeitet.",
+   "explanationEn": "A stem in -t takes an extra e: du arbeitest, er arbeitet.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-2-1",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ gut Fußball. (spielen)",
+   "questionEn": "Fill the gap with the right form of “spielen”.",
+   "options": null,
+   "answer": "spielt",
+   "accepted": [
+    "spielt"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-1",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Ergänzen Sie mit einem Wort: Du ___ heute nicht. (arbeiten)",
+   "questionEn": "Fill the gap with the right form of “arbeiten”.",
+   "options": null,
+   "answer": "arbeitest",
+   "accepted": [
+    "arbeitest"
+   ],
+   "explanationDe": "Ein Stamm auf -t bekommt ein e dazu: du arbeitest, er arbeitet.",
+   "explanationEn": "A stem in -t takes an extra e: du arbeitest, er arbeitet.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-4",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Ergänzen Sie mit einem Wort: Was ___ du gern? (machen)",
+   "questionEn": "Fill the gap with the right form of “machen”.",
+   "options": null,
+   "answer": "machst",
+   "accepted": [
+    "machst"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-4-1",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ali ___ sehr gern. (tanzen)",
+   "questionEn": "Fill the gap with the right form of “tanzen”.",
+   "options": null,
+   "answer": "tanzt",
+   "accepted": [
+    "tanzt"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l07-assessment-4-4-6",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Ergänzen Sie mit einem Wort: Was ___ Sie heute, Herr Krause? (machen)",
+   "questionEn": "Fill the gap with the right form of “machen”.",
+   "options": null,
+   "answer": "machen",
+   "accepted": [
+    "machen"
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
+  },
+  {
    "id": "02374938-9977-52c2-8828-2929e8075633",
    "topic": "present-tense-regular",
    "type": "fill_blank",
@@ -4532,7 +6387,7 @@
    "accepted": [
     "spiele"
    ],
-   "explanationDe": "Ich-Form: -en von spielen entfernen, -e anhängen: spiele.",
+   "explanationDe": "In der ich-Form fällt -en von „spielen“ weg, und -e kommt dazu: spiele.",
    "explanationEn": "Take the stem (spielen without -en) and add the ich-ending **-e**: **spiele**. So: Ich spiele Fußball.",
    "hint": null,
    "minLektion": 7
@@ -4551,7 +6406,7 @@
    "accepted": [
     "wohnst"
    ],
-   "explanationDe": "Du-Form: wohn + st = wohnst.",
+   "explanationDe": "In der du-Form kommt -st an den Stamm „wohn“: wohnst.",
    "explanationEn": "Take the stem wohn- and add the du-ending **-st**: **wohnst**. So: Du wohnst in Berlin.",
    "hint": null,
    "minLektion": 2
@@ -4608,7 +6463,7 @@
    "accepted": [
     "lernt"
    ],
-   "explanationDe": "Er-Form: lern + t = lernt.",
+   "explanationDe": "In der er-Form kommt -t an den Stamm „lern“: lernt.",
    "explanationEn": "After **er** a regular verb takes the ending **-t**: lern + t = **lernt**. So: Er lernt Englisch.",
    "hint": null,
    "minLektion": 11
@@ -4627,7 +6482,7 @@
    "accepted": [
     "macht"
    ],
-   "explanationDe": "Ihr-Form: mach + t = macht.",
+   "explanationDe": "In der ihr-Form kommt -t an den Stamm „mach“: macht.",
    "explanationEn": "After **ihr** (informal you, plural) the verb takes the ending **-t**: mach + t = **macht**. So: Was macht ihr?",
    "hint": null,
    "minLektion": 4
@@ -4646,7 +6501,7 @@
    "accepted": [
     "arbeite"
    ],
-   "explanationDe": "Ich-Form: arbeit + e = arbeite, kein Extra-Buchstabe nötig.",
+   "explanationDe": "In der ich-Form kommt -e an den Stamm „arbeit“: arbeite.",
    "explanationEn": "After **ich** the verb takes **-e**: arbeit + e = **arbeite**. The extra e is only needed before -st and -t (du arbeitest, er arbeitet).",
    "hint": null,
    "minLektion": 7
@@ -4665,7 +6520,7 @@
    "accepted": [
     "sagt"
    ],
-   "explanationDe": "Ihr-Form: sag + t = sagt.",
+   "explanationDe": "In der ihr-Form kommt -t an den Stamm „sag“: sagt.",
    "explanationEn": "After **ihr** (informal you, plural) the verb takes the ending **-t**: sag + t = **sagt**.",
    "hint": null,
    "minLektion": 1
@@ -4678,13 +6533,13 @@
    "difficulty": 1,
    "order": 20,
    "questionDe": "Du ___ ein Heft. (kaufen)",
-   "questionEn": "You ___ a notebook. (verb: kaufen, du)",
+   "questionEn": "You ___ an exercise book. (verb: kaufen, du)",
    "options": null,
    "answer": "kaufst",
    "accepted": [
     "kaufst"
    ],
-   "explanationDe": "Du-Form: kauf + st = kaufst.",
+   "explanationDe": "In der du-Form kommt -st an den Stamm „kauf“: kaufst.",
    "explanationEn": "After **du** (informal you) the verb takes the ending **-st**: kauf + st = **kaufst**.",
    "hint": null,
    "minLektion": 5
@@ -4703,7 +6558,7 @@
    "accepted": [
     "arbeitet"
    ],
-   "explanationDe": "Ihr-Form: arbeit + et = arbeitet — ein -e- wird vor -t eingefügt.",
+   "explanationDe": "In der ihr-Form kommt -et an den Stamm „arbeit“: arbeitet. Vor dem -t steht ein -e-.",
    "explanationEn": "After **ihr** the verb takes **-t**, but the stem arbeit- ends in -t, so an **e** is inserted: **arbeitet**. Not \"arbeitt\".",
    "hint": null,
    "minLektion": 8
@@ -4722,7 +6577,7 @@
    "accepted": [
     "fragt"
    ],
-   "explanationDe": "Er-Form: frag + t = fragt.",
+   "explanationDe": "In der er-Form kommt -t an den Stamm „frag“: fragt.",
    "explanationEn": "After **er** the verb takes the ending **-t**: frag + t = **fragt**. So: Was fragt er?",
    "hint": null,
    "minLektion": 1
@@ -4812,6 +6667,83 @@
    "explanationEn": "Lena is one person (sie), so the verb takes **-t**: **Lena spielt am Wochenende Fußball.** Spielen without change belongs to wir/sie (plural)/Sie."
   },
   {
+   "id": "extra-a11-l07-assessment-3-1-7",
+   "topic": "present-tense-regular",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern Musik]",
+   "questionEn": "Build the sentence. Start with “Frau Krause”. Begin with “Frau Krause”.",
+   "options": null,
+   "answer": "Frau Krause hört gern Musik.",
+   "accepted": [
+    "Frau Krause hört gern Musik."
+   ],
+   "explanationDe": "Im Satz steht das Verb auf Platz zwei.",
+   "explanationEn": "In a sentence the verb stands in second place.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-8",
+   "topic": "present-tense-regular",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / spielen / zusammen Fußball]",
+   "questionEn": "Build the sentence. Start with “Wir”. Begin with “Wir”.",
+   "options": null,
+   "answer": "Wir spielen zusammen Fußball.",
+   "accepted": [
+    "Wir spielen zusammen Fußball."
+   ],
+   "explanationDe": "Die Endungen: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "explanationEn": "The endings: ich -e, du -st, er/sie -t, wir -en, ihr -t, sie/Sie -en.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-4-7",
+   "topic": "present-tense-regular",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Er“): [er / arbeiten / am Dienstag]",
+   "questionEn": "Build the sentence. Start with “Er”. Begin with “Er”.",
+   "options": null,
+   "answer": "Er arbeitet am Dienstag.",
+   "accepted": [
+    "Er arbeitet am Dienstag.",
+    "Am Dienstag arbeitet er.",
+    "Am Dienstag arbeitet er"
+   ],
+   "explanationDe": "Ein Stamm auf -t bekommt ein e dazu: du arbeitest, er arbeitet.",
+   "explanationEn": "A stem in -t takes an extra e: du arbeitest, er arbeitet.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
    "id": "9a58bc0a-594f-5a6f-b82c-146efa8d78c6",
    "topic": "separable-verbs-intro",
    "type": "fill_blank",
@@ -4825,7 +6757,7 @@
    "accepted": [
     "stehe"
    ],
-   "explanationDe": "aufstehen → ich stehe ... auf.",
+   "explanationDe": "Das Verb „aufstehen“ ist trennbar: ich stehe … auf.",
    "explanationEn": "Aufstehen splits in a sentence: the verb part takes the ich-ending **-e** and stands second, the prefix auf stays at the end: **Ich stehe … auf.**",
    "hint": null,
    "minLektion": 8
@@ -4844,7 +6776,7 @@
    "accepted": [
     "rufst"
    ],
-   "explanationDe": "anrufen → du rufst ... an.",
+   "explanationDe": "Das Verb „anrufen“ ist trennbar: du rufst … an.",
    "explanationEn": "Anrufen splits: the verb part takes the du-ending **-st** and stands second, the prefix an stays at the end: **Du rufst … an.**",
    "hint": null,
    "minLektion": 11
@@ -4863,7 +6795,7 @@
    "accepted": [
     "kaufen"
    ],
-   "explanationDe": "einkaufen → wir kaufen ... ein.",
+   "explanationDe": "Das Verb „einkaufen“ ist trennbar: wir kaufen … ein.",
    "explanationEn": "Einkaufen splits: the verb part takes the wir-ending **-en** and stands second, the prefix ein stays at the end: **Wir kaufen … ein.**",
    "hint": null,
    "minLektion": 8
@@ -4882,7 +6814,7 @@
    "accepted": [
     "kommt"
    ],
-   "explanationDe": "mitkommen → er kommt ... mit.",
+   "explanationDe": "Das Verb „mitkommen“ ist trennbar: er kommt … mit.",
    "explanationEn": "Mitkommen splits: the verb part takes the er-ending **-t** and stands second, the prefix mit stays at the end: **Er kommt … mit.**",
    "hint": null,
    "minLektion": 6
@@ -4901,7 +6833,7 @@
    "accepted": [
     "mache"
    ],
-   "explanationDe": "aufmachen → ich mache ... auf.",
+   "explanationDe": "Das Verb „aufmachen“ ist trennbar: ich mache … auf.",
    "explanationEn": "Aufmachen splits: the verb part takes the ich-ending **-e** and stands second, the prefix auf stays at the end: **Ich mache … auf.**",
    "hint": null,
    "minLektion": 5
@@ -4920,7 +6852,7 @@
    "accepted": [
     "macht"
    ],
-   "explanationDe": "zumachen → sie macht ... zu.",
+   "explanationDe": "Das Verb „zumachen“ ist trennbar: sie macht … zu.",
    "explanationEn": "Zumachen splits: sie (she) takes the ending **-t** on the verb part, and the prefix zu stays at the end: **Sie macht … zu.**",
    "hint": null,
    "minLektion": 5
@@ -4939,7 +6871,7 @@
    "accepted": [
     "kommt"
    ],
-   "explanationDe": "ankommen → der Zug kommt ... an.",
+   "explanationDe": "Das Verb „ankommen“ ist trennbar: der Zug kommt … an.",
    "explanationEn": "Ankommen splits: der Zug is er, so the verb part takes **-t** and stands second, the prefix an stays at the end: **Der Zug kommt … an.**",
    "hint": null,
    "minLektion": 10
@@ -4958,7 +6890,7 @@
    "accepted": [
     "gehen"
    ],
-   "explanationDe": "ausgehen → wir gehen ... aus.",
+   "explanationDe": "Das Verb „ausgehen“ ist trennbar: wir gehen … aus.",
    "explanationEn": "Ausgehen splits: after **wir** the verb part takes **-en** and stands second, the prefix aus stays at the end: **Wir gehen … aus.**",
    "hint": null,
    "minLektion": 8
@@ -4977,7 +6909,7 @@
    "accepted": [
     "hole"
    ],
-   "explanationDe": "abholen → ich hole ... ab.",
+   "explanationDe": "Das Verb „abholen“ ist trennbar: ich hole … ab.",
    "explanationEn": "Abholen splits: after **ich** the verb part takes **-e** and stands second, the prefix ab stays at the end: **Ich hole … ab.**",
    "hint": null,
    "minLektion": 11
@@ -4996,10 +6928,110 @@
    "accepted": [
     "hört"
    ],
-   "explanationDe": "zuhören → er hört ... zu.",
+   "explanationDe": "Das Verb „zuhören“ ist trennbar: er hört … zu.",
    "explanationEn": "Zuhören splits: after **er** the verb part takes **-t** and stands second, the prefix zu stays at the end: **Er hört … zu.**",
    "hint": null,
    "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-2",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich stehe jeden Tag um sechs ___. (aufstehen)",
+   "questionEn": "Fill the gap with the right form of “aufstehen”.",
+   "options": null,
+   "answer": "auf",
+   "accepted": [
+    "auf"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-4",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wann ___ ihr auf? (aufstehen)",
+   "questionEn": "Fill the gap with the right form of “aufstehen”.",
+   "options": null,
+   "answer": "steht",
+   "accepted": [
+    "steht"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-2-2",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ben ___ die Gäste ab. (abholen)",
+   "questionEn": "Fill the gap with the right form of “abholen”.",
+   "options": null,
+   "answer": "holt",
+   "accepted": [
+    "holt"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-2-4",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Ergänzen Sie mit einem Wort: Das Kind ___ noch. (schlafen)",
+   "questionEn": "Fill the gap with the right form of “schlafen”.",
+   "options": null,
+   "answer": "schläft",
+   "accepted": [
+    "schläft"
+   ],
+   "explanationDe": "schlafen wechselt den Vokal: du schläfst, er schläft.",
+   "explanationEn": "schlafen changes its vowel: du schläfst, er schläft.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-02",
@@ -5097,6 +7129,31 @@
    "explanationEn": "Mitkommen is a separable verb: in the question kommst comes first, and the prefix **mit** goes to the very end: **Kommst du am Freitag mit?**"
   },
   {
+   "id": "extra-a11-l11-assessment-4-3-2",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich ___ heute leider nicht mit. (mitkommen)",
+   "questionEn": "Fill the gap with the right form of “mitkommen”.",
+   "options": null,
+   "answer": "komme",
+   "accepted": [
+    "komme"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "extra-a11-l11-09",
    "topic": "separable-verbs-intro",
    "type": "fill_blank",
@@ -5114,6 +7171,56 @@
    "hint": null,
    "minLektion": 11,
    "explanationEn": "\"Ich habe gearbeitet\" (I worked) is learned here as a fixed phrase: **gearbeitet** at the end. The pattern behind it comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-3-4",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wir ___ dich morgen an. (anrufen)",
+   "questionEn": "Fill the gap with the right form of “anrufen”.",
+   "options": null,
+   "answer": "rufen",
+   "accepted": [
+    "rufen"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-4-2",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mia kauft heute ___. (einkaufen)",
+   "questionEn": "Fill the gap with the right form of “einkaufen”.",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
   },
   {
    "id": "54801fe3-5b02-56dc-9c28-31bb6f620f04",
@@ -5205,7 +7312,7 @@
    "accepted": [
     "ab"
    ],
-   "explanationDe": "abholen → das Präfix ab steht ganz am Ende, nach der Zeitangabe.",
+   "explanationDe": "Bei „abholen“ steht das Präfix „ab“ ganz am Ende, nach der Zeitangabe.",
    "explanationEn": "Abholen splits: hole stands second, and the prefix **ab** goes to the very end, after the time: **Ich hole dich um 8 Uhr ab.**",
    "hint": null,
    "minLektion": 11
@@ -5224,7 +7331,7 @@
    "accepted": [
     "zu"
    ],
-   "explanationDe": "zumachen → das Präfix zu steht ganz am Ende.",
+   "explanationDe": "Bei „zumachen“ steht das Präfix „zu“ ganz am Ende.",
    "explanationEn": "Zumachen splits: macht stands second, and the prefix **zu** goes to the very end: **Er macht die Tür zu.**",
    "hint": null,
    "minLektion": 5
@@ -5243,7 +7350,7 @@
    "accepted": [
     "ein"
    ],
-   "explanationDe": "einkaufen → das Präfix ein steht ganz am Ende.",
+   "explanationDe": "Bei „einkaufen“ steht das Präfix „ein“ ganz am Ende.",
    "explanationEn": "Einkaufen splits: kaufen stands second, and the prefix **ein** goes to the very end: **Wir kaufen heute ein.**",
    "hint": null,
    "minLektion": 8
@@ -5262,7 +7369,7 @@
    "accepted": [
     "mit"
    ],
-   "explanationDe": "mitkommen → das Präfix mit steht ganz am Ende.",
+   "explanationDe": "Bei „mitkommen“ steht das Präfix „mit“ ganz am Ende.",
    "explanationEn": "Mitkommen splits: kommt stands second, and the prefix **mit** goes to the very end, after the time: **Ihr kommt um 8 Uhr mit.**",
    "hint": null,
    "minLektion": 6
@@ -5283,7 +7390,7 @@
     "Um 7 Uhr stehe ich auf.",
     "Um 7 Uhr stehe ich auf"
    ],
-   "explanationDe": "ich + stehe (Position 2), auf am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "explanationDe": "Auf Platz zwei steht „stehe“, am Ende steht „auf“. Die Zeitangabe kann auch am Satzanfang stehen.",
    "explanationEn": "Aufstehen splits: **stehe** (ich-form) stands second, the prefix **auf** at the very end: **Ich stehe um 7 Uhr auf.** The time may also open the sentence.",
    "hint": null,
    "minLektion": 8
@@ -5304,7 +7411,7 @@
     "Heute kaufen wir ein.",
     "Heute kaufen wir ein"
    ],
-   "explanationDe": "wir + kaufen (Position 2), ein am Ende. heute kann auch am Satzanfang stehen.",
+   "explanationDe": "Auf Platz zwei steht „kaufen“, am Ende steht „ein“. „heute“ kann auch am Satzanfang stehen.",
    "explanationEn": "Einkaufen splits: **kaufen** (wir-form) stands second, the prefix **ein** at the very end: **Wir kaufen heute ein.** Heute may also open the sentence.",
    "hint": null,
    "minLektion": 8
@@ -5325,10 +7432,37 @@
     "Um 8 Uhr holt er dich ab.",
     "Um 8 Uhr holt er dich ab"
    ],
-   "explanationDe": "er + holt (Position 2), ab am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "explanationDe": "Auf Platz zwei steht „holt“, am Ende steht „ab“. Die Zeitangabe kann auch am Satzanfang stehen.",
    "explanationEn": "Abholen splits: **holt** (er-form) stands second, the prefix **ab** at the very end: **Er holt dich um 8 Uhr ab.**",
    "hint": null,
    "minLektion": 11
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-8",
+   "topic": "separable-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / einkaufen / morgen]",
+   "questionEn": "Build the sentence. Start with “Die Eltern”. Begin with “Die Eltern”.",
+   "options": null,
+   "answer": "Die Eltern kaufen morgen ein.",
+   "accepted": [
+    "Die Eltern kaufen morgen ein.",
+    "Morgen kaufen die Eltern ein.",
+    "Morgen kaufen die Eltern ein"
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l11-01",
@@ -5337,8 +7471,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 111,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Kommst du am Freitag“): [mitkommen / du / am Freitag]",
-   "questionEn": "Build the question (to come along). Begin with “Kommst du am Freitag”.",
+   "questionDe": "Bilden Sie die Frage (das Verb steht vorn): [mitkommen / du / am Freitag]",
+   "questionEn": "Build the question (to come along). The verb comes first.",
    "options": null,
    "answer": "Kommst du am Freitag mit?",
    "accepted": [
@@ -5407,10 +7541,35 @@
     "Gestern habe ich gearbeitet.",
     "Gestern habe ich gearbeitet"
    ],
-   "explanationDe": "habe + gearbeitet ist ein fester Ausdruck für gestern.",
+   "explanationDe": "„Ich habe … gearbeitet“ ist ein fester Ausdruck für gestern.",
    "hint": null,
    "minLektion": 11,
    "explanationEn": "\"Ich habe … gearbeitet\" is a fixed phrase for yesterday: **habe** second, **gearbeitet** at the very end: **Ich habe gestern gearbeitet.**"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-3-8",
+   "topic": "separable-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Sara“): [Sara / mitbringen / den Salat]",
+   "questionEn": "Build the sentence. Start with “Sara”. Begin with “Sara”.",
+   "options": null,
+   "answer": "Sara bringt den Salat mit.",
+   "accepted": [
+    "Sara bringt den Salat mit."
+   ],
+   "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
+   "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 11
   },
   {
    "id": "2e4e344c-3116-5304-9f6e-afbed5d037e9",
@@ -5426,7 +7585,7 @@
    "accepted": [
     "vierzehn Uhr dreißig"
    ],
-   "explanationDe": "Offizielle Zeit: Stunde + Uhr + Minuten: 14:30 = vierzehn Uhr dreißig.",
+   "explanationDe": "In der offiziellen Zeit kommt zuerst die Stunde, dann „Uhr“, und dann kommen die Minuten: 14:30 = vierzehn Uhr dreißig.",
    "explanationEn": "Official (24-hour) time is hour + **Uhr** + minutes: 14:30 = **vierzehn Uhr dreißig**.",
    "hint": "vierzehn = 14",
    "minLektion": 4
@@ -5445,7 +7604,7 @@
    "accepted": [
     "halb drei"
    ],
-   "explanationDe": "halb + NÄCHSTE Stunde = 2:30.",
+   "explanationDe": "Nach „halb“ kommt die nächste Stunde. So sagt man 2:30.",
    "explanationEn": "In everyday German, halb names the NEXT hour: **halb drei** = 2:30 (half way to three), not 3:30.",
    "hint": "halb + nächste Stunde",
    "minLektion": 8
@@ -5464,7 +7623,7 @@
    "accepted": [
     "Viertel nach zwei"
    ],
-   "explanationDe": "Viertel nach + aktuelle Stunde.",
+   "explanationDe": "Nach „Viertel nach“ kommt die aktuelle Stunde.",
    "explanationEn": "For a quarter past, everyday German uses Viertel nach + the CURRENT hour: 2:15 = **Viertel nach zwei**.",
    "hint": null,
    "minLektion": 8
@@ -5483,7 +7642,7 @@
    "accepted": [
     "Viertel vor drei"
    ],
-   "explanationDe": "Viertel vor + NÄCHSTE Stunde.",
+   "explanationDe": "Nach „Viertel vor“ kommt die nächste Stunde.",
    "explanationEn": "For a quarter to, everyday German uses Viertel vor + the NEXT hour: 2:45 = **Viertel vor drei**.",
    "hint": null,
    "minLektion": 8
@@ -5522,7 +7681,7 @@
     "Am",
     "am"
    ],
-   "explanationDe": "am + Tageszeit: am Morgen, am Abend (aber: in der Nacht).",
+   "explanationDe": "Vor einer Tageszeit steht „am“: am Morgen, am Abend (aber: in der Nacht).",
    "explanationEn": "Parts of the day take **am**: **am Abend**, am Morgen, am Nachmittag. One exception: **in der Nacht**. Clock times take **um**: um 8 Uhr.",
    "hint": null,
    "minLektion": 7
@@ -5544,7 +7703,7 @@
    ],
    "answer": "halb sechs",
    "accepted": [],
-   "explanationDe": "halb + NÄCHSTE Stunde = 5:30.",
+   "explanationDe": "Nach „halb“ kommt die nächste Stunde. So sagt man 5:30.",
    "explanationEn": "In everyday German, halb names the NEXT hour: 5:30 = **halb sechs** (half way to six). \"Halb fünf\" would be 4:30; \"fünf Uhr dreißig\" is the official form.",
    "hint": null,
    "minLektion": 8
@@ -5566,7 +7725,7 @@
    ],
    "answer": "Donnerstag",
    "accepted": [],
-   "explanationDe": "Die Reihenfolge: Montag, Dienstag, Mittwoch, Donnerstag...",
+   "explanationDe": "Die Reihenfolge: Montag, Dienstag, Mittwoch, Donnerstag …",
    "explanationEn": "The weekdays in order: Montag, Dienstag, Mittwoch, **Donnerstag**, Freitag, Samstag, Sonntag. After Mittwoch comes **Donnerstag**.",
    "hint": null,
    "minLektion": 8
@@ -5628,6 +7787,181 @@
    "hint": null,
    "minLektion": 8,
    "explanationEn": "Parts of the day take **am**: **am Abend**, am Morgen. One exception: **in der Nacht**. Clock times take **um**."
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-1-2",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ergänzen Sie mit einem Wort: Der Termin ist ___ Mittwoch. (am oder um?)",
+   "questionEn": "Fill the gap with am or um.",
+   "options": null,
+   "answer": "am",
+   "accepted": [
+    "am"
+   ],
+   "explanationDe": "um steht vor der Uhrzeit, am vor dem Wochentag.",
+   "explanationEn": "um stands before the time, am before the day.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-2-2",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Ergänzen Sie mit einem Wort: Es ist ___ acht. (7.30)",
+   "questionEn": "Say this time: fill the gap with one word.",
+   "options": null,
+   "answer": "halb",
+   "accepted": [
+    "halb"
+   ],
+   "explanationDe": "halb acht ist 7.30 Uhr; Viertel nach acht ist 8.15 Uhr; Viertel vor acht ist 7.45 Uhr.",
+   "explanationEn": "halb acht is 7:30; Viertel nach acht is 8:15; Viertel vor acht is 7:45.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-assessment-4-2-5",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ben kommt ___ Dienstag. (am oder um?)",
+   "questionEn": "Fill the gap with am or um.",
+   "options": null,
+   "answer": "am",
+   "accepted": [
+    "am"
+   ],
+   "explanationDe": "um steht vor der Uhrzeit, am vor dem Wochentag.",
+   "explanationEn": "um stands before the time, am before the day.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-3-2",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Ergänzen Sie mit einem Wort: Die Pause ist ___ neun Uhr. (am oder um?)",
+   "questionEn": "Fill the gap with am or um.",
+   "options": null,
+   "answer": "um",
+   "accepted": [
+    "um"
+   ],
+   "explanationDe": "um steht vor der Uhrzeit, am vor dem Wochentag.",
+   "explanationEn": "um stands before the time, am before the day.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-4-2",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Ergänzen Sie mit einem Wort: Nach Donnerstag kommt ___.",
+   "questionEn": "Fill the gap with one word.",
+   "options": null,
+   "answer": "Freitag",
+   "accepted": [
+    "Freitag"
+   ],
+   "explanationDe": "Die Woche: Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag.",
+   "explanationEn": "The week: Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-4-4",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Ergänzen Sie mit einem Wort: Es ist halb ___. (10.30)",
+   "questionEn": "Say this time: fill the gap with one word.",
+   "options": null,
+   "answer": "elf",
+   "accepted": [
+    "elf"
+   ],
+   "explanationDe": "halb acht ist 7.30 Uhr; Viertel nach acht ist 8.15 Uhr; Viertel vor acht ist 7.45 Uhr.",
+   "explanationEn": "halb acht is 7:30; Viertel nach acht is 8:15; Viertel vor acht is 7:45.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-assessment-4-4-5",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Ergänzen Sie mit einem Wort: Es ist halb ___. (8.30)",
+   "questionEn": "Say this time: fill the gap with one word.",
+   "options": null,
+   "answer": "neun",
+   "accepted": [
+    "neun"
+   ],
+   "explanationDe": "halb acht ist 7.30 Uhr; Viertel nach acht ist 8.15 Uhr; Viertel vor acht ist 7.45 Uhr.",
+   "explanationEn": "halb acht is 7:30; Viertel nach acht is 8:15; Viertel vor acht is 7:45.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-09",
@@ -5827,25 +8161,23 @@
    "explanationEn": "Dienstag is a day of the week, so it takes **am**, not um: **Der Termin ist am Dienstag.** Um is only for clock times."
   },
   {
-   "id": "827c155d-7b87-53a3-b047-d53ab532f296",
+   "id": "f9df3cd7-3f05-53c4-abd0-4853ce942dc5",
    "topic": "time-and-dates",
    "type": "fill_blank",
    "stage": 5,
    "difficulty": 2,
-   "order": 10,
-   "questionDe": "Es ist ___. (18:20, umgangssprachlich)",
-   "questionEn": "It is 6:20 pm. (colloquial, 12-hour)",
+   "order": 9,
+   "questionDe": "Es ist ___. (20:45, offiziell)",
+   "questionEn": "It is 8:45 pm. (official, 24-hour: write the time in words)",
    "options": null,
-   "answer": "zwanzig nach sechs",
+   "answer": "zwanzig Uhr fünfundvierzig",
    "accepted": [
-    "zwanzig nach sechs",
-    "zwanzig nach 6",
-    "zehn vor halb sieben"
+    "zwanzig Uhr fünfundvierzig"
    ],
-   "explanationDe": "18:20 umgangssprachlich: zwanzig nach sechs.",
-   "explanationEn": "Everyday German uses the 12-hour clock and counts minutes past the hour with nach: 18:20 = **zwanzig nach sechs**.",
+   "explanationDe": "In der offiziellen Zeit kommt zuerst die Stunde, dann „Uhr“, und dann kommen die Minuten: 20:45 = zwanzig Uhr fünfundvierzig.",
+   "explanationEn": "Official time: first the hour, then **Uhr**, then the minutes: 20:45 = **zwanzig Uhr fünfundvierzig**.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 4
   },
   {
    "id": "ffb96fdf-5140-582a-bc5a-b3d17e131ea3",
@@ -5865,28 +8197,6 @@
    "explanationEn": "Official time uses the 24-hour clock with the word Uhr, so midnight is **null Uhr** (zero o'clock).",
    "hint": null,
    "minLektion": 4
-  },
-  {
-   "id": "3e14842d-3e34-5d86-9284-5954e9593b61",
-   "topic": "time-and-dates",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 12,
-   "questionDe": "Wie sagt man 2:50 umgangssprachlich?",
-   "questionEn": "How do you say 2:50 in colloquial German?",
-   "options": [
-    "zehn vor drei",
-    "zehn nach drei",
-    "halb drei",
-    "Viertel vor drei"
-   ],
-   "answer": "zehn vor drei",
-   "accepted": [],
-   "explanationDe": "Kurz vor der vollen Stunde zählt man mit vor zur nächsten Stunde: 2:50 = zehn vor drei.",
-   "explanationEn": "Shortly before the full hour, count to the next hour with **vor**: 2:50 = **zehn vor drei**.",
-   "hint": null,
-   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-03",
@@ -5992,6 +8302,56 @@
    "hint": null,
    "minLektion": 8,
    "explanationEn": "Subject first, verb second, then the day and the time: **Der Termin ist am Dienstag um acht Uhr.** Day with **am**, clock time with **um**."
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-1-8",
+   "topic": "time-and-dates",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wann“): [wann / kommen / der Kellner]",
+   "questionEn": "Build the question. Start with “Wann”. Begin with “Wann”.",
+   "options": null,
+   "answer": "Wann kommt der Kellner?",
+   "accepted": [
+    "Wann kommt der Kellner?"
+   ],
+   "explanationDe": "In einer Frage mit Fragewort steht zuerst das Fragewort, dann das Verb.",
+   "explanationEn": "In a question with a question word, the question word comes first, then the verb.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-2-7",
+   "topic": "time-and-dates",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Sonntag“): [am Sonntag / ich / kochen]",
+   "questionEn": "Build the sentence. Start with “Am Sonntag”. Begin with “Am Sonntag”.",
+   "options": null,
+   "answer": "Am Sonntag koche ich.",
+   "accepted": [
+    "Am Sonntag koche ich."
+   ],
+   "explanationDe": "Im Satz steht das Verb auf Platz zwei.",
+   "explanationEn": "In a sentence the verb stands in second place.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 8
   },
   {
    "id": "68be03d3-c547-41dc-9dc0-772fa974f74f",
@@ -6157,10 +8517,185 @@
    "accepted": [
     "hat"
    ],
-   "explanationDe": "sie (die Kellnerin) → hat.",
+   "explanationDe": "„Die Kellnerin“ ist so viel wie „sie“: sie hat.",
    "hint": null,
    "minLektion": 9,
    "explanationEn": "Die Kellnerin is sie (she). After **sie** the form of haben is **hat**: **Die Kellnerin hat Kuchen und Tee.**"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-1-3",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ heute frei. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "habt",
+   "accepted": [
+    "habt"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-4-1-5",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wir ___ morgen frei. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "haben",
+   "accepted": [
+    "haben"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-3",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ heute Zeit. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "habt",
+   "accepted": [
+    "habt"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-4",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich möchte ___ Salat, bitte. (unbestimmter Artikel)",
+   "questionEn": "Fill the gap with the indefinite article.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach Verben wie brauchen, haben, kaufen wird maskulin ein zu einen: Ich brauche einen Computer.",
+   "explanationEn": "After verbs like brauchen, haben, kaufen, masculine ein becomes einen: Ich brauche einen Computer.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-3-3",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mia ___ viel Arbeit. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l09-assessment-4-3-5",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Ergänzen Sie mit einem Wort: Du ___ Hunger. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "hast",
+   "accepted": [
+    "hast"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-4-3",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Ergänzen Sie mit einem Wort: Herr Vogt ___ einen Termin. (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
   },
   {
    "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
@@ -6335,10 +8870,85 @@
     "Hast",
     "hast"
    ],
-   "explanationDe": "du → hast: Hast du Hunger?",
+   "explanationDe": "Zu „du“ gehört „hast“: Hast du Hunger?",
    "hint": null,
    "minLektion": 9,
    "explanationEn": "Ana is a friend, so the informal you (du) is used. After **du** the form of haben is **hast**: **Hast du Hunger oder Durst?**"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-8",
+   "topic": "verb-haben",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / haben / Hunger]",
+   "questionEn": "Build the sentence. Start with “Wir”. Begin with “Wir”.",
+   "options": null,
+   "answer": "Wir haben Hunger.",
+   "accepted": [
+    "Wir haben Hunger."
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-3-7",
+   "topic": "verb-haben",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / möchten / eine Tasse Tee]",
+   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "options": null,
+   "answer": "Ich möchte eine Tasse Tee.",
+   "accepted": [
+    "Ich möchte eine Tasse Tee."
+   ],
+   "explanationDe": "„Ich möchte …“ ist ein fester Ausdruck: So bestellt man höflich.",
+   "explanationEn": "“Ich möchte …” is a fixed phrase: you order politely with it.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-4-8",
+   "topic": "verb-haben",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Café“): [das Café / haben / Suppe und Kuchen]",
+   "questionEn": "Build the sentence. Start with “Das Café”. Begin with “Das Café”.",
+   "options": null,
+   "answer": "Das Café hat Suppe und Kuchen.",
+   "accepted": [
+    "Das Café hat Suppe und Kuchen."
+   ],
+   "explanationDe": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "explanationEn": "haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-12",
@@ -6630,7 +9240,7 @@
    "accepted": [
     "ist"
    ],
-   "explanationDe": "Meine Telefonnummer = sie: sie ist.",
+   "explanationDe": "„Meine Telefonnummer“ ist so viel wie „sie“: sie ist.",
    "hint": null,
    "minLektion": 2,
    "explanationEn": "Meine Telefonnummer is one singular subject (sie), so sein takes **ist**: **Meine Telefonnummer ist …**"
@@ -6674,6 +9284,306 @@
    "hint": null,
    "minLektion": 2,
    "explanationEn": "Ana is a friend, so the informal you (du) is used. After **du** the form of sein is **bist**: **Bist du ledig?**"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-1-2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mia und ich ___ ledig. (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-1-4",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Ergänzen Sie mit einem Wort: Hier wohnen ___ Familien. (7; Schreiben Sie die Zahl in Worten)",
+   "questionEn": "Write the number as a word, in German.",
+   "options": null,
+   "answer": "sieben",
+   "accepted": [
+    "sieben"
+   ],
+   "explanationDe": "Eine Zahl ist ein Wort. Ab einundzwanzig kommt zuerst die kleine Zahl: 36 ist sechsunddreißig.",
+   "explanationEn": "A number is one word. From 21 on the small number comes first: 36 is sechsunddreißig.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-1-5",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ Kollegen. (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "seid",
+   "accepted": [
+    "seid"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-2-2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Ergänzen Sie mit einem Wort: Wo ___ du, Ben? (wohnen)",
+   "questionEn": "Fill the gap with the right form of “wohnen”.",
+   "options": null,
+   "answer": "wohnst",
+   "accepted": [
+    "wohnst"
+   ],
+   "explanationDe": "wohnen: ich wohne, du wohnst, er/sie wohnt, wir wohnen, ihr wohnt, sie/Sie wohnen.",
+   "explanationEn": "wohnen: ich wohne, du wohnst, er/sie wohnt, wir wohnen, ihr wohnt, sie/Sie wohnen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-2-4",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ihr ___ noch jung. (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "seid",
+   "accepted": [
+    "seid"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l02-assessment-3-2-6",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Ergänzen Sie mit einem Wort: Mia und Ben ___ Kollegen. (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Ergänzen Sie mit einem Wort: Frau Krause, ___ Sie verheiratet? (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-4",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Ergänzen Sie mit einem Wort: Die Tochter ist ___. (9; Schreiben Sie die Zahl in Worten)",
+   "questionEn": "Write the number as a word, in German.",
+   "options": null,
+   "answer": "neun",
+   "accepted": [
+    "neun"
+   ],
+   "explanationDe": "Eine Zahl ist ein Wort. Ab einundzwanzig kommt zuerst die kleine Zahl: 36 ist sechsunddreißig.",
+   "explanationEn": "A number is one word. From 21 on the small number comes first: 36 is sechsunddreißig.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-3-5",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Ergänzen Sie mit einem Wort: Woher ___ du, Mia? (kommen)",
+   "questionEn": "Fill the gap with the right form of “kommen”.",
+   "options": null,
+   "answer": "kommst",
+   "accepted": [
+    "kommst"
+   ],
+   "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ben und Ali, ___ ihr Studenten? (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "seid",
+   "accepted": [
+    "seid"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-4",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Ergänzen Sie mit einem Wort: Ich ___ aus Spanien. (kommen)",
+   "questionEn": "Fill the gap with the right form of “kommen”.",
+   "options": null,
+   "answer": "komme",
+   "accepted": [
+    "komme"
+   ],
+   "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-4-6",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Ergänzen Sie mit einem Wort: Du ___ Verkäufer von Beruf. (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "bist",
+   "accepted": [
+    "bist"
+   ],
+   "explanationDe": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "explanationEn": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 6
   },
   {
    "id": "1e3a7370-9e9c-55ea-b513-496b45421861",
@@ -6876,6 +9786,85 @@
    "explanationEn": "Subject first, verb second. After **ich** the verb kommen ends in **-e**: **Ich komme aus Marokko.** Aus answers \"Woher?\"."
   },
   {
+   "id": "extra-a11-l02-assessment-1-1-7",
+   "topic": "verb-sein",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / kommen / aus Italien]",
+   "questionEn": "Build the sentence. Start with “Die Eltern”. Begin with “Die Eltern”.",
+   "options": null,
+   "answer": "Die Eltern kommen aus Italien.",
+   "accepted": [
+    "Die Eltern kommen aus Italien.",
+    "Aus Italien kommen die Eltern.",
+    "Aus Italien kommen die Eltern"
+   ],
+   "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-7",
+   "topic": "verb-sein",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Vater“): [der Vater / kommen / aus Spanien]",
+   "questionEn": "Build the sentence. Start with “Der Vater”. Begin with “Der Vater”.",
+   "options": null,
+   "answer": "Der Vater kommt aus Spanien.",
+   "accepted": [
+    "Der Vater kommt aus Spanien.",
+    "Aus Spanien kommt der Vater.",
+    "Aus Spanien kommt der Vater"
+   ],
+   "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-7",
+   "topic": "verb-sein",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / wohnen / die Kinder]",
+   "questionEn": "Build the question. Start with “Wo”. Begin with “Wo”.",
+   "options": null,
+   "answer": "Wo wohnen die Kinder?",
+   "accepted": [
+    "Wo wohnen die Kinder?"
+   ],
+   "explanationDe": "wohnen: ich wohne, du wohnst, er/sie wohnt, wir wohnen, ihr wohnt, sie/Sie wohnen.",
+   "explanationEn": "wohnen: ich wohne, du wohnst, er/sie wohnt, wir wohnen, ihr wohnt, sie/Sie wohnen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp1",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
    "id": "5c5c272b-ff81-5811-83b6-6e7fde71ba1b",
    "topic": "yes-no-questions",
    "type": "fill_blank",
@@ -6889,7 +9878,7 @@
    "accepted": [
     "Bist"
    ],
-   "explanationDe": "Aussage: Du bist müde. Frage: Verb an Position 1 → Bist du müde?",
+   "explanationDe": "Aussage: Du bist müde. In der Frage steht das Verb auf Platz eins: Bist du müde?",
    "explanationEn": "Statement: Du bist müde. In a yes/no question the verb moves to position 1: **Bist du müde?** Bist is the du-form of sein.",
    "hint": null,
    "minLektion": 11
@@ -7044,10 +10033,35 @@
    ],
    "answer": "Ja, ich komme aus Italien.",
    "accepted": [],
-   "explanationDe": "Ja + die Aussage in der ich-Form: Ja, ich komme aus Italien.",
+   "explanationDe": "Auf „Ja“ folgt die Aussage in der ich-Form: Ja, ich komme aus Italien.",
    "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" has the wrong verb ending, and \"du kommst\" answers about the other person, not about you.",
    "hint": null,
    "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-1-1",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ du morgen mit dem Auto? (fahren)",
+   "questionEn": "Fill the gap with the right form of “fahren”.",
+   "options": null,
+   "answer": "Fährst",
+   "accepted": [
+    "Fährst"
+   ],
+   "explanationDe": "fahren wechselt den Vokal: du fährst, er fährt.",
+   "explanationEn": "fahren changes its vowel: du fährst, er fährt.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-01",
@@ -7176,14 +10190,89 @@
    "explanationEn": "Statement: Du fährst mit dem Bus. In the question the verb comes first: **Fährst du morgen mit dem Bus?** Fahren changes its vowel after du."
   },
   {
+   "id": "extra-a11-l10-assessment-4-2-1",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ ihr nächste Woche frei? (haben)",
+   "questionEn": "Fill the gap with the right form of “haben”.",
+   "options": null,
+   "answer": "Habt",
+   "accepted": [
+    "Habt"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-3-1",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ Sie auch nach Österreich, Frau Vogt? (fahren)",
+   "questionEn": "Fill the gap with the right form of “fahren”.",
+   "options": null,
+   "answer": "Fahren",
+   "accepted": [
+    "Fahren"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-4-1",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Ergänzen Sie mit einem Wort: ___ der Bahnhof weit? (sein)",
+   "questionEn": "Fill the gap with the right form of “sein”.",
+   "options": null,
+   "answer": "Ist",
+   "accepted": [
+    "Ist"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "0b5c7d74-0e60-51b3-802e-50a4c8457f36",
    "topic": "yes-no-questions",
    "type": "sentence_building",
    "stage": 5,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Bist du“): [du / müde / sein]",
-   "questionEn": "Write the question: [you / tired / to be] (verb: sein, person: du) Begin with “Bist du”.",
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [du / müde / sein]",
+   "questionEn": "Write the question: [you / tired / to be] (verb: sein, person: du) The verb comes first.",
    "options": null,
    "answer": "Bist du müde?",
    "accepted": [
@@ -7201,8 +10290,8 @@
    "stage": 5,
    "difficulty": 1,
    "order": 3,
-   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Wohnst“): [du / in Köln / wohnen]",
-   "questionEn": "Write the question: [you / in Cologne / to live] (verb: wohnen, person: du) Begin with “Wohnst”.",
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [du / in Köln / wohnen]",
+   "questionEn": "Write the question: [you / in Cologne / to live] (verb: wohnen, person: du) The verb comes first.",
    "options": null,
    "answer": "Wohnst du in Köln?",
    "accepted": [
@@ -7220,8 +10309,8 @@
    "stage": 5,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Kommst“): [du / aus Polen / kommen]",
-   "questionEn": "Write the question: [you / from Poland / to come] (verb: kommen, person: du) Begin with “Kommst”.",
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [du / aus Polen / kommen]",
+   "questionEn": "Write the question: [you / from Poland / to come] (verb: kommen, person: du) The verb comes first.",
    "options": null,
    "answer": "Kommst du aus Polen?",
    "accepted": [
@@ -7239,8 +10328,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Kommst du am Samstag“): [du / am Samstag / mitkommen]",
-   "questionEn": "Write the question: [you / on Saturday / to come along] (verb: mitkommen, person: du – separable) Begin with “Kommst du am Samstag”.",
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [du / am Samstag / mitkommen]",
+   "questionEn": "Write the question: [you / on Saturday / to come along] (verb: mitkommen, person: du – separable) The verb comes first.",
    "options": null,
    "answer": "Kommst du am Samstag mit?",
    "accepted": [
@@ -7258,8 +10347,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Schreiben Sie die höfliche Frage (Beginnen Sie mit „Wohnen“): [Sie / in Berlin / wohnen]",
-   "questionEn": "Write the polite question: [you / in Berlin / to live] (verb: wohnen, person: Sie – formal) Begin with “Wohnen”.",
+   "questionDe": "Schreiben Sie die höfliche Frage (das Verb steht vorn): [Sie / in Berlin / wohnen]",
+   "questionEn": "Write the polite question: [you / in Berlin / to live] (verb: wohnen, person: Sie – formal) The verb comes first.",
    "options": null,
    "answer": "Wohnen Sie in Berlin?",
    "accepted": [
@@ -7278,8 +10367,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Schreiben Sie die höfliche Frage (Beginnen Sie mit „Haben“): [Sie / Kinder / haben]",
-   "questionEn": "Write the polite question: [you / children / to have] (verb: haben, person: Sie – formal) Begin with “Haben”.",
+   "questionDe": "Schreiben Sie die höfliche Frage (das Verb steht vorn): [Sie / Kinder / haben]",
+   "questionEn": "Write the polite question: [you / children / to have] (verb: haben, person: Sie – formal) The verb comes first.",
    "options": null,
    "answer": "Haben Sie Kinder?",
    "accepted": [
@@ -7314,21 +10403,44 @@
    "minLektion": 10
   },
   {
+   "id": "extra-a11-l10-assessment-4-1-7",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [der Bus / fahren / nach Bremen]",
+   "questionEn": "Write the yes/no question: the verb comes first.",
+   "options": null,
+   "answer": "Fährt der Bus nach Bremen?",
+   "accepted": [
+    "Fährt der Bus nach Bremen?"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "extra-a11-l10-07",
    "topic": "yes-no-questions",
    "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 107,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Fahrt ihr“): [fahren / ihr / mit dem Auto / in die Schweiz]",
-   "questionEn": "Build the yes/no question about the car trip. Begin with “Fahrt ihr”.",
+   "questionDe": "Bilden Sie die Frage (das Verb steht vorn): [fahren / ihr / mit dem Auto / in die Schweiz]",
+   "questionEn": "Build the yes/no question about the car trip. The verb comes first.",
    "options": null,
    "answer": "Fahrt ihr mit dem Auto in die Schweiz?",
    "accepted": [
     "Fahrt ihr mit dem Auto in die Schweiz?",
-    "Fahrt ihr mit dem Auto in die Schweiz",
-    "Fahrt ihr in die Schweiz mit dem Auto?",
-    "Fahrt ihr in die Schweiz mit dem Auto"
+    "Fahrt ihr mit dem Auto in die Schweiz"
    ],
    "explanationDe": "ihr fahrt wird in der Frage zu Fahrt ihr.",
    "hint": null,
@@ -7342,15 +10454,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 108,
-   "questionDe": "Bilden Sie die höfliche Frage (Beginnen Sie mit „Fahren“): [fahren / Sie / morgen / nach Deutschland]",
-   "questionEn": "Build the polite yes/no question about tomorrow. Begin with “Fahren”.",
+   "questionDe": "Bilden Sie die höfliche Frage (das Verb steht vorn): [fahren / Sie / morgen / nach Deutschland]",
+   "questionEn": "Build the polite yes/no question about tomorrow. The verb comes first.",
    "options": null,
    "answer": "Fahren Sie morgen nach Deutschland?",
    "accepted": [
     "Fahren Sie morgen nach Deutschland?",
-    "Fahren Sie morgen nach Deutschland",
-    "Fahren Sie nach Deutschland morgen?",
-    "Fahren Sie nach Deutschland morgen"
+    "Fahren Sie morgen nach Deutschland"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null,
@@ -7365,15 +10475,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 109,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ist“): [sein / die Ankunft / an Gleis vier] (Verb auf Position 1)",
-   "questionEn": "Build the yes/no question about the arrival. Begin with “Ist”.",
+   "questionDe": "Bilden Sie den Satz: [sein / die Ankunft / an Gleis vier] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the arrival.",
    "options": null,
    "answer": "Ist die Ankunft an Gleis vier?",
    "accepted": [
     "Ist die Ankunft an Gleis vier?",
-    "Ist die Ankunft an Gleis vier",
-    "Ist an Gleis vier die Ankunft?",
-    "Ist an Gleis vier die Ankunft"
+    "Ist die Ankunft an Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null,
@@ -7427,15 +10535,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 112,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Kommt“): [kommen / der Bus / zum Bahnhof] (Verb auf Position 1)",
-   "questionEn": "Build the yes/no question about the bus. Begin with “Kommt”.",
+   "questionDe": "Bilden Sie den Satz: [kommen / der Bus / zum Bahnhof] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the bus.",
    "options": null,
    "answer": "Kommt der Bus zum Bahnhof?",
    "accepted": [
     "Kommt der Bus zum Bahnhof?",
-    "Kommt der Bus zum Bahnhof",
-    "Kommt zum Bahnhof der Bus?",
-    "Kommt zum Bahnhof der Bus"
+    "Kommt der Bus zum Bahnhof"
    ],
    "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null,
@@ -7449,8 +10555,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 113,
-   "questionDe": "[haben / der Zug / nach Österreich / Verspätung] (Antwort: ja oder nein) (Beginnen Sie mit „Hat“)",
-   "questionEn": "Build the yes/no question about a delay. Begin with “Hat”.",
+   "questionDe": "[haben / der Zug / nach Österreich / Verspätung] (Antwort: ja oder nein) (das Verb steht vorn)",
+   "questionEn": "Build the yes/no question about a delay. The verb comes first.",
    "options": null,
    "answer": "Hat der Zug nach Österreich Verspätung?",
    "accepted": [
@@ -7469,8 +10575,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 114,
-   "questionDe": "[kosten / die Fahrkarte / nach Deutschland / zwanzig Euro] (Antwort: ja oder nein) (Beginnen Sie mit „Kostet“)",
-   "questionEn": "Build the yes/no question about the price. Begin with “Kostet”.",
+   "questionDe": "[kosten / die Fahrkarte / nach Deutschland / zwanzig Euro] (Antwort: ja oder nein) (das Verb steht vorn)",
+   "questionEn": "Build the yes/no question about the price. The verb comes first.",
    "options": null,
    "answer": "Kostet die Fahrkarte nach Deutschland zwanzig Euro?",
    "accepted": [
@@ -7483,21 +10589,44 @@
    "explanationEn": "In a yes/no question the verb comes first, then the subject. Die Fahrkarte is sie, so **kostet**: **Kostet die Fahrkarte nach Deutschland zwanzig Euro?**"
   },
   {
+   "id": "extra-a11-l10-assessment-4-2-7",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [die Fahrkarte / kosten / zehn Euro]",
+   "questionEn": "Write the yes/no question: the verb comes first.",
+   "options": null,
+   "answer": "Kostet die Fahrkarte zehn Euro?",
+   "accepted": [
+    "Kostet die Fahrkarte zehn Euro?"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "extra-a11-l10-15",
    "topic": "yes-no-questions",
    "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 115,
-   "questionDe": "[sein / die Abfahrt / von Gleis vier] (die Satzmelodie steigt) (Beginnen Sie mit „Ist“)",
-   "questionEn": "Build the yes/no question about the departure. Begin with “Ist”.",
+   "questionDe": "[sein / die Abfahrt / von Gleis vier] (die Satzmelodie steigt) (das Verb steht vorn)",
+   "questionEn": "Build the yes/no question about the departure. The verb comes first.",
    "options": null,
    "answer": "Ist die Abfahrt von Gleis vier?",
    "accepted": [
     "Ist die Abfahrt von Gleis vier?",
-    "Ist die Abfahrt von Gleis vier",
-    "Ist von Gleis vier die Abfahrt?",
-    "Ist von Gleis vier die Abfahrt"
+    "Ist die Abfahrt von Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null,
@@ -7511,8 +10640,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 116,
-   "questionDe": "[sein / der Bahnhof / weit] (die Satzmelodie steigt) (Beginnen Sie mit „Ist der Bahnhof“)",
-   "questionEn": "Build the yes/no question about the station. Begin with “Ist der Bahnhof”.",
+   "questionDe": "[sein / der Bahnhof / weit] (die Satzmelodie steigt) (das Verb steht vorn)",
+   "questionEn": "Build the yes/no question about the station. The verb comes first.",
    "options": null,
    "answer": "Ist der Bahnhof weit?",
    "accepted": [
@@ -7531,8 +10660,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 117,
-   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Zug fährt nach Österreich.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Zug fährt nach Österreich.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
    "answer": "Fährt der Zug nach Österreich?",
    "accepted": [
@@ -7551,8 +10680,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 118,
-   "questionDe": "Die Antwort ist: „Ja, der Zug hat Verspätung.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
+   "questionDe": "Die Antwort ist: „Ja, der Zug hat Verspätung.“ Schreiben Sie die Frage. (das Verb steht vorn)",
+   "questionEn": "Write the question that this answer answers. The verb comes first.",
    "options": null,
    "answer": "Hat der Zug Verspätung?",
    "accepted": [
@@ -7571,8 +10700,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 119,
-   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Bus fährt nach Deutschland.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Bus fährt nach Deutschland.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
    "answer": "Fährt der Bus nach Deutschland?",
    "accepted": [
@@ -7591,8 +10720,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 120,
-   "questionDe": "Die Antwort ist: „Ja, der Bus hat Verspätung.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
+   "questionDe": "Die Antwort ist: „Ja, der Bus hat Verspätung.“ Schreiben Sie die Frage. (das Verb steht vorn)",
+   "questionEn": "Write the question that this answer answers. The verb comes first.",
    "options": null,
    "answer": "Hat der Bus Verspätung?",
    "accepted": [
@@ -7611,8 +10740,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 121,
-   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Fahrer fährt nach Österreich.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Fahrer fährt nach Österreich.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
    "answer": "Fährt der Fahrer nach Österreich?",
    "accepted": [
@@ -7631,8 +10760,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 122,
-   "questionDe": "Die Antwort ist: „Ja, der Fahrer hat Zeit.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
+   "questionDe": "Die Antwort ist: „Ja, der Fahrer hat Zeit.“ Schreiben Sie die Frage. (das Verb steht vorn)",
+   "questionEn": "Write the question that this answer answers. The verb comes first.",
    "options": null,
    "answer": "Hat der Fahrer Zeit?",
    "accepted": [
@@ -7643,6 +10772,56 @@
    "hint": null,
    "minLektion": 10,
    "explanationEn": "The answer \"Ja, der Fahrer hat Zeit\" repeats the statement. The question puts the verb first: **Hat der Fahrer Zeit?**"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-3-7",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [der Bus / haben / Verspätung]",
+   "questionEn": "Write the yes/no question: the verb comes first.",
+   "options": null,
+   "answer": "Hat der Bus Verspätung?",
+   "accepted": [
+    "Hat der Bus Verspätung?"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-4-7",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Schreiben Sie die Frage (das Verb steht vorn): [du / haben / viel Zeit]",
+   "questionEn": "Write the yes/no question: the verb comes first.",
+   "options": null,
+   "answer": "Hast du viel Zeit?",
+   "accepted": [
+    "Hast du viel Zeit?"
+   ],
+   "explanationDe": "In der Ja/Nein-Frage steht das Verb vorn: Fährt der Zug?",
+   "explanationEn": "In a yes/no question the verb comes first: Fährt der Zug?",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.1-cp4",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 8
   }
  ]
 }

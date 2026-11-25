@@ -1726,3 +1726,28 @@ test('a hint is never repeated: no English line says a task direction twice', ()
     assert.deepEqual(twice, [], level);
   }
 });
+
+// Both scores of 2026-11-25, checkpoint 3 and 4.
+test('a colloquial time is a full hour, a quarter or a half: no minutes the notice does not teach', async () => {
+  const { untaughtColloquialTime } = await import('../src/data/lessonPools/quality.js');
+  for (const q of ['Es ist ___. (18:20, umgangssprachlich)', 'Wie sagt man 2:50 umgangssprachlich?']) assert.equal(untaughtColloquialTime(q), true, q);
+  for (const q of ['Es ist ___. (2:30, umgangssprachlich)', 'Es ist ___. (2:45, umgangssprachlich)', 'Es ist ___. (20:45, offiziell)', 'Es ist ___. (18:20, offiziell)']) assert.equal(untaughtColloquialTime(q), false, q);
+  for (const it of POOL.items) assert.equal(untaughtColloquialTime(it.questionDe), false, `${it.id}: ${it.questionDe}`);
+});
+
+test('a yes/no question to build says where the verb stands, never which form opens it', async () => {
+  const { verbFirstCue } = await import('../src/data/lessonPools/quality.js');
+  const item = (questionDe, answer) => ({ type: 'sentence_building', questionDe, answer });
+  assert.equal(verbFirstCue(item('Bilden Sie die Frage: [kommen / du / morgen]', 'Kommst du morgen?')), '(das Verb steht vorn)');
+  assert.equal(verbFirstCue(item('Bilden Sie die Frage (das Verb steht vorn): [kommen / du / morgen]', 'Kommst du morgen?')), '', 'said already');
+  assert.equal(verbFirstCue(item('Bilden Sie den Satz: [wann / kommen / du]', 'Wann kommst du?')), null);
+  assert.equal(verbFirstCue(item('Bilden Sie den Satz: [du / kommen / morgen]', 'Du kommst morgen.')), null);
+  let n = 0;
+  for (const it of POOL.items) {
+    if (it.type !== 'sentence_building' || !/\?$/.test(it.answer) || verbFirstCue(it) === null) continue;
+    n += 1;
+    assert.doesNotMatch(it.questionDe, /Beginnen Sie mit/, `${it.id} prints the tested form: ${it.questionDe}`);
+    if (/das Verb steht vorn/.test(it.questionDe)) assert.match(it.questionEn || '', /verb comes first/i, `${it.id}: the English says it too`);
+  }
+  assert.ok(n >= 9, `yes/no questions to build: ${n}`);
+});

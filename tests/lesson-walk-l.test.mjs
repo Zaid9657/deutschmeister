@@ -157,7 +157,27 @@ test('an explanation is a sentence: no bare sum of forms, no noun sentence that 
   assert.equal(fullSentenceDe('er + ist.'), 'Zu „er“ gehört die Form „ist“.');
   assert.equal(fullSentenceDe('du + -st.'), 'Zu „du“ gehört die Endung -st.');
   assert.equal(fullSentenceDe('das Bild ist neutral, Verb auf Platz zwei.'), 'Das Bild ist neutral, das Verb steht auf Platz zwei.');
-  for (const text of ['halb + NÄCHSTE Stunde = 2:30.', 'der Beruf — B-E-R-U-F.', 'Nach „er“ steht „ist“.', '']) assert.equal(fullSentenceDe(text), text, 'any other text stays as written');
+  // The bank's formulas (2026-11-25), one line per shape.
+  for (const [formula, sentence] of [
+    ['halb + NÄCHSTE Stunde = 2:30.', 'Nach „halb“ kommt die nächste Stunde. So sagt man 2:30.'],
+    ['Du-Form: wohn + st = wohnst.', 'In der du-Form kommt -st an den Stamm „wohn“: wohnst.'],
+    ['Ihr-Form: arbeit + et = arbeitet — ein -e- wird vor -t eingefügt.', 'In der ihr-Form kommt -et an den Stamm „arbeit“: arbeitet. Vor dem -t steht ein -e-.'],
+    ['Stuhl = maskulin → ein.', '„Stuhl“ ist maskulin, deshalb heißt es „ein“.'],
+    ['Maskulin Singular → die im Plural.', 'Ein maskulines Nomen hat im Plural den Artikel „die“.'],
+    ['Bruder ist maskulin (der-Wort) → mein, keine Endung.', 'Bruder ist maskulin (der-Wort), deshalb heißt es „mein“, ohne Endung.'],
+    ['Tasche ist feminin → ihre. ihr bedeutet hier her (sie, Einzahl).', 'Tasche ist feminin, deshalb heißt es „ihre“. „ihr“ gehört hier zu „sie“ (eine Frau).'],
+    ['aufstehen → ich stehe ... auf.', 'Das Verb „aufstehen“ ist trennbar: ich stehe … auf.'],
+    ['zumachen → das Präfix zu steht ganz am Ende.', 'Bei „zumachen“ steht das Präfix „zu“ ganz am Ende.'],
+    ['wir + kaufen (Position 2), ein am Ende. heute kann auch am Satzanfang stehen.', 'Auf Platz zwei steht „kaufen“, am Ende steht „ein“. „heute“ kann auch am Satzanfang stehen.'],
+    ['das + ist + mein Bruder (Bruder ist maskulin, keine Endung).', 'Zuerst steht „das“, dann „ist“, dann „mein Bruder“ (Bruder ist maskulin, keine Endung).'],
+  ]) assert.equal(fullSentenceDe(formula), sentence);
+  for (const text of ['der Beruf — B-E-R-U-F.', 'Nach „er“ steht „ist“.', '']) assert.equal(fullSentenceDe(text), text, 'any other text stays as written');
+  // No sign stands for a word. „B-I-T-T-E = Bitte“ spells, „14:30 = vierzehn Uhr dreißig“ reads a number.
+  for (const item of pool.items) {
+    assert.doesNotMatch(item.explanationDe, /[→+]|\.\.\./, `${item.id}: ${item.explanationDe}`);
+    for (const m of item.explanationDe.matchAll(/(\S+) = /g)) assert.match(m[1], /^(?:\p{Lu}|ß)(?:-(?:\p{Lu}|ß))+$|^\d{1,2}:\d{2}$/u, `${item.id}: ${item.explanationDe}`);
+    assert.doesNotMatch(item.explanationDe, /\b(?:her|their|his|your|means?)\b/, `${item.id}: an English word explains a German one`);
+  }
   for (const item of pool.items) {
     assert.equal(fullSentenceDe(item.explanationDe), item.explanationDe, `${item.id}: ${item.explanationDe}`);
     assert.doesNotMatch(item.explanationEn, /^\p{L}+ \+ -?\p{L}+\.$/u, `${item.id}: ${item.explanationEn}`);

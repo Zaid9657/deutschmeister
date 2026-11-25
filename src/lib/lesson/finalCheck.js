@@ -70,6 +70,8 @@ export function englishIn(turn, value) {
 // last part, or an ending that has one article. Null where none of them knows: that noun's article is not checked.
 const OWN_NOUNS = new Map();
 for (const [g, words] of Object.entries(NOUN_GENDERS)) for (const w of words.split(/\s+/)) OWN_NOUNS.set(fold(w), [...new Set([...(OWN_NOUNS.get(fold(w)) || []), g])]);
+// What these nouns name is no first name: „Ich heiße Banane“ (as a surname after a first name it may be one: „Anna Vogel“).
+const NO_NAME = new Set(OWN_NOUNS.keys());
 const FEMININE_JOB = /(?:in|frau|kraft|hilfe|euse)$/u;
 const OWN_MASS = foldedSet(OWN_MASS_NOUNS);
 const readingsMemo = new Map();
@@ -1014,6 +1016,10 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
     const isName = (written, w, i) => /\p{L}/u.test(w) && !CLOSED.has(w) && !isNumberWord(w)
       && (names?.has?.(w) || (!known(w) && !(i === from && personsOf(w, lexicon))) || (i > 0 && /^\p{Lu}/u.test(written) && typeof exact?.has === 'function' && !exact.has(written)));
     const rest = raw.slice(from);
+    // A thing is no first name („Ich heiße Banane“) and a word said twice is none either („Banane Banane“): a surname may
+    // be one („Anna Vogel“). Not certain enough to be called wrong, so `typedResult` makes it BEYOND.
+    const folded = rest.map((r) => fold(bareName(r)));
+    if ((from === 0 && NO_NAME.has(folded[0])) || new Set(folded).size < folded.length) return RESULT.WRONG;
     return rest.length && rest.every((r, i) => isName(bareName(r), bareName(parts[from + i]), from + i)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   // `thing`: things one buys or needs, each with the article the verb asks for (the Akkusativ the course copies
@@ -2492,7 +2498,8 @@ function reasonOf(turn, value) {
   if (turn.spell) return 'spelling';
   if (turn.listen) return 'heard';
   if (turn.parts) return 'message';
-  if (turn.ownName) return 'name';
+  // A thing in the place of a name („Ich heiße Mango“) is odd, not certainly wrong: BEYOND.
+  if (turn.ownName) return wordsOf(String(value).replace(/[.,!?;:]/g, ' ')).some((w) => NO_NAME.has(fold(w)) && !turn.lexicon?.genders?.has?.(fold(w))) ? null : 'name';
   if (!/[\p{L}\p{N}]/u.test(text)) return 'missing';
   const form = formFault(text, turn.lexicon) || taskShapeFault(turn, text);
   if (form) return form;
@@ -2664,10 +2671,24 @@ export function sequenceFault(turn, value) {
 }
 const sequenceReason = sequenceFault;
 
+/**
+ * A taught noun with an infinitive's ending is no German word („Mein Hobby ist Fußballen.“, „Musiken“): an answer with
+ * one is never praised as the learner's own word. A dative plural („mit Freunden“) has its plural in -e among the taught
+ * forms, and any other word German has is known as itself.
+ */
+function madeUpWord(turn, value) {
+  const lexicon = turn?.lexicon;
+  if (!lexicon?.genders?.has) return false;
+  return wordsOf(String(value || '').replace(/[.,!?;:„“"()]/g, ' ')).some((w) => {
+    const f = fold(w);
+    return f.length > 6 && f.endsWith('en') && lexicon.genders.has(f.slice(0, -2)) && !lexicon.has(f.slice(0, -1)) && !knownWord(f, lexicon) && !OWN_NOUNS.has(f);
+  });
+}
+
 /** CORRECT, TYPO, WRONG or BEYOND (the third outcome) for one typed answer: a WRONG names its fault (`wrongReason`). */
 export function typedResult(turn, value) {
   const result = typedCore(turn, value);
-  if (verifiedResult(result)) return result;
+  if (verifiedResult(result)) return madeUpWord(turn, value) ? BEYOND : result;
   return reasonFor(turn, value, result) ? RESULT.WRONG : BEYOND;
 }
 
@@ -2698,7 +2719,7 @@ function isName(turn, raw) {
   if (!w || turn.accepted.some((o) => wordsOf(fold(o)).includes(w)) || CLOSED.has(w)) return false;
   const lexicon = turn.lexicon;
   if (lexicon?.names?.has?.(w)) return true;
-  if (lexicon?.genders?.has?.(w) || OWN_KIND.job.has(w) || OWN_KIND.language.has(w)) return false;
+  if (lexicon?.genders?.has?.(w) || OWN_KIND.job.has(w) || OWN_KIND.language.has(w) || NO_NAME.has(w)) return false;
   return !(lexicon?.has?.(w) && /^\p{Ll}/u.test(String(raw)));
 }
 

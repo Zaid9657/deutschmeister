@@ -272,6 +272,14 @@ export const MONTH_SCOPED_TOPIC_RE = /time|date|clock|uhrzeit/i;
 export const UNTAUGHT_TIME_RE = /(^|[^a-zäöüß])der\s+nacht([^a-zäöüß]|$)/i;
 
 /**
+ * A COLLOQUIAL CLOCK TIME IS A FULL HOUR, A QUARTER OR A HALF. Lektion 8's notice teaches „Viertel nach",
+ * „Viertel vor" and „halb" and no minutes, so „18:20, umgangssprachlich" → „zwanzig nach sechs" asks for a
+ * form the level never teaches (both scores of 2026-11-25, checkpoint 3).
+ */
+export const untaughtColloquialTime = (q) => /umgangssprachlich/i.test(String(q || ''))
+  && [...String(q).matchAll(/\b\d{1,2}[:.](\d{2})\b/g)].some((m) => !['00', '15', '30', '45'].includes(m[1]));
+
+/**
  * REVIEW #7 BLOCKER 3. The inverse of RULE 6b: no drawn and no CHECKPOINT item
  * may demand a form that no notice and no rule card of the level introduces.
  *
@@ -1242,6 +1250,24 @@ export function middleFieldAcceptedForms(item) {
   return middleFieldOrders(item).flatMap((o) => [o, o.slice(0, -1)]);
 }
 
+const VERB_FIRST_CUE_RE = /das Verb steht vorn|Verb auf Position 1/i;
+const QUESTION_WORD_RE = /^(?:wer|wen|wem|was|wo|woher|wohin|wann|wie|warum|welche[rsnm]?)$/i;
+
+/**
+ * THE OPENING OF A YES/NO QUESTION IS ITS VERB, and the verb is what the task asks for: „Beginnen Sie mit
+ * ‚Kommst'" prints the tested form (both scores of 2026-11-25, checkpoint 4; nine practice items). Its cue
+ * says where the verb stands, not which form it has. Null for every other sentence, and for a question
+ * that already says so.
+ */
+export function verbFirstCue(item) {
+  if (String(item?.type) !== 'sentence_building' || !/\?$/.test(String(item.answer || '').trim())) return null;
+  const words = String(item.answer).trim().split(/\s+/);
+  if (QUESTION_WORD_RE.test(words[0].replace(/[,?]/g, ''))) return null;
+  // „Du kommst aus Polen?": an echo question keeps its statement's opening.
+  if (finiteVerbAt(words.map((w) => w.replace(/[?]$/, ''))) >= 1 && !/^[A-ZÄÖÜ][a-zäöüß]*(?:t|st|e|en)$/.test(words[0]) && !/^(?:Ist|Sind|Bist|Seid|Hat|Hast|Habt)$/.test(words[0])) return null;
+  return VERB_FIRST_CUE_RE.test(String(item.questionDe || '')) ? '' : '(das Verb steht vorn)';
+}
+
 /**
  * Name the opening of a frontable statement or question. Objects, predicates and
  * pronouns can also occupy the Vorfeld; questions can use confirmation/echo
@@ -1254,6 +1280,8 @@ export function missingOpeningCue(item, { allStatements = false } = {}) {
   const q = String(item.questionDe || '');
   if (/\(Beginnen Sie mit /.test(q) || /\b(?:Imperativ|Bitte)\b/i.test(q)) return null;
   const answer = String(item.answer || '').trim();
+  // A yes/no question that says where its verb stands has named its opening (verbFirstCue below).
+  if (/\?$/.test(answer) && VERB_FIRST_CUE_RE.test(q)) return null;
   if (!answer || /!$/.test(answer)) return null;
   const words = answer.replace(/[.!?]+$/, '').split(/\s+/).filter(Boolean);
   if (words.length < 3) return null;
@@ -1315,6 +1343,7 @@ export function taskConstraintsEn(item) {
   if (item?.type === 'sentence_building') directions.push(
     [/\b(?:Frage|Verb auf Position 1|Antwort: ja oder nein)\b/, 'Build a question.', /\bquestion\b/i],
     [/\b(?:Imperativ|Bitte):/, 'Build a request in the imperative.', /\b(?:imperative|request)\b/i],
+    [/\(das Verb steht vorn\)/, 'The verb comes first.', /\bverb comes first\b/i],
   );
   const said = String(item?.questionEn || '');
   for (const [pattern, en, already] of directions) if (pattern.test(q) && !already?.test(said)) constraints.push(en);
@@ -2455,7 +2484,7 @@ export function exclusionReason(item, { level } = {}) {
     if (MONTH_SCOPED_TOPIC_RE.test(String(item.topic || '')) && (MONTH_RE.test(q) || MONTH_RE.test(expects))) {
       return REASON.MONTH_NAME;
     }
-    if (UNTAUGHT_TIME_RE.test(q)) return REASON.UNTAUGHT_TIME_EXCEPTION;
+    if (UNTAUGHT_TIME_RE.test(q) || untaughtColloquialTime(q)) return REASON.UNTAUGHT_TIME_EXCEPTION;
     // REVIEW #7 BLOCKER 3, last of the level-scoped rules so that every id an
     // older reason already names keeps the reason it was pinned with.
     if (untaughtForm(item)) return REASON.UNTAUGHT_FORM;
@@ -2509,14 +2538,42 @@ export function exclusionReason(item, { level } = {}) {
 // „er + ist.", „du + -st.": the sum of two forms, not an explanation.
 const SUM_RE = /^(\p{L}+) \+ (-?)(\p{L}+)\.$/u;
 const NOUN_SENTENCE_RE = /^(?:der|die|das) (?=\p{Lu}[\p{L}-]* (?:ist|sind|wird|bleibt)\b)/u;
+// The bank's formulas (2026-11-25): signs („→", „+", „=", „...") stand for words, and an English word explains a German
+// one („ihr bedeutet hier their"). Each shape is rewritten once here, so a new bank row of the same shape is a sentence too.
+const GENDER_ADJ = { Maskulin: 'maskulines', Feminin: 'feminines', Neutral: 'neutrales' };
+const FORMULAS_DE = [
+  [/(\p{Lu}\p{L}+) ist (maskulin|feminin|neutral|Plural)((?: \([^)]*\))?) → (\p{L}+)(, keine Endung)?/gu,
+    (_, noun, kind, note, form, bare) => `${noun} ist ${kind}${note}, deshalb heißt es „${form}“${bare ? ', ohne Endung' : ''}`],
+  [/^(\p{Lu}\p{L}+) = (maskulin|feminin|neutral) → (\p{L}+)\.$/u, '„$1“ ist $2, deshalb heißt es „$3“.'],
+  [/^(Maskulin|Feminin|Neutral) Singular → die im Plural\.$/u, (_, g) => `Ein ${GENDER_ADJ[g]} Nomen hat im Plural den Artikel „die“.`],
+  [/: (?:der|die|das) \p{Lu}\p{L}+ → \p{Ll}+\.$/u, '.'],
+  [/^(\p{L}+)-Form: (\p{L}+) \+ (\p{L}+) = (\p{L}+)(?:, kein Extra-Buchstabe nötig|( — ein -e- wird vor -t eingefügt))?\.$/u,
+    (_, person, stem, ending, form, e) => `In der ${person.toLowerCase()}-Form kommt -${ending} an den Stamm „${stem}“: ${form}.${e ? ' Vor dem -t steht ein -e-.' : ''}`],
+  [/^(\p{L}+)-Form: -en von (\p{Ll}+) entfernen, -(\p{Ll}+) anhängen: (\p{Ll}+)\.$/u,
+    (_, person, verb, ending, form) => `In der ${person.toLowerCase()}-Form fällt -en von „${verb}“ weg, und -${ending} kommt dazu: ${form}.`],
+  [/^(\p{Ll}+) → das Präfix (\p{Ll}+) steht/u, 'Bei „$1“ steht das Präfix „$2“'],
+  [/^(\p{Ll}+) → ((?:ich|du|er|sie|wir|ihr|der \p{Lu}\p{L}+) \p{Ll}+) \.\.\. (\p{Ll}+)\.$/u, 'Das Verb „$1“ ist trennbar: $2 … $3.'],
+  [/^\p{Ll}+ \+ (\p{Ll}+) \(Position 2\), (\p{Ll}+) am Ende\./u, 'Auf Platz zwei steht „$1“, am Ende steht „$2“.'],
+  [/^(\p{Ll}+) \+ (\p{Ll}+) \+ ((?:\p{L}+ )*\p{L}+)(?= \(|\.)/u, 'Zuerst steht „$1“, dann „$2“, dann „$3“'],
+  [/^(halb|Viertel vor) \+ NÄCHSTE Stunde(?: = (\d{1,2}:\d{2}))?\.$/u, (_, w, at) => `Nach „${w}“ kommt die nächste Stunde.${at ? ` So sagt man ${at}.` : ''}`],
+  [/^Viertel nach \+ aktuelle Stunde\.$/u, 'Nach „Viertel nach“ kommt die aktuelle Stunde.'],
+  [/^am \+ Tageszeit:/u, 'Vor einer Tageszeit steht „am“:'],
+  [/^Offizielle Zeit: Stunde \+ Uhr \+ Minuten/u, 'In der offiziellen Zeit kommt zuerst die Stunde, dann „Uhr“, und dann kommen die Minuten'],
+  [/Frage: Verb an Position 1 → /u, 'In der Frage steht das Verb auf Platz eins: '],
+  [/^Ja \+ die Aussage/u, 'Auf „Ja“ folgt die Aussage'],
+  [/(?<!\p{L})ihr bedeutet hier (her|their)(?: \(sie, (?:Einzahl|Plural)\))?\./gu, (_, en) => `„ihr“ gehört hier zu „sie“ (${en === 'her' ? 'eine Frau' : 'mehrere Personen'}).`],
+  [/(?<=[.!?] )(\p{Ll}+) (?=(?:kann|benutzt) )/gu, '„$1“ '],
+  [/ ?\.\.\.$/u, ' …'],
+];
 
 /**
- * An explanation is a sentence (browser walk 2026-11-25). Three wordings of the bank are made one: the
+ * An explanation is a sentence (browser walk 2026-11-25). The bank's formulas and three wordings are made one: the
  * bare sum („er + ist."), a sentence about a noun that starts small („das Bild ist neutral"), and the
  * verb's place named without a verb („…, Verb auf Platz zwei"). Every other text stays as written.
  */
 export function fullSentenceDe(text) {
-  const s = String(text || '');
+  let s = String(text || '');
+  for (const [re, to] of FORMULAS_DE) s = s.replace(re, to);
   const sum = s.match(SUM_RE);
   if (sum) return sum[2] ? `Zu „${sum[1]}“ gehört die Endung -${sum[3]}.` : `Zu „${sum[1]}“ gehört die Form „${sum[3]}“.`;
   return s

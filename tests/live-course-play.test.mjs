@@ -30,14 +30,14 @@ test('a false reading statement never stands word for word in its own text (both
 test('the reading gate catches both play findings when they come back', () => {
   const bank = structuredClone(LESEN_A11);
   const [p1] = bank['a1.1-cp1'].papers;
-  const falseUnit = p1.find((u) => u.answer === 'Falsch');
+  const falseUnit = p1.find((u) => u.format === 'trueFalse' && u.answer === 'Falsch');
   falseUnit.text = `${falseUnit.text} Die Leute sagen: ${falseUnit.statement}`;
   // The worked ad of Lektion 3 is practised German like a dialogue line.
   const shown = CURRICULA['a1.1'].lektionen[2].notice.readingExample.text.split(/(?<=[.!?])\s+/).find((s) => s.split(' ').length >= 4);
   const other = p1.find((u) => u !== falseUnit);
   other.text = `${other.text} ${shown}`;
   const { findings } = checkLesenA11(bank);
-  assert.ok(findings.some((f) => f.startsWith(`${falseUnit.id}: false statement stands word for word`)), findings.join('\n'));
+  assert.ok(findings.some((f) => f.startsWith(`${falseUnit.id}: statement stands word for word`)), findings.join('\n'));
   assert.ok(findings.some((f) => f.startsWith(`${other.id}: practised sentence`)), findings.join('\n'));
 });
 

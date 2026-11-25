@@ -24,6 +24,12 @@ const checkOpenings = (items) => {
       if (/\bbitte\b/i.test(item.answer)) assert.ok(item.accepted.some((answer) => /^Bitte /i.test(answer)), item.id);
       continue;
     }
+    // A1.1 yes/no questions say „das Verb steht vorn“: naming the opening gave the tested form (2026-11-25).
+    if (/das Verb steht vorn|Verb auf Position 1/.test(item.questionDe)) {
+      assert.ok(/\?$/.test(item.answer) && !opening.test(item.questionDe), `${item.id}: only a question, and no second cue`);
+      assert.equal(missingOpeningCue(item), null, item.id);
+      continue;
+    }
     const cue = opening.exec(item.questionDe);
     assert.ok(cue, `${item.id}: every statement or question names its opening`);
     assert.ok(item.answer.startsWith(`${cue[1]} `), `${item.id}: the key follows the cue`);

@@ -217,6 +217,27 @@ test('I2: a form task says what its form check checks, and names no length, poin
   }
 });
 
+test('the final check opens on the turn the learner had reached, and the chosen person stays the same', async () => {
+  const CheckStage = await component('CheckStage');
+  const l = c.lektionen[2];
+  const stage = { ...buildLesson({ curriculum: c, lektion: l, pool }).stages.find((s) => s.kind === 'check') };
+  stage.part = sessionOf(stage);
+  const props = { stage, lektion: l, onBack: noop, onDone: noop };
+  for (const lng of LANGS) {
+    lang = lng;
+    fresh();
+    const start = header(render(CheckStage, props));
+    fresh();
+    const third = header(render(CheckStage, { ...props, resume: { retake: 0, outcomes: ['shown', 'missed'], chosen: null } }));
+    assert.notEqual(third, start, `${lng}: the header counts the turn`);
+    assert.match(third, /3/, `${lng}: ${third}`);
+    // More verdicts than turns (an edited check): the end screen, never a blank turn.
+    fresh();
+    const done = render(CheckStage, { ...props, resume: { retake: 0, outcomes: Array(40).fill('shown'), chosen: null } });
+    assert.equal(elements(done, (el) => el.type === 'li').length, shownLines(l, lng).length);
+  }
+});
+
 test('I4: the final check reads every can-do state aloud, and a graded answer stays on screen', async () => {
   const CheckStage = await component('CheckStage');
   const RecapStage = await component('RecapStage');

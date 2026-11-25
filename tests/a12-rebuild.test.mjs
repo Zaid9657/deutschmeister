@@ -1,5 +1,6 @@
 // The A1.2 rebuild on the A1.1 standard (owner: "start now", 2026-10-15). One file for the rules the
 // rebuild adds, so each finding class it closes keeps a test that fails on the old code.
+import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -327,7 +328,7 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   let items = 0;
   for (const checkpoint of CURRICULUM_A11.checkpoints) {
     for (const seed of [undefined, 1, 2, 3]) {
-      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed })) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(checkpoint), pool, seed })) {
         if (it.section !== 'lesen') continue;
         items += 1;
         const at = `${checkpoint.id}/${seed} „${it.statement}"`;
@@ -1019,7 +1020,7 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
     for (const checkpoint of curriculum.checkpoints) {
       const cpSpec = reportSpecFor(curriculum, checkpoint);
       for (let round = 0; round < 3; round += 1) {
-        for (const it of buildCheckpoint({ curriculum, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed: paperSeed(checkpoint, round) })) {
+        for (const it of buildCheckpoint({ curriculum, checkpoint: generatedCheckpoint(checkpoint), pool, seed: paperSeed(checkpoint, round) })) {
           if (it.section !== 'lesen' || !it.transform) continue;
           checked += 1;
           const at = `${checkpoint.id}/${round} „${it.statement}"`;
@@ -1142,7 +1143,7 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
-        const lesen = B.buildCheckpoint({ curriculum, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint: generatedCheckpoint(checkpoint), pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
         const negated = { Richtig: 0, Falsch: 0 };
         for (const it of lesen) {
           // A two-option item (A1.2, round 11b) prints its Richtig and its Falsch side by side.
@@ -1490,10 +1491,14 @@ test('DaF review #7 MAJOR 8: legacy binary reading preserves its negation gates,
     assert.ok(lesen.length === 4 && lesen.every((it) => it.kind === 'choice'), `${id}: four two-option items`);
     assert.equal(bestPlace(lesen), 2, `${id}: a negation strategy scores ${bestPlace(lesen)} of 4`);
   }
-  // A1.1 is live and recorded: its checkpoint 2 chapter has no negative first-person line, so three
-  // papers keep one added negation (the follow-up in the handoff). A ratchet: it only goes down.
-  const a11 = papers(CURRICULUM_A11, JSON.parse(read('src/data/lessonPools/a11.json')), 3);
-  assert.ok(unbalanced(a11).length <= 3, `A1.1: ${unbalanced(a11)}`);
+  // A1.1 prints two statements and two questions per paper since 2026-11-25. Its gate reads the same feature as a
+  // declared strategy over the whole bank (scripts/a11-lesen-check.mjs): negated in both or in neither says nothing.
+  const { auditDeclaredStrategies, TF_LIMIT } = await import('../scripts/a11-lesen-check.mjs');
+  const { LESEN_A11 } = await import('../src/data/curricula/a11.lesen.js');
+  const { totals } = auditDeclaredStrategies(Object.values(LESEN_A11).flatMap((c) => c.papers));
+  for (const name of ['negation → Falsch', 'negation in text → Falsch', 'negation in both or in neither → Richtig']) {
+    for (const key of [name, `${name} (inverse)`]) assert.ok(totals.get(key) <= TF_LIMIT, `A1.1 ${key}: ${totals.get(key)}`);
+  }
 
   // ANNOTATED BY HAND: a time a preposition makes a bound or the end of an interval is not refuted by
   // another number — an arrival at seven makes „vor zehn" and „vor acht" both true (review #7).
@@ -1697,7 +1702,7 @@ test('DaF review #7 B1: the task formulas are one list — the checkpoint draw a
   // untaught lexis to the checkpoint draw while the validator stamped it servable.
   const { ITEM_FORMULAS } = await import('../src/lib/checkpoint/lexis.js');
   const src = read('scripts/validate-curriculum.mjs');
-  assert.match(src, /import \{ ITEM_FORMULAS \} from '\.\.\/src\/lib\/checkpoint\/lexis\.js';/);
+  assert.match(src, /import \{ ITEM_FORMULAS, seriesWords \} from '\.\.\/src\/lib\/checkpoint\/lexis\.js';/);
   assert.doesNotMatch(src, /const ITEM_FORMULA_RE = new RegExp\(\[/, 'no second copy of the list');
   // Longest first: a shorter formula listed earlier would match and leave the rest counted as lexis.
   ITEM_FORMULAS.forEach((formula, i) => {

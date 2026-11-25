@@ -13,6 +13,7 @@ import Card from '../../components/ui/Card.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
 import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { useScreenTitle } from '../../hooks/useScreenTitle.js';
 
 // The Wiederholen screen (standard §3, "Spaced review"): the cards that are due
 // today, in four modes — flashcard reveal, listening, typed, and "say it"
@@ -69,6 +70,7 @@ function ReviewSession() {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
+  useScreenTitle(curriculum && `${t('review.title', lang)} · ${curriculum.code}`, lang);
 
   const [cards, setCards] = useState(null);
   const [index, setIndex] = useState(0);

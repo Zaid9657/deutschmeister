@@ -132,7 +132,8 @@ const take = (list, n) => list.slice(0, Math.max(0, n));
 export const printedSurface = (item) => {
   if (!item) return '';
   const parts = [item.promptDe];
-  if (item.type === 'dictation' || item.type === 'read_aloud') parts.push(item.text || item.audioText);
+  // A heard text is shown under its answer once the section is done, so a later section has read it.
+  if (item.type === 'dictation' || item.type === 'read_aloud' || item.kind === 'listenChoice') parts.push(item.text || item.audioText);
   else if (item.section === 'lesen') parts.push(item.text);
   return parts.filter(Boolean).join(' ');
 };
@@ -143,16 +144,37 @@ export const printedSurface = (item) => {
  * verdicts, not productions, and reading them as leakable answers would make
  * every prompt containing „richtig" a leak.
  */
-const VERDICT_KINDS = new Set(['trueFalse', 'gradedWriting']);
+const VERDICT_KINDS = new Set(['trueFalse', 'gradedWriting', 'listenChoice']);
 // Authored Lesen extracts a fact its own text prints, through a short answer or a legacy choice.
 // Finding that fact is the reading task; it is not a separate production to conceal. Its text still
 // prints answers, and the other direction of leaksAcross keeps later productions clear of them.
 export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind) && !(item.section === 'lesen' && ['choice', 'readingGap'].includes(item.kind));
 
+const plainWords = (s) => String(s || '').toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
+
+/**
+ * A RESERVED ONE-WORD GAP IS GIVEN AWAY BY ITS WORD IN ITS PLACE (2026-11-25). `leaksAnswer` asks whether the
+ * word is printed at all; „eine" or „sind" is printed on every page and gives nothing away. What gives
+ * „___ Party ist am Freitag. (sie)" away is „Ihre Party" in a dictation, and „Ihr ___ Zeit. (haben)" is
+ * answered by „habt ihr": the answer beside the word it stands beside in the gap, in either order.
+ */
+function gapPrinted(item, printed) {
+  const sentence = String(item.promptDe).replace(/\([^)]*\)/g, ' ').split(/(?<=[.!?])\s+|:\s/).find((x) => x.includes('___')) || '';
+  const [before, after] = sentence.split('___');
+  const key = plainWords(item.answer)[0];
+  // An article, a preposition or a number belongs to the word after it; a verb stands on either side of its subject.
+  const goesOn = DETERMINER_RE.test(key) || PREPOSITIONS.has(key) || TIME_PREPOSITIONS.has(key);
+  const beside = [goesOn ? null : plainWords(before).at(-1), plainWords(after)[0]].filter(Boolean);
+  const words = plainWords(printed);
+  return words.some((w, i) => w === key && (beside.includes(words[i - 1]) || beside.includes(words[i + 1])));
+}
+
+const printsAnswer = (item, printed) => (item.reservedGap ? gapPrinted(item, printed) : leaksAnswer(item, { questionDe: printed }));
+
 /** True when either item's whole production is already printed by the other. */
 export const leaksAcross = (a, b) =>
-  (leakable(a) && leaksAnswer(a, { questionDe: printedSurface(b) })) ||
-  (leakable(b) && leaksAnswer(b, { questionDe: printedSurface(a) }));
+  (leakable(a) && printsAnswer(a, printedSurface(b))) ||
+  (leakable(b) && printsAnswer(b, printedSurface(a)));
 
 /** Every leaking pair of one paper — the measurement tests/checkpoint.test.mjs runs. */
 export const checkpointLeaks = (items = []) => {
@@ -583,12 +605,64 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
     hint: poolItem.hint || null,
     poolItemId: poolItem.id,
     type: poolItem.type,
+    // A reserved task whose answer is one word (see gapPrinted); A1.2's reserved gaps ask for the whole sentence.
+    ...(poolItem.assessment && poolItem.type === 'fill_blank' && !/\s/.test(poolItem.answer) ? { reservedGap: true } : {}),
   };
 }
 
 // ── the five sections ───────────────────────────────────────────────────────
 
-// Hören: 3 full-line dictations from the chapter's dialogues + 2 "Welches Wort
+/**
+ * AUTHORED HÖREN AND SPRECHEN (2026-11-25). A level that hands its checkpoint a `hoeren` bank (A1.1:
+ * src/data/curricula/a11.hoeren.js) hears NEW sentences: 36 of 36 dictations and 24 of 24 read-alouds of
+ * A1.1 were scene lines, and no listening item had a text of its own. One paper is two dictations, three
+ * short spoken texts with a question each, and the two lines of Sprechen; paper r serves round r, whole,
+ * as it was reviewed (authoredLesen). An incomplete bank is an error, never a fallback to the scenes.
+ * The clips are found by the words they say: the checkpoint's id is their place in the audio manifest.
+ */
+function authoredPaper(ctx) {
+  const papers = ctx.checkpoint.hoeren?.papers;
+  const paper = Array.isArray(papers) && papers.length === 4 ? papers[ctx.round % papers.length] : null;
+  if (!paper || paper.say?.length + paper.hear?.length !== SECTION_COUNTS.hoeren || paper.read?.length !== SECTION_COUNTS.sprechen) {
+    throw new Error(`${ctx.checkpoint.id}: an authored Hören bank needs four complete papers`);
+  }
+  return paper;
+}
+
+function authoredHoeren(ctx) {
+  const { checkpoint } = ctx;
+  const paper = authoredPaper(ctx);
+  const common = {
+    section: 'hoeren', topic: 'hoeren', lektionNr: checkpoint.afterLektion, lektionId: checkpoint.id, lineKey: null,
+    source: 'authored', register: null, scored: true, text: null, hint: null, poolItemId: null,
+  };
+  const dictations = paper.say.map((unit, i) => ({
+    ...common, id: `${checkpoint.id}-hoeren-${i + 1}`, kind: 'dictation', mode: 'typed', type: 'dictation', unitId: unit.id,
+    promptDe: 'Hören Sie zu und schreiben Sie den Satz.', promptEn: 'Listen and type the sentence.',
+    audioText: unit.de, options: null, answer: unit.de, accepted: [unit.de], caseSensitive: lineIsCaseTask(unit.de),
+    explanationDe: unit.de, explanationEn: unit.en,
+  }));
+  const heard = paper.hear.map((unit, i) => ({
+    ...common, id: `${checkpoint.id}-hoeren-${paper.say.length + i + 1}`, kind: 'listenChoice', mode: 'options', type: 'multiple_choice', unitId: unit.id,
+    promptDe: unit.question, promptEn: unit.questionEn, audioText: unit.text, options: [...unit.options],
+    answer: unit.answer, accepted: [unit.answer], evidence: unit.evidence,
+    explanationDe: `„${unit.evidence}“`, explanationEn: unit.why,
+  }));
+  return [...dictations, ...heard].map((item) => ctx.seat(item));
+}
+
+function authoredSprechen(ctx) {
+  const { checkpoint } = ctx;
+  return authoredPaper(ctx).read.map((unit, i) => ctx.seat({
+    id: `${checkpoint.id}-sprechen-${i + 1}`, section: 'sprechen', kind: 'readAloud', mode: 'confirm', type: 'read_aloud', unitId: unit.id,
+    topic: 'sprechen', lektionNr: checkpoint.afterLektion, lektionId: checkpoint.id, lineKey: null, source: 'authored', register: null,
+    scored: false, scorable: true, promptDe: 'Lesen Sie den Satz laut vor.', promptEn: 'Read the sentence aloud.',
+    audioText: unit.de, text: unit.de, options: null, answer: unit.de, accepted: [unit.de], caseSensitive: lineIsCaseTask(unit.de),
+    explanationDe: unit.de, explanationEn: unit.en, hint: null, poolItemId: null,
+  }));
+}
+
+// Hören without a bank: 3 full-line dictations from the chapter's dialogues + 2 "Welches Wort
 // hören Sie?" items built from the Wortfeld (correct word + 3 Wortfeld
 // distractors). Audio is window.speechSynthesis in v1 (CONTRACT.md).
 function buildHoerenDictation(ctx) {
@@ -686,7 +760,8 @@ function buildHoerenWords(ctx) {
   const { checkpoint, rng, chapter } = ctx;
   const items = [];
 
-  const words = shuffle(wortfeldWords(chapter), rng).filter((word, i, all) => all.findIndex((w) => w.de === word.de) === i);
+  // „Welches Wort hören Sie?“ asks for a word: „die Zahlen 0–10“ names a list (round-1 walk, checkpoint 1).
+  const words = shuffle(wortfeldWords(chapter), rng).filter((word, i, all) => all.findIndex((w) => w.de === word.de) === i && !/\d\s*[–-]\s*\d/.test(word.de));
   const probe = (w) => ({
     section: 'hoeren', kind: 'wordChoice', promptDe: 'Welches Wort hören Sie?', answer: w.de, accepted: [w.de],
   });
@@ -2714,9 +2789,10 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // item of Lektion 6 the learner had not answered in a lesson, and the drill had to
   // fall back on one they had (a1.1-cp2's default paper, measured 2026-10-17; the
   // transfer ratchet in tests/checkpoint.test.mjs had held only because the shuffle missed it).
-  const hoerenDictation = buildHoerenDictation(ctx);
+  const authored = Boolean(checkpoint.hoeren);
+  const hoerenDictation = authored ? authoredHoeren(ctx) : buildHoerenDictation(ctx);
   const lesen = buildLesen(ctx);
-  const sprechen = buildSprechen(ctx);
+  const sprechen = authored ? authoredSprechen(ctx) : buildSprechen(ctx);
   const schreiben = buildSchreiben(ctx);
   const bausteine = buildBausteine(ctx);
   // Dead last, because it is the freest draw on the paper: the chapter's whole
@@ -2724,7 +2800,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // else, while a three-Lektion chapter has three sentence-building items for
   // its Schreiben drills and cannot. Placing them earlier cost checkpoint 1 two
   // recorded fallbacks; placing them last costs none.
-  const hoerenWords = buildHoerenWords(ctx);
+  const hoerenWords = authored ? [] : buildHoerenWords(ctx);
   const items = [...hoerenDictation, ...hoerenWords, ...lesen, ...bausteine, ...schreiben, ...sprechen];
   checkpointReports.set(items, { leakFallbacks });
   return items;

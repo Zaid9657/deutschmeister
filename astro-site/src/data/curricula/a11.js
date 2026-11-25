@@ -67,6 +67,7 @@
  * receptionist's, clerk's, seller's, waiter's and station staff's lines (Codex review, 2026-10-09).
  * tests/course-value.test.mjs holds every Lektion to it.
  */
+import { HOEREN_A11 } from './a11.hoeren.js';
 import { LESEN_A11 } from './a11.lesen.js';
 import { A11_MORE_ANSWERS } from './a11.answers.js';
 import { A11_OPTIONS_DE } from './a11.optionsDe.js';
@@ -327,13 +328,13 @@ export const CURRICULUM_A11 = {
         { de: 'Auf Wiedersehen', word: 'Auf Wiedersehen', article: null, plural: null, en: 'Goodbye', wordId: 'f1f59c8b-8842-49da-b10a-9e154f6de7e2' },
         { de: 'Bis morgen', word: 'Bis morgen', article: null, plural: null, en: 'See you tomorrow', wordId: '28a1c448-c9c1-4796-aab1-9f417c26df94' },
         { de: 'Danke', word: 'Danke', article: null, plural: null, en: 'Thank you', wordId: 'ec26881d-ea91-41dc-8da4-6efc3dc04222' },
-        { de: 'Bitte', word: 'Bitte', article: null, plural: null, en: 'Please / You\'re welcome', wordId: '501d7595-03fc-4696-a141-677e345df16d' },
+        { de: 'Bitte', word: 'Bitte', article: null, plural: null, en: 'Please / You’re welcome', wordId: '501d7595-03fc-4696-a141-677e345df16d' },
         { de: 'Entschuldigung', exampleDe: 'Entschuldigung, wie heißen Sie?', word: 'Entschuldigung', article: null, plural: null, en: 'Excuse me / Sorry', wordId: '8db3b3da-db54-4372-970e-bff5e8111b5f' },
         { de: 'Freut mich', exampleDe: 'Ich heiße Ana. – Freut mich!', word: 'Freut mich', article: null, plural: null, en: 'Nice to meet you', wordId: '9e09ab43-124d-42df-8b7d-38db7d8692d7' },
         { de: 'Willkommen', word: 'Willkommen', article: null, plural: null, en: 'Welcome', wordId: 'aae696c2-6d27-4aa7-8832-f618e2d160b1' },
         { de: 'Wie geht es dir?', word: 'Wie geht es dir?', article: null, plural: null, en: 'How are you? (informal)', wordId: '41dd2800-884a-440c-91b4-e771ebb03a35' },
         { de: 'Wie geht es Ihnen?', word: 'Wie geht es Ihnen?', article: null, plural: null, en: 'How are you? (formal)', wordId: '079b8258-5044-42cd-85d6-9b51e12b55c7' },
-        { de: 'Mir geht es gut', word: 'Mir geht es gut', article: null, plural: null, en: 'I\'m fine', wordId: '2b299a38-0052-4469-aaeb-d19292f4679b' },
+        { de: 'Mir geht es gut', word: 'Mir geht es gut', article: null, plural: null, en: 'I’m fine', wordId: '2b299a38-0052-4469-aaeb-d19292f4679b' },
         { de: 'der Gruß', exampleDe: '„Guten Tag“ ist ein Gruß.', word: 'Gruß', article: 'der', plural: 'Grüße', en: 'greeting', wordId: 'e3b63654-5c07-412f-b209-1ea0ec0d140a' },
         { de: 'heißen', word: 'heißen', article: null, plural: null, en: 'to be called', wordId: '7422ba1e-b9a8-4559-892a-a1104fc980d0' },
         { de: 'buchstabieren', word: 'buchstabieren', article: null, plural: null, en: 'to spell', wordId: 'c32af826-0d23-45a0-8e21-5f5687937153' },
@@ -354,8 +355,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
           // 2026-11-17 (Codex, tone): Ana asks back and both leave with the farewell the can-do names,
           // so the learner says the question and „Auf Wiedersehen“ aloud. Tschüss/Bis morgen stay Wortfeld.
-          { speaker: 'Ana', de: 'Mir geht es gut, danke. Und wie geht es Ihnen?', en: 'I\'m fine, thank you. And how are you?' },
-          { speaker: 'Frau Kaya', de: 'Mir geht es gut, danke. Auf Wiedersehen, Frau Chakiri.', en: 'I\'m fine, thank you. Goodbye, Ms Chakiri.' },
+          { speaker: 'Ana', de: 'Mir geht es gut, danke. Und wie geht es Ihnen?', en: 'I’m fine, thank you. And how are you?' },
+          { speaker: 'Frau Kaya', de: 'Mir geht es gut, danke. Auf Wiedersehen, Frau Chakiri.', en: 'I’m fine, thank you. Goodbye, Ms Chakiri.' },
           { speaker: 'Ana', de: 'Auf Wiedersehen!', en: 'Goodbye!' },
         ],
       },
@@ -657,7 +658,7 @@ export const CURRICULUM_A11 = {
         // `der Schalter` is out for the same reason (round 17): it stood in the stage direction of
         // the dialogue and in no line, no item and no task — the Ämter lexis the learner produces is
         // `das Amt`, `die Post`, `das Formular`, `ausfüllen`.
-        { de: 'die Post', word: 'Post', article: 'die', plural: '—', en: 'post office', wordId: '1897eb9b-5393-490d-aebf-c52080c2ec7d' },
+        { de: 'die Post', word: 'Post', article: 'die', plural: '—', en: 'post, mail (also: the post office)', wordId: '1897eb9b-5393-490d-aebf-c52080c2ec7d' },
       ],
       dialog: {
         title: 'Am Schalter im Bürgerbüro',
@@ -1000,7 +1001,7 @@ export const CURRICULUM_A11 = {
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: er, sie, es', de: 'Teil 2: er, sie, es' }],
             { en: 'Part 1: Ana’s message', de: 'Teil 1: Anas Nachricht' },
             // „Woher …?" is Lektion 2's question; this Lektion gives it „deine Eltern" (DaF review 2026-11-19).
-            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lektion 2', de: 'die Szene von Lektion 2' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lesson 2', de: 'die Szene von Lektion 2' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
           ],
         },
@@ -1089,7 +1090,7 @@ export const CURRICULUM_A11 = {
         formExamples: ['Das Kind ist jung. Es spricht Deutsch.', 'Wir sprechen Deutsch. Sprecht ihr auch Deutsch?'],
         title: 'er, sie, es – die Personalpronomen',
         bodyDe: 'Pronomen richten sich normalerweise nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Bei bekannten Personen ist auch er oder sie möglich. Das Kind heißt Paul. Er ist zwei. Plural: **wir**, **ihr**, **sie**. Höflich: **Sie** mit großem S (eine/mehrere Personen). Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
-        bodyEn: 'Normally a pronoun follows the noun’s article: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. A known person can also be referred to with er/sie. Example: Das Kind heißt Paul. Er ist zwei. For several people: **wir**, **ihr**, **sie**. Polite **Sie** has a capital S and addresses one person or several. **sprechen** changes its vowel: er **spricht** — more in Lektion 7.',
+        bodyEn: 'Normally a pronoun follows the noun’s article: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. A known person can also be referred to with er/sie. Example: Das Kind heißt Paul. Er ist zwei. For several people: **wir**, **ihr**, **sie**. Polite **Sie** has a capital S and addresses one person or several. **sprechen** changes its vowel: er **spricht** — more in Lesson 7.',
         // Arabic help: Codex's Modern Standard Arabic from bodyEn, re-derived 2026-11-19 after the marking fixes rewrote the English, checked by a blind back-translation.
         bodyAr: 'نختار الضمير عادةً حسب أداة الاسم الذي يأخذ الضمير مكانه: der Bruder → er، die Schwester → sie، das Kind → es. ويمكن أيضًا استخدام er/sie للإشارة إلى شخص معروف. مثال: «Das Kind heißt Paul». «Er ist zwei». لأكثر من شخص، استخدم wir، وihr، وsie. أما Sie بحرف S كبير، فتُستخدم بصيغة الاحترام لمخاطبة شخص واحد أو عدة أشخاص. يتغيّر حرف العلة في جذر الفعل sprechen: er spricht. المزيد في Lektion 7.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
@@ -1409,7 +1410,7 @@ export const CURRICULUM_A11 = {
           titleEn: 'Tim’s room',
           instructionDe: 'Tim schickt Lena ein Foto und schreibt. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Tim sends Lena a photo and writes to her. Read the message. Tap a word for its meaning.',
-          text: 'Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim',
+          text: 'Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier, ein Buch und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim',
           questions: [
             {
               promptDe: 'Welche Farbe hat die Tür in Tims Zimmer? Wählen Sie die richtige Antwort.',
@@ -1474,8 +1475,8 @@ export const CURRICULUM_A11 = {
             to: 8, meaningLines: '8e5444c0',
             meaning: {
               promptDe: 'Was sagt Tim über das Heft? Wählen Sie die Bedeutung.',
-              promptEn: 'What does Tim say about the notebook? Choose the meaning.',
-              options: ['It is red, just as Lena thinks.', 'It is not red but green.', 'It is not his notebook at all.'],
+              promptEn: 'What does Tim say about the exercise book? Choose the meaning.',
+              options: ['It is red, just as Lena thinks.', 'It is not red but green.', 'It is not his exercise book at all.'],
               answer: 'It is not red but green.',
             },
             say: {
@@ -1564,7 +1565,7 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'das Buch', word: 'Buch', article: 'das', plural: 'Bücher', en: 'book', wordId: '1b45946d-ed74-4e8a-b8e3-78f27639e657' },
-        { de: 'das Heft', word: 'Heft', article: 'das', plural: 'Hefte', en: 'notebook', wordId: 'b1e6ebea-f728-41ae-82b5-74630aa2d463' },
+        { de: 'das Heft', word: 'Heft', article: 'das', plural: 'Hefte', en: 'exercise book', wordId: 'b1e6ebea-f728-41ae-82b5-74630aa2d463' },
         { de: 'der Stift', word: 'Stift', article: 'der', plural: 'Stifte', en: 'pen', wordId: 'de4bcb35-dabf-4017-84c9-c6910a82e774' },
         { de: 'der Bleistift', word: 'Bleistift', article: 'der', plural: 'Bleistifte', en: 'pencil', wordId: '857849c9-5da7-411c-bc9c-0b5766694014' },
         { de: 'der Kugelschreiber', exampleDe: 'Der Kugelschreiber ist blau.', word: 'Kugelschreiber', article: 'der', plural: 'Kugelschreiber', en: 'ballpoint pen', wordId: 'd862aa1f-12c2-4ea1-9479-529b82466b82' },
@@ -1581,7 +1582,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Wohnung', exampleDe: 'Die Wohnung ist hier.', word: 'Wohnung', article: 'die', plural: 'Wohnungen', en: 'flat, apartment', wordId: 'd46d546b-f0f1-4cab-818e-0e99a09b355d' },
         { de: 'der Schlüssel', word: 'Schlüssel', article: 'der', plural: 'Schlüssel', en: 'key', wordId: '1b3689de-3eee-4947-8ddd-c1b4fcada95b' },
         { de: 'das Bild', word: 'Bild', article: 'das', plural: 'Bilder', en: 'picture', wordId: '358ec9f0-c571-453a-a5c5-7e88ef81d1b8' },
-        { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'color', field: true, wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
+        { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'colour', field: true, wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
         { de: 'rot', word: 'rot', article: null, plural: null, en: 'red', wordId: 'fd89afcf-f470-4427-8ab4-d88fb9d35c06' },
         { de: 'blau', word: 'blau', article: null, plural: null, en: 'blue', wordId: 'f5d65f53-08bd-40ec-b859-16ebe6143ba8' },
         { de: 'grün', word: 'grün', article: null, plural: null, en: 'green', wordId: 'a86cb4d8-541f-4335-bff1-150dac102f32' },
@@ -1602,8 +1603,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Die Schere ist hier. Das Lineal auch.', en: 'The scissors are here. The ruler too.' },
           { speaker: 'Lena', de: 'Ist der Stift blau oder schwarz?', en: 'Is the pen blue or black?' },
           { speaker: 'Tim', de: 'Der Stift ist blau, der Bleistift ist gelb.', en: 'The pen is blue, the pencil is yellow.' },
-          { speaker: 'Lena', de: 'Und das Heft? Ist es rot?', en: 'And the notebook? Is it red?' },
-          { speaker: 'Tim', de: 'Nein, das Heft ist grün.', en: 'No, the notebook is green.' },
+          { speaker: 'Lena', de: 'Und das Heft? Ist es rot?', en: 'And the exercise book? Is it red?' },
+          { speaker: 'Tim', de: 'Nein, das Heft ist grün.', en: 'No, the exercise book is green.' },
           // Zimmer, Schlüssel and Bild were flashcards only; the last two lines bring them into the
           // input, which is what the Wohnen can-do needs (DaF review #2, L5 and §A).
           // `die Farbe` is a FIELD of the graded Formular of this Lektion („Farbe: grün“) and stood
@@ -1795,9 +1796,9 @@ export const CURRICULUM_A11 = {
           ],
           repeat: [
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ein, eine', de: 'Teil 2: ein, eine' }],
-            { en: 'the scene of Lektion 1', de: 'die Szene von Lektion 1' },
+            { en: 'the scene of Lesson 1', de: 'die Szene von Lektion 1' },
             { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
-            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lektion 5', de: 'die Szene von Lektion 5' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lesson 5', de: 'die Szene von Lektion 5' }],
           ],
         },
       },
@@ -1875,7 +1876,7 @@ export const CURRICULUM_A11 = {
         formExamples: ['kaufen: Ich kaufe ein Handy.'],
         title: 'ein, eine – der unbestimmte Artikel',
         bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
-        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
+        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lesson 8.',
         // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
         bodyAr: 'عند ذكر شيء جديد أو غير معروف بعد، استخدم أداة النكرة: ein مع الأسماء التي تأخذ der أو das (ein Computer)، وeine مع الأسماء التي تأخذ die (eine Lampe). بعد أفعال مثل brauchen (يحتاج)، haben (لديه)، kaufen (يشتري)، تتحول ein مع الاسم المذكر إلى einen: «Ich brauche einen Computer». ستتعلّم سبب هذا التغيير عند دراسة حالة النصب (Akkusativ) في A1.2؛ اتبع هذه الصيغة الآن. للتعبير عن «لا … أيّ» أو «ليس … أيّ» أمام اسم، استخدم kein: «Wir haben kein Handy». ستتعلّم عبارة الوقت um eins (في الساعة الواحدة) في Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
@@ -2256,12 +2257,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: 'a08f2c99',
+            to: 10, meaningLines: '485a3023',
             meaning: {
               promptDe: 'Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena say about Wednesday? Choose the meaning.',
-              options: ['She is at the doctor’s.', 'She is free all day.', 'She is at work.'],
-              answer: 'She is at the doctor’s.',
+              options: ['She has no time.', 'She is free all day.', 'She is free in the evening.'],
+              answer: 'She has no time.',
             },
             say: {
               line: 9,
@@ -2405,7 +2406,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
           // Samstag and Sonntag came over from L7 with the rest of the week but appeared in no line,
           // no item and no task of L8 — the week was a set on paper only (DaF review #3).
-          { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Freitag, Samstag und Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Friday, Saturday and Sunday I am free!' },
+          { speaker: 'Lena', de: 'Am Mittwoch nicht. Am Freitag, Samstag und Sonntag habe ich frei!', en: 'Not on Wednesday. On Friday, Saturday and Sunday I am free!' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann', 'Um wie viel Uhr', 'Entschuldigung, wie spät'] },
@@ -2413,7 +2414,7 @@ export const CURRICULUM_A11 = {
         formExamples: ['Der Termin ist um Viertel nach acht.', 'Es ist acht Uhr dreißig.'],
         title: 'um, am – die Uhrzeit sagen',
         bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Aber: Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**, vierzehn Uhr dreißig. **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
-        bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lektion 9.',
+        bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lesson 9.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
         bodyAr: 'لقول متى يحدث شيء، نستخدم um مع الساعة: um acht Uhr. أمّا لقول كم الساعة، فلا نستخدم um: «Es ist acht Uhr». مع يوم من أيام الأسبوع، نستخدم am: am Montag. في الكلام اليومي: Viertel nach acht (8.15)، Viertel vor neun (8.45)، halb neun (8.30)، وليس 9.30! تستخدم جداول المواعيد والإذاعة نظام 24 ساعة، الساعة + Uhr + الدقائق: acht Uhr dreißig، vierzehn Uhr dreißig (14.30). للسؤال: «Wie spät ist es?». نتعلّم «Hast du Zeit?» في هذه المرحلة كعبارة ثابتة؛ ويأتي haben في Lektion 9.',
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
@@ -2532,12 +2533,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8, meaningLines: '92e1eb61',
+            to: 8, meaningLines: 'c7826f5c',
             meaning: {
-              promptDe: 'Paul hat auch Tee, Bier, Wein und Orangensaft. Was sagt Ana? Wählen Sie die Bedeutung.',
-              promptEn: 'Paul also has tea, beer, wine and orange juice. What does Ana say? Choose the meaning.',
-              options: ['Yes, please: she orders a glass of wine.', 'No, thank you: tomorrow she will have breakfast here.', 'No, thank you: she would like the bill.'],
-              answer: 'No, thank you: tomorrow she will have breakfast here.',
+              promptDe: 'Was kommt sofort? Wählen Sie die Bedeutung.',
+              promptEn: 'What is coming right away? Choose the meaning.',
+              options: ['Coffee and cake, but no water.', 'Coffee, water and cake.', 'Tea, water and soup.'],
+              answer: 'Coffee, water and cake.',
             },
             say: {
               line: 7,
@@ -2545,12 +2546,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: '8962f100',
+            to: 10, meaningLines: '5d60ab9c',
             meaning: {
-              promptDe: 'Was sagt Paul? Wählen Sie die Bedeutung.',
-              promptEn: 'What does Paul say? Choose the meaning.',
-              options: ['A cup of coffee and a cake are coming right away.', 'He is sorry: there is no cake today.', 'The coffee will take another twenty minutes.'],
-              answer: 'A cup of coffee and a cake are coming right away.',
+              promptDe: 'Wann hat das Café auch Bier und Wein? Wählen Sie die Bedeutung.',
+              promptEn: 'When does the café have beer and wine too? Choose the meaning.',
+              options: ['In the afternoon.', 'In the evening.', 'In the morning.'],
+              answer: 'In the evening.',
             },
             say: {
               line: 9,
@@ -2667,15 +2668,17 @@ export const CURRICULUM_A11 = {
           { speaker: 'Paul', de: 'Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', en: 'Are you hungry too? We have soup, salad and cake.' },
           { speaker: 'Ana', de: 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.', en: 'Yes, I am hungry. I would like cake, please.' },
           { speaker: 'Paul', de: 'Möchten Sie auch Wasser?', en: 'Would you like water as well?' },
-          // Eight of the 23 Wortfeld entries of the Café-Lektion were ordered by nobody: Bier,
-          // Mineralwasser, Orangensaft, Tasse, Kellnerin, essen, Brot, Frühstück (and Wein).
-          // The closing four lines carry them instead of repeating Wasser and Tee (DaF review #3).
+          // Eight of the 23 Wortfeld entries of the Café-Lektion were ordered by nobody (DaF review #3); the closing
+          // lines carry them. Since 2026-11-25 the waiter brings all three things Ana ordered, the guest asks for what
+          // she does not see („Haben Sie …?“, the third can-do), and nobody plans breakfast aloud (the Claude score:
+          // the waiter forgot the water, „ein Kuchen“ is a whole cake, „Morgen esse ich hier zum Frühstück Brot“ was
+          // a word list).
           { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte.', en: 'Yes, a glass of mineral water, please.' },
-          { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier, Wein und Orangensaft.', en: 'Gladly. We also have tea, beer, wine and orange juice.' },
-          { speaker: 'Ana', de: 'Nein, danke. Morgen esse ich hier zum Frühstück Brot.', en: 'No, thank you. Tomorrow I’ll have bread here for breakfast.' },
-          { speaker: 'Paul', de: 'Gut. Eine Tasse Kaffee und ein Kuchen kommen sofort.', en: 'Good. A cup of coffee and a cake are coming right away.' },
+          { speaker: 'Paul', de: 'Gern! Eine Tasse Kaffee, ein Glas Wasser und Kuchen. Das kommt sofort.', en: 'Gladly! A cup of coffee, a glass of water and cake. That is coming right away.' },
+          { speaker: 'Ana', de: 'Danke! Haben Sie auch Brot zum Frühstück?', en: 'Thank you! Do you have bread for breakfast too?' },
+          { speaker: 'Paul', de: 'Ja, mit Tee oder Orangensaft. Abends haben wir auch Bier und Wein.', en: 'Yes, with tea or orange juice. In the evening we have beer and wine too.' },
           // Ana answers the waiter with one more order (third score, 2026-11-22: „Zum Frühstück trinke ich immer …“ answered nothing).
-          { speaker: 'Ana', de: 'Danke! Das Café ist sehr gut.', en: 'Thank you! The café is very good.' },
+          { speaker: 'Ana', de: 'Danke! Das Café ist gut. Morgen esse ich hier.', en: 'Thank you! The café is good. Tomorrow I will eat here.' },
         ],
       },
       pretest: {
@@ -2768,7 +2771,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4, meaningLines: '8d7cde6a',
+            to: 4, meaningLines: '7b992c57',
             meaning: {
               promptDe: 'Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Schmidt say about the train? Choose the meaning.',
@@ -2781,12 +2784,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6, meaningLines: 'ac62ddaf',
+            to: 6, meaningLines: 'f6ddabb0',
             meaning: {
               promptDe: 'Was kostet die Fahrkarte? Wählen Sie die Antwort.',
               promptEn: 'How much is the ticket? Choose the answer.',
-              options: ['Twenty euros.', 'Fifteen euros.', 'Fifty euros.'],
-              answer: 'Fifteen euros.',
+              options: ['A hundred euros.', 'Ninety euros.', 'Nineteen euros.'],
+              answer: 'Ninety euros.',
             },
             say: {
               line: 4,
@@ -2794,12 +2797,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8, meaningLines: '59555bf2',
+            to: 8, meaningLines: '1e572b9d',
             meaning: {
               promptDe: 'Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.',
               promptEn: 'Does the train go to Switzerland? Choose the meaning.',
-              options: ['Yes, it leaves right here, from platform four.', 'No, only the bus goes to Switzerland.', 'Yes, but Ana has to change at platform five first.'],
-              answer: 'Yes, it leaves right here, from platform four.',
+              options: ['Yes, it leaves from platform four.', 'No, you have to change in Cologne.', 'No, only the bus goes to Switzerland.'],
+              answer: 'No, you have to change in Cologne.',
             },
             say: {
               line: 6,
@@ -2807,12 +2810,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: '8e18ca54',
+            to: 10, meaningLines: '2a40e3d7',
             meaning: {
               promptDe: 'Was sagt die Durchsage? Wählen Sie die Bedeutung.',
               promptEn: 'What does the announcement say? Choose the meaning.',
-              options: ['The train is on time; please board at platform four.', 'The train is cancelled; please take the bus.', 'The train is delayed; please change at platform five.'],
-              answer: 'The train is delayed; please change at platform five.',
+              options: ['The train is on time.', 'The train is cancelled.', 'The train is delayed.'],
+              answer: 'The train is delayed.',
             },
             say: {
               line: 8,
@@ -2862,7 +2865,7 @@ export const CURRICULUM_A11 = {
           repeat: [
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: yes/no questions (Fährt der Zug …?)', de: 'Teil 2: Ja/Nein-Fragen (Fährt der Zug …?)' }],
             [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
-            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Lektion 8, Part 2: telling the time', de: 'Lektion 8, Teil 2: die Uhrzeit sagen' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Lesson 8, Part 2: telling the time', de: 'Lektion 8, Teil 2: die Uhrzeit sagen' }],
             [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
           ],
         },
@@ -2920,24 +2923,20 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Entschuldigung, fährt der Zug nach Österreich?', en: 'Excuse me, does the train go to Austria?' },
           { speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr von Gleis vier.', en: 'Yes, the train leaves at nine o’clock from platform four.' },
           { speaker: 'Ana', de: 'Hat der Zug Verspätung?', en: 'Is the train delayed?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
-          { speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
+          // Arrival and price fit the trip (the Claude score, 2026-11-25: Bremen to Austria in three hours for fifteen euros).
+          { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich. Die Ankunft ist abends um acht.', en: 'No, it is on time. The arrival is at eight in the evening.' },
+          { speaker: 'Ana', de: 'Kostet die Fahrkarte hundert Euro?', en: 'Does the ticket cost a hundred euros?' },
+          { speaker: 'Herr Schmidt', de: 'Nein, sie kostet neunzig Euro.', en: 'No, it costs ninety euros.' },
           // One question, one answer: the line asked about the bus to Switzerland and the platform at once
-          // (independent score, 2026-11-22). The timetable says no bus goes there; the train does. The line keeps
-          // „in die Schweiz“, the direction A1.2 builds on (its RULE 29).
+          // (independent score, 2026-11-22). The line keeps „in die Schweiz“, the direction A1.2 builds on (its RULE 29),
+          // and its answer is the reason to change trains (2026-11-25: nobody changes because a train is late).
           { speaker: 'Ana', de: 'Fährt der Zug auch in die Schweiz?', en: 'Does the train go to Switzerland too?' },
-          // A platform is far or near, and Ana asks it (third score and its review: „Die Abfahrt ist nicht weit“, „Die
-          // Schweiz ist weit“ answered nothing).
-          { speaker: 'Herr Schmidt', de: 'Ja. Die Abfahrt ist von Gleis vier, die Ankunft ist um zwölf.', en: 'Yes. The departure is from platform four, the arrival is at twelve.' },
-          // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
-          // had no announcement to understand. The announcement is read out by the man at the counter
-          // rather than given its own speaker, because a dialogue has exactly two speakers
-          // (scripts/validate-curriculum.mjs RULE 5). It is now the dictation line (review #2, L10, §A).
-          // No question is left open before the announcement (the review of 46c7ca80): line 8 gives the arrival, and
-          // Ana sees the platform is near. Ten lines is the dialogue's maximum, and the dictation line keeps its ten words.
-          { speaker: 'Ana', de: 'Danke! Gleis vier ist nicht weit.', en: 'Thank you! Platform four is not far.' },
-          { speaker: 'Herr Schmidt', de: 'Durchsage: Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen!', en: 'Announcement: the train is delayed. Please change trains at platform five!' },
+          { speaker: 'Herr Schmidt', de: 'Nein. Bitte in Köln umsteigen!', en: 'No. Please change in Cologne!' },
+          // The „Durchsagen“ can-do had no announcement to understand (review #2, L10, §A). A dialogue has two speakers
+          // (RULE 5), so the man at the counter passes it on; he does not speak it as if he were the loudspeaker
+          // (the Claude score, 2026-11-25). It is the dictation line.
+          { speaker: 'Ana', de: 'Danke! Ist Gleis vier weit von hier?', en: 'Thank you! Is platform four far from here?' },
+          { speaker: 'Herr Schmidt', de: 'Nein. Hören Sie die Durchsage? Der Zug hat Verspätung!', en: 'No. Do you hear the announcement? The train is delayed!' },
         ],
       },
       pretest: {
@@ -2951,8 +2950,8 @@ export const CURRICULUM_A11 = {
         title: 'Ja/Nein-Fragen: das Verb steht vorn',
         bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du **fährst**, er **fährt**.',
         bodyEn: 'A yes/no question needs no helper word like the English "do". Just move the verb to the front: **Der Zug fährt.** (The train is leaving.) → **Fährt der Zug?** (Is the train leaving?). The answer is **ja** or **nein**, and your voice goes up at the end of the question. The verb **fahren** (to go by train, bus or car) changes its vowel in two forms: du **fährst**, er **fährt**.',
-        bodyAr: 'لا يحتاج سؤال نعم/لا إلى كلمة مساعدة مثل do في الإنجليزية. فقط انقل الفعل إلى البداية: «Der Zug fährt» (القطار يغادر) → «Fährt der Zug?» (هل يغادر القطار؟). يكون الجواب ja أو nein، وترتفع نبرة صوتك في نهاية السؤال. يتغيّر حرف العلة في الفعل fahren (الذهاب بالقطار أو الحافلة أو السيارة) في صيغتين: du fährst، er fährt.',
-        examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte zwanzig Euro?'],
+        bodyAr: 'لا يحتاج سؤال نعم/لا إلى كلمة مساعدة. فقط انقل الفعل إلى البداية: «Der Zug fährt» (القطار يغادر) → «Fährt der Zug?» (هل يغادر القطار؟). يكون الجواب ja أو nein، وترتفع نبرة صوتك في نهاية السؤال. يتغيّر حرف العلة في الفعل fahren (الذهاب بالقطار أو الحافلة أو السيارة) في صيغتين: du fährst، er fährt.',
+        examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte hundert Euro?'],
         ruleSlug: 'yes-no-questions',
       },
       phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', focusEn: 'In a yes/no question the melody rises', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Kommst du MIT?↗'] },
@@ -2993,7 +2992,7 @@ export const CURRICULUM_A11 = {
         // das ist die Regel in `src/lib/lesson/writing.js`, die MAJOR 1 „Zweitens“ bestellt.
         sample: 'Guten Tag, Frau Ramos! Der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
       },
-      // Not listening exercise 3: the final test's Hören is its first ten questions (abschlusstestA11.js), and
+      // Not listening exercise 3: the final test's Hören asks eight of its questions (abschlusstestA11.js), and
       // practising them here first would measure memory, not listening (2026-11-22).
       links: { listeningExercise: null, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
@@ -3007,18 +3006,18 @@ export const CURRICULUM_A11 = {
       guided: {
         read: {
           titleDe: 'Tims Zettel für Freitag',
-          titleEn: 'Tim\'s note for Friday',
+          titleEn: 'Tim’s note for Friday',
           instructionDe: 'Lesen Sie Tims Zettel. Tippen Sie auf ein Wort für seine Bedeutung.',
-          instructionEn: 'Read Tim\'s note. Tap a word for its meaning.',
+          instructionEn: 'Read Tim’s note. Tap a word for its meaning.',
           text: 'Wochentag: Freitag\nUm sechs Uhr aufstehen, duschen, frühstücken\nLena anrufen – noch nicht gemacht!\nUm vier Uhr Lena abholen: Sie möchte mitkommen.\nDas Wörterbuch für Lena mitbringen!\nDann einkaufen: Brot, Kaffee und Wasser. Tee habe ich schon.\nUm sieben Uhr nach Hause. Abends bin ich müde.\nLetzte Woche: jeden Tag gearbeitet. Am Sonntag: bis neun schlafen!',
           questions: [
             {
               promptDe: 'Was macht Tim um vier Uhr? Wählen Sie die Antwort.',
-              promptEn: 'What does Tim do at four o\'clock? Choose the answer.',
+              promptEn: 'What does Tim do at four o’clock? Choose the answer.',
               options: ['He calls Lena, and then they have breakfast.', 'He picks Lena up, and then they go shopping.', 'He goes home, and then he sleeps until nine.'],
               answer: 'He picks Lena up, and then they go shopping.',
               explanationDe: 'Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.',
-              explanationEn: 'The note says: pick Lena up at four o\'clock, then go shopping.',
+              explanationEn: 'The note says: pick Lena up at four o’clock, then go shopping.',
             },
             {
               promptDe: 'Was kauft Tim nicht? Wählen Sie die Antwort.',
@@ -3133,13 +3132,13 @@ export const CURRICULUM_A11 = {
             [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ich kaufe … ein', de: 'Teil 2: ich kaufe … ein' }],
-            [{ en: 'Part 2: ich stehe … auf', de: 'Teil 2: ich stehe … auf' }, { en: 'Lektion 8, Part 2: um, am', de: 'Lektion 8, Teil 2: um, am' }],
+            [{ en: 'Part 2: ich stehe … auf', de: 'Teil 2: ich stehe … auf' }, { en: 'Lesson 8, Part 2: um, am', de: 'Lektion 8, Teil 2: um, am' }],
           ],
         },
       },
       nextHook: {
         de: 'Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?',
-        en: 'Ana\'s birthday is coming up and she is planning a party. Who will she invite?',
+        en: 'Ana’s birthday is coming up and she is planning a party. Who will she invite?',
       },
       // NOT „Gestern und heute“: the title and can-do 2 promised the Perfekt, which this Lektion
       // defers to A1.2 and teaches as two fixed expressions. The Lektion is the day (review #2, L11).
@@ -3261,7 +3260,7 @@ export const CURRICULUM_A11 = {
           titleDe: 'Eine Nachricht von Mama und Papa',
           titleEn: 'A message from Mum and Dad',
           instructionDe: 'Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.',
-          instructionEn: 'Read the message from Ana\'s parents. Tap a word for its meaning.',
+          instructionEn: 'Read the message from Ana’s parents. Tap a word for its meaning.',
           series: {
             titleDe: 'Die Monate', titleEn: 'The months',
             items: [{ label: '1', de: 'Januar' }, { label: '2', de: 'Februar' }, { label: '3', de: 'März' }, { label: '4', de: 'April' }, { label: '5', de: 'Mai' }, { label: '6', de: 'Juni' }, { label: '7', de: 'Juli' }, { label: '8', de: 'August' }, { label: '9', de: 'September' }, { label: '10', de: 'Oktober' }, { label: '11', de: 'November' }, { label: '12', de: 'Dezember' }],
@@ -3270,7 +3269,7 @@ export const CURRICULUM_A11 = {
           questions: [
             {
               promptDe: 'Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.',
-              promptEn: 'Are Ana\'s parents coming to the party? Choose the answer.',
+              promptEn: 'Are Ana’s parents coming to the party? Choose the answer.',
               options: ['No, they have to work on Friday.', 'They do not know yet; the date is bad.', 'Yes, they have Friday off and are glad to come.'],
               answer: 'Yes, they have Friday off and are glad to come.',
               explanationDe: 'In der Nachricht steht: Wir kommen gern zum Fest. Am Freitag haben wir frei.',
@@ -3279,7 +3278,7 @@ export const CURRICULUM_A11 = {
             {
               promptDe: 'Was möchten Mama und Papa am Samstag machen? Wählen Sie die Antwort.',
               promptEn: 'What do Mum and Dad want to do on Saturday? Choose the answer.',
-              options: ['Invite Ana to the café as their guest.', 'Buy a present for Ana\'s brother.', 'Celebrate again at Ana\'s home.'],
+              options: ['Invite Ana to the café as their guest.', 'Buy a present for Ana’s brother.', 'Celebrate again at Ana’s home.'],
               answer: 'Invite Ana to the café as their guest.',
               explanationDe: 'In der Nachricht steht: Am Samstag möchten wir dich einladen. Du bist unser Gast im Café.',
               explanationEn: 'The message says: on Saturday we would like to invite you. You are our guest at the café.',
@@ -3306,8 +3305,8 @@ export const CURRICULUM_A11 = {
             meaning: {
               promptDe: 'Wer kommt zum Fest? Wählen Sie die Bedeutung.',
               promptEn: 'Who is coming to the party? Choose the meaning.',
-              options: ['Only Ana\'s mum is coming.', 'Ana\'s parents cannot come.', 'Ana\'s mum and dad are coming.'],
-              answer: 'Ana\'s mum and dad are coming.',
+              options: ['Only Ana’s mum is coming.', 'Ana’s parents cannot come.', 'Ana’s mum and dad are coming.'],
+              answer: 'Ana’s mum and dad are coming.',
             },
             say: {
               line: 3,
@@ -3341,7 +3340,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: 'd4c7da28',
+            to: 10, meaningLines: 'cfdd87ff',
             meaning: {
               promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say as they part? Choose the meaning.',
@@ -3406,7 +3405,7 @@ export const CURRICULUM_A11 = {
         // chunks the Lektion actually says goodbye with do.
         'Ich kann mich mit „Mach’s gut“ und „Bis bald“ verabschieden und gute Wünsche aussprechen.',
       ],
-      examTeile: ['Lesen Teil 3', 'Sprechen Teil 3', 'Schreiben Teil 2'],
+      examTeile: ['Lesen Teil 1', 'Sprechen Teil 3', 'Schreiben Teil 2'],
       grammarSlugs: ['possessive-articles', 'verb-sein', 'verb-haben'],
       primarySlug: 'possessive-articles',
       minutes: 15,
@@ -3414,7 +3413,7 @@ export const CURRICULUM_A11 = {
         { de: 'der Geburtstag', word: 'Geburtstag', article: 'der', plural: 'Geburtstage', en: 'birthday', wordId: 'c34d4cef-643f-42e3-9d9a-8c3bfcc45f36' },
         { de: 'das Datum', exampleDe: 'Das Datum: 5. Mai.', word: 'Datum', article: 'das', plural: 'Daten', en: 'date', field: true, wordId: '3efd1d54-db2c-4bf9-beb9-eb4d8a6decd1' },
         { de: 'das Alter', exampleDe: 'Mein Alter: 25.', word: 'Alter', article: 'das', plural: '—', en: 'age', field: true, wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
-        { de: 'die Mama', word: 'Mama', article: 'die', plural: 'Mamas', en: 'mom', wordId: '1b7ca804-8c61-43cd-b9cf-7f54ff536ff1' },
+        { de: 'die Mama', word: 'Mama', article: 'die', plural: 'Mamas', en: 'mum', wordId: '1b7ca804-8c61-43cd-b9cf-7f54ff536ff1' },
         { de: 'der Papa', word: 'Papa', article: 'der', plural: 'Papas', en: 'dad', wordId: 'd4facfd1-4d57-4414-a526-a67b2b4a3c43' },
         // Ehefrau/Ehemann doubled Mann/Frau from L3 and Zwilling is not in the A1 Wortliste. The months
         // are the level's one real gap: no month name appeared anywhere in the 12 Lektionen, while the
@@ -3468,7 +3467,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein. Die Gäste bringen Kuchen mit.', en: 'Yes. I am inviting my colleague too. The guests are bringing cake.' },
           { speaker: 'Lena', de: 'Was möchtest du zum Geburtstag?', en: 'What would you like for your birthday?' },
           { speaker: 'Ana', de: 'Vielleicht ein Buch. Mein Bruder kauft das Geschenk.', en: 'Maybe a book. My brother is buying the present.' },
-          { speaker: 'Lena', de: 'Deine Party ist bestimmt schön!', en: 'Your party is sure to be lovely!' },
+          { speaker: 'Lena', de: 'Eine Party im Mai! Das ist bestimmt schön!', en: 'A party in May! That is sure to be lovely!' },
           { speaker: 'Ana', de: 'Ja! Mach\'s gut, Lena. Bis bald!', en: 'Yes! Take care, Lena. See you soon!' },
         ],
       },
@@ -3532,10 +3531,10 @@ export const CURRICULUM_A11 = {
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A11['a1.1-cp1'] },
-    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A11['a1.1-cp2'] },
-    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A11['a1.1-cp3'] },
-    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A11['a1.1-cp4'] },
+    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3', assessmentPapers: 4, hoeren: HOEREN_A11['a1.1-cp1'], lesen: LESEN_A11['a1.1-cp1'] },
+    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6', assessmentPapers: 4, hoeren: HOEREN_A11['a1.1-cp2'], lesen: LESEN_A11['a1.1-cp2'] },
+    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9', assessmentPapers: 4, hoeren: HOEREN_A11['a1.1-cp3'], lesen: LESEN_A11['a1.1-cp3'] },
+    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12', assessmentPapers: 4, hoeren: HOEREN_A11['a1.1-cp4'], lesen: LESEN_A11['a1.1-cp4'] },
   ],
 };
 

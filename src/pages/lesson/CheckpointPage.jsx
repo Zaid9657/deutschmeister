@@ -40,6 +40,7 @@ import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
 import { hintText } from '../../lib/lesson/hints.js';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { localDoneIds } from '../../lib/course/localProgress.js';
+import { useScreenTitle } from '../../hooks/useScreenTitle.js';
 import {
   checkpointRunFits,
   clearCheckpointRun,
@@ -395,6 +396,7 @@ function CheckpointRun() {
     () => (curriculum?.checkpoints || []).find((c) => String(c.nr) === String(nr)) || null,
     [curriculum, nr],
   );
+  useScreenTitle(checkpoint && `${checkpoint.title} · ${curriculum.code}`, lang);
 
   const [pool, setPool] = useState(null);
   // A pool that did not load is the app's ErrorBoundary's to handle (a stale chunk reloads once,
@@ -764,7 +766,7 @@ function CheckpointRun() {
                 return (
                   <li key={item.id} className="py-4">
                     <p className="font-bold" lang="de">{item.promptDe}</p>
-                    {item.text && <p className="mt-2 whitespace-pre-line rounded-clay bg-paper-sunk p-3 text-sm leading-relaxed text-ink" lang="de">{item.text}</p>}
+                    {(item.text || item.kind === 'listenChoice') && <p className="mt-2 whitespace-pre-line rounded-clay bg-paper-sunk p-3 text-sm leading-relaxed text-ink" lang="de">{item.text || item.audioText}</p>}
                     <p className="mt-1 text-sm">{t('practice.yourAnswer', lang)}: <span lang="de">{feedback.answer}</span></p>
                     <p className={`mt-1 flex items-center gap-2 text-sm font-bold ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
                       {feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}

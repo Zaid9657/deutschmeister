@@ -470,7 +470,8 @@ corpora (first scores in each batch's section above); Lektion 1 was finished wit
 - **Can-do honesty.** `guided.check.shown` holds the check's own line wherever its turns prove less than the can-do says (12 lines). The check summary, the recap and the course home's finished Lektion use it (`shownLines`).
 - **Who Frau Kaya is (decided by the courses session, 2026-11-23):** only the L1 hostel receptionist, as the cast sheet says; the gesiezt colleague of L10 and L12 is Frau Ramos, and the L6/L12 boss examples name Frau Berg. Since 2026-11-24 the L3 politeness item (`extra-a11-l03-08`) asks Herr Weber and the final test's Lesen Teil 2 names Ana, so in A1.1 Frau Kaya appears only in Lektion 1 and on the cast sheet.
 - **Waiting on Zaid:**
-  - whether the 28-day plan's Tag 5 and Tag 21 should keep listening exercise 3, the final test's Hören;
+  - ~~whether the 28-day plan's Tag 5 and Tag 21 should keep listening exercise 3, the final test's Hören~~ (Loop round 2: no day of the
+    plan opens it any more; to be confirmed);
   - whether the tasks behind the 6 teacher-wrong answers graded correct should ask for digits or a full sentence.
 
 ## Loop round 1 (2026-11-24/25): the marking of natural answers, and everything a learner meets around it
@@ -520,3 +521,36 @@ The sound lines' texts changed („Möchte“ → „möchte“ and others), so 
 
 **Dialogue lines changed in this round** (for the recording): Lektion 7 line 8 „Nein, ich tanze nicht gut. Meine Freundin Ana tanzt gern.“;
 Lektion 12 line 3 „Der Mai ist ein schöner Monat! Kommt deine Mama auch?“; three new lists (`read-series` in L2, L4, L12).
+
+## Loop round 2 (2026-11-25): checkpoints that measure transfer, the final test, the dialogues before recording, resume and screens
+
+**The checkpoints of A1.1 ask nothing the learner has met.** Before, all 36 dictations and 24 read-alouds were scene lines, no listening
+item had a new text, and "every word of the statement stands in the text → Richtig" passed 11 of 16 reading papers. Now each checkpoint has
+four authored papers and a retake takes the next one, so nothing repeats:
+
+- **Hören** (`a11.hoeren.js`): per paper two new dictations, three heard texts with a question and three answers, and two new lines to
+  read aloud. Gate: `scripts/a11-hoeren-check.mjs` (words taught by then, no sentence of the course, no answer by place, length or order of
+  mention, disjoint answer sets). The heard text is printed in the feedback after the whole part.
+- **Lesen** (`a11.lesen.js`, rewritten): two statements and two questions per paper. Declared shortcuts, each alone at most 18 of 32
+  statements or 16 of 32 questions, and no pair of them passes more than 5 of 16 papers; the Richtig/Falsch pattern varies.
+- **Sprachbausteine and Schreiben** (`a11.assessment.js`): 128 reserved tasks, never served in practice. In checkpoints 2–4 two of the six
+  Bausteine come from an earlier chapter. A reserved gap may not be printed elsewhere on its paper.
+- All 304 units were solved blind by Codex, without keys, from what is printed (`tests/fixtures/a11-hoeren-review.json`,
+  `a11-lesen-review.json`); a unit whose text changes has to be reviewed again.
+- **Rules from the findings:** a colloquial time is a full hour, a quarter or a half (`untaughtColloquialTime`); a yes/no question to build
+  says where the verb stands, not which form opens it (`verbFirstCue`); numbers and months of a shown series count as taught (`seriesWords`).
+
+**Final test.** The Hören part uses the questions of the same recording that need no untaught word (2, 3, 4, 6, 11, 13, 14, 15; no database change);
+eight new reading items that are not solved by matching digits, days or words; the English of every task beside the German; a warning
+before handing in with open tasks. No day of the 28-day plan opens the test's recording.
+
+**Dialogue lines changed (before the recording):** L8 line 10; L9 lines 7–10; L10 lines 4, 5, 6, 8, 9, 10; L12 line 9. Their exact words are
+in `src/data/curricula/a11.js`; the recording plan (`generate-course-audio.mjs`) has them, and 112 new clips for the checkpoints (28 each).
+
+**Final check.** A refresh keeps the turn (verdicts and the chosen person only, never an answer). A thing is no first name and a word said
+twice is no name („Ich heiße Banane“, „Banane Banane“ → not confirmed); a made-up activity („Fußballen“) is not praised. „Und Sie, Frau Kaya?“
+for „Und Ihnen?“ stays accepted on purpose: it is common German.
+
+**Screens.** Every course screen names itself in the tab and sets the document language (`useScreenTitle`); the skip link follows
+Deutsch-Modus; German explanations are sentences (no „→“, „+“, „...“ for words, no English word explaining a German one); the English of the
+course says lesson, colour, mum and exercise book.

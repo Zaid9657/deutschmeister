@@ -8,7 +8,7 @@ import { scoreWriting, leitpunktSatisfied, foldWord } from '../src/lib/lesson/wr
 import { planFor } from '../src/lib/course/plan.js';
 
 test('derived tiles explicitly request the original dialogue order in both instruction languages', () => {
-  for (const [nr, attempt] of [[11, 1], [12, 3]]) {
+  for (const [nr, attempt] of [[10, 1], [11, 3]]) {
     const lektion = CURRICULUM_A11.lektionen.find((l) => l.nr === nr);
     const item = derivedItems(lektion, attempt).find((i) => i.type === 'word_order');
     assert.equal(item.answer, lektion.dialog.lines[item.lineIndex].de);

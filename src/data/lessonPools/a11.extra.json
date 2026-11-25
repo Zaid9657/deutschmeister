@@ -211,7 +211,7 @@
    "options": null,
    "answer": "ist",
    "accepted": ["ist"],
-   "explanationDe": "Meine Telefonnummer = sie: sie ist.",
+   "explanationDe": "„Meine Telefonnummer“ ist so viel wie „sie“: sie ist.",
    "hint": null
   },
   {
@@ -466,7 +466,7 @@
    "options": null,
    "answer": "Sie",
    "accepted": ["Sie", "sie"],
-   "explanationDe": "Für mehrere Personen steht sie: die Eltern → sie.",
+   "explanationDe": "Für mehrere Personen steht „sie“.",
    "hint": null
   },
   {
@@ -1273,7 +1273,7 @@
    "difficulty": 2,
    "order": 203,
    "questionDe": "Hier sind ein Buch und ein Heft. ___ Buch ist rot. (bestimmter Artikel)",
-   "questionEn": "Here are a book and a notebook. The book is red.",
+   "questionEn": "Here are a book and an exercise book. The book is red.",
    "options": null,
    "answer": "Das",
    "accepted": ["Das", "das"],
@@ -1952,7 +1952,7 @@
    "options": null,
    "answer": "hat",
    "accepted": ["hat"],
-   "explanationDe": "sie (die Kellnerin) → hat.",
+   "explanationDe": "„Die Kellnerin“ ist so viel wie „sie“: sie hat.",
    "hint": null
   },
   {
@@ -1967,7 +1967,7 @@
    "options": null,
    "answer": "Hast",
    "accepted": ["Hast", "hast"],
-   "explanationDe": "du → hast: Hast du Hunger?",
+   "explanationDe": "Zu „du“ gehört „hast“: Hast du Hunger?",
    "hint": null
   },
   {
@@ -2447,7 +2447,7 @@
    "options": null,
    "answer": "Ich habe gestern gearbeitet.",
    "accepted": ["Ich habe gestern gearbeitet.", "Ich habe gestern gearbeitet"],
-   "explanationDe": "habe + gearbeitet ist ein fester Ausdruck für gestern.",
+   "explanationDe": "„Ich habe … gearbeitet“ ist ein fester Ausdruck für gestern.",
    "hint": null
   },
   {

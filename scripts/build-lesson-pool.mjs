@@ -129,7 +129,7 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts, taskConstraintsEn,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue, verbFirstCue, namedRepairAccepts, taskConstraintsEn,
   middleFieldAcceptedForms, englishEchoesGerman, fullSentenceDe,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
@@ -296,6 +296,19 @@ raw.forEach(repairFrontedOrder);
 // `answer`/`accepted` are never touched.
 const openingCued = [];
 function repairOpeningCue(item) {
+  // A1.1: the opening of a yes/no question is the tested verb, so its cue is the verb's place. (A1.2's
+  // banks were reviewed with their openings; its build keeps them.)
+  if (level === 'a1.1') {
+    const place = verbFirstCue(item);
+    if (place !== null) {
+      if (place) {
+        const prompt = String(item.questionDe).replace(/\s*\(Beginnen Sie mit „[^“]*“\)/, '');
+        item.questionDe = /:\s*\[/.test(prompt) ? prompt.replace(/:\s*(?=\[)/, ` ${place}: `) : `${prompt} ${place}`;
+        openingCued.push({ id: item.id, questionDe: item.questionDe });
+      }
+      return;
+    }
+  }
   // Live Batch 1 cues every statement/question; X-041's narrower detector
   // still guards object shapes without treating two constituents as one.
   const opening = missingOpeningCue(item, { allStatements: true });
@@ -517,9 +530,8 @@ const { kept, excluded, counts } = filterPool(raw, { level });
  * ignored: a stale entry here would otherwise outlive the item it is about.
  */
 const ACCEPTED_EXTRAS_BY_LEVEL = {
-  'a1.1': {
-    '827c155d-7b87-53a3-b047-d53ab532f296': ['zwanzig nach sechs', 'sechs Uhr zwanzig', 'zwanzig nach 6'],
-  },
+  // Its one entry („18:20, umgangssprachlich“) went with the item: the course teaches only halb and Viertel (quality.js, 2026-11-25).
+  'a1.1': {},
 };
 
 /** The widenings for the level being built — an id is only ever in one level. */
@@ -866,10 +878,11 @@ let extra = [];
 if (existsSync(extraUrl)) {
   const parsed = JSON.parse(readFileSync(extraUrl, 'utf8'));
   extra = Array.isArray(parsed) ? parsed : parsed.items || [];
-  if (level === 'a1.2') {
-    const { ASSESSMENT_A12 } = await import('../src/data/lessonPools/a12.assessment.js');
-    extra.push(...ASSESSMENT_A12.map((item) => structuredClone(item)));
-  }
+  // The checkpoints' reserved tasks: in the pool, but no practice or remediation draw may serve them.
+  const reserved = level === 'a1.2'
+    ? (await import('../src/data/lessonPools/a12.assessment.js')).ASSESSMENT_A12
+    : (await import('../src/data/lessonPools/a11.assessment.js')).ASSESSMENT_A11;
+  extra.push(...reserved.map((item) => structuredClone(item)));
   // REVIEW #4 BLOCKER 2: the extras go through the same gate, so they get the
   // same repair — and because the repair skips any prompt that already carries
   // a bracket, an item whose author wrote the cue by hand is untouched.

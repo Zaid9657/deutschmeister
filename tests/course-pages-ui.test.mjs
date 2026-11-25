@@ -141,7 +141,7 @@ test('a part nobody scored draws no full bar, and a guessed part is told to list
     assert.doesNotMatch(t('checkpoint.sectionGuess.hoeren', lang), /texts|Texte/, lang);
     assert.doesNotMatch(t('checkpoint.sectionGuess', lang), /texts|Texte|listen|hören Sie/, lang);
   }
-  assert.match(page, /\{item\.text && <p [^>]*>\{item\.text\}<\/p>\}/, 'the Lesen feedback prints the text it is about');
+  assert.match(page, /\{\(item\.text \|\| item\.kind === 'listenChoice'\) && <p [^>]*>\{item\.text \|\| item\.audioText\}<\/p>\}/, 'the feedback prints the text it is about, read or heard');
 });
 
 // ── labels and hints in the chrome language ─────────────────────────────────

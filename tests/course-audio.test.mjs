@@ -48,9 +48,21 @@ test('planRenders covers every dialogue line of all 12 Lektionen', () => {
   assert.equal(byKind('line').length, CURRICULUM_A11.lektionen.reduce((n, l) => n + l.dialog.lines.length, 0));
 });
 
-test('the checkpoint dictation lines need no separate render — they ARE dialogue lines', () => {
-  // buildCheckpoint.dialogLines() flattens lektion.dialog.lines with their index,
-  // so the `line-<i>` keys above already cover every checkpoint Hören item.
+test('a Lektion dictates and reads aloud its dialogue lines; a checkpoint speaks its own bank, planned by its words', () => {
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const clips = plan.filter((e) => e.lektionId === cp.id);
+    assert.equal(clips.length, 28, `${cp.id}: four papers of two dictations, three texts and two lines to read aloud`);
+    for (const paper of cp.hoeren.papers) for (const u of [...paper.say, ...paper.hear, ...paper.read]) {
+      const entry = clips.find((e) => e.key === textKey(u.de || u.text));
+      assert.ok(entry, `${u.id} is not planned`);
+      assert.equal(entry.text, u.de || u.text);
+      assert.equal(entry.path, `course/a1.1/${cp.id}/${entry.key}.mp3`);
+      if (u.voice) assert.equal(entry.voice, u.voice === 'm' ? VOICE_MALE : VOICE_FEMALE);
+      // …and the player looks exactly there: the level is the part of the id before the first hyphen.
+      assert.equal(clipFor({ [entry.key]: { url: 'https://x/cp.mp3' } }, null, entry.text), 'https://x/cp.mp3');
+      assert.equal(cp.id.split('-')[0], 'a1.1');
+    }
+  }
   for (const lektion of CURRICULUM_A11.lektionen) {
     for (const idx of lektion.hoeren?.lines || []) {
       assert.ok(

@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { CURRICULA } from '../src/data/curricula/index.js';
+import { HOEREN_A11 } from '../src/data/curricula/a11.hoeren.js';
 import { LESEN_A11 } from '../src/data/curricula/a11.lesen.js';
 import { LESEN_A12 } from '../src/data/curricula/a12.lesen.js';
 import { normalizeAnswer } from '../src/utils/answerMatch.js';
@@ -35,6 +36,7 @@ export function courseWords() {
     ...['a11', 'a12'].flatMap((lv) => JSON.parse(readFileSync(`${root}src/data/lessonPools/${lv}.json`, 'utf8')).items
       .flatMap((i) => [i.type === 'error_correction' ? null : i.questionDe, i.answer, ...(i.accepted || []), i.explanationDe])),
     ...[LESEN_A11, LESEN_A12].flatMap((bank) => Object.values(bank).flatMap((c) => c.papers.flat()).flatMap((u) => [u.text, u.statement, u.question])),
+    ...Object.values(HOEREN_A11).flatMap((c) => c.papers).flatMap((p) => [...p.say, ...p.read].map((u) => u.de).concat(p.hear.flatMap((u) => [u.text, u.question]))),
   ].filter((t) => typeof t === 'string');
   const words = new Set();
   for (const t of texts) for (const w of normalizeAnswer(t).split(/[^\p{L}]+/u)) if (w.length >= 2) words.add(w);

@@ -14,9 +14,10 @@
 //   manifest: src/data/curricula/<level>.audio.js
 //             { level, generatedAt, voices, lektionen: { [id]: { [key]: {url, sha1, voice} } } }
 //
-// The checkpoint Hören items dictate the SAME dialogue lines the Lektion does
-// (src/lib/checkpoint/buildCheckpoint.js → dialogLines()), so the `line-<i>`
-// keys already cover them — there is deliberately no separate `cp<n>-…` render.
+// A checkpoint with a listening bank (A1.1: src/data/curricula/a11.hoeren.js) speaks new sentences: its
+// dictations, heard texts and read-aloud models are planned under the checkpoint's own id, found by their
+// words (`a1.1-cp1` / `t-<hash>`, planCheckpoint below). A checkpoint without one dictates dialogue lines,
+// which the `line-<i>` keys cover.
 //
 // ONE VOICE PER CHARACTER (SPEAKER_VOICES), so every dialogue is audibly two
 // people. It used to be two voices — every woman Katja, every man Conrad — and
@@ -212,7 +213,21 @@ export function planRenders(curriculum) {
     }
   }
 
+  for (const checkpoint of (curriculum && curriculum.checkpoints) || []) out.push(...planCheckpoint(level, checkpoint));
   return out;
+}
+
+/** What a checkpoint's own papers say (authoredHoeren, authoredSprechen): a heard text in its speaker's voice. */
+export function planCheckpoint(level, checkpoint) {
+  const spoken = (checkpoint.hoeren?.papers || []).flatMap((paper) => [
+    ...paper.say.map((u) => [u.de, VOICE_DEFAULT]),
+    ...paper.hear.map((u) => [u.text, u.voice === 'm' ? VOICE_MALE : VOICE_FEMALE]),
+    ...paper.read.map((u) => [u.de, VOICE_DEFAULT]),
+  ]);
+  return spoken.map(([text, voice]) => ({
+    kind: 'say', lektionId: checkpoint.id, lektionNr: checkpoint.afterLektion, key: textKey(text), text, display: text, voice,
+    path: `course/${level}/${checkpoint.id}/${textKey(text)}.mp3`,
+  }));
 }
 
 /** Slower than RATE: a number or a time the learner writes down, and a name spelled letter by letter. */
@@ -368,7 +383,7 @@ async function main() {
   const chars = entries.filter((e) => e.kind !== 'alias').reduce((n, e) => n + e.text.length, 0);
   const cents = estimateCents(entries);
 
-  console.log(`${level}: ${entries.length - aliases} clips — ${lines} dialogue lines, ${pretests} pretest models, ${phonetik} Phonetik items, ${words} Wortfeld words, ${says} guided lines (sound models, final-check cues and answers); ${aliases} more keys reuse a clip`);
+  console.log(`${level}: ${entries.length - aliases} clips — ${lines} dialogue lines, ${pretests} pretest models, ${phonetik} Phonetik items, ${words} Wortfeld words, ${says} guided and checkpoint lines (sound models, final-check cues and answers, the checkpoints' own texts); ${aliases} more keys reuse a clip`);
   console.log(`${level}: ${chars} characters ≈ ${cents} US cents at $${USD_PER_MILLION_CHARS}/1M`);
 
   // The previous manifest is the skip ledger: same sha1 → the MP3 is already up.

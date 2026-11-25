@@ -68,6 +68,24 @@ export function scoreListeningAnswers(mock, keysByPart = {}, answers = {}) {
 }
 
 /**
+ * How many tasks of a section have no answer yet — asked before the section is handed in (an empty test was
+ * submitted without a word, browser walk of 2026-11-25). `keysByPart` as in scoreListeningAnswers; a writing
+ * task counts as one while its field is empty.
+ */
+export function openAnswers(section, answers = {}, keysByPart = {}) {
+  let open = 0;
+  const missing = (key) => { if (answers[key] === undefined || answers[key] === null || answers[key] === '') open += 1; };
+  for (const part of section?.parts || []) {
+    if (part.type === 'matching') for (const t of part.texts || []) missing(`${part.key}:${t.id}`);
+    else if (part.type === 'mc-group') for (const item of part.items || []) missing(item.id);
+    else if (part.type === 'cloze') for (const gap of part.gaps || []) missing(gap.id);
+    else if (part.type === 'listening') for (const item of keysByPart[part.key] || []) missing(`listening:${part.key}:${item.id}`);
+    else if (part.type === 'writing' && !String(answers[`writing:${part.key}`] || '').trim()) open += 1;
+  }
+  return open;
+}
+
+/**
  * Merge runtime listening results ({ score, max }) into an objective result.
  * Kept separate so the pure part stays testable without DB fixtures.
  */

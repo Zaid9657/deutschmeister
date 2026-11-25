@@ -21,6 +21,7 @@ import FloatingIntroButton from './components/FloatingIntroButton';
 import SessionTimeoutModal from './components/SessionTimeoutModal';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
 import { chromeFor } from './lib/chrome.js';
+import { useLessonLang } from './lib/lesson/lessonLang.js';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -110,8 +111,11 @@ function OutsideAdmin({ children }) {
  */
 function Shell() {
   const { pathname } = useLocation();
+  const [lessonLang] = useLessonLang();
   const chrome = chromeFor(pathname);
   const focused = chrome === 'player';
+  // Only the course speaks German on request (Deutsch-Modus); every other page of the app is English.
+  const de = lessonLang === 'de' && pathname.startsWith('/course/');
   return (
               <div className="min-h-screen bg-paper print:min-h-0 print:bg-white">
                 {/* Keyboard users land here first and can jump the nav. The SPA
@@ -120,7 +124,7 @@ function Shell() {
                   href="#main"
                   className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-ink focus:shadow-overlay focus:ring-2 focus:ring-siegel"
                 >
-                  Skip to content
+                  {de ? 'Zum Inhalt springen' : 'Skip to content'}
                 </a>
                 {!focused && <Navbar />}
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}

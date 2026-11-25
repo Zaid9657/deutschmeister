@@ -139,20 +139,20 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "a08f2c99",
+        "meaningLines": "485a3023",
         "meaning": {
           "promptDe": "Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say about Wednesday? Choose the meaning.",
           "options": [
-            "She is at the doctor’s.",
+            "She has no time.",
             "She is free all day.",
-            "She is at work."
+            "She is free in the evening."
           ],
-          "answer": "She is at the doctor’s.",
+          "answer": "She has no time.",
           "optionsDe": [
-            "Sie ist beim Arzt.",
+            "Sie hat keine Zeit.",
             "Sie ist frei.",
-            "Sie ist im Büro."
+            "Sie ist abends frei."
           ]
         },
         "say": {

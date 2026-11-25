@@ -5,7 +5,7 @@
       "titleEn": "Welcome!",
       "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the card. Tap a word for its meaning.",
-      "text": "Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.",
+      "text": "Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\nTschüss! Bis morgen!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.",
       "questions": [
         {
           "promptDe": "Was ist „Guten Tag“? Wählen Sie die Bedeutung.",
@@ -119,11 +119,11 @@
           "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say as she leaves? Choose the meaning.",
           "options": [
-            "Bye! See you tomorrow.",
+            "Goodbye!",
             "Good morning!",
             "Nice to meet you."
           ],
-          "answer": "Bye! See you tomorrow.",
+          "answer": "Goodbye!",
           "optionsDe": [
             "Auf Wiedersehen!",
             "Guten Morgen!",

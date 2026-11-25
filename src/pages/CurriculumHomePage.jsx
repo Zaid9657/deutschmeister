@@ -28,6 +28,7 @@ import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import { useLessonLang } from '../lib/lesson/strings.js';
+import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import LangToggle from '../components/lesson/LangToggle.jsx';
 import SituationScene from '../components/illustrations/SituationScene.jsx';
 
@@ -110,6 +111,7 @@ const SWAY = [0, 0.6, 1, 0.6, 0, -0.6, -1, -0.6];
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
+  useScreenTitle(null, lang); // SEO below carries the title
   const de = lang === 'de';
   const { profile, hasFullCourse, loading: subLoading } = useSubscription() || {};
   const [searchParams] = useSearchParams();

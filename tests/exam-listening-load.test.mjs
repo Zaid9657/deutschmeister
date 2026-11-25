@@ -112,6 +112,8 @@ test('the mock runner shows a retry for a failed or empty listening part, never 
   assert.match(part, /const \{ exercise, questions: allQuestions, loading, error, retry \} = useExerciseDetails\(/);
   const failure = part.match(/if \(error \|\| !exercise \|\| questions\.length === 0\) \{[\s\S]*?\n {2}\}\n/);
   assert.ok(failure, 'an error, a missing exercise and an empty question list are all a load failure');
-  assert.match(failure[0], /<Button[^>]*onClick=\{retry\}[^>]*>\s*Erneut laden\s*<\/Button>/);
+  assert.match(failure[0], /<Button[^>]*onClick=\{retry\}[^>]*>\s*\{copy\.reload\}\s*<\/Button>/);
+  assert.match(runSource, /reload: 'Erneut laden'/);
+  assert.match(runSource, /reload: 'Load again'/);
   assert.ok(part.indexOf('if (error || !exercise || questions.length === 0)') < part.indexOf('<audio ref={audioRef}'), 'checked before the audio is rendered');
 });

@@ -167,3 +167,24 @@ test('5E, cards too: no rule card shows a grammatical job sentence as a mistake 
   }
   assert.deepEqual(offenders, []);
 });
+
+// Loop round 1, item 5: the English of the course is one English — British spelling, "lesson", curly apostrophes.
+test('the English of A1.1 says lesson, colour, mum and exercise book, and its apostrophes are curly', async () => {
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  const MIXED = /\bLektion(?:en)?\b|\bcolou?r\b(?<!colour)|\bmoms?\b|\bnotebooks?\b/i;
+  const bad = [];
+  const english = (path) => /(?:En|^en|\.en)$/.test(path.replace(/\[\d+\]/g, ''));
+  const walk = (x, path) => {
+    if (typeof x === 'string') {
+      if (!english(path)) return;
+      if (MIXED.test(x)) bad.push(`${path}: ${x.slice(0, 80)}`);
+      if (/\w'\w/.test(x)) bad.push(`${path}: straight apostrophe: ${x.slice(0, 80)}`);
+    } else if (Array.isArray(x)) x.forEach((y, i) => walk(y, `${path}[${i}]`));
+    else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) walk(v, `${path}.${k}`);
+  };
+  walk(CURRICULUM_A11.lektionen, 'lektionen');
+  for (const it of POOL) for (const f of ['questionEn', 'explanationEn']) if (MIXED.test(it[f] || '')) bad.push(`${it.id}.${f}: ${it[f].slice(0, 80)}`);
+  for (const [k, v] of Object.entries(STRINGS.en)) if (MIXED.test(v)) bad.push(`strings ${k}: ${v.slice(0, 80)}`);
+  assert.deepEqual(bad, []);
+});

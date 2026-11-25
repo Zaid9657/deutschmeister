@@ -252,6 +252,19 @@ function seedVocabulary(spec, priorCurriculum) {
 }
 
 /**
+ * THE CLOSED SERIES A LEKTION SHOWS AND SAYS IN FULL (`guided.read.series`: the numbers in L2 and L4, the
+ * months in L12) — taught from that Lektion on, like its notice. The number series of L4 gives the rule of
+ * the compounds („45 ist fünf-und-vierzig") and four examples, so every compound from 21 to 99 is taught.
+ */
+const UNITS = ['ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+export function seriesWords(lektion) {
+  const words = (lektion?.guided?.read?.series?.items || []).map((i) => String(i.de).toLowerCase());
+  if (words.some((w) => UNITS.some((u) => TENS.some((t) => w === `${u}und${t}`)))) for (const u of UNITS) for (const t of TENS) words.push(`${u}und${t}`);
+  return words;
+}
+
+/**
  * Every word form a learner has met by the END of Lektion `lastNr` — the
  * knownUpTo loop of itemLexis(), stopped at one Lektion instead of kept per
  * Lektion. Returns null when the level has no lexis tables (see LEXIS_LEVELS).
@@ -271,6 +284,7 @@ export function knownUpTo(curriculum, lastNr, priorCurriculum = null) {
     // The Notice card is input the learner reads in this very Lektion, on the
     // screen before the practice items, so what it teaches counts as taught.
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
   }
   return known;
 }

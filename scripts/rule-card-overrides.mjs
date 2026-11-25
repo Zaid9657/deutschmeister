@@ -431,7 +431,7 @@ const RULE_CARD_OVERRIDES = {
       'Das Subjekt steht meist direkt nach dem Verb.',
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
-      'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
+      'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte hundert Euro?',
       'Fährt der Zug auch in die Schweiz? Hat der Zug Verspätung?',
       'English: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.',
     ].join('\n'),

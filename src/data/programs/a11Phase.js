@@ -163,7 +163,8 @@ const speakingRepeat = (id, order, minutes = 15) => ({
 // Listening — first pass (weeks 1–2), then a reuse/dictation pass (weeks 3–4)
 // -----------------------------------------------------------------------
 // A1.1 has 6 listening exercises (docs/research/audit-a1-content-2026-09-03.md
-// §3) and deep-links via the real SPA route /listening/:level/:exerciseNumber
+// §3). Number 3 is the final test's Hören, so the plan never opens it (Tag 5 and Tag 21 did until
+// 2026-11-25: the test would have measured memory). The plan deep-links via the real SPA route /listening/:level/:exerciseNumber
 // — no trailing slash, case 3 of the trailing-slash rule (a dynamic route
 // with params).
 const listening = (id, n, minutes = 15) => ({
@@ -419,7 +420,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 5',
-        items: [gLesson('verb-sein'), listening('d5-listening', 3), speaking('d5-speaking', 2), vocab('d5-vocab', A11_VOCAB_CATEGORIES.TIME)],
+        items: [gLesson('verb-sein'), listening('d5-listening', 6), speaking('d5-speaking', 2), vocab('d5-vocab', A11_VOCAB_CATEGORIES.TIME)],
       },
       {
         label: 'Tag 6',
@@ -448,7 +449,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 10',
-        items: [gReview('alphabet-pronunciation'), gReview('yes-no-questions'), reading('d10-reading', 5), listening('d10-listening', 6)],
+        items: [gReview('alphabet-pronunciation'), gReview('yes-no-questions'), reading('d10-reading', 5), listeningReuse('d10-listening', 1)],
       },
       {
         label: 'Tag 11',
@@ -486,7 +487,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 17',
-        items: [gReview('possessive-articles'), gReview('present-tense-regular'), listeningReuse('d17-listening', 1), speaking('d17-speaking', 8)],
+        items: [gReview('possessive-articles'), gReview('present-tense-regular'), listeningReuse('d17-listening', 2), speaking('d17-speaking', 8)],
       },
       {
         label: 'Tag 18',
@@ -494,7 +495,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 19',
-        items: [gLesson('time-and-dates'), listeningReuse('d19-listening', 2), vocab('d19-vocab', A11_VOCAB_CATEGORIES.COLORS), xray('d19-xray')],
+        items: [gLesson('time-and-dates'), listeningReuse('d19-listening', 4), vocab('d19-vocab', A11_VOCAB_CATEGORIES.COLORS), xray('d19-xray')],
       },
       {
         label: 'Tag 20',
@@ -502,7 +503,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 21',
-        items: [listeningReuse('d21-listening', 3, 20), vocab('d21-vocab', A11_VOCAB_CATEGORIES.DAYS, 20), xray('d21-xray', 20)],
+        items: [listeningReuse('d21-listening', 5, 20), vocab('d21-vocab', A11_VOCAB_CATEGORIES.DAYS, 20), xray('d21-xray', 20)],
       },
     ],
   },
@@ -518,15 +519,15 @@ const WEEKS = [
     days: [
       {
         label: 'Tag 22',
-        items: [listeningReuse('d22-listening', 4), vocab('d22-vocab', A11_VOCAB_CATEGORIES.PRONOUNS), xray('d22-xray'), speakingRepeat('d22-speaking', 1)],
+        items: [listeningReuse('d22-listening', 6), vocab('d22-vocab', A11_VOCAB_CATEGORIES.PRONOUNS), xray('d22-xray'), speakingRepeat('d22-speaking', 1)],
       },
       {
         label: 'Tag 23',
-        items: [readingAnzeigen('d23-reading'), listeningReuse('d23-listening', 5), vocab('d23-vocab', A11_VOCAB_CATEGORIES.YESNO), xray('d23-xray')],
+        items: [readingAnzeigen('d23-reading'), listeningReuse('d23-listening', 1), vocab('d23-vocab', A11_VOCAB_CATEGORIES.YESNO), xray('d23-xray')],
       },
       {
         label: 'Tag 24',
-        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 6), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 6)],
+        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 2), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 6)],
       },
       {
         label: 'Tag 25',

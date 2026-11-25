@@ -8,6 +8,7 @@ import { programKeyFor } from '../services/lessonService.js';
 import { getProgramCompletedAt, getProgramProgress } from '../services/programProgress';
 import { flattenCourse, isComplete, courseCertificate, courseComplete, courseHome } from '../lib/courseFlow.js';
 import { lessonDateFormat, useLessonLang } from '../lib/lesson/strings.js';
+import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import Button from '../components/ui/Button.jsx';
 import FullPageRedirect from '../components/FullPageRedirect.jsx';
 
@@ -38,6 +39,7 @@ export default function CourseCertificatePage() {
   const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
   const de = lang === 'de';
+  useScreenTitle(`${de ? 'Teilnahmebescheinigung' : 'Certificate'} ${String(level || '').toUpperCase()}`, lang);
   const [done, setDone] = useState(() => new Set());
   const [completedAt, setCompletedAt] = useState(null);
   const [loaded, setLoaded] = useState(false);

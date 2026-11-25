@@ -48,6 +48,16 @@ test('natural answers the scores saw refused or sent beyond are verified', () =>
   for (const [nr, t, answer] of [[2, 1, 'Ich komme aus syrien.'], [3, 1, 'Das ist meine mutter.'], [10, 1, 'Ich fahre nach berlin.'], [11, 5, 'Ich arbeite am montag.']]) assert.equal(typedResult(at(nr, t), answer), RESULT.TYPO, answer);
 });
 
+test('a thing is no first name, a word said twice is no name, and a made-up activity is not praised', () => {
+  for (const [nr, t, answer] of [[1, 2, 'Ich heiße Banane.'], [1, 2, 'Mein Name ist Mango.'], [6, 4, 'Banane Banane.'], [6, 4, 'Omar Omar'], [7, 1, 'Mein Hobby ist Fußballen.'], [7, 2, 'Ich gehe gern Fußballen.']]) {
+    assert.equal(typedResult(at(nr, t), answer), BEYOND, `${nr}.${t} ${answer}`);
+  }
+  // A surname may be a thing („Anna Vogel"), and so may the name after Frau or Herr.
+  for (const [nr, t, answer] of [[1, 2, 'Ich heiße Omar.'], [1, 2, 'Ich heiße Anna Vogel.'], [1, 2, 'Ich bin Omar Haddad.'], [6, 4, 'Haddad'], [6, 4, 'Hier ist Omar Haddad.'], [7, 1, 'Mein Hobby ist Wandern.'], [7, 1, 'Mein Hobby ist Fußball.']]) {
+    assert.equal(typedResult(at(nr, t), answer), RESULT.CORRECT, `${nr}.${t} ${answer}`);
+  }
+});
+
 test('a fault in an open gap is never praised: determiners, prepositions, places, nouns the course does not teach', () => {
   for (const [nr, t, answer] of [[7, 2, 'Ich gehe gern Kino.'], [7, 2, 'Ich gehe gern zu Kino.'], [7, 2, 'Ich gehe gern ins Park.'], [7, 2, 'Ich spiele gern mit mein Freund.'], [7, 2, 'Ich koche gern mit mein Frau.'], [7, 2, 'Ich lese gern Buch.'],
     [7, 2, 'Ich spiele gern Schwimmen.'], [7, 1, 'Ich spiele gern der Gitarre.'], [7, 1, 'Ich fahre gern mit das Fahrrad.'], [11, 3, 'Ich gehe Arbeit.'], [11, 3, 'Ich gehe Büro.'],

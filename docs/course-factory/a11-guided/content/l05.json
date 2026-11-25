@@ -5,7 +5,7 @@
       "titleEn": "Tim’s room",
       "instructionDe": "Tim schickt Lena ein Foto und schreibt. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Tim sends Lena a photo and writes to her. Read the message. Tap a word for its meaning.",
-      "text": "Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim",
+      "text": "Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier, ein Buch und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim",
       "questions": [
         {
           "promptDe": "Welche Farbe hat die Tür in Tims Zimmer? Wählen Sie die richtige Antwort.",
@@ -119,11 +119,11 @@
         "meaningLines": "8e5444c0",
         "meaning": {
           "promptDe": "Was sagt Tim über das Heft? Wählen Sie die Bedeutung.",
-          "promptEn": "What does Tim say about the notebook? Choose the meaning.",
+          "promptEn": "What does Tim say about the exercise book? Choose the meaning.",
           "options": [
             "It is red, just as Lena thinks.",
             "It is not red but green.",
-            "It is not his notebook at all."
+            "It is not his exercise book at all."
           ],
           "answer": "It is not red but green.",
           "optionsDe": [

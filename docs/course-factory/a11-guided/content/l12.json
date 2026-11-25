@@ -4,7 +4,7 @@
       "titleDe": "Eine Nachricht von Mama und Papa",
       "titleEn": "A message from Mum and Dad",
       "instructionDe": "Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.",
-      "instructionEn": "Read the message from Ana's parents. Tap a word for its meaning.",
+      "instructionEn": "Read the message from Ana’s parents. Tap a word for its meaning.",
       "series": {
         "titleDe": "Die Monate",
         "titleEn": "The months",
@@ -63,7 +63,7 @@
       "questions": [
         {
           "promptDe": "Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.",
-          "promptEn": "Are Ana's parents coming to the party? Choose the answer.",
+          "promptEn": "Are Ana’s parents coming to the party? Choose the answer.",
           "options": [
             "No, they have to work on Friday.",
             "They do not know yet; the date is bad.",
@@ -83,8 +83,8 @@
           "promptEn": "What do Mum and Dad want to do on Saturday? Choose the answer.",
           "options": [
             "Invite Ana to the café as their guest.",
-            "Buy a present for Ana's brother.",
-            "Celebrate again at Ana's home."
+            "Buy a present for Ana’s brother.",
+            "Celebrate again at Ana’s home."
           ],
           "answer": "Invite Ana to the café as their guest.",
           "explanationDe": "In der Nachricht steht: Am Samstag möchten wir dich einladen. Du bist unser Gast im Café.",
@@ -129,11 +129,11 @@
           "promptDe": "Wer kommt zum Fest? Wählen Sie die Bedeutung.",
           "promptEn": "Who is coming to the party? Choose the meaning.",
           "options": [
-            "Only Ana's mum is coming.",
-            "Ana's parents cannot come.",
-            "Ana's mum and dad are coming."
+            "Only Ana’s mum is coming.",
+            "Ana’s parents cannot come.",
+            "Ana’s mum and dad are coming."
           ],
-          "answer": "Ana's mum and dad are coming.",
+          "answer": "Ana’s mum and dad are coming.",
           "optionsDe": [
             "Nur Anas Mama kommt.",
             "Anas Eltern kommen nicht.",
@@ -193,7 +193,7 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "d4c7da28",
+        "meaningLines": "cfdd87ff",
         "meaning": {
           "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say as they part? Choose the meaning.",

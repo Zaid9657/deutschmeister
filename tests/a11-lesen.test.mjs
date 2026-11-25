@@ -3,9 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { LESEN_A11 } from '../src/data/curricula/a11.lesen.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { buildCheckpoint, paperSeed } from '../src/lib/checkpoint/buildCheckpoint.js';
-import { auditBankFeatures } from './helpers/lesenGate.mjs';
-import { checkLesenA11, auditDeclaredStrategies, auditTemplates, textSkeleton, auditContactNumbers } from '../scripts/a11-lesen-check.mjs';
+import { buildCheckpoint, paperSeed, guessCeiling, scoreCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
+import { checkLesenA11, auditDeclaredStrategies, auditTemplates, textSkeleton, auditContactNumbers, paperCeiling, TF_LIMIT, CHOICE_LIMIT, PAPERS_LIMIT } from '../scripts/a11-lesen-check.mjs';
 
 const papers = Object.values(LESEN_A11).flatMap((b) => b.papers);
 const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
@@ -17,16 +16,28 @@ test('A1.1 authored Lesen: taught independent texts pass the declared strategies
   assert.deepEqual(result.findings, []);
   assert.equal(papers.length, 16);
   assert.equal(new Set(papers.flat().map((u) => u.id)).size, 64);
-  assert.ok(result.surface.papers.every((p) => p.passes));
-  assert.equal(result.surface.totals.size, 14, 'only the declared strategies and explicit inverses');
-  assert.ok([...result.surface.totals.values()].every((score) => score <= 36));
-  assert.ok(papers.every((p) => p.filter((u) => u.answer === 'Richtig').length === 2));
+  assert.deepEqual([TF_LIMIT, CHOICE_LIMIT, PAPERS_LIMIT], [18, 16, 5], 'a limit only goes down');
+  for (const [name, score] of result.surface.totals) assert.ok(score <= 18, `${name}: ${score}/32`);
+  assert.ok(result.surface.pairs[0].passed <= 5, result.surface.pairs[0].name);
+  // Both scores of 2026-11-25: „every word of the statement stands in the text → Richtig“ took 51 of 64 and
+  // passed eleven papers of sixteen; every paper was two Richtig and two Falsch.
+  assert.ok(result.surface.totals.get('all statement words in text → Richtig') <= 18);
+  assert.equal(result.surface.patterns.size, 4, 'the number of Richtig in a paper is no rule of its own');
   assert.ok(papers.every((p) => p.some((u) => u.type === 'message') && p.some((u) => u.type === 'ad') && p.some((u) => ['notice', 'sign'].includes(u.type))));
   assert.ok(result.templates.maxRepeat <= 2);
-  // Supervisor replaced the batch-2-only combination limits; these are diagnostics,
-  // not ratchets. Keep reporting even when they exceed the declared strategy ceiling.
-  assert.ok(result.features.pairs.families.length > 0);
-  console.log(`PASS: A1.1 declared strategies ≤2/4 and ≤36/64; templates ≤2; REPORT ONLY pairs ${result.features.pairs.worst[0].score}/64; whole papers ${result.features.pairs.worstPerfect[0].perfect}/16`);
+});
+
+test('one answer, or one place, tapped throughout never passes the reading of an A1.1 checkpoint', () => {
+  for (const paper of papers) assert.ok(paperCeiling(paper) <= 2);
+  for (const checkpoint of CURRICULUM_A11.checkpoints) for (let round = 0; round < 4; round += 1) {
+    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+    assert.equal(guessCeiling(items), paperCeiling(checkpoint.lesen.papers[round]));
+    for (let place = 0; place < 3; place += 1) {
+      const answers = Object.fromEntries(items.map((it) => [it.id, it.options[place] ?? '']));
+      const s = scoreCheckpoint(items, answers).sections.lesen;
+      assert.ok(s.correct <= s.guessCeiling, `${checkpoint.id}/${round}: place ${place} takes ${s.correct}`);
+    }
+  }
 });
 
 test('Public phone contacts require plausible complete numbers; named contacts and internal office numbers remain valid', () => {
@@ -54,7 +65,8 @@ test('Public phone contacts require plausible complete numbers; named contacts a
 test('Reading texts, statements and explanations avoid the untaught meanings identified in blind review', () => {
   // Narrow regression checks for the reviewed senses, not a semantic vocabulary proof.
   // The supervisor still reviews meaning in context via the pending blind fixture.
-  for (const u of papers.flat()) for (const field of ['text', 'statement', 'explanationDe']) {
+  for (const u of papers.flat()) for (const field of ['text', 'statement', 'question', 'explanationDe']) {
+    if (u[field] === undefined) continue;
     assert.doesNotMatch(u[field], /\bPost\s+für\b/iu, `${u.id} ${field}: Post is taught as post office, not letters`);
     assert.doesNotMatch(u[field], /\b(?:ist|sind)\b[^.!?]*\b(?:auf|zu)\s*(?=[.!?“”]|$)/iu, `${u.id} ${field}: auf/zu as open/closed is untaught`);
   }
@@ -74,6 +86,7 @@ test('A1.1 serves exactly the authored paper by round; malformed banks cannot fa
         assert.equal(it.answer, authored[i].answer);
         assert.deepEqual(it.options, authored[i].options);
         assert.equal(it.statement, authored[i].statement);
+        assert.equal(it.kind, authored[i].format === 'trueFalse' ? 'trueFalse' : 'choice');
         assert.equal(it.changed, undefined, 'no generated falsifier');
       }
     }
@@ -83,42 +96,29 @@ test('A1.1 serves exactly the authored paper by round; malformed banks cannot fa
   }
 });
 
-test('Declared gate catches planted numeric, negation, literal, missing-token, overlap and length leaks; control passes', () => {
+test('the declared gate catches a planted leak of every kind, and passes the bank', () => {
   assert.ok(auditDeclaredStrategies(papers).passes, 'real independent positive control');
-  const mutations = {
-    'constant answer': (p) => p.map((u) => ({ ...u, answer: 'Richtig' })),
-    numeric: (p) => p.map((u) => ({ ...u, statement: u.answer === 'Falsch' ? 'Paul ist acht.' : 'Paul ist Student.' })),
-    negation: (p) => p.map((u) => ({ ...u, statement: u.answer === 'Falsch' ? 'Paul ist nicht hier.' : 'Paul ist hier.' })),
-    literal: (p) => p.map((u) => ({ ...u, text: u.answer === 'Richtig' ? u.statement : 'Paul ist Lehrer.' })),
-    missing: (p) => p.map((u) => ({ ...u, text: u.answer === 'Richtig' ? u.statement.split(' ').reverse().join(' ') : 'Unbekannt.' })),
-    overlap: (p) => p.map((u) => ({ ...u, statement: 'a b c d', text: u.answer === 'Richtig' ? 'a b c' : 'a b' })),
-    length: (p) => p.map((u) => ({ ...u, statement: u.answer === 'Richtig' ? 'a b c d' : 'a b', text: 'a b c d' })),
+  const say = (fn) => papers.map((p) => p.map((u) => (u.format === 'trueFalse' ? { ...u, ...fn(u) } : u)));
+  const ask = (fn) => papers.map((p) => p.map((u) => (u.format === 'choice' ? { ...u, ...fn(u) } : u)));
+  const right = (u) => u.answer === 'Richtig';
+  const planted = {
+    'constant answer': say(() => ({ answer: 'Richtig' })),
+    number: say((u) => ({ statement: right(u) ? 'Ben ist Student.' : 'Ben ist acht.' })),
+    negation: say((u) => ({ statement: right(u) ? 'Ben ist hier.' : 'Ben ist nicht hier.' })),
+    literal: say((u) => ({ text: right(u) ? u.statement : 'Unbekannt.' })),
+    'one sentence': say((u) => ({ text: right(u) ? `${u.statement} Ja!` : 'Unbekannt.' })),
+    length: papers.map((p) => { let n = 0; return p.map((u) => { if (u.format !== 'trueFalse') return u; n += 1; const long = n === 1; return { ...u, statement: long ? 'a b c d e f' : 'a b', text: 'a b c d e f', answer: long ? 'Richtig' : 'Falsch' }; }); }),
+    'negation in text': say((u) => ({ text: right(u) ? 'Ben ist hier.' : 'Ben ist nicht hier.' })),
+    place: ask((u) => ({ options: [u.answer, ...u.options.filter((o) => o !== u.answer)] })),
+    'named first': ask((u) => ({ text: u.answer + ' ' + u.options.filter((o) => o !== u.answer).join(' ') })),
+    'named last': ask((u) => ({ text: u.options.filter((o) => o !== u.answer).join(' ') + ' ' + u.answer })),
+    'named most often': ask((u) => ({ text: u.options.join(' ') + ' ' + u.answer })),
+    longest: ask((u) => ({ options: u.options.map((o) => (o === u.answer ? 'Sehr sehr lang und klar.' : o.slice(0, 6))), answer: 'Sehr sehr lang und klar.' })),
+    'like the question': ask((u) => ({ question: 'Was kostet der Tisch?', text: `Der Tisch kostet ${u.answer} Das Regal, ${u.options.filter((o) => o !== u.answer).join(' ')}` })),
   };
-  for (const [name, mutate] of Object.entries(mutations)) {
-    const planted = mutate(papers[0]);
-    assert.equal(auditDeclaredStrategies([planted]).passes, false, name);
-    const inverse = planted.map((u) => ({ ...u, answer: u.answer === 'Richtig' ? 'Falsch' : 'Richtig' }));
-    assert.equal(auditDeclaredStrategies([inverse]).passes, false, `${name} inverse`);
-  }
-});
-
-test('Planted order and feature-pair leaks remain visible as report-only diagnostics', () => {
-  const ordered = papers.map((p) => [...p].sort((a, b) => a.answer.localeCompare(b.answer)));
-  const bank = auditBankFeatures(ordered);
-  assert.ok(bank.findings.length, 'legacy diagnostic still detects position leak');
-  assert.ok(auditDeclaredStrategies(ordered).passes, 'ordering alone is not a declared gate');
-  assert.equal(bank.pairs.worst[0].score, 64);
-  assert.equal(bank.pairs.worstPerfect[0].perfect, 16);
-  // A crossed pair of visible features can leak while each feature alone balances.
-  const paired = structuredClone(papers);
-  paired.forEach((paper, p) => paper.forEach((u, i) => {
-    const number = p % 2 === 0;
-    const long = (i % 2 === 0) !== number;
-    u.statement = `${number ? 'acht' : 'hier'} ${long ? 'a b c d e f g' : 'a'}`;
-    u.answer = (number !== long) ? 'Richtig' : 'Falsch';
-  }));
-  const pairLeak = auditBankFeatures(paired);
-  assert.equal(pairLeak.pairs.worst[0].score, 64, 'feature-pair leak detected');
+  for (const [name, bank] of Object.entries(planted)) assert.equal(auditDeclaredStrategies(bank).passes, false, name);
+  const ceiling = [papers[2].map((u) => ({ ...u, ...(u.format === 'choice' ? { answer: u.options[1] } : {}) }))];
+  assert.ok(auditDeclaredStrategies(ceiling).findings.some((x) => /one answer or place throughout/.test(x)), 'a paper one place passes');
 });
 
 test('Template gate rejects repeated content-word skeletons, including changes of names and numbers', () => {
@@ -154,12 +154,15 @@ test('Authoring gate rejects short texts, missing genres, practised sentences an
     ['genre', (u) => { u.type = 'message'; }, /must mix/],
     ['practised', (u) => { u.text += '. Wie geht es Ihnen?'; }, /practised sentence/],
     ['construction', (u) => { u.text += ' Meine Schwester wohnt in Berlin.'; }, /deferred possessive-articles/],
+    // A statement printed word for word is found by looking; an answer the text never names is no competitor.
+    ['verbatim', (u, i) => { if (i === 1) u.text += ` ${u.statement}`; }, /statement stands word for word/],
+    ['no competitor', (u, i) => { if (i === 0) u.options = [...u.options.slice(0, 1), 'In Italien.', u.answer].slice(-3); }, /answer not named in the text/],
     // A cast name names only the cast (the independent score, 2026-11-20).
     ['cast', (u) => { u.text += ' Lena ist schon zehn.'; }, /cast name Lena/],
   ]) {
     const bank = structuredClone(LESEN_A11);
     if (name === 'genre') bank['a1.1-cp1'].papers[0].forEach(edit);
-    else edit(bank['a1.1-cp1'].papers[0][0]);
+    else bank['a1.1-cp1'].papers[0].forEach((u, i) => (['verbatim', 'no competitor'].includes(name) ? edit(u, i) : i === 0 && edit(u, i)));
     assert.ok(checkLesenA11(bank).findings.some((f) => finding.test(f)), name);
   }
 });

@@ -11,6 +11,7 @@
 // word (then `relevanceScore` ranks it with the legacy drill and it is never
 // drawn). Both are checked here, per item, plus the draw the learner actually
 // gets — the number that the review was about.
+import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -817,7 +818,7 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // Keep the original named seats as regression probes as well as checking
   // every live seat: authored Lesen changes which other sections can be seated.
   const legacy = CURRICULUM_A11.checkpoints.flatMap((cp) =>
-    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL })
+    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(cp), pool: POOL })
       .map((it) => ({ ...it, questionDe: it.questionDe || it.promptDe || '', source: POOL.items.find((p) => p.id === it.poolItemId) || null })));
   // c286975 cp3/bausteine-4 was this pool item. Hören's disjoint option draw
   // reseats it; retain the historical checker probe without depending on a seat.
@@ -847,14 +848,16 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // Re-measured 2026-11-23: `extra-a11-l07-05` became „Wir tanzen hier zusammen.“ (a word bag needs four
   // words), so its seat `a1.1-cp3-schreiben-1` gained the fronted „Hier tanzen wir zusammen.“ and is
   // checked above like every other seat with a second order.
+  // Re-measured 2026-11-25: the papers come from the reserved bank (a11.assessment.js), so the seats are its own.
   assert.deepEqual([...liveGradedIds].sort(), [
-    'a1.1-cp1-schreiben-2',
-    'a1.1-cp3-schreiben-1',
+    'a1.1-cp1-schreiben-1',
+    'a1.1-cp4-schreiben-2',
   ], 'every current authored-paper seat with a second order remains covered');
   // REVIEW #13 BLOCKER 1 „Viertens": a count can only ever report what the rule
   // FINDS, so it can never report what it stopped finding. The set is named.
   // 2026-11-03: L8's taught-form repair reseats CP3 to a haben gap, not a frontable sentence.
   // Both-order acceptance is still required above for EVERY pool and drawn checkpoint item.
+  // 2026-11-25: yes/no questions no longer name their opening, which reseats the generated papers: one more frontable seat.
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
@@ -905,6 +908,7 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
     'a1.1-cp1-schreiben-2',
     'a1.1-cp3-schreiben-2',
+    'a1.1-cp4-bausteine-6',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

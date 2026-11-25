@@ -38,10 +38,7 @@ export const LICENSED_ORDERS = Object.freeze({
   'Ich spiele am Wochenende Fußball.': ['Ich spiele am Wochenende Fußball.', 'Am Wochenende spiele ich Fußball.',
     'Fußball spiele ich am Wochenende.', 'Ich spiele Fußball am Wochenende.'],
   'Mein Hobby ist Sport.': ['Mein Hobby ist Sport.', 'Sport ist mein Hobby.'],
-  'Das Café ist sehr gut.': ['Das Café ist sehr gut.', 'Sehr gut ist das Café.'],
-  'Eine Tasse Kaffee und ein Kuchen kommen sofort.': ['Eine Tasse Kaffee und ein Kuchen kommen sofort.',
-    'Sofort kommen eine Tasse Kaffee und ein Kuchen.', 'Ein Kuchen und eine Tasse Kaffee kommen sofort.',
-    'Sofort kommen ein Kuchen und eine Tasse Kaffee.'],
+  'Das Café ist gut.': ['Das Café ist gut.', 'Gut ist das Café.'],
   // A1.2
   'Ich sehe zehn Minuten fern.': ['Ich sehe zehn Minuten fern.', 'Zehn Minuten sehe ich fern.'],
   'Der Kühlschrank hat kein Brot.': ['Der Kühlschrank hat kein Brot.', 'Kein Brot hat der Kühlschrank.'],

@@ -44,6 +44,7 @@ export const SHARED_FILES = [
   ['src/data/curricula/a11.js', 'astro-site/src/data/curricula/a11.js'],
   ['src/data/curricula/a11.answers.js', 'astro-site/src/data/curricula/a11.answers.js'],
   ['src/data/curricula/a11.optionsDe.js', 'astro-site/src/data/curricula/a11.optionsDe.js'],
+  ['src/data/curricula/a11.hoeren.js', 'astro-site/src/data/curricula/a11.hoeren.js'],
   ['src/data/curricula/a11.lesen.js', 'astro-site/src/data/curricula/a11.lesen.js'],
   ['src/data/curricula/a12.js', 'astro-site/src/data/curricula/a12.js'],
   ['src/data/curricula/a12.lesen.js', 'astro-site/src/data/curricula/a12.lesen.js'],

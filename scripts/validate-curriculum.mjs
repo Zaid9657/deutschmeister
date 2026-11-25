@@ -77,7 +77,7 @@ import { COUNTRY_STEMS } from '../src/lib/lesson/countries.js';
 // writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
 import { planPractice } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
-import { ITEM_FORMULAS } from '../src/lib/checkpoint/lexis.js';
+import { ITEM_FORMULAS, seriesWords } from '../src/lib/checkpoint/lexis.js';
 import { shortReadingFindings, reservedAssessmentFindings, finalTestContentFindings } from './lib/assessment-content.mjs';
 import { abschlusstestA12 } from '../src/data/courseTests/abschlusstestA12.js';
 
@@ -1410,6 +1410,7 @@ export function taughtUpTo(c, spec) {
     // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
     // scharfes S in L1) counts as taught from here on (DaF review #4).
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     // The function words this Lektion says out loud (DaF review #10, MAJOR 3). Outside
     // FUNCTION_WORDS_FREE a function word is taught where it is first met, not at Lektion 1 —
     // otherwise `minLektion` calls `von meiner Schwester` servable in Lektion 1 and the whole
@@ -1926,6 +1927,7 @@ export function producedBeforeTaught(c, extraKnown) {
     // Grow the known set exactly as RULE 5 does, so „taught by this Lektion“ means the same thing.
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     for (const { i, de } of productionLines(l)) {
       for (const t of tokenise(de)) {
         const low = t.toLowerCase();

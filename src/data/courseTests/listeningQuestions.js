@@ -15,6 +15,8 @@
 //
 // Semantics, pinned by the tests:
 //   - no questionMax (undefined/null/0/non-number) → every question, ordered;
+//   - `questionNumbers` (a list) keeps exactly these questions, in the order of the list — the
+//     A1.1 final test asks only what the course has taught, in the order of the recording;
 //   - questions without a numeric question_number are dropped when a cap is
 //     set (they cannot be placed against it) but kept otherwise;
 //   - the input array is never mutated.
@@ -33,6 +35,7 @@ export function selectListeningQuestions(questions, part) {
       return a.i - b.i; // stable for ties / non-numbered rows
     })
     .map(({ q }) => q);
+  if (part && Array.isArray(part.questionNumbers)) return part.questionNumbers.map((n) => ordered.find((q) => num(q) === n)).filter(Boolean);
   if (max === null) return ordered;
   return ordered.filter((q) => Number.isFinite(num(q)) && num(q) <= max);
 }

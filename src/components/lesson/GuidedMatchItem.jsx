@@ -14,6 +14,8 @@ export default function GuidedMatchItem({ item, index, total, part = null, onRes
     id: `${item.id}:${pairIndex}`, type: 'multiple_choice',
     promptDe: `Was bedeutet „${pair.de}“? Wählen Sie die Bedeutung.`,
     promptEn: `What does “${pair.de}” mean? Choose the meaning.`,
+    // The English meaning is the task itself, so it stays English in Deutsch-Modus and says so to a screen reader.
+    optionsLang: 'en',
     options: optionOrder(item.pairs.map((p) => p.en), `${item.id}:${pairIndex}`), answer: pair.en, accepted: [pair.en],
     explanationDe: `Das Wortpaar ist: ${pair.de} – ${pair.en}.`,
     explanationEn: `The word pair is: ${pair.de} – ${pair.en}.`,

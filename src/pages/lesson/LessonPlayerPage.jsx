@@ -45,6 +45,7 @@ import OtterSays from '../../components/illustrations/OtterSays.jsx';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
 import useKeepFocus from '../../hooks/useKeepFocus.js';
+import { useScreenTitle } from '../../hooks/useScreenTitle.js';
 
 import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
@@ -280,6 +281,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
+  // Where the final check stands, so a reload does not start its turns again (runState.js, `check`).
+  const [checkRun, setCheckRun] = useState(() => resumed?.check || null);
   // The final check's verdict per can-do (CheckStage); the recap ticks only what it shows.
   const [checkShown, setCheckShown] = useState(null);
   const [wordRows, setWordRows] = useState(() => new Map());
@@ -440,9 +443,9 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
       flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
-      runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
+      runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, check: checkRun,
     }), owner);
-  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, checkRun, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -653,7 +656,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = <WritingStage stage={stage} lektionId={lektion.id} onResult={resultFor('writing')} onReport={reportSkill('writing')} onBack={back} onDone={advance} />;
       break;
     case 'check':
-      body = <Suspense fallback={<PlayerLoading />}><CheckStage stage={stage} lektion={lektion} onBack={back}
+      body = <Suspense fallback={<PlayerLoading />}><CheckStage stage={stage} lektion={lektion} onBack={back} resume={checkRun} onProgress={setCheckRun}
         onDone={(shown) => { setCheckShown(shown); advance(); }} /></Suspense>;
       break;
     case 'recap':
@@ -756,6 +759,8 @@ export default function LessonPlayerPage() {
   const [poolError, setPoolError] = useState(null);
   const lektionNr = Number(nr);
   const lektion = curriculum ? (curriculum.lektionen || []).find((l) => l.nr === lektionNr) : null;
+  const [lang] = useLessonLang();
+  useScreenTitle(lektion && `${t('player.lesson', lang, { nr: lektion.nr })}: ${lektion.title} · ${curriculum.code}`, lang);
 
   useEffect(() => {
     if (!curriculum) return undefined;

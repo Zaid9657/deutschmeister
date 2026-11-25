@@ -1,5 +1,4 @@
-import { useCallback, useSyncExternalStore } from 'react';
-import { safeGet, safeSet } from '../../utils/safeStorage.js';
+import { DEFAULT_LESSON_LANG, normalizeLessonLang } from './lessonLang.js';
 import { SESSION_COUNT } from './sessions.js';
 
 // The lesson chrome's string table (Wave 1, 2026-09-19).
@@ -30,9 +29,10 @@ import { SESSION_COUNT } from './sessions.js';
 // German in both tables on purpose: they are the words the learner will meet
 // on the exam paper, so the chrome names them the way the exam does.
 
-export const LESSON_LANG_KEY = 'dm_lesson_lang';
-export const DEFAULT_LESSON_LANG = 'en';
-export const LESSON_LANGS = ['en', 'de'];
+// The flag itself lives in lessonLang.js, so a screen that needs the language and no string (the app shell) loads no table.
+export {
+  DEFAULT_LESSON_LANG, LESSON_LANG_KEY, LESSON_LANGS, normalizeLessonLang, readLessonLang, useLessonLang, writeLessonLang,
+} from './lessonLang.js';
 
 export const STRINGS = {
   en: {
@@ -325,12 +325,12 @@ export const STRINGS = {
     'recap.done': 'Done. The lesson counts at any score — what wobbled today comes back for review.',
 
     // ── go deeper (recap) ────────────────────────────────────────────────────
-    'recap.coverage.noListening': 'There is no extra listening exercise for this Lektion yet; its listening practice is the dialogue and the dictation.',
-    'recap.coverage.noReading': 'There is no reading text for this Lektion yet.',
+    'recap.coverage.noListening': 'There is no extra listening exercise for this lesson yet; its listening practice is the dialogue and the dictation.',
+    'recap.coverage.noReading': 'There is no reading text for this lesson yet.',
     'recap.goDeeper.title': 'Go deeper',
-    'recap.goDeeper.listening': 'Listening exercise for this Lektion',
-    'recap.goDeeper.reading': 'Reading text for this Lektion',
-    'recap.goDeeper.speaking': 'Speaking mission for this Lektion',
+    'recap.goDeeper.listening': 'Listening exercise for this lesson',
+    'recap.goDeeper.reading': 'Reading text for this lesson',
+    'recap.goDeeper.speaking': 'Speaking mission for this lesson',
     'recap.follow.title': 'German in your feed',
     'recap.follow.body': 'One post a day: the sentence of the day, a common mistake, an exam fact.',
 
@@ -341,9 +341,9 @@ export const STRINGS = {
 
     // ── milestone card (course home) ─────────────────────────────────────────
     'milestone.day1.title': 'Day 1 — you started',
-    'milestone.day1.body': 'The first Lektion is the hardest one to begin. It is done.',
+    'milestone.day1.body': 'The first lesson is the hardest one to begin. It is done.',
     'milestone.day7.title': '7 days — this is a habit now',
-    'milestone.day7.body': 'A week of German, one Lektion at a time.',
+    'milestone.day7.body': 'A week of German, one lesson at a time.',
     'milestone.day30.title': '30 days — a month of German',
     'milestone.day30.body': 'A month of showing up. That is how a language gets learned.',
     'milestone.dismiss': 'Dismiss',
@@ -492,14 +492,14 @@ export const STRINGS = {
     'otter.unclear': 'You practised saying the line aloud. We couldn’t clearly recognise the words in this recording.',
     'otter.pause.1': 'You’ve finished the first part. Your place is saved, so you can take a break.',
     'otter.pause.2': 'You’ve completed two parts already. Take a break if you need one—your place is saved.',
-    'otter.end': 'You made time for German and completed Lektion {nr}. Take a moment to feel proud of what you’ve practised.',
+    'otter.end': 'You made time for German and completed lesson {nr}. Take a moment to feel proud of what you’ve practised.',
     'otter.back': 'Welcome back. Your place is saved; take a moment to settle in.',
     // The final check (2026-11-18). The otter's lines are Codex's, from the founder's words. Each check's
     // opening and passed line belong to its Lektion (`guided.check.open`/`passed` in the curriculum, 2026-11-19).
     'otter.check.missed': 'Take a moment to look at the answer. Then we’ll carry on together.',
     'otter.check.notYet': 'Revisit {part} when you’re ready. You can try the check again now or go on to {next}.',
     // What {next} names: the real next step on the course path (finalCheck.nextAfter).
-    'check.next.lektion': 'Lektion {nr}',
+    'check.next.lektion': 'Lesson {nr}',
     'check.next.checkpoint': 'the checkpoint',
     'check.next.test': 'the final test',
     'recap.canDo.notYet': 'Still to practise',
@@ -1042,9 +1042,6 @@ export const UNCLEAR_BELOW = 0.5;
 /** What a mic-scored line shows instead of a percentage: speech recognition is not a pronunciation grade. */
 export const speechLine = (pct, lang) => t(pct < UNCLEAR_BELOW ? 'otter.unclear' : 'speaking.said', lang);
 
-/** 'en' or 'de'; anything else (a stale or tampered flag) is the default. */
-export const normalizeLessonLang = (value) => (LESSON_LANGS.includes(value) ? value : DEFAULT_LESSON_LANG);
-
 /**
  * One chrome string. Falls back to `en`, then to the key itself — a missing
  * key shows up on screen as `stage.x.eyebrow` instead of a blank, which is the
@@ -1074,62 +1071,3 @@ export const partEyebrow = (part, name, lang = DEFAULT_LESSON_LANG) =>
  */
 export const lessonDateFormat = (lang, options) =>
   new Intl.DateTimeFormat(normalizeLessonLang(lang) === 'de' ? 'de-DE' : 'en-GB', options);
-
-// ── the persisted flag, shared by every screen that mounts the hook ──────────
-//
-// A module-level store rather than a context provider: the player, the
-// checkpoint and the review page are three separate routes, none wrapped by a
-// common course provider, and the toggle in one header must be reflected in
-// every stage component below it on the next render. useSyncExternalStore is
-// the React 18 way to subscribe to exactly that.
-
-const listeners = new Set();
-let current = null; // null = not read yet
-
-/** `?lang=de` / `?lang=en` on the URL wins once and is persisted from then on. */
-function fromQuery() {
-  try {
-    const v = new URLSearchParams(window.location.search).get('lang');
-    return LESSON_LANGS.includes(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
-export function readLessonLang() {
-  if (current !== null) return current;
-  if (typeof window === 'undefined') return DEFAULT_LESSON_LANG;
-  const q = fromQuery();
-  if (q) {
-    safeSet(LESSON_LANG_KEY, q);
-    current = q;
-  } else {
-    current = normalizeLessonLang(safeGet(LESSON_LANG_KEY));
-  }
-  return current;
-}
-
-export function writeLessonLang(next) {
-  const lang = normalizeLessonLang(next);
-  current = lang;
-  safeSet(LESSON_LANG_KEY, lang);
-  listeners.forEach((fn) => fn());
-  return lang;
-}
-
-const subscribe = (fn) => {
-  listeners.add(fn);
-  return () => listeners.delete(fn);
-};
-const getServerSnapshot = () => DEFAULT_LESSON_LANG;
-
-/**
- * [lang, setLang] — the chrome language of the lesson screens, persisted in
- * `dm_lesson_lang` through safeStorage (a blocked localStorage means "English
- * this session", never a crash). Default English (docs/language-strategy.md).
- */
-export function useLessonLang() {
-  const lang = useSyncExternalStore(subscribe, readLessonLang, getServerSnapshot);
-  const setLang = useCallback((next) => writeLessonLang(next), []);
-  return [lang, setLang];
-}

@@ -45,6 +45,7 @@
 //   6. THE LADDER — 1/4/7/14/60/180 with lapse → step 0. These are the numbers
 //      the schedule is made of; ladder.js is the only place they are computed.
 
+import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -108,7 +109,7 @@ const ALL_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
 // Legacy generator coverage remains intact; live A1.1 now has a separate authored-bank gate.
 const GENERATED_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
   cp,
-  items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL }),
+  items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(cp), pool: POOL }),
 }));
 
 const cp1 = CURRICULUM_FIXTURE.checkpoints[0];
@@ -218,50 +219,51 @@ test('a checkpoint dictates nothing longer than its own chapter dictates, and ne
   assert.equal(buildCheckpoint({ curriculum: only, checkpoint: only.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation').length, 3);
 });
 
-test('the twelve dictations of the four real papers are pinned, so a reorder is visible, not silent', () => {
-  // DaF review #19, Minor 24: `dictableFirst` sorts before `take(lines, 3)`, so the round-19
-  // ceiling changed which lines Hören spends, `usedLineKeys` with them, and — because every later
-  // section draws „unused first“ — the Lesen windows, the swap words, the Wortfeld distractors and
-  // the Bausteine of ALL FOUR papers. The commit said „cp1 no longer dictates 12 words“. Nothing
-  // else said anything, because nothing pinned the paper. This does: the dictation ids, their
-  // source lines and their text, measured 2026-09-14 (round 20). A change here is not wrong by
-  // itself — but it must be re-measured, re-read as a paper, and re-pinned in the same commit,
-  // with the old and the new paper side by side in the diff.
-  // 2026-10-17 (A1.2 DaF review #7, MAJOR 8): Hören now leaves the lines a value or contrary Lesen
-  // window needs until after the free ones. Checkpoint 4's third dictation was „Kostet die Fahrkarte
-  // zwanzig Euro?" — the line „Nein, sie kostet fünfzehn Euro." needs for its „sie" — and it moves
-  // to L12 line 3; checkpoint 2's moves from L4 line 0 to line 4. Re-read: both are construction-free
-  // lines of 6 and 7 words, taught by their chapter, with a recording. RE-MEASURED.
-  // 2026-11-23 (review of 46c7ca80, H2): Lektion 9's scene was rewritten, so checkpoint 3's second
-  // dictation keeps its line (L9 line 8) with the line's new text. Re-read: 9 words, at the chapter's
-  // ceiling of 9, construction-free, every word taught in L9; no other section of the paper moved.
-  // RE-MEASURED.
-  const dictated = Object.fromEntries(ALL_CHECKPOINTS.map(({ cp, items }) => [
-    cp.id,
-    items.filter((i) => i.kind === 'dictation').map((i) => [i.id, i.lektionId, i.lineKey, i.audioText]),
-  ]));
-  assert.deepEqual(dictated, {
-    'a1.1-cp1': [
-      ['a1.1-cp1-hoeren-1', 'a1.1-l01', 'line-6', 'Gut. Wie geht es Ihnen?'],
-      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Auf Wiedersehen!'],
-      ['a1.1-cp1-hoeren-3', 'a1.1-l01', 'line-3', 'C-H-A-K-I-R-I.'],
-    ],
-    'a1.1-cp2': [
-      ['a1.1-cp2-hoeren-1', 'a1.1-l06', 'line-7', 'Null vier zwei – drei drei acht eins.'],
-      ['a1.1-cp2-hoeren-2', 'a1.1-l04', 'line-7', 'Das macht zusammen zwanzig Euro.'],
-      ['a1.1-cp2-hoeren-3', 'a1.1-l04', 'line-4', 'Das ist teuer. Und der Stuhl?'],
-    ],
-    'a1.1-cp3': [
-      ['a1.1-cp3-hoeren-1', 'a1.1-l08', 'line-8', 'Und am Mittwoch, am Donnerstag oder am Freitag?'],
-      ['a1.1-cp3-hoeren-2', 'a1.1-l09', 'line-8', 'Gut. Eine Tasse Kaffee und ein Kuchen kommen sofort.'],
-      ['a1.1-cp3-hoeren-3', 'a1.1-l07', 'line-9', 'Vielleicht hören wir am Wochenende zusammen Musik?'],
-    ],
-    'a1.1-cp4': [
-      ['a1.1-cp4-hoeren-1', 'a1.1-l10', 'line-2', 'Hat der Zug Verspätung?'],
-      ['a1.1-cp4-hoeren-2', 'a1.1-l12', 'line-8', 'Deine Party ist bestimmt schön!'],
-      ['a1.1-cp4-hoeren-3', 'a1.1-l12', 'line-3', 'Ja, meine Mama und mein Papa kommen.'],
-    ],
-  }, 'the papers were rebuilt — re-measure every dictation, re-read the four papers, re-pin here');
+test('A1.1 hears and reads aloud its own bank: new sentences, another paper every round, found by their words', () => {
+  // 36 of 36 dictations and 24 of 24 read-alouds were scene lines, and no listening item had a new text
+  // (both blind scores of 2026-11-25). The bank's content has its own gate (tests/a11-hoeren.test.mjs).
+  const scenes = new Set(CURRICULUM_A11.lektionen.flatMap((l) => l.dialog.lines.map((x) => x.de)));
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const seen = new Set();
+    for (let round = 0; round < 8; round += 1) {
+      const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL, seed: paperSeed(cp, round) });
+      const bank = cp.hoeren.papers[round % 4];
+      const hoeren = items.filter((i) => i.section === 'hoeren');
+      const sprechen = items.filter((i) => i.section === 'sprechen');
+      assert.deepEqual(hoeren.map((i) => i.audioText), [...bank.say.map((u) => u.de), ...bank.hear.map((u) => u.text)]);
+      assert.deepEqual(hoeren.map((i) => i.kind), ['dictation', 'dictation', 'listenChoice', 'listenChoice', 'listenChoice']);
+      assert.deepEqual(sprechen.map((i) => i.text), bank.read.map((u) => u.de));
+      for (const i of [...hoeren, ...sprechen]) {
+        assert.ok(!scenes.has(i.audioText), `${i.id} is a scene line: ${i.audioText}`);
+        if (round < 4) assert.ok(!seen.has(i.audioText), `${i.id} comes back in a retake`);
+        seen.add(i.audioText);
+        // The clip is found by its words under the checkpoint's id (speech.js audioFor).
+        assert.equal(i.lektionId, cp.id);
+        assert.equal(i.lineKey, null);
+      }
+      for (const i of hoeren.filter((x) => x.kind === 'listenChoice')) {
+        assert.equal(i.options.length, 3);
+        assert.ok(i.options.includes(i.answer));
+        assert.equal(i.text, null, 'the text is heard, not printed');
+        assert.equal(isItemCorrect(i, i.answer), true);
+        for (const o of i.options.filter((x) => x !== i.answer)) assert.equal(isItemCorrect(i, o), false, `${i.id}: ${o}`);
+      }
+    }
+    for (const bad of [{}, { papers: [] }, { papers: cp.hoeren.papers.slice(0, 3) }]) {
+      assert.throws(() => buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, hoeren: bad }, pool: POOL }), /Hören bank/);
+    }
+  }
+});
+
+test('a retake of an A1.1 checkpoint repeats nothing but the graded text', () => {
+  // Retakes repeated two to eight of twenty tasks (browser walk and both scores, 2026-11-25).
+  const key = (i) => i.poolItemId || i.unitId || i.id;
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const papers = [0, 1, 2, 3].map((round) => buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL, seed: paperSeed(cp, round) }));
+    const all = papers.flatMap((p) => p.filter((i) => i.kind !== 'gradedWriting').map(key));
+    assert.equal(all.length, 76);
+    assert.equal(new Set(all).size, 76, cp.id);
+  }
 });
 
 test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of each', () => {
@@ -287,10 +289,9 @@ const quotedStatement = (item) =>
   item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“'));
 
 test('the Lesen answer key is drawn, not the same R–F–R–F in every checkpoint', () => {
-  // The real curriculum, because this is a claim about the four checkpoints a
-  // learner actually sits — the fixture has one.
+  // The generator's papers; A1.1's own (written) papers have their patterns in tests/a11-lesen.test.mjs.
   const orders = CURRICULUM_A11.checkpoints.map((cp) =>
-    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(cp), pool: POOL })
       .filter((i) => i.section === 'lesen')
       .map((i) => i.answer)
       .join('-'),
@@ -308,7 +309,7 @@ test('a falsch statement contradicts a line of THIS text, not another Lektion', 
     const chapterLines = new Set(
       chapterLektionen(CURRICULUM_A11, cp).flatMap((l) => l.dialog.lines.map((line) => line.de)),
     );
-    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL })
+    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(cp), pool: POOL })
       .filter((i) => i.section === 'lesen');
     for (const item of items.filter((i) => i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
@@ -486,7 +487,7 @@ test('„einen Taschen" is rejected by the agreement guard — and the number ke
 
 test('no Falsch statement of the four papers contains a determiner its noun cannot take', () => {
   let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     const map = readingMap(chapterLektionen(CURRICULUM_A11, cp));
     for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
@@ -1232,8 +1233,8 @@ test('isItemCorrect grades exactly like checkAnswer(…, checkOptionsFor(item)),
 test('a dictated phone number is right in the checkpoint however the learner separated it', () => {
   // The measured item of REVIEW #6 BLOCKER 3. Found by shape, not by id, so the
   // pin survives a reshuffle: the dictation whose answer carries a separator.
-  const dictations = ALL_CHECKPOINTS.flatMap(({ items }) => items).filter((i) => i.kind === 'dictation');
-  assert.ok(dictations.length >= 12, 'three dictations per checkpoint');
+  const dictations = GENERATED_CHECKPOINTS.flatMap(({ items }) => items).filter((i) => i.kind === 'dictation');
+  assert.ok(dictations.length >= 12, 'three dictations per generated checkpoint');
   const withSeparator = dictations.filter((i) => /[\u2010-\u2015]/.test(i.answer));
   assert.ok(withSeparator.length >= 1, 'the phone-number dictation must still be in a checkpoint');
   for (const item of withSeparator) {
@@ -1478,7 +1479,9 @@ test('the bound BITES — an item stamped past the chapter leaves the draw, and 
   // `extra-a11-l05-05` until the Lesen falsifier stopped swapping names and nouns and
   // retakes began to prefer what the earlier papers left (A1.2 DaF review #5, MAJOR 8,
   // 2026-10-17); the id is a measurement of the current build, not a fact about the pool.)
-  const cp2 = CURRICULUM_A11.checkpoints[1];
+  // Since 2026-11-25 the live A1.1 papers are reserved, so the draw is measured on the generated stand-in;
+  // a reserved row past its chapter fails the build (tests/a11-hoeren.test.mjs).
+  const cp2 = generatedCheckpoint(CURRICULUM_A11.checkpoints[1]);
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),

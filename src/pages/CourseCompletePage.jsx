@@ -21,6 +21,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 import FullPageRedirect from '../components/FullPageRedirect.jsx';
 import { localDoneIds } from '../lib/course/localProgress.js';
 import { useLessonLang } from '../lib/lesson/strings.js';
+import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import LangToggle from '../components/lesson/LangToggle.jsx';
 
 // The end of the path: the one screen that may celebrate (design rule 2 —
@@ -72,6 +73,7 @@ export default function CourseCompletePage() {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const de = lang === 'de';
+  useScreenTitle(`${de ? 'Kursabschluss' : 'Course completion'} ${String(level || '').toUpperCase()}`, lang);
   const { hasLevelAccess, loading: subLoading } = useSubscription() || {};
   const [done, setDone] = useState(() => user ? new Set() : localDoneIds(level));
   const [loaded, setLoaded] = useState(() => !user);

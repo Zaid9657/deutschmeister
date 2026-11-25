@@ -72,7 +72,8 @@ export function reservedAssessmentFindings(curriculum, pool) {
         if (!Number.isInteger(it.minLektion) || it.minLektion > cp.afterLektion) findings.push(`${it.id}: not taught by checkpoint`);
         if (!it.questionEn || !it.explanationDe || !it.explanationEn) findings.push(`${it.id}: missing bilingual task or feedback`);
         if (it.type === 'fill_blank' && /\(\d+[;)]/.test(it.questionDe) && !it.questionDe.includes('Schreiben Sie die Zahl in Worten')) findings.push(`${it.id}: number-word production needs an explicit German instruction`);
-        if (it.type === 'fill_blank' && !/\([^)]*, Sie\)/.test(it.questionDe) && !it.questionDe.includes('Ergänzen Sie mit einem Wort')) findings.push(`${it.id}: bounded gap production needs its one-word instruction`);
+        // „Ergänzen Sie …" would print the answer where the answer is „Sie".
+        if (it.type === 'fill_blank' && it.answer !== 'Sie' && !/\([^)]*, Sie\)/.test(it.questionDe) && !it.questionDe.includes('Ergänzen Sie mit einem Wort')) findings.push(`${it.id}: bounded gap production needs its one-word instruction`);
         if (it.options?.length || !['fill_blank', 'sentence_building', 'error_correction'].includes(it.type)) findings.push(`${it.id}: typed transfer required`);
         if (checkAnswer(it.answer, it.accepted, checkOptionsFor(it)).result !== RESULT.CORRECT) findings.push(`${it.id}: its own key is rejected`);
       }

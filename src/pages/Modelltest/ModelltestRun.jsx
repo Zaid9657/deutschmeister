@@ -12,7 +12,8 @@ import {
   advanceSection,
   completeAttempt,
 } from '../../services/examService';
-import { scoreObjectiveSections, mergeListeningResult, scoreListeningAnswers } from '../../services/examScoring';
+import { scoreObjectiveSections, mergeListeningResult, scoreListeningAnswers, openAnswers } from '../../services/examScoring';
+import { useLessonLang } from '../../lib/lesson/lessonLang.js';
 import { useExerciseDetails, fetchExerciseQuestions } from '../../hooks/useListening';
 import { selectListeningQuestions } from '../../data/courseTests/listeningQuestions.js';
 import { getAudioUrl } from '../../utils/listeningHelpers';
@@ -53,9 +54,52 @@ const writingPlaceholder = (label) =>
     : /E-Mail/.test(label) ? 'Schreiben Sie Ihre E-Mail hier …'
       : 'Schreiben Sie Ihren Text hier …';
 
+// A course test with English twins (`instructionsEn`) keeps its German tasks and says them in English below,
+// in the language the course is read in; every other test speaks German only, like the exam.
+const COPY = {
+  de: {
+    part: (n, of) => `Teil ${n} von ${of}`,
+    loading: 'Hörtext wird geladen…',
+    loadFailed: 'Dieser Hörtext konnte nicht geladen werden. Bitte prüfen Sie die Verbindung und laden Sie ihn erneut.',
+    reload: 'Erneut laden',
+    play: 'Abspielen',
+    playsLeft: (n) => `Noch ${n}× abspielbar (wie in der Prüfung begrenzt)`,
+    noPlays: 'Keine Wiedergabe mehr — beantworten Sie die Fragen.',
+    playFailed: 'Die Wiedergabe ist nicht gestartet. Bitte erneut versuchen — dieser Versuch zählt nicht.',
+    selfCheck: 'Selbstcheck (wird nicht automatisch bewertet):',
+    open: (n) => (n === 1 ? 'In diesem Teil ist noch eine Aufgabe offen.' : `In diesem Teil sind noch ${n} Aufgaben offen.`),
+    openFree: 'Offene Aufgaben zählen als falsch.',
+    anyway: 'Trotzdem weiter',
+    finishAnyway: 'Trotzdem abschließen',
+    finishing: 'Wird ausgewertet…',
+    finish: 'Test abschließen',
+    next: (title) => `Weiter zu: ${title}`,
+    time: (clock) => `Verbleibende Zeit ${clock}`,
+  },
+  en: {
+    part: (n, of) => `Part ${n} of ${of}`,
+    loading: 'Loading the recording…',
+    loadFailed: 'The recording could not be loaded. Please check your connection and load it again.',
+    reload: 'Load again',
+    play: 'Play',
+    playsLeft: (n) => (n === 1 ? 'You can play it once more' : `You can play it ${n} more times`),
+    noPlays: 'No more plays — please answer the questions.',
+    playFailed: 'The recording did not start. Please try again — this try does not count.',
+    selfCheck: 'Self-check (not marked automatically):',
+    open: (n) => (n === 1 ? 'One task in this part is still open.' : `${n} tasks in this part are still open.`),
+    openFree: 'Open tasks count as wrong.',
+    anyway: 'Continue anyway',
+    finishAnyway: 'Finish anyway',
+    finishing: 'Marking your test…',
+    finish: 'Finish the test',
+    next: (title) => `Continue to: ${title}`,
+    time: (clock) => `Time left ${clock}`,
+  },
+};
+
 const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
-function MockListeningPart({ part, answers, onAnswer, registerKey }) {
+function MockListeningPart({ part, answers, onAnswer, registerKey, copy = COPY.de }) {
   const { exercise, questions: allQuestions, loading, error, retry } = useExerciseDetails(part.level, String(part.exerciseNumber));
   // Plays live in the saved answers (`_plays`), so a reload cannot hand out fresh ones, and a play
   // counts only once the audio has actually started (Codex rescore, 2026-10-15: a blocked or
@@ -85,7 +129,7 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   if (loading) {
     return (
       <div className="flex items-center gap-2 text-graphite text-sm py-6">
-        <Loader2 className="w-4 h-4 animate-spin" /> Hörtext wird geladen…
+        <Loader2 className="w-4 h-4 animate-spin" /> {copy.loading}
       </div>
     );
   }
@@ -95,10 +139,10 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
     return (
       <div className="space-y-3 py-4">
         <p role="alert" className="text-sm text-graphite">
-          Dieser Hörtext konnte nicht geladen werden. Bitte prüfen Sie die Verbindung und laden Sie ihn erneut.
+          {copy.loadFailed}
         </p>
         <Button size="sm" variant="secondary" onClick={retry}>
-          Erneut laden
+          {copy.reload}
         </Button>
       </div>
     );
@@ -127,17 +171,17 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
           }}
           disabled={!canPlay}
         >
-          <Volume2 className="w-4 h-4" /> Abspielen
+          <Volume2 className="w-4 h-4" /> {copy.play}
         </Button>
         <span className="font-data text-[0.8125rem] text-graphite">
           {canPlay
-            ? `Noch ${playsAllowed - plays}× abspielbar (wie in der Prüfung begrenzt)`
-            : 'Keine Wiedergabe mehr — beantworten Sie die Fragen.'}
+            ? copy.playsLeft(playsAllowed - plays)
+            : copy.noPlays}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />
         {playFailed && (
           <p role="alert" className="w-full text-[0.8125rem] font-bold text-accent-aprikose-ink">
-            Die Wiedergabe ist nicht gestartet. Bitte erneut versuchen — dieser Versuch zählt nicht.
+            {copy.playFailed}
           </p>
         )}
       </Card>
@@ -195,6 +239,9 @@ const ModelltestRun = () => {
   const [changingSection, setChangingSection] = useState(false);
   const [finishError, setFinishError] = useState(null);
   const [sectionError, setSectionError] = useState(null);
+  // The section whose open tasks were named once: the next press hands it in (the timer never asks).
+  const [warned, setWarned] = useState(null);
+  const [lessonLang] = useLessonLang();
   const listeningKeysRef = useRef({});
   const autosaveRef = useRef(null);
   if (!autosaveRef.current) autosaveRef.current = createExamAutosave(saveAnswers);
@@ -247,6 +294,9 @@ const ModelltestRun = () => {
   }, [deadline]);
 
   const section = mock?.sections[sectionIndex];
+  const bilingual = Boolean(mock?.sections.some((s) => s.instructionsEn));
+  const english = bilingual && lessonLang !== 'de';
+  const copy = COPY[english ? 'en' : 'de'];
   const isLast = mock ? sectionIndex >= mock.sections.length - 1 : false;
 
   // Once the learner submits (or time runs out) the answers are FROZEN: a retry after a failed
@@ -354,6 +404,13 @@ const ModelltestRun = () => {
     );
   }
 
+  const open = openAnswers(section, answers, listeningKeysRef.current);
+  const asking = open > 0 && warned === sectionIndex;
+  const handIn = () => {
+    if (open > 0 && !asking) { setWarned(sectionIndex); return; }
+    nextSection();
+  };
+
   const mm = remaining != null ? String(Math.floor(remaining / 60)).padStart(2, '0') : '--';
   const ss = remaining != null ? String(remaining % 60).padStart(2, '0') : '--';
   const low = remaining != null && remaining < 120;
@@ -371,7 +428,7 @@ const ModelltestRun = () => {
           <div className="flex items-center justify-between gap-3 pb-3">
             <div>
               <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-                Teil {sectionIndex + 1} von {mock.sections.length}
+                {copy.part(sectionIndex + 1, mock.sections.length)}
               </p>
               <h1 className="font-display text-lg font-semibold text-ink">{section.title}</h1>
             </div>
@@ -381,7 +438,7 @@ const ModelltestRun = () => {
               className="font-data tabular-nums"
               role="timer"
               aria-live={low ? 'polite' : 'off'}
-              aria-label={`Verbleibende Zeit ${mm}:${ss}`}
+              aria-label={copy.time(`${mm}:${ss}`)}
             >
               <Clock className="w-4 h-4" /> {mm}:{ss}
             </Chip>
@@ -394,7 +451,8 @@ const ModelltestRun = () => {
           </div>
         </div>
 
-        <p className="mt-5 text-sm text-graphite leading-relaxed">{section.instructions}</p>
+        <p className="mt-5 text-sm text-graphite leading-relaxed" lang="de">{section.instructions}</p>
+        {english && section.instructionsEn && <p className="mt-2 text-sm text-graphite leading-relaxed" lang="en">{section.instructionsEn}</p>}
 
         <div className="mt-6 space-y-8">
           {section.parts.map((part) => (
@@ -503,13 +561,15 @@ const ModelltestRun = () => {
                   answers={answers}
                   onAnswer={setAnswer}
                   registerKey={registerListeningKey}
+                  copy={copy}
                 />
               )}
 
               {part.type === 'writing' && (
                 <div className="space-y-4">
                   <Card tone="sunk" className="p-4 text-sm text-ink leading-relaxed">
-                    {part.task}
+                    <span lang="de">{part.task}</span>
+                    {english && part.taskEn && <span className="mt-2 block text-graphite" lang="en">{part.taskEn}</span>}
                   </Card>
                   <textarea
                     value={answers[`writing:${part.key}`] || ''}
@@ -520,7 +580,7 @@ const ModelltestRun = () => {
                     className={`w-full p-4 text-sm leading-relaxed ${FIELD}`}
                   />
                   <Card className="p-4">
-                    <p className="text-sm font-bold text-ink mb-2">Selbstcheck (wird nicht automatisch bewertet):</p>
+                    <p className="text-sm font-bold text-ink mb-2">{copy.selfCheck}</p>
                     <ul className="space-y-1.5">
                       {part.criteria.map((c) => (
                         <li key={c} className="text-sm text-graphite">· {c}</li>
@@ -534,8 +594,9 @@ const ModelltestRun = () => {
         </div>
 
         {(finishError || sectionError) && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError || sectionError}</p>}
-        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing || changingSection}>
-          {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
+        {asking && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{copy.open(open)}{section.parts.some((p) => p.type !== 'writing') ? ` ${copy.openFree}` : ''}</p>}
+        <Button size="lg" className="mt-8 w-full" onClick={handIn} disabled={finishing || changingSection}>
+          {finishing ? copy.finishing : asking ? (isLast ? copy.finishAnyway : copy.anyway) : isLast ? copy.finish : copy.next(mock.sections[sectionIndex + 1].title)}
           <ChevronRight className="w-4 h-4" />
         </Button>
 

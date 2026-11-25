@@ -485,7 +485,8 @@ test('the runner honours a per-part playsAllowed cap (Wave 4 PR D2)', () => {
   assert.match(runSrc, /const PLAYS_ALLOWED = 2;/, 'the default stays two plays for every mock that does not set the field');
   assert.match(runSrc, /const playsAllowed = part\.playsAllowed \?\? PLAYS_ALLOWED;/, 'MockListeningPart must resolve the per-part cap');
   assert.match(runSrc, /const canPlay = plays < playsAllowed;/, 'the play guard must read the resolved cap');
-  assert.match(runSrc, /Noch \$\{playsAllowed - plays\}× abspielbar/, 'the counter label must read the resolved cap');
+  assert.match(runSrc, /copy\.playsLeft\(playsAllowed - plays\)/, 'the counter label must read the resolved cap');
+  assert.match(runSrc, /playsLeft: \(n\) => `Noch \$\{n\}× abspielbar/, 'and say it');
   assert.ok(!/plays < PLAYS_ALLOWED|PLAYS_ALLOWED - plays/.test(runSrc), 'nothing may read the module constant directly once a part can override it');
 });
 

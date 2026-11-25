@@ -26,7 +26,7 @@ export default function CheckedChoice({ item, lang, onResult, onNext, hintFirst 
         {item.options.map((option) => (
           <label key={option} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-rule bg-white p-4 text-sm">
             <input type="radio" name={item.id} value={option} checked={answer === option} onChange={() => setAnswer(option)} className="h-4 w-4 accent-coral-accessible" />
-            <span lang={shown === item.options ? undefined : 'de'}>{label(option)}</span>
+            <span lang={shown === item.options ? item.optionsLang : 'de'}>{label(option)}</span>
           </label>
         ))}
       </fieldset>

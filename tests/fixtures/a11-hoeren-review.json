@@ -1,0 +1,1911 @@
+{
+ "status": "reviewed",
+ "reviewedOn": "2026-11-25",
+ "method": "Independent blind review (Codex as DaF/SD1 examiner, read-only, effort high, 2026-11-25): every unit was worked out from what is printed here, without keys, places of the answers, evidence or reasons, and judged for one supported answer, refutation (not silence), natural German and a believable purpose. Round 1 reviewed all 304 units of the new checkpoint banks (36 to fix), round 2 the 38 changed ones (1 to fix), round 3 that one. `solved` and `evidence` are the reviewer’s; `round` says which review covers the current text.",
+ "units": [
+  {
+   "id": "a11-cp1-p1-h1",
+   "solved": "In Bremen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo, hier ist Thomas Vogt. Ich komme aus Österreich und wohne in Bremen. Frau Vogt ist noch in Berlin. Auf Wiedersehen!",
+   "question": "Wo wohnt Thomas Vogt?"
+  },
+  {
+   "id": "a11-cp1-p1-h2",
+   "solved": "18",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Sara, hier ist Mia. Ben ist zwanzig, und ich bin achtzehn. Und du? Wie alt bist du?",
+   "question": "Wie alt ist Mia?"
+  },
+  {
+   "id": "a11-cp1-p1-h3",
+   "solved": "Arabisch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das ist Frau Brandt. Sie ist Lehrerin und spricht Deutsch und Englisch. Der Mann von Frau Brandt spricht nur Arabisch.",
+   "question": "Welche Sprache spricht der Mann von Frau Brandt?"
+  },
+  {
+   "id": "a11-cp1-p2-h1",
+   "solved": "Das Formular.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Guten Morgen, hier ist Frau Krause vom Amt. Das Formular für Frau Lorenz ist schon da. Die Adresse und die Telefonnummer sind noch nicht da.",
+   "question": "Was ist schon da?"
+  },
+  {
+   "id": "a11-cp1-p2-h2",
+   "solved": "0421 58263",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Die Telefonnummer von Frau Becker ist null vier zwei eins, fünf acht zwei sechs drei.",
+   "question": "Wie ist die Telefonnummer von Frau Becker?"
+  },
+  {
+   "id": "a11-cp1-p2-h3",
+   "solved": "Ali.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ali ist Lehrer, er ist der Mann von Sara. Jonas ist der Bruder von Sara. Er ist noch Student. Und Ben? Er ist auch Student.",
+   "question": "Wer ist Lehrer?"
+  },
+  {
+   "id": "a11-cp1-p3-h1",
+   "solved": "Frau Meyer.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Morgen! Ich bin Frau Meyer. Ich spreche Englisch und Deutsch. Der Sohn spricht Deutsch und Arabisch, die Tochter spricht nur Deutsch.",
+   "question": "Wer spricht Englisch?"
+  },
+  {
+   "id": "a11-cp1-p3-h2",
+   "solved": "16",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das ist die Familie Novak. Der Sohn heißt Jonas und ist dreizehn. Die Tochter heißt Mia und ist sechzehn.",
+   "question": "Wie alt ist die Tochter?"
+  },
+  {
+   "id": "a11-cp1-p3-h3",
+   "solved": "In Köln.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo, hier ist Ben. Ich bin in Köln, Sara ist in Berlin. Morgen kommen wir nach Bremen. Tschüss!",
+   "question": "Wo ist Ben?"
+  },
+  {
+   "id": "a11-cp1-p4-h1",
+   "solved": "Jonas Seidel.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Hallo, hier ist Jonas Seidel. Ich buchstabiere Seidel: S, E, I, D, E, L. Danke und auf Wiedersehen!",
+   "question": "Wie heißt der Mann?"
+  },
+  {
+   "id": "a11-cp1-p4-h2",
+   "solved": "Die Telefonnummer.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Becker, hier ist Herr Vogt vom Amt. Geburtsdatum und Adresse sind da. Die Telefonnummer ist noch nicht da.",
+   "question": "Was ist noch nicht da?"
+  },
+  {
+   "id": "a11-cp1-p4-h3",
+   "solved": "Aus Deutschland.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Mia kommt aus Polen. Thomas kommt aus Deutschland, aber die Eltern von Thomas kommen aus Spanien.",
+   "question": "Woher kommt Thomas?"
+  },
+  {
+   "id": "a11-cp2-p1-h1",
+   "solved": "15 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag! Der Tisch kostet fünfzig Euro, die Lampe kostet fünf Euro, und der Stuhl kostet fünfzehn Euro.",
+   "question": "Was kostet der Stuhl?"
+  },
+  {
+   "id": "a11-cp2-p1-h2",
+   "solved": "Bei Frau Becker.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Meyer, hier ist Jonas. Der Schlüssel ist bei Frau Becker. Die Tasche ist im Büro. Und das Buch? Das Buch ist bei mir.",
+   "question": "Wo ist der Schlüssel?"
+  },
+  {
+   "id": "a11-cp2-p1-h3",
+   "solved": "Um elf.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Morgen! Um zehn kommt die Chefin, um elf ist die Pause, um zwölf kommt ein Verkäufer.",
+   "question": "Wann ist die Pause?"
+  },
+  {
+   "id": "a11-cp2-p2-h1",
+   "solved": "Weiß.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Im Büro ist der Stuhl grün, der Tisch ist weiß, und die Lampe ist blau.",
+   "question": "Welche Farbe hat der Tisch?"
+  },
+  {
+   "id": "a11-cp2-p2-h2",
+   "solved": "Ein Lineal.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ben, hier ist Sara. Ein Lineal ist schon da. Ich brauche noch ein Heft und eine Schere. Danke!",
+   "question": "Was ist schon da?"
+  },
+  {
+   "id": "a11-cp2-p2-h3",
+   "solved": "74 338",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Firma Krause, guten Tag! Frau Lorenz ist nicht im Büro. Die Nummer von Frau Lorenz ist sieben vier, drei drei acht.",
+   "question": "Wie ist die Nummer?"
+  },
+  {
+   "id": "a11-cp2-p3-h1",
+   "solved": "Lampen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Flohmarkt in Bremen! Frau Novak verkauft Bücher, Herr Seidel verkauft Lampen, und Ali verkauft Stühle.",
+   "question": "Was verkauft Herr Seidel?"
+  },
+  {
+   "id": "a11-cp2-p3-h2",
+   "solved": "Frau Lorenz.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo, hier ist Thomas. Ich bin Ingenieur. Die Chefin ist auch Ingenieurin, und Frau Lorenz ist Verkäuferin.",
+   "question": "Wer ist Verkäuferin?"
+  },
+  {
+   "id": "a11-cp2-p3-h3",
+   "solved": "17 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das Handy kostet siebzehn Euro, der Computer kostet siebzig Euro. Das macht zusammen siebenundachtzig Euro.",
+   "question": "Was kostet das Handy?"
+  },
+  {
+   "id": "a11-cp2-p4-h1",
+   "solved": "4 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Zwei Hefte kosten vier Euro, drei Stifte kosten sechs Euro. Das macht zusammen zehn Euro.",
+   "question": "Was kosten die Hefte?"
+  },
+  {
+   "id": "a11-cp2-p4-h2",
+   "solved": "Das Wörterbuch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Becker, hier ist Mia. Das Wörterbuch ist noch nicht da. Der Rucksack ist da, die Tasche auch.",
+   "question": "Was ist noch nicht da?"
+  },
+  {
+   "id": "a11-cp2-p4-h3",
+   "solved": "Eine Lampe.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hier ist das Zimmer. Ein Stuhl und ein Tisch sind schon da. Sie brauchen noch eine Lampe.",
+   "question": "Was brauchen Sie noch?"
+  },
+  {
+   "id": "a11-cp3-p1-h1",
+   "solved": "Am Freitag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Mia, hier ist Ben. Heute arbeite ich bis acht Uhr. Gehen wir am Freitag ins Kino? Am Samstag spiele ich Fußball.",
+   "question": "Wann möchte Ben ins Kino?"
+  },
+  {
+   "id": "a11-cp3-p1-h2",
+   "solved": "Suppe.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag! Ich möchte Suppe, bitte, und ein Glas Wasser. Brot möchte ich nicht, und Kuchen habe ich schon.",
+   "question": "Was möchte die Frau essen?"
+  },
+  {
+   "id": "a11-cp3-p1-h3",
+   "solved": "Um 7:30 Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Morgen, hier ist Radio Bremen. Es ist Viertel vor sieben. Um halb acht hören Sie Musik.",
+   "question": "Wann hören Sie Musik?"
+  },
+  {
+   "id": "a11-cp3-p2-h1",
+   "solved": "Am Freitag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hier ist das Büro von Frau Lorenz. Montag bis Donnerstag arbeiten wir bis vier Uhr. Am Freitag haben wir frei.",
+   "question": "Wann haben alle frei?"
+  },
+  {
+   "id": "a11-cp3-p2-h2",
+   "solved": "Lesen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Jonas, hier ist Sara. Ich lese gern. Ich tanze nicht gern, und ich schwimme nicht gern. Hast du ein Buch für mich?",
+   "question": "Was macht Sara gern?"
+  },
+  {
+   "id": "a11-cp3-p2-h3",
+   "solved": "3 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Der Kaffee kostet zwei Euro, das Glas Wein kostet drei Euro, und der Kuchen kostet vier Euro.",
+   "question": "Was kostet der Wein?"
+  },
+  {
+   "id": "a11-cp3-p3-h1",
+   "solved": "Um drei.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Novak, hier ist Herr Seidel. Um zwei habe ich einen Termin beim Arzt. Haben Sie um drei Uhr Zeit? Um vier arbeite ich.",
+   "question": "Wann hat Herr Seidel Zeit?"
+  },
+  {
+   "id": "a11-cp3-p3-h2",
+   "solved": "Kuchen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Guten Abend! Wir haben heute Suppe, Brot und Salat. Kuchen haben wir heute nicht.",
+   "question": "Was hat das Café heute nicht?"
+  },
+  {
+   "id": "a11-cp3-p3-h3",
+   "solved": "Jonas.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ali, hier ist Jonas. Ich bin krank und spiele heute nicht. Ben und Mia spielen. Tschüss!",
+   "question": "Wer spielt heute nicht?"
+  },
+  {
+   "id": "a11-cp3-p4-h1",
+   "solved": "Tee.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Morgens trinke ich immer Kaffee, nachmittags trinke ich Tee, und abends trinke ich nur Wasser.",
+   "question": "Was trinkt die Frau nachmittags?"
+  },
+  {
+   "id": "a11-cp3-p4-h2",
+   "solved": "Um 9:00 Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Meyer, es ist schon Viertel vor neun! Um neun Uhr haben Sie einen Termin mit Frau Brandt, und um Viertel nach neun ist Pause.",
+   "question": "Wann ist der Termin?"
+  },
+  {
+   "id": "a11-cp3-p4-h3",
+   "solved": "Er kocht.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Thomas arbeitet am Wochenende nicht. Am Samstag spielt er Fußball, am Sonntag hört er Musik und kocht.",
+   "question": "Was macht Thomas am Sonntag?"
+  },
+  {
+   "id": "a11-cp4-p1-h1",
+   "solved": "Gleis 6.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Achtung, Durchsage: Der Zug nach Berlin fährt heute von Gleis sechs, nicht von Gleis fünf. Abfahrt um sieben Uhr.",
+   "question": "Wo ist der Zug nach Berlin?"
+  },
+  {
+   "id": "a11-cp4-p1-h2",
+   "solved": "Am Sonntag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Sara, hier ist Jonas. Am Sonntag komme ich gern zum Fest. Am Samstag arbeite ich leider, und am Freitag habe ich einen Termin.",
+   "question": "Wann kommt Jonas?"
+  },
+  {
+   "id": "a11-cp4-p1-h3",
+   "solved": "Um 7:30 Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich stehe um sieben Uhr auf. Um halb acht frühstücke ich, und um acht fahre ich mit dem Bus ins Büro.",
+   "question": "Wann frühstückt der Mann?"
+  },
+  {
+   "id": "a11-cp4-p2-h1",
+   "solved": "Wein.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Frau Becker, hier ist Mia. Ich kaufe heute Kaffee und Kuchen ein. Wein kaufe ich nicht, Wein haben wir schon.",
+   "question": "Was kauft Mia nicht?"
+  },
+  {
+   "id": "a11-cp4-p2-h2",
+   "solved": "Um 12 Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Der Zug nach Köln: Abfahrt um neun Uhr, Ankunft um zwölf Uhr. Um drei Uhr fährt ein Bus in die Schweiz.",
+   "question": "Wann ist der Zug in Köln?"
+  },
+  {
+   "id": "a11-cp4-p2-h3",
+   "solved": "Sie lernt.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Heute lerne ich zu Hause. Gestern habe ich gearbeitet, und morgen schlafe ich bis neun.",
+   "question": "Was macht die Frau heute?"
+  },
+  {
+   "id": "a11-cp4-p3-h1",
+   "solved": "13 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag! Die Fahrkarte nach Köln kostet dreizehn Euro, die Fahrkarte nach Bremen dreißig. Kinder zahlen drei Euro.",
+   "question": "Was kostet die Fahrkarte nach Köln?"
+  },
+  {
+   "id": "a11-cp4-p3-h2",
+   "solved": "Der Bruder.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hier ist Thomas. Mein Bruder feiert im Juli, meine Schwester feiert im Juni, und ich feiere im Mai.",
+   "question": "Wer feiert im Juli?"
+  },
+  {
+   "id": "a11-cp4-p3-h3",
+   "solved": "Mit dem Zug.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Jonas! Heute fährt kein Bus in die Schweiz, und das Auto braucht mein Vater. Wir fahren mit dem Zug!",
+   "question": "Wie fährt die Frau in die Schweiz?"
+  },
+  {
+   "id": "a11-cp4-p4-h1",
+   "solved": "Kuchen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ben, hier ist Mia. Ich bringe am Samstag Musik mit, Jonas bringt Kuchen mit, und Ali macht Salat.",
+   "question": "Was bringt Jonas mit?"
+  },
+  {
+   "id": "a11-cp4-p4-h2",
+   "solved": "Um 11 Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo, hier ist Frau Novak. Um zehn ist die Abfahrt in Köln. Um elf bin ich am Bahnhof in Bremen, und um zwölf habe ich einen Termin.",
+   "question": "Wann ist Frau Novak in Bremen?"
+  },
+  {
+   "id": "a11-cp4-p4-h3",
+   "solved": "Am Mittwoch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Am Mittwoch bin ich frei, dann rufe ich dich an. Am Montag und am Dienstag arbeite ich noch.",
+   "question": "Wann ruft der Mann an?"
+  },
+  {
+   "id": "a11-cp1-p1-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wir kommen aus Italien und wohnen in Berlin."
+  },
+  {
+   "id": "a11-cp1-p1-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wie alt ist der Bruder von Frau Krause?"
+  },
+  {
+   "id": "a11-cp1-p1-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Sind Sie ledig oder verheiratet, Frau Lorenz?"
+  },
+  {
+   "id": "a11-cp1-p1-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Eltern von Ben sprechen auch Englisch."
+  },
+  {
+   "id": "a11-cp1-p2-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Sprechen die Kinder auch Arabisch?"
+  },
+  {
+   "id": "a11-cp1-p2-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Herr Krause ist Lehrer und wohnt in Berlin."
+  },
+  {
+   "id": "a11-cp1-p2-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das Baby von Frau Meyer heißt Mia."
+  },
+  {
+   "id": "a11-cp1-p2-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Sie ist verheiratet und wohnt in Köln."
+  },
+  {
+   "id": "a11-cp1-p3-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag, ich bin die Mutter von Ali."
+  },
+  {
+   "id": "a11-cp1-p3-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Woher kommen die Eltern von Jonas?"
+  },
+  {
+   "id": "a11-cp1-p3-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Und wie geht es Frau Krause?"
+  },
+  {
+   "id": "a11-cp1-p3-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Geschwister sprechen zusammen Arabisch."
+  },
+  {
+   "id": "a11-cp1-p4-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wie heißt der Sohn von Frau Becker?"
+  },
+  {
+   "id": "a11-cp1-p4-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Das Baby heißt Ali, die Mutter heißt Sara."
+  },
+  {
+   "id": "a11-cp1-p4-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Entschuldigung, sprechen Sie Deutsch?"
+  },
+  {
+   "id": "a11-cp1-p4-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Der Bruder von Mia ist Student in Berlin."
+  },
+  {
+   "id": "a11-cp2-p1-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das Regal kostet vierzig Euro, das ist teuer."
+  },
+  {
+   "id": "a11-cp2-p1-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wir brauchen einen Stift und Papier."
+  },
+  {
+   "id": "a11-cp2-p1-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ist das Fenster braun oder weiß?"
+  },
+  {
+   "id": "a11-cp2-p1-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wir haben kein Papier, aber zwei Stifte."
+  },
+  {
+   "id": "a11-cp2-p2-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Kollegin kauft ein Wörterbuch."
+  },
+  {
+   "id": "a11-cp2-p2-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wie viel kosten die Tasche und die Uhr?"
+  },
+  {
+   "id": "a11-cp2-p2-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich verkaufe den Rucksack für zwanzig Euro."
+  },
+  {
+   "id": "a11-cp2-p2-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das ist kein Bild, das ist eine Tafel."
+  },
+  {
+   "id": "a11-cp2-p3-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Der Chef hat ein Büro und zwei Computer."
+  },
+  {
+   "id": "a11-cp2-p3-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ist die Tasche von Mia rot oder schwarz?"
+  },
+  {
+   "id": "a11-cp2-p3-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wo ist der Bleistift von Ben?"
+  },
+  {
+   "id": "a11-cp2-p3-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Firma braucht eine Ingenieurin."
+  },
+  {
+   "id": "a11-cp2-p4-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich brauche eine Lampe, aber kein Regal."
+  },
+  {
+   "id": "a11-cp2-p4-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Um zwei kommt ein Kollege von Jonas."
+  },
+  {
+   "id": "a11-cp2-p4-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Entschuldigung, wie ist Ihre E-Mail-Adresse?"
+  },
+  {
+   "id": "a11-cp2-p4-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Schere ist rot, und das Lineal ist gelb."
+  },
+  {
+   "id": "a11-cp3-p1-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Am Samstag kochen wir zusammen Suppe."
+  },
+  {
+   "id": "a11-cp3-p1-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Der Termin mit Frau Becker ist um halb zwei."
+  },
+  {
+   "id": "a11-cp3-p1-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich trinke morgens immer Tee."
+  },
+  {
+   "id": "a11-cp3-p1-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Spielt ihr am Wochenende Fußball?"
+  },
+  {
+   "id": "a11-cp3-p2-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hast du am Mittwoch nachmittags Zeit?"
+  },
+  {
+   "id": "a11-cp3-p2-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Kellnerin hat heute viel Arbeit."
+  },
+  {
+   "id": "a11-cp3-p2-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wir tanzen heute nicht, wir sind krank."
+  },
+  {
+   "id": "a11-cp3-p2-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich habe Durst und möchte Orangensaft."
+  },
+  {
+   "id": "a11-cp3-p3-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Frau Krause hört gern Musik und spielt Fußball."
+  },
+  {
+   "id": "a11-cp3-p3-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Am Dienstag ist Thomas nicht pünktlich."
+  },
+  {
+   "id": "a11-cp3-p3-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Möchten Sie auch ein Glas Wein?"
+  },
+  {
+   "id": "a11-cp3-p3-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Um Viertel vor neun habe ich einen Termin."
+  },
+  {
+   "id": "a11-cp3-p4-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Suppe ist gut, der Tee ist auch gut."
+  },
+  {
+   "id": "a11-cp3-p4-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wann hast du am Donnerstag Pause?"
+  },
+  {
+   "id": "a11-cp3-p4-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Arbeitet ihr am Wochenende oder habt ihr frei?"
+  },
+  {
+   "id": "a11-cp3-p4-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Eine Tasse Tee und Brot, bitte."
+  },
+  {
+   "id": "a11-cp4-p1-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Fährt der Bus am Sonntag auch nach Köln?"
+  },
+  {
+   "id": "a11-cp4-p1-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Meine Kollegin bringt am Freitag den Kuchen mit."
+  },
+  {
+   "id": "a11-cp4-p1-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Rufst du mich morgen an?"
+  },
+  {
+   "id": "a11-cp4-p1-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Sein Geburtstag ist im August."
+  },
+  {
+   "id": "a11-cp4-p2-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Holen Sie bitte die Gäste am Bahnhof ab!"
+  },
+  {
+   "id": "a11-cp4-p2-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Unser Zug hat leider zehn Minuten Verspätung."
+  },
+  {
+   "id": "a11-cp4-p2-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Das ist ihr Geschenk, und das ist seine Karte."
+  },
+  {
+   "id": "a11-cp4-p2-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Kommt der Bus pünktlich oder hat er Verspätung?"
+  },
+  {
+   "id": "a11-cp4-p3-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Mein Vater schläft am Wochenende bis zehn."
+  },
+  {
+   "id": "a11-cp4-p3-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Wir laden die Gäste ein und kochen zusammen."
+  },
+  {
+   "id": "a11-cp4-p3-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich kaufe heute ein und koche abends Suppe."
+  },
+  {
+   "id": "a11-cp4-p3-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ist Ihr Büro weit vom Bahnhof?"
+  },
+  {
+   "id": "a11-cp4-p4-s1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Steht ihr am Sonntag auch um sieben auf?"
+  },
+  {
+   "id": "a11-cp4-p4-s2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ihre Party ist im September, nicht im Oktober."
+  },
+  {
+   "id": "a11-cp4-p4-r1",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Nächste Woche fahren wir nach Österreich."
+  },
+  {
+   "id": "a11-cp4-p4-r2",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Deine Karte kommt morgen, liebe Mia."
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-1-1",
+   "solved": "buchstabiert",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wie ___ man Novak? (buchstabieren)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-1-2",
+   "solved": "sind",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mia und ich ___ ledig. (sein)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-1-3",
+   "solved": "Er",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Das ist Herr Brandt. ___ ist Lehrer. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-1-4",
+   "solved": "sieben",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Hier wohnen ___ Familien. (7; Schreiben Sie die Zahl in Worten)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-1-5",
+   "solved": "sprichst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Du ___ gut Deutsch. (sprechen)"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-1-6",
+   "solved": "dir",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Hallo Ben, wie geht es ___? (du)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-1-7",
+   "solved": "Die Eltern kommen aus Italien.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / kommen / aus Italien]"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-1-8",
+   "solved": "Ihr sprecht gut Arabisch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Ihr“): [ihr / sprechen / gut Arabisch]"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-1",
+   "solved": "heißen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Frau Becker, wie ___ Sie mit Vornamen? (heißen)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-2-2",
+   "solved": "wohnst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo ___ du, Ben? (wohnen)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-3",
+   "solved": "Es",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Das Kind ist acht. ___ wohnt in Köln. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-2-4",
+   "solved": "seid",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ noch jung. (sein)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-5",
+   "solved": "ihr",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mia und Jonas, sprecht ___ Deutsch?"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-6",
+   "solved": "V",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Welcher Buchstabe heißt Vau? ___"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-2-7",
+   "solved": "Wie buchstabiert man Seidel?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / buchstabieren / man / Seidel]"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-2-8",
+   "solved": "Der Sohn spricht Arabisch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Der Sohn“): [der Sohn / sprechen / Arabisch]"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-1",
+   "solved": "heiße",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich ___ Thomas Vogt. (heißen)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-2",
+   "solved": "sind",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Frau Krause, ___ Sie verheiratet? (sein)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-3-3",
+   "solved": "Sie",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Das sind die Geschwister von Ali. ___ kommen morgen. (wir, ihr oder sie?)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-4",
+   "solved": "neun",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Die Tochter ist ___. (9; Schreiben Sie die Zahl in Worten)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-3-5",
+   "solved": "sprecht",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ auch Arabisch. (sprechen)"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-6",
+   "solved": "Ihnen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Guten Abend, Herr Vogt. Wie geht es ___? (Sie)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-3-7",
+   "solved": "Der Vater kommt aus Spanien.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Der Vater“): [der Vater / kommen / aus Spanien]"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-3-8",
+   "solved": "Ich buchstabiere Lorenz.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / buchstabieren / Lorenz]"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-4-1",
+   "solved": "geht",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Und wie ___ es Frau Krause? (gehen)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-2",
+   "solved": "seid",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ben und Ali, ___ ihr Studenten? (sein)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-3",
+   "solved": "Sie",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Das ist die Schwester von Jonas. ___ wohnt auch hier. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-4",
+   "solved": "komme",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich ___ aus Spanien. (kommen)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-5",
+   "solved": "Wir",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Ben und ich sind Brüder. ___ wohnen zusammen. (wir, ihr oder sie?)"
+  },
+  {
+   "id": "extra-a11-l01-assessment-1-4-6",
+   "solved": "J",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Welcher Buchstabe heißt Jot? ___"
+  },
+  {
+   "id": "extra-a11-l02-assessment-1-4-7",
+   "solved": "Wo wohnen die Kinder?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / wohnen / die Kinder]"
+  },
+  {
+   "id": "extra-a11-l03-assessment-1-4-8",
+   "solved": "Die Kinder sprechen drei Sprachen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Die Kinder“): [die Kinder / sprechen / drei Sprachen]"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-1-1",
+   "solved": "der",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ist ___ Rucksack neu? (der, die oder das?)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-1-2",
+   "solved": "die",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo sind ___ Hefte von Mia? (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-1-3",
+   "solved": "einen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich brauche ___ Bleistift. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-1-4",
+   "solved": "Sie",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Die Uhr ist alt. ___ kostet nur vier Euro. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-1-5",
+   "solved": "seid",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ Kollegen. (sein)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-1-6",
+   "solved": "Sie",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Brandt, buchstabieren ___ bitte!"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-1-7",
+   "solved": "Was kostet das Telefon?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Was“): [was / kosten / das Telefon]"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-1-8",
+   "solved": "Die Chefin braucht eine Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Die Chefin“): [die Chefin / brauchen / eine Uhr]"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-2-1",
+   "solved": "sechsunddreißig",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das macht zusammen ___ Euro. (36; Schreiben Sie die Zahl in Worten)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-2-2",
+   "solved": "Der",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ Bleistift ist grün. (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-2-3",
+   "solved": "eine",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das ist ___ Firma in Köln. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-2-4",
+   "solved": "den",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich kaufe ___ Tisch. (den, die oder das?)"
+  },
+  {
+   "id": "extra-a11-l01-assessment-2-2-5",
+   "solved": "buchstabiert",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wie ___ man Krause? (buchstabieren)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-2-6",
+   "solved": "Er",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Das ist der Vater von Ben. ___ heißt Thomas. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-2-7",
+   "solved": "Wo sind die Bücher?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Bücher]"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-2-8",
+   "solved": "Jonas braucht ein Heft.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Jonas“): [Jonas / brauchen / ein Heft]"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-3-1",
+   "solved": "kosten",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Die Stühle ___ zusammen zehn Euro. (kosten)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-3-2",
+   "solved": "Es",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Das Fenster ist alt. ___ ist braun. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-3-3",
+   "solved": "kein",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das ist ___ Büro, das ist eine Wohnung. (Verneinung)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-3-4",
+   "solved": "eine",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Frau Lorenz braucht ___ Tasche. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-3-5",
+   "solved": "kommst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Woher ___ du, Mia? (kommen)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-2-3-6",
+   "solved": "sprecht",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ gut Englisch. (sprechen)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-3-7",
+   "solved": "Die Lampe ist nicht teuer.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Die Lampe“): [die Lampe / sein / nicht / teuer]"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-3-8",
+   "solved": "Welche Farbe hat der Rucksack?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Welche Farbe“): [welche Farbe / haben / der Rucksack]"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-1",
+   "solved": "siebzehn",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das Wörterbuch kostet ___ Euro. (17; Schreiben Sie die Zahl in Worten)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-2-4-2",
+   "solved": "das",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo ist ___ Bild? (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-4-3",
+   "solved": "ein",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Hier ist ___ Telefon für Sie. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-4",
+   "solved": "Der",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ Preis ist gut. (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l01-assessment-2-4-5",
+   "solved": "heißen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wie ___ Sie bitte? (heißen)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-2-4-6",
+   "solved": "bist",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Du ___ Verkäufer von Beruf. (sein)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-2-4-7",
+   "solved": "Der Kollege braucht ein Regal.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Der Kollege“): [der Kollege / brauchen / ein Regal]"
+  },
+  {
+   "id": "extra-a11-l04-assessment-2-4-8",
+   "solved": "Ich verkaufe den Rucksack.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / verkaufen / den Rucksack]"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-1-1",
+   "solved": "kochst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Du ___ gern Suppe. (kochen)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-1-2",
+   "solved": "am",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Der Termin ist ___ Mittwoch. (am oder um?)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-1-3",
+   "solved": "habt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ heute frei. (haben)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-1-4",
+   "solved": "schwimme",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich ___ gern. (schwimmen)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-3-1-5",
+   "solved": "vierundneunzig",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das Zimmer kostet ___ Euro. (94; Schreiben Sie die Zahl in Worten)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-3-1-6",
+   "solved": "einen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich kaufe ___ Computer. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-1-7",
+   "solved": "Frau Krause hört gern Musik.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern Musik]"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-1-8",
+   "solved": "Wann kommt der Kellner?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie die Frage (Beginnen Sie mit „Wann“): [wann / kommen / der Kellner]"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-2-1",
+   "solved": "spielt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ gut Fußball. (spielen)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-2-2",
+   "solved": "halb",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Es ist ___ acht. (7.30)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-3",
+   "solved": "habt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ihr ___ heute Zeit. (haben)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-4",
+   "solved": "einen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich möchte ___ Salat, bitte. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-3-2-5",
+   "solved": "Die",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ Tür ist braun. (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l02-assessment-3-2-6",
+   "solved": "sind",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mia und Ben ___ Kollegen. (sein)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-2-7",
+   "solved": "Am Sonntag koche ich.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Am Sonntag“): [am Sonntag / ich / kochen]"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-2-8",
+   "solved": "Wir haben Hunger.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / haben / Hunger]"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-1",
+   "solved": "arbeitest",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Du ___ heute nicht. (arbeiten)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-3-2",
+   "solved": "um",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Die Pause ist ___ neun Uhr. (am oder um?)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-3-3",
+   "solved": "hat",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mia ___ viel Arbeit. (haben)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-4",
+   "solved": "machst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Was ___ du gern? (machen)"
+  },
+  {
+   "id": "extra-a11-l03-assessment-3-3-5",
+   "solved": "spricht",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mein Vater ___ Englisch. (sprechen)"
+  },
+  {
+   "id": "extra-a11-l04-assessment-3-3-6",
+   "solved": "Er",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Der Wecker ist gut. ___ kostet acht Euro. (er, sie oder es?)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-3-7",
+   "solved": "Ich möchte eine Tasse Tee.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / möchten / eine Tasse Tee]"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-3-8",
+   "solved": "Wir spielen zusammen Fußball.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / spielen / zusammen Fußball]"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-4-1",
+   "solved": "tanzt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ali ___ sehr gern. (tanzen)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-4-2",
+   "solved": "Freitag",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Nach Donnerstag kommt ___."
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-4-3",
+   "solved": "hat",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Herr Vogt ___ einen Termin. (haben)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-3-4-4",
+   "solved": "elf",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Es ist halb ___. (10.30)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-3-4-5",
+   "solved": "kein",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Herr Seidel hat ___ Telefon. (Verneinung)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-3-4-6",
+   "solved": "die",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo sind ___ Schlüssel von Ben und Mia? (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-3-4-7",
+   "solved": "Er arbeitet am Dienstag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Er“): [er / arbeiten / am Dienstag]"
+  },
+  {
+   "id": "extra-a11-l09-assessment-3-4-8",
+   "solved": "Das Café hat Suppe und Kuchen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Das Café“): [das Café / haben / Suppe und Kuchen]"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-1-1",
+   "solved": "Fährst",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ du morgen mit dem Auto? (fahren)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-2",
+   "solved": "auf",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich stehe jeden Tag um sechs ___. (aufstehen)"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-1-3",
+   "solved": "sein",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das ist Ben. Das ist ___ Geschenk. (er)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-4",
+   "solved": "steht",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wann ___ ihr auf? (aufstehen)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-4-1-5",
+   "solved": "haben",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wir ___ morgen frei. (haben)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-4-1-6",
+   "solved": "arbeitet",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Herr Meyer ___ zu Hause. (arbeiten)"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-1-7",
+   "solved": "Fährt der Bus nach Bremen?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Schreiben Sie die Frage (das Verb steht vorn): [der Bus / fahren / nach Bremen]"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-1-8",
+   "solved": "Die Eltern kaufen morgen ein.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / einkaufen / morgen]"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-2-1",
+   "solved": "Habt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ ihr nächste Woche frei? (haben)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-2-2",
+   "solved": "holt",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ben ___ die Gäste ab. (abholen)"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-2-3",
+   "solved": "deine",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo ist ___ Tasche, Mia? (du)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-2-4",
+   "solved": "schläft",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das Kind ___ noch. (schlafen)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-4-2-5",
+   "solved": "am",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Ergänzen Sie mit einem Wort: Ben kommt ___ Dienstag. (am oder um?)"
+  },
+  {
+   "id": "extra-a11-l06-assessment-4-2-6",
+   "solved": "einen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich habe ___ Termin. (unbestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-2-7",
+   "solved": "Kostet die Fahrkarte zehn Euro?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Schreiben Sie die Frage (das Verb steht vorn): [die Fahrkarte / kosten / zehn Euro]"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-2-8",
+   "solved": "Mein Bruder feiert am Sonntag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Mein Bruder“): [mein Bruder / feiern / am Sonntag]"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-3-1",
+   "solved": "Fahren",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ Sie auch nach Österreich, Frau Vogt? (fahren)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-3-2",
+   "solved": "komme",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Ich ___ heute leider nicht mit. (mitkommen)"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-3-3",
+   "solved": "Ihr",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Frau Novak, ist das ___ Zug? (Sie)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-3-4",
+   "solved": "rufen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wir ___ dich morgen an. (anrufen)"
+  },
+  {
+   "id": "extra-a11-l09-assessment-4-3-5",
+   "solved": "hast",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Du ___ Hunger. (haben)"
+  },
+  {
+   "id": "extra-a11-l05-assessment-4-3-6",
+   "solved": "die",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Wo ist ___ Karte für Ali? (bestimmter Artikel)"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-3-7",
+   "solved": "Hat der Bus Verspätung?",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Schreiben Sie die Frage (das Verb steht vorn): [der Bus / haben / Verspätung]"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-3-8",
+   "solved": "Sara bringt den Salat mit.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Sara“): [Sara / mitbringen / den Salat]"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-4-1",
+   "solved": "Ist",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: ___ der Bahnhof weit? (sein)"
+  },
+  {
+   "id": "extra-a11-l11-assessment-4-4-2",
+   "solved": "ein",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Mia kauft heute ___. (einkaufen)"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-4-3",
+   "solved": "unsere",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Das sind ___ Gäste. (wir)"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-4-4",
+   "solved": "Ihre",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Sara feiert. ___ Gäste kommen am Freitag. (sie)"
+  },
+  {
+   "id": "extra-a11-l08-assessment-4-4-5",
+   "solved": "neun",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Es ist halb ___. (8.30)"
+  },
+  {
+   "id": "extra-a11-l07-assessment-4-4-6",
+   "solved": "machen",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ergänzen Sie mit einem Wort: Was ___ Sie heute, Herr Krause? (machen)"
+  },
+  {
+   "id": "extra-a11-l10-assessment-4-4-7",
+   "solved": "Hast du viel Zeit?",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Schreiben Sie die Frage (das Verb steht vorn): [du / haben / viel Zeit]"
+  },
+  {
+   "id": "extra-a11-l12-assessment-4-4-8",
+   "solved": "Meine Eltern kommen später.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Meine Eltern“): [meine Eltern / kommen / später]"
+  }
+ ]
+}

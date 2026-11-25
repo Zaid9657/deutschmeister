@@ -42,6 +42,21 @@ function withWindow(storage, fn) {
 
 const NOW = Date.UTC(2026, 9, 1, 8, 0, 0);
 
+// Walk L, 13 (2026-11-25): a refresh at turn 3 of the final check started it again.
+test('the run keeps where the final check stands: the verdicts and the chosen person, never an answer', () => {
+  const check = { retake: 1, outcomes: ['shown', 'missed', 'unverified'], chosen: 'Schwester', answers: ['Das ist meine Schwester Ana.'] };
+  const run = packRun({ stageKey: 'check', stageIndex: 13, itemIndex: 0, attempt: 1, attempts: [], misses: [], requeued: [], combo: 0, dueCards: [], check }, NOW);
+  assert.deepEqual(run.check, { retake: 1, outcomes: ['shown', 'missed', 'unverified'], chosen: 'Schwester' });
+  assert.doesNotMatch(JSON.stringify(run), /Ana/, 'no answer is stored');
+  assert.deepEqual(unpackRun(JSON.parse(JSON.stringify(run)), NOW).check, run.check);
+  for (const bad of [null, 'x', [], { outcomes: ['lovely'] }, { outcomes: {} }, {}]) {
+    assert.equal(packRun({ stageKey: 'check', stageIndex: 13, itemIndex: 0, attempt: 1, check: bad }, NOW).check, null, JSON.stringify(bad));
+  }
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.match(player, /resume=\{checkRun\} onProgress=\{setCheckRun\}/);
+  assert.match(player, /useState\(\(\) => resumed\?\.check \|\| null\)/);
+});
+
 test('packRun → unpackRun round-trips a run and normalises bad numbers', () => {
   const run = packRun({
     stageKey: 'speaking', stageIndex: 8, itemIndex: 0, attempt: 2,
@@ -146,7 +161,7 @@ test('LessonPlayerPage restores the run on mount, saves it on every change, and 
     'the recap clears the run, and a run past the recap is never saved again');
   assert.match(src, /if \(!cancelled && !resumed && !started\.current\) setAttempt/, 'a resumed run keeps its draw, and so does a started one');
   assert.match(src, /if \(resumed\) return undefined;/, 'a resumed run keeps its warm-up cards');
-  assert.match(src, /readAloud,\s*\}\), owner\);/, 'the read-aloud results travel with the run');
+  assert.match(src, /readAloud, check: checkRun,\s*\}\), owner\);/, 'the read-aloud results and the place in the check travel with the run');
 });
 
 test('every full-page exit from a lesson stage returns to the Lektion URL the player resumes on', () => {
