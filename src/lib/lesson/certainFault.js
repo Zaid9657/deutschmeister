@@ -141,6 +141,15 @@ function verbPlace(text, isVerb) {
 }
 const unsplit = (x, isVerb) => { const m = String(x || '').match(/^(?:fern|auf|ein|an|ab|mit|aus)(\p{L}{3,})$/u); return Boolean(m) && isVerb(m[1]) && !isVerb(x); };
 
+// A preposition before a verb, before another preposition or at the end („Freitag zehn um passt mir“, „sechs um Uhr auf“).
+const NEVER_LAST = set('am um im ins zum zur beim vom in bei für ohne gegen bis von seit');
+function prepositionPlace(text, isVerb) {
+  return String(text || '').split(/[.!?;]+/).some((clause) => {
+    const w = toks(clause);
+    return w.some((x, i) => NEVER_LAST.has(x) && (i === w.length - 1 || (NEVER_LAST.has(w[i + 1]) && !(x === 'bis' || w[i + 1] === 'bis' || (x === 'von' && w[i + 1] === 'bis'))) || (w[i + 1] === 'uhr' && x === 'um') || (isVerb(w[i + 1]) && !QUESTION.has(w[i + 1]) && !SEIN.has(w[i + 1]))));
+  });
+}
+
 /** A date that does not exist („31.04.1990“, „12/13/1990“). */
 const badDate = (text) => [...String(text || '').matchAll(/(\d{1,2})[./]\s?(\d{1,2})[./]\s?(\d{4})/g)].some(([, d, m, y]) => Number(m) < 1 || Number(m) > 12 || Number(d) < 1 || Number(d) > new Date(Number(y), Number(m), 0).getDate());
 
@@ -161,7 +170,7 @@ const timePreposition = (whole) => whole.some((w, i) => (DAYS.has(w) && ['in', '
  */
 export function certainFault(turn, text, reason, knows, isVerb = () => false) {
   if (ALWAYS.has(reason)) return true;
-  if (timePreposition(toks(text)) || verbPlace(text, isVerb)) return true;
+  if (timePreposition(toks(text)) || verbPlace(text, isVerb) || (reason === 'order' && prepositionPlace(text, isVerb))) return true;
   // Telling the time takes no „um“ („Es ist um halb neun“).
   if (turn.slot === 'clock' && /\bist\s+(?:es\s+)?um\b/iu.test(text)) return true;
   if (reason === 'extra' && doubled(text)) return true;
