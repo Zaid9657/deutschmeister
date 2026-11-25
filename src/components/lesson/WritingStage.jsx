@@ -70,7 +70,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
       eyebrow={t('stage.writing.eyebrow', lang)}
       part={stage.part}
       title={schreiben.taskDe}
-      lead={schreiben.taskEn || null}
+      lead={(lang !== 'de' && schreiben.taskEn) || null}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       onPrimary={next}

@@ -251,7 +251,25 @@ test('I4: the final check reads every can-do state aloud, and a graded answer st
     const rows = elements(render(RecapStage, { checkShown, stage: recapStage, level: c.level, accuracy: 1, status: 'complete', skills: [], onBack: noop, onNext: noop }), (el) => el.type === 'li')
       .filter((li) => shownLines(l, lng).some((line) => text(li).startsWith(line)));
     assert.equal(rows.length, checkShown.length, `${lng}: the recap lists the can-dos`);
-    rows.forEach((li, i) => assert.equal(srOnly(li).includes(t('check.shown', lng)), checkShown[i], `${lng}: recap row ${i + 1}`));
+    // What the check showed stands first, what it did not show after it; every row says its state in words.
+    const expected = shownLines(l, lng).map((line, i) => ({ line, shown: checkShown[i] })).sort((a, b) => Number(b.shown) - Number(a.shown));
+    rows.forEach((li, i) => {
+      assert.ok(text(li).startsWith(expected[i].line), `${lng}: recap row ${i + 1}`);
+      assert.ok(srOnly(li).includes(t(expected[i].shown ? 'check.shown' : 'recap.canDo.notYet', lng)), `${lng}: recap row ${i + 1}`);
+    });
+    // Under „What you can do now" only what the check showed, with how; nothing shown, no such heading.
+    const recap = (shown) => render(RecapStage, { checkShown: shown, stage: recapStage, level: c.level, accuracy: 1, status: 'complete', skills: [], onNext: noop });
+    const headings = (shown) => { fresh(); return elements(recap(shown), (el) => el.type === 'h3').map((h3) => text(h3)); };
+    const [now, notYet] = [t('recap.canDo.title', lng), t('recap.canDo.notYet', lng)];
+    assert.deepEqual(headings(checkShown).filter((h3) => [now, notYet].includes(h3)), [now, notYet], lng);
+    assert.deepEqual(headings(checkShown.map(() => false)).filter((h3) => [now, notYet].includes(h3)), [notYet], `${lng}: nothing shown`);
+    assert.deepEqual(headings(checkShown.map(() => true)).filter((h3) => [now, notYet].includes(h3)), [now], `${lng}: all shown`);
+    assert.deepEqual(headings(null).filter((h3) => [now, notYet].includes(h3)), [now], `${lng}: no check`);
+    fresh();
+    const screen = text(recap(checkShown));
+    for (const key of ['recap.canDo.inCheck.written', 'recap.canDo.notInCheck']) assert.ok(screen.includes(t(key, lng)), `${lng}: ${key} (a guest writes every turn)`);
+    fresh();
+    assert.ok(!text(recap(null)).includes(t('recap.canDo.inCheck.written', lng)), `${lng}: without a check nothing is said about one`);
 
     // A turn answered right: the input goes, the learner's words stay above „Correct!“.
     const right = modelAnswer(turns[0]);

@@ -38,7 +38,7 @@ function helpers() {
     safeRemove: (key) => { store.delete(key); },
   };
   const source = cut(GW, 'const DRAFT_MAX_AGE_MS', '// The feedback reached the screen').replace('export function', 'function');
-  Object.assign(context, vm.runInNewContext(`${source}\n({ draftKey, readDraft, assessedKeyOf, readAssessed, forgetAssessedWriting });`, context));
+  Object.assign(context, vm.runInNewContext(`${source}\n({ draftKey, readDraft, assessedKeyOf, keepsOutcome, readAssessed, forgetAssessedWriting });`, context));
   return { store, context };
 }
 
@@ -108,6 +108,9 @@ test('only an AI assessment in a lesson is kept: not the form-check fallback, no
   const key = h.context.draftKey('user-1', 'a11-l04', 'a1.1-l04');
   runFinish(h, { keepAssessed: true, r: { ...scored, scored: false, usedFallback: true }, key });
   assert.equal(h.context.readAssessed(key), null, 'a fallback leaves the learner free to get a real assessment later');
+  assert.equal(h.context.readDraft(key)?.text, 'Hallo Lena! Ich komme am Montag.', 'its text comes back after a refresh, ready to hand in again');
+  h.context.forgetAssessedWriting('user-1', 'a11-l04', 'a1.1-l04');
+  assert.equal(h.context.readDraft(key), null, 'moving on drops it: a later run starts a new text');
   runFinish(h, { keepAssessed: false, r: scored, key });
   assert.equal(h.context.readAssessed(key), null, 'without keepAssessed nothing is kept');
   assert.match(STAGE, /allowRevision\s+keepAssessed/, 'the lesson stage keeps it');
@@ -115,6 +118,24 @@ test('only an AI assessment in a lesson is kept: not the form-check fallback, no
   // Expired records are ignored like drafts.
   h.context.safeSetJSON(h.context.assessedKeyOf(key), { text: 'x', outcome: scored, savedAt: Date.now() - 8 * 24 * 60 * 60 * 1000 });
   assert.equal(h.context.readAssessed(key), null);
+});
+
+test('a guest’s handed-in text and its form check come back after a refresh, with Next open (browser walk 2026-11-25)', () => {
+  const h = helpers();
+  const key = h.context.draftKey(undefined, 'a11-l04', 'a1.1-l04');
+  h.context.safeSetJSON(key, { text: 'Hallo Lena! Ich komme am Montag.', fields: {}, savedAt: Date.now() });
+  const fallback = { ...scored, scored: false, pct: null, total: null, usedFallback: true };
+  runFinish(h, { keepAssessed: true, r: fallback, key });
+  assert.equal(h.context.readDraft(key), null, 'handed in: the draft is dropped');
+  const kept = h.context.readAssessed(key);
+  assert.equal(kept.text, 'Hallo Lena! Ich komme am Montag.');
+  assert.deepEqual(kept.outcome, fallback, 'the restore effect reports it upward, which opens Next');
+  h.context.forgetAssessedWriting(undefined, 'a11-l04', 'a1.1-l04');
+  assert.equal(h.context.readAssessed(key), null, 'moving on ends it');
+  // Without keepAssessed (a checkpoint) a guest's fallback is kept nowhere.
+  runFinish(h, { keepAssessed: false, r: fallback, key });
+  assert.equal(h.context.readAssessed(key), null);
+  assert.equal(h.context.readDraft(key), null);
 });
 
 test('moving on, or opening the improved-version editor, ends the kept assessment; Back keeps it', () => {

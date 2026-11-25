@@ -162,11 +162,11 @@ function WortfeldAudioBadge({ words, lang }) {
   );
 }
 
-export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
+/** `group`/`onGroup`: the page of words is the player's saved position, so a refresh reopens the same page. */
+export default function WortfeldStage({ stage, lektionId, group: savedGroup = 0, onGroup, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
   const [allOpen, setAllOpen] = useState(false);
   const [memory, setMemory] = useState(false);
-  const [group, setGroup] = useState(0);
   const words = stage.words || [];
   const [lang] = useLessonLang();
   const id = lektionId || stage.lektionId || lektionIdFromWords(words);
@@ -175,6 +175,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   // Index-keyed so the flip state survives paging. Every word stays in a group: each one can come
   // up in the match exercise, the checkpoints and review, so none may be presented as optional.
   const groups = groupWords(words.map((w, i) => ({ w, i })));
+  const group = Math.min(savedGroup, Math.max(groups.length - 1, 0));
   const shown = groups[group] || [];
   const last = group >= groups.length - 1;
   const from = groups.slice(0, group).reduce((n, g) => n + g.length, 0) + 1;
@@ -182,7 +183,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   // A new group is a new screen: the learner hears where they are.
   // Paging (forward OR back to group one) moves focus to the group heading; the first render does not.
   const paged = useRef(false);
-  const goGroup = (n) => { paged.current = true; setGroup(n); };
+  const goGroup = (n) => { paged.current = true; onGroup?.(n); };
   useEffect(() => {
     if (paged.current && headingRef.current) headingRef.current.focus({ preventScroll: false });
   }, [group]);
@@ -224,7 +225,8 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       onPrimary={last ? onDone : () => goGroup(group + 1)}
     >
       {id && group === 0 && (
-        <SituationScene lektionId={id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
+        // The strip is cut high, where the people's heads are in all twelve pictures (Lektion 9 lost Paul's).
+        <SituationScene lektionId={id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover object-[center_20%] sm:h-40" />
       )}
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
