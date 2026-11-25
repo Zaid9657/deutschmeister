@@ -747,17 +747,21 @@ export const WORTFELD_ICON_FALLBACK = 'Sparkle';
 // ---------------------------------------------------------------------------
 
 /**
- * Four notes, `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes
- * a chapter, and `chapters[].nr` and `checkpoint.nr` are the same numbers
- * (one checkpoint per chapter), so the checkpoint result screen can key
- * straight off `checkpoint.nr`. Facts only: no stereotypes, no exam-fee
+ * `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes a chapter, and
+ * `chapters[].nr` and `checkpoint.nr` are the same numbers (one checkpoint per
+ * chapter), so the checkpoint result screen can key straight off `checkpoint.nr`.
+ * Every note sits with the chapter whose Lektionen it is about (`lektion`, pinned
+ * by tests/course-meta.test.mjs): the registration note stood one chapter late, at
+ * the shopping checkpoint, and the flea market at the free-time one (2026-11-25).
+ * Chapter 1 has two. Facts only: no stereotypes, no exam-fee
  * figures, no outcome promises (the a11.js header's rule extends here). Each
  * `source` is a real, checkable URL, or the literal string "allgemein
  * bekannt" for a norm with no single citable page. `bodyEn`/`bodyDe` stay at
  * or under 90 words; `bodyDe` speaks Sie, like the rest of the course.
  */
 export const LANDESKUNDE = {
-  1: {
+  1: [{
+    lektion: 1,
     titleDe: 'Begrüßung: Sie oder du?',
     titleEn: 'Greeting people: Sie or du?',
     bodyEn:
@@ -776,7 +780,8 @@ export const LANDESKUNDE = {
       'Leuten und in manchen Firmen lockerer gehandhabt wird. Im Zweifel ist „Sie“ die sichere Wahl.',
     source: 'allgemein bekannt',
   },
-  2: {
+  {
+    lektion: 2,
     titleDe: 'Anmelden: das Bürgerbüro und die Meldebescheinigung',
     titleEn: 'Registering: the Bürgerbüro and the Meldebescheinigung',
     bodyEn:
@@ -794,8 +799,9 @@ export const LANDESKUNDE = {
       'Bringen Sie Ihren Pass, den Mietvertrag und die Wohnungsgeberbestätigung mit; oft ist vorher ' +
       'ein Termin nötig.',
     source: 'https://www.gesetze-im-internet.de/bmg/__17.html',
-  },
-  3: {
+  }],
+  2: [{
+    lektion: 4,
     titleDe: 'Flohmarkt: gebraucht kaufen, bar bezahlen',
     titleEn: 'Flohmarkt culture: buying secondhand, paying cash',
     bodyEn:
@@ -811,26 +817,35 @@ export const LANDESKUNDE = {
       'ist üblich, nicht unhöflich. Die meisten Verkaufenden sind Privatpersonen ohne Kartenlesegerät, ' +
       'deshalb zahlt man meist bar, am besten mit kleinen Scheinen und Münzen. Bringen Sie eine eigene Tasche mit.',
     source: 'allgemein bekannt',
-  },
-  4: {
-    titleDe: 'Pünktlichkeit und die Bahn',
-    titleEn: 'Punctuality and the train',
+  }],
+  3: [{
+    lektion: 8,
+    titleDe: 'Pünktlichkeit bei einem Termin',
+    titleEn: 'Being on time for an appointment',
     bodyEn:
       'Arriving on time for an appointment (Termin) is expected in Germany; if you will be even a ' +
-      'few minutes late, a short call or message ahead is considered polite. Deutsche Bahn, the ' +
-      'national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
+      'few minutes late, a short call or message ahead is considered polite.',
+    bodyDe:
+      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
+      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben.',
+    source: 'allgemein bekannt',
+  }],
+  4: [{
+    lektion: 10,
+    titleDe: 'Pünktlichkeit bei der Bahn',
+    titleEn: 'Punctuality and the train',
+    bodyEn:
+      'Deutsche Bahn, the national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
       'arrives less than six minutes after the scheduled time — its own definition, published with ' +
       'its punctuality reporting. A delay is called "Verspätung"; announcements at the Bahnhof name ' +
       'the platform (Gleis) and any delay together.',
     bodyDe:
-      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
-      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben. Die Deutsche Bahn, ' +
-      'der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
+      'Die Deutsche Bahn, der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
       'weniger als sechs Minuten nach der planmäßigen Zeit ankommt — das ist ihre eigene Definition, ' +
       'veröffentlicht in ihrer Pünktlichkeitsstatistik. Eine Verspätung heißt „Verspätung“; ' +
       'Durchsagen am Bahnhof nennen Gleis und eventuelle Verspätung zusammen.',
     source: 'https://www.deutschebahn.com/de/presse/konzernthemen/puenktlichkeit',
-  },
+  }],
 };
 
 export default A11_META;

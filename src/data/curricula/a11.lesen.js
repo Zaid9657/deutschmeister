@@ -34,7 +34,7 @@ const papers = [
     ['message', 'Guten Tag, Frau Brandt, Ihr Wörterbuch ist im Büro. Das Heft ist nicht hier, es ist bei Frau Novak. Brauchen Sie auch Papier? Das Papier ist hier. Grüße, Mia', 'Das Wörterbuch ist im Büro.', true, 'Ihr Wörterbuch ist im Büro.', 'The dictionary is in the office; Novak has the exercise book.'],
   ],
   [
-    ['message', 'Hallo Ben, der Stuhl ist schwarz. Ich brauche den Stuhl für das Büro. Der Tisch ist weiß und ist für Sara. Grüße, Mia', 'Der Stuhl ist schwarz.', true, 'der Stuhl ist schwarz.', 'Ben’s chair is black; the table is white.'],
+    ['message', 'Hallo Ben, der Stuhl ist schwarz. Ich brauche den Stuhl für das Büro. Der Tisch ist weiß und ist für Sara. Grüße, Mia', 'Der Stuhl ist schwarz.', true, 'der Stuhl ist schwarz.', 'The chair is black; the table is white.'],
     ['ad', 'Lampe für das Büro: acht Euro! Die Lampe ist weiß. Das Regal ist braun und kostet dreißig Euro. Ich verkaufe auch Bücher. Frau Brandt, Telefonnummer 0174 5236802.', 'Die Lampe für das Büro ist braun.', false, 'Die Lampe ist weiß.', 'The lamp is white; brown describes the shelf.'],
     ['message', 'Frau Becker, Ihre Tasche ist hier bei mir. Die Tasche ist blau. Das Bild ist rot und ist von Jonas. Brauchen Sie das Bild auch? Grüße, Sara', 'Die Tasche ist rot.', false, 'Die Tasche ist blau.', 'The bag is blue; the picture is red.'],
     ['notice', 'Die Uhr für Frau Novak ist schwarz und kostet zehn Euro. Die Uhr für Frau Meyer ist weiß. Bitte die Uhr für Frau Novak kaufen!', 'Die Uhr für Frau Novak ist schwarz.', true, 'Die Uhr für Frau Novak ist schwarz und kostet zehn Euro.', 'The order notice assigns the black clock to Novak and the white clock to Meyer.'],

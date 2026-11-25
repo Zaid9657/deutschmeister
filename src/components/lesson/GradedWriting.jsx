@@ -59,6 +59,15 @@ const AI_ROW_LABEL_EN = {
   fallback: 'cannot be checked without the AI assessment',
 };
 
+/**
+ * A row's name in the chrome language. The three form rows are chrome (their German is writing.js's, which
+ * tests pin); a Leitpunkt or a form field is the German task itself and stays German in both.
+ */
+const rowLabel = (c, lang) => {
+  if (c.key === 'length') return t('writing.row.length', lang, { range: c.label.replace(/\s.*$/, '') });
+  return c.key === 'anrede' || c.key === 'gruss' ? t(`writing.row.${c.key}`, lang) : c.label;
+};
+
 /** The Formcheck rows — live under the text, or as the fallback card after a submission without the KI. */
 function Checklist({ checks, mode, signedIn, lang }) {
   const aiLabelDe = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
@@ -91,7 +100,7 @@ function Checklist({ checks, mode, signedIn, lang }) {
               <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
             )}
             <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-              {c.label} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
+              {rowLabel(c, lang)} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
             </span>
           </li>
         );

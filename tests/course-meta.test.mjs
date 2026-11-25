@@ -29,6 +29,7 @@ function englishStrings(meta) {
   out.push(meta.aboutEn);
   for (const c of meta.chapters) out.push(c.titleEn, c.storyEn);
   for (const c of meta.characters) out.push(c.roleEn);
+  for (const notes of Object.values(LANDESKUNDE)) for (const n of notes) out.push(n.titleEn, n.bodyEn);
   for (const intro of Object.values(meta.lektionIntro)) out.push(intro.situationEn, ...intro.canDoEn);
   out.push(...meta.outcomesEn);
   for (const s of meta.howItWorksEn.steps) out.push(s.label, s.descriptionEn);
@@ -383,10 +384,11 @@ test('the wortfeld string keys (EN tag, show/hide all English) exist in both chr
 
 test('every chapter has a Landeskunde note with both languages, both under 90 words, and a source', () => {
   const chapterNrs = A11_META.chapters.map((c) => c.nr);
-  assert.deepEqual(Object.keys(LANDESKUNDE).map(Number).sort(), chapterNrs, 'LANDESKUNDE must have exactly one entry per chapter');
-  for (const nr of chapterNrs) {
-    const note = LANDESKUNDE[nr];
-    assert.ok(note, `chapter ${nr} has no Landeskunde note`);
+  assert.deepEqual(Object.keys(LANDESKUNDE).map(Number).sort(), chapterNrs, 'LANDESKUNDE must have an entry for every chapter');
+  for (const nr of chapterNrs) assert.ok(LANDESKUNDE[nr].length > 0, `chapter ${nr} has no Landeskunde note`);
+  for (const [nr, note] of Object.entries(LANDESKUNDE).flatMap(([n, notes]) => notes.map((x) => [n, x]))) {
+    // A note stands at its own chapter: the registration one stood at checkpoint 2, the flea market at 3.
+    assert.ok(A11_META.chapters.find((c) => c.nr === Number(nr)).lektionen.includes(note.lektion), `"${note.titleDe}" is about Lektion ${note.lektion}, not chapter ${nr}`);
     for (const field of ['titleDe', 'titleEn', 'bodyEn', 'bodyDe', 'source']) {
       assert.ok(typeof note[field] === 'string' && note[field].trim().length > 0, `chapter ${nr}: "${field}" is empty`);
     }
@@ -401,7 +403,7 @@ test('every chapter has a Landeskunde note with both languages, both under 90 wo
 
 test('Landeskunde notes carry no outcome promise or exam-fee figure', () => {
   const BANNED = /\b(garantiert|Erfolg garantiert|bestehen Sie sicher|€\s?\d|EUR\s?\d)\b/i;
-  for (const [nr, note] of Object.entries(LANDESKUNDE)) {
+  for (const [nr, note] of Object.entries(LANDESKUNDE).flatMap(([n, notes]) => notes.map((x) => [n, x]))) {
     for (const field of ['bodyEn', 'bodyDe']) {
       assert.ok(!BANNED.test(note[field]), `chapter ${nr}: "${field}" reads like an outcome promise or an exam fee figure`);
     }

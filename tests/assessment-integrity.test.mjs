@@ -435,7 +435,8 @@ test('checkpoint and read-aloud audio use checked playback; an item read instead
   const { readFileSync } = await import('node:fs');
   const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(page, /\bplayLine\b/, 'no unchecked playback in an assessment');
-  assert.match(page, /<PlayButton[^>]*onFallback=\{\(\) => \{ setShownText\(true\); onReadInstead\(item\.id\); \}\}/);
+  // …and only until it is answered: a wrong answer could be taken out of the score afterwards (2026-11-25).
+  assert.match(page, /<PlayButton[^>]*onFallback=\{feedback \? undefined : \(\) => \{ setShownText\(true\); onReadInstead\(item\.id\); \}\}/);
   assert.match(page, /const scoredItems = useMemo\(\(\) => items\.filter\(\(i\) => !notHeard\.has\(i\.id\)\), \[items, notHeard\]\)/);
   assert.match(page, /scoreCheckpoint\(scoredItems, finalAnswers\)/, 'the result and the saved attempt leave it out');
   const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');

@@ -113,5 +113,5 @@ test('a gap that shows its number in digits and wants the word says so, in both 
 });
 
 test('the German culture notes call Sie and du the two forms of address, not two forms of „Sie“', () => {
-  for (const note of Object.values(LANDESKUNDE)) assert.doesNotMatch(note.bodyDe, /Formen von „Sie“/);
+  for (const note of Object.values(LANDESKUNDE).flat()) assert.doesNotMatch(note.bodyDe, /Formen von „Sie“/);
 });
