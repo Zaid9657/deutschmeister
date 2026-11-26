@@ -7,6 +7,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { checkAnswer, checkOptionsFor, RESULT, westernDigits } from '../src/lib/lesson/check.js';
 import { CURRICULA } from '../src/data/curricula/index.js';
+import { scoreWriting, formularText } from '../src/lib/lesson/writing.js';
+import { buildCheckpoint, paperSeed } from '../src/lib/checkpoint/buildCheckpoint.js';
 
 const pool = (lv) => JSON.parse(readFileSync(new URL(`../src/data/lessonPools/${lv}.json`, import.meta.url), 'utf8')).items.filter((i) => i.minLektion != null);
 const items = [...pool('a11'), ...pool('a12')];
@@ -16,6 +18,35 @@ const dictations = Object.values(CURRICULA).flatMap((c) => c.lektionen.flatMap((
   .map((i) => l.dialog.lines[i]?.de).filter(Boolean).map((de) => ({ id: `${l.id}-d`, topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation', answer: de, accepted: [de] }))));
 const ARABIC = (s) => s.replace(/\d/g, (d) => String.fromCharCode(0x0660 + Number(d)));
 const PERSIAN = (s) => s.replace(/\d/g, (d) => String.fromCharCode(0x06F0 + Number(d)));
+
+test('writing and checkpoint forms fold both digit keyboards before checking, enabling submit and serialising values', () => {
+  const curriculum = CURRICULA['a1.1'];
+  const tasks = curriculum.lektionen.map((l) => l.schreiben);
+  const poolData = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  for (const checkpoint of curriculum.checkpoints) {
+    tasks.push(...buildCheckpoint({ curriculum, checkpoint, pool: poolData, seed: paperSeed(checkpoint, 0) }).filter((i) => i.task).map((i) => i.task));
+  }
+  const source = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
+  const canSubmit = new Function('isFormular', 'check', 'text', `return ${source.match(/const canSubmit = (.*);/)[1]};`);
+  let digitFields = 0;
+  for (const task of tasks.filter((t) => t.kind === 'formular')) {
+    const values = Object.fromEntries(task.fields.map((field) => [field, /telefon/i.test(field) ? '0176 224488' : /uhr|von|bis/i.test(field) ? '15 Uhr' : /personen|zimmer/i.test(field) ? '4' : /tag|am$/i.test(field) ? 'Montag' : 'Ana']));
+    const base = scoreWriting(task, values);
+    for (const convert of [ARABIC, PERSIAN]) {
+      const input = Object.fromEntries(Object.entries(values).map(([k, v]) => [k, convert(v)]));
+      digitFields += Object.values(values).filter((v) => /\d/.test(v)).length;
+      assert.deepEqual(scoreWriting(task, input), base, task.taskKey);
+      assert.equal(canSubmit(true, scoreWriting(task, input), ''), true, task.taskKey);
+      assert.equal(formularText(task.fields, input), formularText(task.fields, values));
+      const empty = { ...input, [task.fields[0]]: '---' };
+      assert.equal(canSubmit(true, scoreWriting(task, empty), ''), false);
+    }
+  }
+  assert.ok(digitFields >= 12, 'room, clock, people and phone fields in lessons and checkpoints');
+  const message = { kind: 'mitteilung', minWords: 1, maxWords: 100, leitpunkte: ['Tag und Uhrzeit', 'Ihre Telefonnummer', 'Ihr Name und Ihr Geburtsdatum'] };
+  const text = 'Hallo Lena! Ich komme am 3.5.1998 um 15 Uhr. Meine Telefonnummer ist 0176 224488. Viele Grüße, Ana';
+  for (const convert of [ARABIC, PERSIAN]) assert.deepEqual(scoreWriting(message, convert(text)), scoreWriting(message, text));
+});
 
 test('Arabic-Indic and Persian digits are the same digits, for every item kind that takes digits', () => {
   assert.equal(westernDigits('٠١٧٦ ۲۳۴'), '0176 234');

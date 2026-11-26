@@ -1281,7 +1281,7 @@ export const CURRICULUM_A11 = {
             // The total of the two things just asked about, before the learner says what they buy.
             { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
               variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 25 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 54 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 87 Euro.' }] },
-            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …', 'Ich möchte …', 'Ich möchte … kaufen.', 'Ich möchte … nehmen.'], slot: 'thing',
+            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Nennen Sie etwas, das Sie kaufen, in einem Satz.', taskEn: 'Name one thing you buy, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …', 'Ich möchte …', 'Ich möchte … kaufen.', 'Ich möchte … nehmen.'], slot: 'thing',
               variants: [{ example: 'Ich kaufe den Stuhl und die Uhr.' }, { example: 'Ich kaufe den Rucksack und die Lampe.' }, { example: 'Ich kaufe das Regal und den Tisch.' }] },
           ],
           repeat: [
@@ -1791,7 +1791,7 @@ export const CURRICULUM_A11 = {
             de: 'Sie haben gesagt, was Sie brauchen, nach der Arbeit gefragt und am Telefon Ihren Namen genannt und beide Nummern verstanden. Gönnen Sie sich vor dem zweiten Checkpoint einen Moment, um darauf stolz zu sein.',
           },
           turns: [
-            { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
+            { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Nennen Sie etwas, das Sie im Büro brauchen, in einem Satz.', taskEn: 'Name one thing you need in the office, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
             { canDo: 3, taskDe: 'Sie suchen Ihr Büro. Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
             { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?', 'Wann beginnt die Pause?', 'Wann fängt die Pause an?', 'Wann ist meine Pause?', 'Wann ist die Mittagspause?', 'Wann ist Mittagspause?', 'Wann machen wir Mittagspause?', 'Wann haben wir Mittagspause?', 'Wann beginnt die Mittagspause?', 'Wann fängt die Mittagspause an?'] },
             // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or

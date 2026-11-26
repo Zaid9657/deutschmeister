@@ -17,13 +17,15 @@ const frameText = (a) => (typeof a === 'string' ? a : a?.frame || '');
 
 /** What the turn asks: { kind, … }, read off its accepted answers; null where no sentence answers it (a greeting, a goodbye). */
 export const requiresVerbFirst = turn => /Ja\s*\/\s*Nein[-– ]*Frage|(?:das )?Verb (?:steht vorn|auf Position 1)/iu.test(turn?.taskDe || '');
+// A positive naming condition must be visible in the task, in either interface language.
+export const requiresNamedThing = (turn) => /Nennen Sie (?:mindestens )?(?:etwas|eine|einen|ein)|Name (?:at least )?one thing/iu.test(`${turn.taskDe || ''} ${turn.taskEn || ''}`);
 const kinds = new WeakMap();
 export function asked(turn) {
   if (!kinds.has(turn)) {
     const q = findKind(turn);
     const task = turn.taskDe || '';
     const journey = q && (q.train || q.kind === 'askPrice');
-    kinds.set(turn, q && { ...q, verbFirst: requiresVerbFirst(turn), mine: /(?<!\p{L})Ihr(?:e|en|em|er)?\s+\p{Lu}/u.test(task), to: journey ? (turn.only || []).map(fold) : [], withHave: /mit „Ich habe/u.test(task), byPronoun: (turn.accepted || []).map(frameText).some((f) => /(?<!\p{L})(?:er|sie|es|der|die|das)(?:\s+ab)?\?$/u.test(f) && !/,|\?.+\?/u.test(f) && !(q.things || []).some((t) => fold(f).includes(t))) });
+    kinds.set(turn, q && { ...q, allowNothing: !requiresNamedThing(turn), verbFirst: requiresVerbFirst(turn), mine: /(?<!\p{L})Ihr(?:e|en|em|er)?\s+\p{Lu}/u.test(task), to: journey ? (turn.only || []).map(fold) : [], withHave: /mit „Ich habe/u.test(task), byPronoun: (turn.accepted || []).map(frameText).some((f) => /(?<!\p{L})(?:er|sie|es|der|die|das)(?:\s+ab)?\?$/u.test(f) && !/,|\?.+\?/u.test(f) && !(q.things || []).some((t) => fold(f).includes(t))) });
   }
   return kinds.get(turn);
 }
@@ -359,7 +361,7 @@ const SAYING = {
   },
   photo: (c, q) => (c.acc?.det === 'mein' && headsOf(c.acc).some((h) => q.people.includes(h)) && ((c.lemma === 'sehen' && c.subj?.head === 'du') || (c.lemma === 'zeigen' && I(c)))) || (c.lemma === 'sein' && c.subj?.det === 'mein' && headsOf(c.subj).some((h) => q.people.includes(h)) && pps(c, 'auf').some((p) => ['foto', 'bild'].includes(p.np.head))) || (c.lemma === 'sein' && c.pred?.head === 'das' && c.subj?.det === 'mein' && headsOf(c.subj).some((h) => q.people.includes(h))) || c.lemma === 'sein' && headsOf(c.pred).some((h) => q.people.includes(h) || q.people.some((p) => (SAME_PERSON[p] || []).includes(h))) && c.pred.det === 'mein' && ['das', 'sie', 'er', 'es', 'hier'].includes(c.subj?.head),
   age: (c, q) => c.lemma === 'sein' && !backwards(c) && !c.elems.some((e) => e !== c.subj && (['own', 'name'].includes(e.kind) || (e.kind === 'num' && adjs(c).length > 0) || (e.kind === 'np' && /^jahre?$/u.test(e.head) && e.det !== 'num'))) && (third(c, q) || (c.subj?.kind === 'name' || c.subj?.kind === 'own')) && (adjs(c).some((a) => ['jung', 'alt', 'älter', 'jünger'].includes(a)) || headsOf(c.pred).some((h) => ['jahre', 'jahr'].includes(h)) || c.pred?.kind === 'num'),
-  buy: (c, q, env) => I(c) && c.acc && (['kaufen', 'nehmen', 'bestellen'].includes(c.lemma) || (['möchten', 'wollen'].includes(c.lemma)) || (c.lemma === 'haben' && (c.polite || c.modal === 'möchten'))) && ((!negated(c) && goods(c.acc, env)) || (q.allowNothing && c.acc.head === 'nichts')),
+  buy: (c, q, env) => I(c) && c.acc && (['kaufen', 'nehmen', 'bestellen'].includes(c.lemma) || (['möchten', 'wollen'].includes(c.lemma)) || (c.lemma === 'haben' && (c.polite || c.modal === 'möchten'))) && ((!negated(c) && goods(c.acc, env)) || (q.allowNothing && (c.acc.head === 'nichts' || negated(c) && goods(c.acc, env)))),
   thing: (c) => !negated(c) && ((c.lemma === 'sein' && ['das', 'dies', 'hier', 'es'].includes(c.subj?.head) && c.pred && c.pred.kind === 'np' && !FAMILY.has(c.pred.head)) || (c.lemma === 'sein' && (adv(c, 'hier', 'da') || pps(c, 'in').some((p) => ['tasche', 'rucksack', 'hand', 'handtasche'].includes(p.np.head))) && c.subj?.kind === 'np' && !c.adj?.length) || (c.lemma === 'haben' && I(c) && c.acc?.kind === 'np' && (adv(c, 'hier', 'da') || pps(c, 'in').length > 0))),
   here: (c, q, env) => adv(c, ...HERE) && ['sein', 'liegen', 'stehen', 'stecken'].includes(c.lemma) && !negated(c) && isThing(c.subj, q, env) && picksUp(c.subj, env) && !notMine(c.subj) && !(c.subj.kind === 'pron' && c.subj.head === 'sie' && !c.reading?.persons?.includes('er') && !env.thingGenders.includes('pl')),
   colour: (c, q, env) => {
@@ -370,7 +372,7 @@ const SAYING = {
     if (c.lemma === 'haben' && mine(c.subj) && c.acc?.head === 'farbe' && (COLOURS.has(c.acc.colour) || (c.elems || []).some((e) => COLOURS.has(e.head)))) return true;
     return Boolean(c.lemma === 'haben' && I(c) && headsOf(c.acc).some((h) => q.things.includes(h)) && (c.acc.adjs || []).some((a) => COLOURS.has(a)));
   },
-  need: (c, q, env) => !negated(c) && ((I(c) && goods(c.acc, env) && (['brauchen', 'benötigen'].includes(c.lemma) || (c.lemma === 'haben' && c.polite) || c.lemma === 'möchten')) || (c.lemma === 'fehlen' && c.dat?.head === 'mir')),
+  need: (c, q, env) => (q.allowNothing && I(c) && ['brauchen', 'benötigen', 'möchten'].includes(c.lemma) && c.acc?.head === 'nichts') || (!negated(c) && ((I(c) && goods(c.acc, env) && (['brauchen', 'benötigen'].includes(c.lemma) || (c.lemma === 'haben' && c.polite) || c.lemma === 'möchten')) || (c.lemma === 'fehlen' && c.dat?.head === 'mir'))),
   hobby: (c, q, env) => {
     if (I(c) && c.lemma === 'arbeiten' && !c.perfect && !c.question && adv(c, 'gern', 'gerne') && pps(c, 'in', 'an').some((p) => ['garten', 'computer', 'haus', 'balkon'].includes(p.np.head))) return true;
     if (c.question || c.perfect || !plays(c, env) || !doable(c, env)) return false;
@@ -483,6 +485,8 @@ const SAYING = {
   wish: (c, q, env) => {
     if (c.question) return false;
     const gift = (n) => goods(n, env, true);
+    if (I(c) && c.acc?.head === 'nichts' && (['möchten', 'brauchen', 'nehmen'].includes(c.lemma) || c.lemma === 'wünschen' && (c.dat?.head === 'mir' || c.refl?.head === 'mir'))) return q.allowNothing;
+    if (!q.allowNothing && negated(c)) return false;
     if (I(c) && (['möchten', 'brauchen', 'nehmen'].includes(c.lemma) || (c.lemma === 'haben' && (c.polite || c.modal))) && gift(c.acc)) return !negated(c) || headsOf(c.acc).some((h) => ['geschenk', 'geschenke', 'nichts'].includes(h));
     if (I(c) && c.lemma === 'wünschen' && (c.dat?.head === 'mir' || c.refl?.head === 'mir') && gift(c.acc)) return true;
     if (I(c) && c.lemma === 'freuen' && pps(c, 'über').length > 0) return true;
@@ -645,6 +649,10 @@ export function meaning(turn, sentences, env) {
   const asks = QUESTION_KINDS.includes(q.kind);
   // A question is no statement: „Brauche ich einen Computer?“ answers nothing (a guest may ask for a thing, a host invite).
   const states = !asks && !['invite', 'order', 'accept', 'wish', 'join', 'agree'].includes(q.kind);
+  // A grammatical refusal answers an open personal question. With a visible
+  // naming requirement it misses the task, including kein + noun (not only nichts).
+  if (!q.allowNothing && ['buy', 'need', 'wish'].includes(q.kind) && clauses.length
+    && clauses.every((c) => !c.question && (c.acc?.head === 'nichts' || negated(c)) && test(c, { ...q, allowNothing: true }, e2))) return { say: 'task' };
   const matches = clauses.filter((c) => !(states && c.question && !c.wh && I(c)) && test(c, q, e2));
   const verbFirst = c => c.question && !c.wh && !c.before && !c.sub;
   const performsForm = c => verbFirst(c) || (c.sub === 'ob' && sentences.some(s => {

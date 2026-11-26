@@ -82,6 +82,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
           taskKey: schreiben.taskKey,
           kind: schreiben.kind,
           taskDe: schreiben.taskDe,
+          taskEn: schreiben.taskEn,
           fields: schreiben.fields,
           leitpunkte: schreiben.leitpunkte,
           minWords: schreiben.minWords,

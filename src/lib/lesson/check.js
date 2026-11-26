@@ -20,6 +20,8 @@
 // word never reads as a conjugation slip just because the item's topic is a
 // verb topic (REVIEW #6 MAJOR 9) — see the decision table above
 // tagSentenceError.
+import { westernDigits } from './digits.js';
+export { westernDigits } from './digits.js';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { sameAnswer } from '../../data/sameAnswer.js';
 import { COURSE_WORDS } from '../../data/courseWords.js';
@@ -62,7 +64,7 @@ export function levenshtein(a, b) {
  * on an Arabic keyboard, and „٨ Uhr" is „8 Uhr" (2026-11-19, the Lektion 2–3 rollout's blind corpus).
  * Folded first, for every item kind, before any other rule reads a number.
  */
-export const westernDigits = (s) => String(s ?? '').replace(/[٠-٩۰-۹]/g, (d) => String(d.charCodeAt(0) & 0xf));
+// The implementation lives in digits.js so writing needs no practice-bank dependency.
 
 const stripPunct = (s) =>
   s.replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")

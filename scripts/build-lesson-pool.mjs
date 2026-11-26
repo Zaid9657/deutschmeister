@@ -1332,6 +1332,14 @@ for (const item of items) {
 }
 if (namedRepairDropped.length) console.log(`named repairs: dropped ${namedRepairDropped.length} accepted entr(y/ies) that repair another element: ${namedRepairDropped.join('; ')}`);
 
+// Whole-sentence correction keys require an explicit production instruction.
+// Apply after all source repairs; never patch individual generated item ids.
+if (level === 'a1.1') for (const item of items) {
+  if (item.type !== 'error_correction' || (String(item.answer || '').match(/\p{L}+/gu) || []).length < 2) continue;
+  if (!item.questionDe.includes('Schreiben Sie den ganzen Satz.')) item.questionDe += ' Schreiben Sie den ganzen Satz.';
+  if (!String(item.questionEn || '').includes('Write the whole sentence.')) item.questionEn = [item.questionEn, 'Write the whole sentence.'].filter(Boolean).join(' ');
+}
+
 // Last: authored corrections and automatic cues have both reached their final
 // German wording. Carry every binding cue into the learner's English hint.
 for (const item of items) {

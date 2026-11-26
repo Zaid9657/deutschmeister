@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { requiresVerbFirst } from '../src/lib/lesson/taskMeaning.js';
+import { asked, requiresNamedThing, requiresVerbFirst } from '../src/lib/lesson/taskMeaning.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { RESULT, numberWordsToDigits } from '../src/lib/lesson/check.js';
@@ -20,6 +20,35 @@ const sitting = (l, r = 0) => checkTurns({ ...l.guided.check, lexicon }, r);
 // A wrong answer is never verified: WRONG where its fault is certain, BEYOND where the check cannot be sure
 // (`certainFault`, 2026-11-25: WRONG by the older fault rules also hit 22 % of 4,400 correct answers).
 const refused = (turn, answer) => { const r = typedResult(turn, answer); return r === BEYOND ? RESULT.WRONG : r; };
+
+test('a personal nothing answer is accepted unless the displayed task explicitly requires naming a thing', () => {
+  const cases = [[4, 5, ['Ich kaufe nichts.', 'Ich möchte nichts.']], [6, 0, ['Ich brauche nichts.']], [12, 4, ['Ich möchte nichts.', 'Ich wünsche mir nichts.', 'Ich möchte keine Geschenke.']]];
+  for (const [nr, i, answers] of cases) for (let round = 0; round < 6; round++) {
+    const turn = sitting(CURRICULUM_A11.lektionen[nr - 1], round)[i];
+    const open = { ...turn, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer in one sentence.' };
+    const naming = { ...turn, taskDe: 'Nennen Sie etwas in einem Satz.', taskEn: 'Name one thing, in one sentence.' };
+    for (const answer of answers) {
+      assert.equal(typedResult(open, answer), RESULT.CORRECT, `${nr}: open ${answer}`);
+      assert.equal(typedResult(naming, answer), RESULT.WRONG, `${nr}: naming ${answer}`);
+      assert.equal(wrongReason(naming, answer), 'task', `${nr}: honest task hint ${answer}`);
+      assert.equal(typedResult(turn, answer), nr === 12 ? RESULT.CORRECT : RESULT.WRONG, `${nr}: actual ${answer}`);
+    }
+    if (nr !== 12) {
+      assert.match(turn.taskDe, /Nennen Sie etwas/);
+      assert.match(turn.taskEn, /Name one thing/);
+    }
+    for (const wrong of ['Ich kaufen nichts.', 'Ich braucht nichts.', 'Ich wünsche nichts.', 'Ich möchte keinen Geschenke.']) assert.equal(verifiedResult(typedResult(open, wrong)), false, wrong);
+  }
+});
+
+test('a faulty taught feeling formula gets a named repair and every correct lesson formula still passes', () => {
+  const turn = sitting(l1)[3];
+  for (const [answer, reason] of [['Mir gehen gut.', 'verb'], ['Mir geht gut.', 'missing'], ['Mir gehe gut.', 'verb'], ['Mir gehen sehr gut.', 'verb'], ['Mir gehen nicht so gut.', 'verb'], ['Heute gehen mir gut.', 'verb']]) {
+    assert.equal(typedResult(turn, answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(turn, answer), reason, answer);
+  }
+  for (const answer of [...turn.accepted, ...(turn.more || [])]) assert.ok(verifiedResult(typedResult(turn, answer)), answer);
+});
 
 test('every final check covers each can-do and names a part to repeat for it', () => {
   assert.ok(withCheck.includes(l1));
@@ -481,10 +510,11 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
         if (!own) return;
         // A fact of the learner's life a real person may not have (a job, a hobby): the none passes.
         if (NONE[t.none || t.slot]) { personal += 1; for (const none of NONE[t.none || t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
-        // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
-        assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
-        // …and the hint says to read the task again: no word of it is wrong (Claude score of fd8f8dba, MINOR 9).
-        assert.equal(faultHintKey(t, frame(t).replaceAll('…', 'nichts')), 'check.fault.task', `${where}: hint`);
+        const absenceAnswersTask = ['buy', 'need', 'wish'].includes(asked(t)?.kind) && !requiresNamedThing(t);
+        const absence = frame(t).replaceAll('…', 'nichts');
+        assert.equal(typedResult(t, absence), absenceAnswersTask ? RESULT.CORRECT : RESULT.WRONG, `${where}: ${absence}`);
+        // A visible naming requirement is binding; an unrestricted personal wish may be empty.
+        if (!absenceAnswersTask) assert.equal(faultHintKey(t, absence), 'check.fault.task', `${where}: hint`);
         // A name is open: „Ich bin arbeitslos“ cannot be told from „Ich bin Carlos“ typed small, so name turns are left out.
         if (t.slot !== 'name') for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(refused(t, none), RESULT.WRONG, `${where}: ${none}`);
       });
@@ -1371,7 +1401,8 @@ test('Phase 2b: individual evidence excludes a reveal, also after saving and res
 
 test('Phase 2b: the task distinguishes naming a purchase from choosing whether to buy', () => {
   const lexicon = courseLexicon(CURRICULUM_A11);
-  const turn = checkTurns({ ...CURRICULUM_A11.lektionen[3].guided.check, lexicon }, 0).find((t) => t.taskEn.startsWith('Say what you are buying'));
+  const turn = checkTurns({ ...CURRICULUM_A11.lektionen[3].guided.check, lexicon }, 0).find((t) => asked(t)?.kind === 'buy');
+  assert.ok(turn && requiresNamedThing(turn), 'the actual purchase task explicitly requires a thing');
   const whether = { ...turn, taskEn: 'Say whether you are buying anything, in one sentence.', taskDe: 'Sagen Sie in einem Satz, ob Sie etwas kaufen.' };
   for (const answer of ['Ich kaufe nichts.', 'Heute kaufe ich nichts.']) {
     assert.equal(typedResult(turn, answer), RESULT.WRONG);

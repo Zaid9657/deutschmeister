@@ -5,6 +5,28 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { latinMatches, latinRuns } from '../src/lib/lesson/bidi.js';
 
 const withArabic = CURRICULUM_A11.lektionen.filter((l) => l.notice.bodyAr);
+
+test('every lesson and checkpoint writing instruction and content point has optional Arabic help', async () => {
+  const { writingArabic } = await import('../src/lib/lesson/arabicHelp.js');
+  const { buildCheckpoint, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const tasks = CURRICULUM_A11.lektionen.map((l) => l.schreiben);
+  for (const checkpoint of CURRICULUM_A11.checkpoints) for (let round = 0; round < 4; round++) {
+    tasks.push(...buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: paperSeed(checkpoint, round) }).filter((i) => i.task).map((i) => i.task));
+  }
+  assert.ok(tasks.length >= 28);
+  for (const task of tasks) {
+    const lines = writingArabic(task);
+    const points = task.kind === 'formular' ? task.fields : task.leitpunkte;
+    assert.equal(lines?.length, 1 + points.length, task.taskKey);
+    for (const line of lines) assert.match(line || '', /[\u0600-\u06ff]/, task.taskKey);
+  }
+  const editor = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
+  assert.match(editor, /<WritingArabicHelp task=\{task\}/);
+  const stage = readFileSync(new URL('../src/components/lesson/WritingStage.jsx', import.meta.url), 'utf8');
+  assert.match(stage, /taskEn: schreiben.taskEn/);
+});
 // The German of the English notice: every **bold** span, one sentence at a time, without its closing full stop.
 const germanOf = (en) => [...en.matchAll(/\*\*([^*]+)\*\*/g)].flatMap((m) => m[1].split(/(?<=[.!?])\s+/)).map((s) => s.replace(/[.]$/, '').trim());
 

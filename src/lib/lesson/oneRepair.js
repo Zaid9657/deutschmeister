@@ -60,6 +60,19 @@ export function repairs(text, { fragments = false, isPlace = () => false, isThin
   const bounds = (i) => { let a = i; let b = i; while (a > 0 && T[a - 1].kind !== 'p') a -= 1; while (b < T.length - 1 && T[b + 1].kind !== 'p') b += 1; return [a, b]; };
   const verbs = T.map((t, i) => ({ t, i })).filter(({ t, i }) => t.kind === 'w' && (!t.cap || starts[i]) && verbReadings(t.f).length);
 
+  // The dative feeling formula has the fixed verb group geht es, including
+  // negation, degree words and a fronted time. The reader must verify the
+  // complete healed answer before this can name a fault.
+  for (const { t, i } of verbs) {
+    const [a, b] = bounds(i);
+    const clause = T.slice(a, b + 1);
+    if (verbReadings(t.f).some((r) => r.lemma === 'gehen')
+      && clause.some((x) => /^(?:mir|dir|ihm|ihr|ihnen|uns|euch)$/u.test(x.f))
+      && !clause.some((x) => x.f === 'es')) {
+      put([...T.slice(0, i), { raw: 'geht', f: 'geht', kind: 'w' }, { raw: 'es', f: 'es', kind: 'w' }, ...T.slice(i + 1)], t.f === 'geht' ? 'missing' : 'verb', true);
+    }
+  }
+
   // No verb at all: „Mein Heft grün.“, „Ich am Dienstag frei.“, „Meine Telefonnummer 030 …“.
   if (fragments && (/^(?:ich|es|mein|meine|der|die|das)$/u.test(T[0].f) || /^(?:ja|danke|nein)$/u.test(T[0].f))) {
     for (let i = 1; i <= Math.min(4, T.length - 1); i += 1) for (const v of ['ist', 'bin', 'habe', 'sind']) put([...T.slice(0, i), { raw: v, f: v, kind: 'w' }, ...T.slice(i)], 'missing');

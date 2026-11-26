@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
 import { MAX_WRITING_POINTS } from '../../data/writingTasks';
 import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing.js';
+import { westernDigits } from '../../lib/lesson/digits.js';
+import { WritingArabicHelp } from './ArabicHelp.jsx';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -210,7 +212,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
   const min = Number(task?.minWords) || 0;
   const max = Number(task?.maxWords) || 0;
   const inRange = count >= min && (!max || count <= max);
-  const submission = isFormular ? formularText(task?.fields, fields) : text;
+  const submission = isFormular ? formularText(task?.fields, fields) : westernDigits(text);
   // A Formular is handed in with EVERY field filled (DaF review #18, MAJOR 2): the button used to
   // open as soon as one field had a character. `filled` is a letter or a digit — see scoreWriting.
   const canSubmit = isFormular ? check.checks.length > 0 && check.checks.every((c) => c.filled) : !!text.trim();
@@ -323,6 +325,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
   return (
     <div>
       <Card className="p-5">
+        <WritingArabicHelp task={task} />
         {isFormular ? (
           <div className="space-y-3">
             {(task?.fields || []).map((field) => (

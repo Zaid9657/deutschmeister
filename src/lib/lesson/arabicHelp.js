@@ -1,5 +1,8 @@
+import { WRITING_INSTRUCTIONS_AR, WRITING_POINTS_AR } from './writingArabic.js';
 // Optional task and recovery help. Native-reader review: takeover/arabic-for-native-reader.md.
 export const TASKS_AR = {
+  "Name one thing you buy, in one sentence.": "اذكر شيئًا واحدًا تشتريه في جملة واحدة.",
+  "Name one thing you need in the office, in one sentence.": "اذكر شيئًا واحدًا تحتاجه في المكتب في جملة واحدة.",
   "Greet her back.": "ردّ التحية عليها.",
   "Answer with your own name.": "أجب باسمك أنت.",
   "Frau Kaya spells a guest’s name. Write the name.": "تهجّئ Frau Kaya اسم ضيف. اكتب الاسم الذي تسمعه.",
@@ -241,4 +244,12 @@ export function taskArabic(taskEn = '') {
 }
 export function feedbackArabic(key, values = {}) {
   return (FEEDBACK_AR[key] || '').replace(/\{(\w+)\}/g, (_, name) => values[name] ?? '');
+}
+
+/** Instruction and each content point, in one closed disclosure in lessons and checkpoints. */
+export function writingArabic(task = {}) {
+  const instruction = WRITING_INSTRUCTIONS_AR[task.taskDe] || taskArabic(task.taskEn);
+  if (!instruction) return null;
+  const points = task.kind === 'formular' ? task.fields : task.leitpunkte;
+  return [instruction, ...(points || []).map((point) => WRITING_POINTS_AR[point] ? point + ': ' + WRITING_POINTS_AR[point] : null)];
 }

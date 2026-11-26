@@ -386,7 +386,7 @@ test('the Formcheck is one function: the screen and RULE 17 grade with the same 
   // (a level's Wortfeld, a curriculum) may ever be handed in: that is the dependency-freedom this
   // test has always pinned, and it still holds.
   const imports = [...writing.matchAll(/^import .* from '([^']+)';$/gm)].map((m) => m[1]);
-  assert.deepEqual(imports, ['./countries.js'], 'writing.js imports the world list and nothing else');
+  assert.deepEqual(imports.sort(), ['./countries.js', './digits.js'], 'writing.js imports shared language facts, never a curriculum or practice bank');
   assert.ok(!/from '[^']*\/data\//.test(writing), 'writing.js never imports a course');
 });
 

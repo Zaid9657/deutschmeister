@@ -1778,3 +1778,14 @@ test('a wrong spelling begins as a German word does: no option is ruled out at s
   const begins = /^(?:[aeiouäöü]|[b-df-hj-np-tv-z][aeiouäöüy]|(?:bl|br|ch|dr|fl|fr|gl|gn|gr|kl|kn|kr|pf|ph|pl|pr|ps|qu|sch|sk|sl|sm|sp|st|th|tr|ts|wr|zw))/i;
   for (const it of items) for (const o of it.options) assert.match(o, begins, `${it.id}: ${o}`);
 });
+test('every whole-sentence correction explicitly asks for the whole sentence in German and English', () => {
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  let count = 0;
+  for (const item of pool.items) {
+    if (item.type !== 'error_correction' || (String(item.answer || '').match(/\p{L}+/gu) || []).length < 2) continue;
+    count++;
+    assert.ok(item.questionDe.includes('Schreiben Sie den ganzen Satz.'), item.id);
+    assert.ok(item.questionEn.includes('Write the whole sentence.'), item.id);
+  }
+  assert.ok(count > 20);
+});

@@ -32,8 +32,8 @@
    "reason": "A correct sentence („Ja, ich bin aus Italien.“) was a wrong option; „Kurzantwort“ was the wrong term (2026-10 review)."
   },
   "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b": {
-   "questionDe": "Wie sagt man den Beruf? Schreiben Sie den Satz ohne Artikel: „Ich bin eine Lehrerin.“",
-   "questionEn": "How do you say the job? Write the sentence without the article: \"Ich bin eine Lehrerin.\"",
+   "questionDe": "Wie sagt man den Beruf? Schreiben Sie den Satz ohne Artikel: „Ich bin eine Lehrerin.“ Schreiben Sie den ganzen Satz.",
+   "questionEn": "How do you say the job? Write the sentence without the article: \"Ich bin eine Lehrerin.\" Write the whole sentence.",
    "explanationDe": "Nach ich bin steht ein Beruf meist ohne Artikel: Ich bin Lehrerin. Mit Adjektiv kommt der Artikel zurück: Ich bin eine gute Lehrerin.",
    "explanationEn": "After **sein**, a plain job normally takes no article: **Ich bin Lehrerin.** English says \"a teacher\"; German does not. With an adjective the article returns: **Ich bin eine gute Lehrerin.**",
    "reason": "„Ich bin eine Lehrerin.“ is not ungrammatical: the article-free job is the usual form, with an adjective the article returns (2026-10 review, finding 5E)."
