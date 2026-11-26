@@ -3,6 +3,7 @@
 // knows no answer: it takes a sentence apart — verb in its place, subject and verb together, every noun phrase in a case its verb
 // or preposition asks for, participle, infinitive and prefix at the end — and hands back what it says, or null when it cannot
 // read every word. `taskMeaning.js` compares that with what the turn asks.
+import { clockMinutes, relativeClock } from './clockTime.js';
 import { ACCUSATIVE_PREP, ADVERBS, CONTRACTED, COORDINATORS, DATIVE_PREP, DAYS, DAY_PARTS, DEGREE, MONTHS, NUMBER_WORDS, PRONOUNS, SEASONS, SUBORDINATORS, TWO_WAY_PREP, W_WORDS,
   WEAK_NOUNS, adjectiveEnding, adjectiveForm, determinerOf, fold, separableOf, verbReadings } from './germanForms.js';
 
@@ -401,7 +402,7 @@ export function reader(text, ctx) {
     const t = T[i];
     if (!t) return out;
     const num = (k) => (T[k]?.kind === 'n' ? Number(T[k].f) : T[k]?.kind === 'w' && isNumber(T[k].f) ? numberValue(T[k].f) : null);
-    if (t.kind === 'clock') { const [h, m] = t.f.split(/[.:]/).map(Number); if (h < 25 && m < 60) { out.push({ end: i + 1, h, m, exact: true }); if (f(i + 1) === 'uhr') out.push({ end: i + 2, h, m, exact: true }); } return out; }
+    if (t.kind === 'clock') { const [h, m] = t.f.split(/[.:]/).map(Number); if (clockMinutes(h, m) !== null) { out.push({ end: i + 1, h, m, exact: true }); if (f(i + 1) === 'uhr') out.push({ end: i + 2, h, m, exact: true }); } return out; }
     if (t.f === 'halb') { const h = num(i + 1); if (h && h <= 12) out.push({ end: i + 2, h: h - 1 || 12, m: 30, spoken: true }); return out; }
     if (t.f === 'mittag' || t.f === 'mitternacht') return [{ end: i + 1, h: t.f === 'mittag' ? 12 : 0, m: 0 }];
     const quarter = t.f === 'viertel' ? 15 : null;
@@ -419,7 +420,8 @@ export function reader(text, ctx) {
         const half = f(k + 1) === 'halb';
         const h = num(k + (half ? 2 : 1));
         const mins = quarter ?? n;
-        if (h && h <= 24 && mins < 60) { const base = half ? (h - 1) * 60 + 30 : h * 60; const total = base + (f(k) === 'vor' ? -mins : mins); out.push({ end: k + (half ? 3 : 2), h: Math.floor(((total + 1440) % 1440) / 60), m: ((total % 60) + 60) % 60, spoken: true }); }
+        const total = relativeClock(mins, f(k), h, half, quarter === null && k > i + 1);
+        if (total !== null) out.push({ end: k + (half ? 3 : 2), h: Math.floor(total / 60), m: total % 60, spoken: true });
       }
     }
     if (n !== null && n <= 24) {

@@ -323,7 +323,7 @@ export const CURRICULUM_A11 = {
         // because `danke` and `gut` occur separately. A can-do quotes what the learner rehearsed.
         'Ich kann fragen, wie es jemandem geht, und mit „Mir geht es gut, danke“ antworten.',
       ],
-      examTeile: ['Sprechen Teil 1', 'Schreiben Teil 1', 'Hören Teil 1'],
+      examTeile: ['Sprechen Teil 1', 'Schreiben Teil 1'],
       grammarSlugs: ['alphabet-pronunciation'],
       primarySlug: 'alphabet-pronunciation',
       minutes: 15,
@@ -511,12 +511,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: 'f5fc633f',
+            to: 10, meaningLines: '71eff06c',
             meaning: {
               promptDe: 'Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.',
               promptEn: 'What is Ana’s phone number? Choose the numbers.',
-              options: ['0167', '0176', '1076'],
-              answer: '0176',
+              options: ['0172 9925409', '0172 9925904', '0172 9952904'],
+              answer: '0172 9925904',
             },
             say: {
               line: 9,
@@ -546,9 +546,9 @@ export const CURRICULUM_A11 = {
             // the learner's own and counts.
             { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
             { canDo: 1, taskDe: 'Und Herr Weber? Fragen Sie nach seinem Beruf.', taskEn: 'Now ask Herr Weber what his job is.', accepted: ['Was sind Sie von Beruf?', 'Und Sie?', 'Und Sie? Was sind Sie von Beruf?', 'Was ist Ihr Beruf?', 'Was machen Sie beruflich?', 'Welchen Beruf haben Sie?', 'Sind Sie …?'], slot: 'job', slotWords: CHECK_JOBS },
-            { canDo: 3, cue: { de: 'Wie ist Ihre Telefonnummer?', en: 'What is your phone number?' }, taskDe: 'Antworten Sie mit einem Satz. Sie können eine Nummer erfinden.', taskEn: 'Give a phone number in one sentence. A made-up number is fine.', accepted: ['Meine Telefonnummer ist …', 'Meine Nummer ist …', 'Ich habe die Telefonnummer …'], slot: 'phone', example: 'Meine Telefonnummer ist 0176 2345678.' },
+            { canDo: 3, cue: { de: 'Wie ist Ihre Telefonnummer?', en: 'What is your phone number?' }, taskDe: 'Antworten Sie mit einem Satz. Sie können eine Nummer erfinden.', taskEn: 'Give a phone number in one sentence. A made-up number is fine.', accepted: ['Meine Telefonnummer ist …', 'Meine Nummer ist …', 'Ich habe die Telefonnummer …'], slot: 'phone', example: 'Meine Telefonnummer ist 0172 9925904.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Amt. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
-              variants: [{ listen: 'null vier zwei eins, drei sechs eins acht' }, { listen: 'null vier zwei eins, fünf null neun zwei' }, { listen: 'null vier zwei eins, sieben acht drei vier' }] },
+              variants: [{ listen: 'null vier zwei eins, drei sechs eins acht null null eins' }, { listen: 'null vier zwei eins, fünf null neun zwei null null zwei' }, { listen: 'null vier zwei eins, sieben acht drei vier null null drei' }] },
             // The can-do is a short MESSAGE with personal details (DaF review 2026-11-19), so it is one: the
             // two Leitpunkte of this Lektion's own writing task that a learner can make up — a name and a date.
             { canDo: 4, taskDe: 'Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden.', taskEn: 'Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.',
@@ -591,7 +591,7 @@ export const CURRICULUM_A11 = {
       // the Lektion really rehearses is listening: `hoeren` dictates two dialogue lines of the
       // Bürgerbüro exchange, which is Hören Teil 1 (short everyday dialogue). „Lesen Teil 1“ stays
       // covered across the course by L3 and L11, which both link a reading lesson.
-      examTeile: ['Sprechen Teil 1', 'Hören Teil 1', 'Schreiben Teil 2'],
+      examTeile: ['Sprechen Teil 1', 'Schreiben Teil 2'],
       grammarSlugs: ['verb-sein', 'alphabet-pronunciation'],
       primarySlug: 'verb-sein',
       minutes: 15,
@@ -711,8 +711,8 @@ export const CURRICULUM_A11 = {
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
           // lines are the only place a learner hears digits in L2 (DaF review #2, L2).
           // The post goes to the address just given (third score, 2026-11-22: „Hier ist auch die Post“ placed the word).
-          { speaker: 'Herr Weber', de: 'Danke. Und wie ist Ihre Telefonnummer?', en: 'Thank you. And what is your phone number?' },
-          { speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
+          { speaker: 'Herr Weber', de: 'Danke. Und wie ist Ihre Telefonnummer für das Formular?', en: 'Thank you. And what is your phone number for the form?' },
+          { speaker: 'Ana', de: 'Meine Telefonnummer ist 0172 9925904.', en: 'My phone number is 0172 9925904.' },
         ],
       },
       pretest: {
@@ -1028,7 +1028,7 @@ export const CURRICULUM_A11 = {
         'Ich kann nach der Familie einer Person fragen.',
         'Ich kann sagen, woher meine Familie kommt.',
       ],
-      examTeile: ['Sprechen Teil 2', 'Lesen Teil 1'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['personal-pronouns', 'verb-sein'],
       primarySlug: 'personal-pronouns',
       minutes: 15,
@@ -1309,7 +1309,7 @@ export const CURRICULUM_A11 = {
         'Ich kann Preise bis hundert Euro verstehen.',
         'Ich kann sagen, was ich kaufe.',
       ],
-      examTeile: ['Lesen Teil 2', 'Sprechen Teil 3', 'Hören Teil 2'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['nouns-gender', 'personal-pronouns'],
       primarySlug: 'nouns-gender',
       minutes: 15,
@@ -1378,11 +1378,11 @@ export const CURRICULUM_A11 = {
       sprechen: {
         readAloud: [0, 2],
         open: {
-          teil: 'Sprechen Teil 3',
+          teil: 'Sprechen Teil 2',
           promptDe: 'Fragen Sie am Stand nach einem Preis und reagieren Sie auf die Antwort.',
           promptEn: 'At a market stall, ask for the price of something and react to the answer.',
           hintWords: ['kosten', 'Euro', 'teuer'],
-          // Sie — Teil 3 am Marktstand: Kundin zu Verkäufer.
+          // Sie — Informationen zum Preis: Sprechen Teil 2.
           anrede: 'Sie',
           missionOrder: 2,
         },
@@ -1495,7 +1495,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: '1a11daca',
+            to: 10, meaningLines: '42bd6012',
             meaning: {
               promptDe: 'Was sagt Tim über das Bild? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about the picture? Choose the meaning.',
@@ -1569,7 +1569,7 @@ export const CURRICULUM_A11 = {
         'Ich kann Farben nennen.',
         'Ich kann einfache Fragen im Kurs stellen.',
       ],
-      examTeile: ['Sprechen Teil 2', 'Hören Teil 1'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['definite-articles', 'nouns-gender'],
       primarySlug: 'definite-articles',
       minutes: 15,
@@ -1638,7 +1638,7 @@ export const CURRICULUM_A11 = {
           // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
           // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
           // Lena asks Tim two things and Tim answers both (review of 2492a424: she asked and answered herself).
-          { speaker: 'Lena', de: 'Wo ist mein Schlüssel? Und welche Farbe hat das Bild?', en: 'Where is my key? And what colour is the picture?' },
+          { speaker: 'Lena', de: 'Wo ist mein Schlüssel? Welche Farbe hat das Bild für dein Zimmer?', en: 'Where is my key? What colour is the picture for your room?' },
           { speaker: 'Tim', de: 'Er ist hier. Das Bild ist blau. Es ist für mein Zimmer.', en: 'It is here. The picture is blue. It is for my room.' },
         ],
       },
@@ -1739,7 +1739,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6, meaningLines: 'f067e137',
+            to: 6, meaningLines: 'a46b936a',
             meaning: {
               promptDe: 'Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber say about a mobile phone? Choose the meaning.',
@@ -1752,7 +1752,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8, meaningLines: 'bc4ddad0',
+            to: 8, meaningLines: 'c2eabe50',
             meaning: {
               promptDe: 'Was möchte Ana wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana want to know? Choose the meaning.',
@@ -1800,7 +1800,7 @@ export const CURRICULUM_A11 = {
               accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.', '… am Telefon.', 'Hier spricht …'], slot: 'name',
               example: 'Guten Tag, ich heiße Ana Chakiri.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Büro. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
-              variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei.' }] },
+              variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null null null eins.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier null null zwei.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei null null drei.' }] },
             { canDo: 2, taskDe: 'Herr Weber sagt die Handynummer von Ihrer Chefin, Frau Berg. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the mobile number of your boss, Frau Berg. Write it down.',
               variants: [{ listen: 'Die Handynummer von Frau Berg ist null eins sieben eins, zwei drei vier, fünf sechs sieben acht.' }, { listen: 'Die Handynummer von Frau Berg ist null eins fünf zwei, acht sieben sechs, fünf vier drei zwei.' }, { listen: 'Die Handynummer von Frau Berg ist null eins sieben sechs, neun null eins, zwei drei vier fünf.' }] },
           ],
@@ -1830,7 +1830,7 @@ export const CURRICULUM_A11 = {
         // in its dialogue, its model text and its speaking prompt.
         'Ich kann nach der Pause und nach dem Büro fragen.',
       ],
-      examTeile: ['Hören Teil 3', 'Schreiben Teil 2', 'Sprechen Teil 2'],
+      examTeile: ['Schreiben Teil 2', 'Sprechen Teil 2'],
       grammarSlugs: ['indefinite-articles', 'definite-articles', 'nouns-gender'],
       primarySlug: 'indefinite-articles',
       minutes: 15,
@@ -1843,7 +1843,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Kollegin', exampleDe: 'Die Kollegin heißt Lena.', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
         { de: 'die Arbeit', exampleDe: 'Die Arbeit ist im Büro.', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
         { de: 'der Computer', word: 'Computer', article: 'der', plural: 'Computer', en: 'computer', wordId: 'b75584fd-ce50-433c-9deb-dc2c35906c15' },
-        { de: 'die Handynummer', exampleDe: 'Die Handynummer ist 0176 234567.', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', field: true, wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
+        { de: 'die Handynummer', exampleDe: 'Die Handynummer ist 0176 04069001.', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', field: true, wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
         { de: 'die E-Mail-Adresse', exampleDe: 'Wie ist die E-Mail-Adresse?', word: 'E-Mail-Adresse', article: 'die', plural: 'E-Mail-Adressen', en: 'email address', field: true, wordId: '7a4581a1-0411-425b-b230-95840777b557' },
         { de: 'der Ingenieur', word: 'Ingenieur', article: 'der', plural: 'Ingenieure', en: 'engineer (m)', wordId: 'a358f9d4-ef56-451c-8139-8a210b7a122f' },
         { de: 'die Ingenieurin', exampleDe: 'Die Kollegin ist Ingenieurin.', word: 'Ingenieurin', article: 'die', plural: 'Ingenieurinnen', en: 'engineer (f)', wordId: '19f79c25-b6b5-4ec9-b9b7-c56515c68da8' },
@@ -1868,10 +1868,10 @@ export const CURRICULUM_A11 = {
           { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
           { speaker: 'Ana', de: 'Danke. Ich brauche einen Computer und ein Telefon.', en: 'Thank you. I need a computer and a telephone.' },
           { speaker: 'Herr Weber', de: 'Hier sind ein Computer und ein Telefon. Ihr Kollege ist Ingenieur.', en: 'Here are a computer and a telephone. Your colleague is an engineer.' },
-          { speaker: 'Ana', de: 'Und ein Handy?', en: 'And a mobile phone?' },
+          { speaker: 'Ana', de: 'Und ein Handy für die Arbeit?', en: 'And a mobile phone for work?' },
           { speaker: 'Herr Weber', de: 'Wir haben kein Handy.', en: 'We do not have a mobile phone.' },
-          { speaker: 'Ana', de: 'Und wie ist die Telefonnummer?', en: 'And what is the telephone number?' },
-          { speaker: 'Herr Weber', de: 'Null vier zwei – drei drei acht eins.', en: 'Zero four two – three three eight one.' },
+          { speaker: 'Ana', de: 'Und wie ist die Telefonnummer vom Büro?', en: 'And what is the office telephone number?' },
+          { speaker: 'Herr Weber', de: 'Null vier zwei eins – dreißig achtzig null null eins.', en: 'Zero four two one – thirty eighty zero zero one.' },
           { speaker: 'Ana', de: 'Danke! Wann ist die Pause?', en: 'Thank you! When is the break?' },
           { speaker: 'Herr Weber', de: 'Die Pause ist um eins.', en: 'The break is at one.' },
         ],
@@ -1928,7 +1928,7 @@ export const CURRICULUM_A11 = {
         // zu beschriften. Der Possessivartikel („Meine Nummer ist …“) wäre die natürlichste
         // Fassung, steht hier aber nicht: RULE 15b schiebt die Possessivartikel auf Lektion 12, und
         // ein Mustertext ist ein Produktionstext.
-        sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun im Büro. Viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei eins drei null acht null null null eins. Ich bin um neun im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'verb-sein'], topicMin: { 'verb-sein': 3 }, typedMin: 3, mustCover: ['einen'] },
@@ -2070,7 +2070,7 @@ export const CURRICULUM_A11 = {
         'Ich kann eine Person nach ihren Hobbys fragen.',
         'Ich kann sagen, wann ich frei bin.',
       ],
-      examTeile: ['Lesen Teil 2', 'Sprechen Teil 2'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['present-tense-regular', 'personal-pronouns'],
       primarySlug: 'present-tense-regular',
       minutes: 15,
@@ -2355,7 +2355,7 @@ export const CURRICULUM_A11 = {
         'Ich kann über meinen Tag sprechen.',
         'Ich kann sagen, wann ich Zeit habe.',
       ],
-      examTeile: ['Hören Teil 1', 'Schreiben Teil 2', 'Sprechen Teil 3'],
+      examTeile: ['Schreiben Teil 2'],
       grammarSlugs: ['time-and-dates', 'present-tense-regular', 'separable-verbs-intro'],
       primarySlug: 'time-and-dates',
       minutes: 15,
@@ -2437,7 +2437,7 @@ export const CURRICULUM_A11 = {
         // damit das eigene Thema dieser Lektion.
         readAloud: [6, 8],
         open: {
-          teil: 'Sprechen Teil 3',
+          teil: 'Sprechen üben',
           promptDe: 'Bitten Sie um einen Termin am Nachmittag und reagieren Sie auf die Antwort.',
           promptEn: 'Ask for an appointment in the afternoon and react to the answer.',
           hintWords: ['der Termin', 'um', 'Zeit haben'],
@@ -2636,7 +2636,7 @@ export const CURRICULUM_A11 = {
         'Ich kann höflich fragen, ob es etwas gibt.',
         'Ich kann ein Angebot annehmen oder höflich ablehnen.',
       ],
-      examTeile: ['Sprechen Teil 3', 'Hören Teil 2', 'Schreiben Teil 1'],
+      examTeile: ['Sprechen Teil 3', 'Schreiben Teil 1'],
       grammarSlugs: ['verb-haben', 'indefinite-articles'],
       primarySlug: 'verb-haben',
       minutes: 15,
@@ -2894,7 +2894,7 @@ export const CURRICULUM_A11 = {
         'Ich kann Durchsagen zu Abfahrt und Verspätung verstehen.',
         'Ich kann sagen, wohin ich fahre.',
       ],
-      examTeile: ['Hören Teil 2', 'Lesen Teil 3', 'Sprechen Teil 2'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['yes-no-questions', 'verb-haben', 'present-tense-regular'],
       primarySlug: 'yes-no-questions',
       minutes: 15,
@@ -3130,9 +3130,9 @@ export const CURRICULUM_A11 = {
               accepted: ['Ich arbeite …', '… arbeite ich.'], slot: 'when', none: 'job', example: 'Ich arbeite am Dienstag.' },
             { canDo: 2, taskDe: 'Fragen Sie Lena.',
               variants: [
-                { taskDe: 'Einkaufen am Samstag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Saturday: ask Lena if she is going shopping then.', when: 'samstag', example: 'Kaufst du am Samstag ein?' },
-                { taskDe: 'Einkaufen am Freitag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Friday: ask Lena if she is going shopping then.', when: 'freitag', example: 'Kaufst du am Freitag ein?' },
-                { taskDe: 'Einkaufen am Montag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Monday: ask Lena if she is going shopping then.', when: 'montag', example: 'Kaufst du am Montag ein?' },
+                { taskDe: 'Einkaufen am Samstag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Saturday: ask Lena a yes/no question about going shopping then.', when: 'samstag', example: 'Kaufst du am Samstag ein?' },
+                { taskDe: 'Einkaufen am Freitag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Friday: ask Lena a yes/no question about going shopping then.', when: 'freitag', example: 'Kaufst du am Freitag ein?' },
+                { taskDe: 'Einkaufen am Montag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Monday: ask Lena a yes/no question about going shopping then.', when: 'montag', example: 'Kaufst du am Montag ein?' },
               ],
               accepted: ['Kaufst du … ein?', 'Gehst du … einkaufen?'], slot: 'when', thingsAfter: true },
             { canDo: 2, cue: { de: 'Ja, dann kaufe ich ein. Kommst du mit?', en: 'Yes, I’m going shopping then. Are you coming along?' }, taskDe: 'Sagen Sie, dass Sie mitkommen, mit einem Satz.', taskEn: 'Say that you are coming along, in one sentence.',
@@ -3162,7 +3162,7 @@ export const CURRICULUM_A11 = {
         'Ich kann eine Verabredung zum Einkaufen machen.',
         'Ich kann sagen, wann ich aufstehe und wann ich arbeite.',
       ],
-      examTeile: ['Sprechen Teil 2', 'Lesen Teil 1', 'Hören Teil 3'],
+      examTeile: ['Sprechen Teil 2'],
       grammarSlugs: ['separable-verbs-intro', 'present-tense-regular', 'time-and-dates'],
       primarySlug: 'separable-verbs-intro',
       minutes: 15,
@@ -3416,7 +3416,7 @@ export const CURRICULUM_A11 = {
         // chunks the Lektion actually says goodbye with do.
         'Ich kann mich mit „Mach’s gut“ und „Bis bald“ verabschieden und gute Wünsche aussprechen.',
       ],
-      examTeile: ['Lesen Teil 1', 'Sprechen Teil 3', 'Schreiben Teil 2'],
+      examTeile: ['Schreiben Teil 2'],
       grammarSlugs: ['possessive-articles', 'verb-sein', 'verb-haben'],
       primarySlug: 'possessive-articles',
       minutes: 15,
@@ -3507,8 +3507,8 @@ export const CURRICULUM_A11 = {
         // so putting the farewell on it is what makes the last can-do of the course an exercise.
         readAloud: [0, 9],
         open: {
-          // Teil 1 is „sich vorstellen“ over Stichwortkarten; formulating an invitation is Teil 3.
-          teil: 'Sprechen Teil 3',
+          // An invitation is general conversation practice here, not an SD1 request card.
+          teil: 'Sprechen üben',
           promptDe: 'Laden Sie eine Kollegin zu Ihrem Fest ein und reagieren Sie auf die Antwort.',
           promptEn: 'Invite a colleague to your party and react to her answer.',
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],

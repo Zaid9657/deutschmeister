@@ -21,6 +21,9 @@ import {
 import { checkpointFeedback, defersFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
+import CommandHelp from '../../components/lesson/CommandHelp.jsx';
+import { PersonalExchange } from '../../components/lesson/SpeakingStage.jsx';
+import { checkpointExchange, checkpointSpeakingContext } from '../../lib/checkpoint/speaking.js';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
 import {
   fetchAttemptState,
@@ -718,6 +721,16 @@ function CheckpointRun() {
           )}
           <LangToggle className="ml-auto" />
         </div>
+
+        <CommandHelp />
+        {curriculum.level === 'a1.1' && (phase === 'intro' || phase === 'result') && (
+          <PersonalExchange
+            key={`${checkpoint.id}-${round}`}
+            task={checkpointExchange(checkpoint.nr)}
+            context={checkpointSpeakingContext(curriculum, checkpoint, t('checkpoint.exchange.back', lang))}
+            storageKey={`dm_checkpoint_exchange_${checkpoint.id}_${round}`}
+          />
+        )}
 
         {phase === 'intro' && (
           <Card className="p-6 sm:p-8">

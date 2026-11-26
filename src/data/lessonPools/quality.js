@@ -1077,6 +1077,7 @@ function chunkSpan(words, chunk) {
  */
 export function frontableOrders(item) {
   if (String(item?.type) !== 'sentence_building') return [];
+  if (/Beginnen Sie mit „[^“]+“/u.test(item.questionDe || '')) return [];
   const q = String(item.questionDe || '');
   if (/\bfrage\b/i.test(q)) return [];
   const bracket = BRACKET_LIST_RE.exec(q);
@@ -1254,7 +1255,18 @@ export function middleFieldOrders(item) {
   if (movable.length < 2 || movable.length > MAX_MOVABLE) return [];
   const prefix = words.slice(0, start);
   const key = flat(words.join(' '));
-  return [...new Set(permutations(movable).map((order) => [...prefix, ...pronouns, ...order, ...tail].flat().join(' ')))]
+  // A noun subject precedes non-time PPs; a motion goal precedes only a
+  // manner PP (mit / zu Fuß), never time, adverb or subject.
+  const motion = /^(?:fahr|fähr|geh|komm|flieg|reis|lauf|läuf)/i.test(verb);
+  const timePP = u => /^(?:am|um|ab|seit|bis)$/i.test(head(u));
+  const pp = u => PREPOSITION_RE.test(head(u)) && u.length >= 2 && !timePP(u);
+  const goal = u => motion && /^(?:nach|zu|zum|zur|in|ins|an|ans|auf|aufs)$/i.test(head(u)) && !/^zu (?:Fuß|Fuss)$/i.test(u.join(' '));
+  const subjectUnit = !pronouns.length && (start === opening.length || !/^(?:der|die|das|mein|meine|ich|du|er|sie|wir|ihr|es)$/i.test(opening[0])) ? movable.find(u => MIDDLE_DETERMINER_RE.test(head(u))) : null;
+  const subject = u => u === subjectUnit;
+  const introduced = u => motion && /^(?:von|aus)$/i.test(head(u)) && /^(?:ein|eine)$/i.test(head(subjectUnit || []));
+  const ordered = order => !order.some((u, i) => (pp(u) && order.slice(i + 1).some(subject) && !introduced(u))
+    || (goal(u) && order.slice(i + 1).some(x => !/^(?:mit|zu Fuß|zu Fuss)(?: |$)/i.test(x.join(' ')))));
+  return [...new Set(permutations(movable).filter(ordered).map((order) => [...prefix, ...pronouns, ...order, ...tail].flat().join(' ')))]
     .filter((o) => flat(o) !== key)
     .map((o) => `${o}${end}`);
 }

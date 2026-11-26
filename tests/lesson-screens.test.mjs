@@ -94,6 +94,7 @@ const component = async (name) => (modules[name] ||= (await load(`src/components
 // The real shell turns { eyebrow, part } into the header line.
 const { default: StageShell } = await loadJsxModule('src/components/lesson/StageShell.jsx', {
   'lucide-react': {}, '../ui/Button.jsx': { default: 'Button' },
+  './CommandHelp.jsx': { default: 'CommandHelp' },
   '../../lib/lesson/strings.js': { ...strings, useLessonLang: () => [lang] },
 });
 /** The header a stage screen shows: the shell's eyebrow line, or an item screen's own h2. */

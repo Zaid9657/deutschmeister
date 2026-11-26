@@ -23,6 +23,7 @@
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { sameAnswer } from '../../data/sameAnswer.js';
 import { COURSE_WORDS } from '../../data/courseWords.js';
+import { keepsOpening, sameSentenceTask, sentenceTask } from './practiceSentence.js';
 
 // CORRECTED: the exercise was finished, but only after a wrong try that the
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
@@ -433,7 +434,7 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  */
 export function checkAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false, spelledLine = null,
-  contractions = false, numerals = false,
+  contractions = false, numerals = false, sentence = null,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -453,6 +454,14 @@ export function checkAnswer(userInput, expected, {
   const user = prepare(userInput);
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+
+  if (sentence?.opening && !keepsOpening(userInput, sentence.opening)) {
+    const opening = String(userInput).trim().split(/\s+/).slice(0, sentence.opening.split(/\s+/).length).join(' ');
+    // The required opening still permits the same spelling slip as the sentence.
+    if (checkAnswer(opening, sentence.opening, { caseSensitive }).result === RESULT.WRONG) {
+      return { result: RESULT.WRONG, expected: accepted[0] || '', reason: 'task' };
+    }
+  }
 
   // Tiles carry the source line's capitals and punctuation with them. Moving
   // one cannot be a spelling slip; only an exact, licensed word order passes.
@@ -514,6 +523,14 @@ export function checkAnswer(userInput, expected, {
     };
     const given = variant(userInput);
     for (const a of accepted) if (variant(a) === given) return { result: RESULT.CORRECT, expected: a };
+  }
+  if (sentence && !dictation && !spellingMode && !choice && !wordOrder) {
+    for (const a of accepted) {
+      const match = sameSentenceTask(userInput, a, sentence);
+      if (!match) continue;
+      if (caseSensitive && match.smallWord) return { result: RESULT.WRONG, expected: a, reason: 'case' };
+      return { result: match.smallStart || match.smallWord ? RESULT.TYPO : RESULT.CORRECT, expected: a };
+    }
   }
   for (const a of accepted) {
     // A spelled word is nothing BUT its letters: „H-A-L-O" for „H-A-L-L-O", „Wilkommen" read off
@@ -624,6 +641,7 @@ export function checkOptionsFor(item) {
     ...(SPELLED_GAP_RE.test(item?.questionDe || '') ? { spelledLine: item.questionDe.match(SPELLED_GAP_RE)[0] } : {}),
     ...(item?.readingAnswer === true ? { readingAnswer: true } : {}),
     ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
+    ...(sentenceTask(item) ? { sentence: sentenceTask(item) } : {}),
     // Only where the key can use them, so every other item's options stay what they were.
     ...(contractionsFree(item) && accepted.some((a) => CONTRACTED_RE.test(String(a || ''))) ? { contractions: true } : {}),
     ...(numeralsFree(item) && accepted.some((a) => /\d/.test(String(a || '')) || numberWordsToDigits(a) !== String(a || '')) ? { numerals: true } : {}),

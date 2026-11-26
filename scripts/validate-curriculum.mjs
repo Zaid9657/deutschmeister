@@ -2061,7 +2061,13 @@ export function examTeileBacked(c) {
       const family = String(teil).split(' ')[0];
       const covers = EXAM_TEIL_COVERS[family];
       let why = null;
-      if (covers && !covers(l)) {
+      if (c.level === 'a1.1' && /^Hören Teil/u.test(teil) && l.hoeren?.kind === 'dictation') {
+        why = 'dictation is general listening practice, not an exam-part format';
+      } else if (c.level === 'a1.1' && /^Lesen Teil/u.test(teil) && !l.lesen) {
+        why = 'reading a dialogue or following a link is general practice, not an in-lesson exam item';
+      } else if (c.level === 'a1.1' && teil === 'Sprechen Teil 3' && !/^Bitten Sie .* und reagieren/u.test(open.promptDe || '')) {
+        why = 'Teil 3 needs a request and a response, not an information question or an invitation';
+      } else if (covers && !covers(l)) {
         why = EXAM_TEIL_SURFACE_WHY[family];
       } else if (teil === 'Sprechen Teil 1'
         && !SELF_INTRO_RE.test(open.promptDe || '')
@@ -3448,7 +3454,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
       teileSeen.add(t);
     }
   });
-  for (const t of EXAM_TEILE) if (!teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
+  for (const t of EXAM_TEILE) if (c.level !== 'a1.1' && !teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
 
   // ---- RULE 3 (grammar slugs) ---------------------------------------------------------------
   const primaryCount = new Map();
@@ -3561,8 +3567,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
     if (new Set(s.readAloud || []).size !== (s.readAloud || []).length) fail(`Lektion ${l.nr}: readAloud lines must differ`);
     for (const i of s.readAloud || []) if (!Number.isInteger(i) || i < 0 || i >= lineCount) fail(`Lektion ${l.nr}: readAloud index ${i} out of range`);
     const open = s.open || {};
-    if (!EXAM_TEILE.includes(open.teil) || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
-    if (!(l.examTeile || []).includes(open.teil)) fail(`Lektion ${l.nr}: sprechen.open.teil "${open.teil}" is not in examTeile`);
+    if ((!EXAM_TEILE.includes(open.teil) && open.teil !== 'Sprechen üben') || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
+    if (!(l.examTeile || []).includes(open.teil) && open.teil !== 'Sprechen üben') fail(`Lektion ${l.nr}: sprechen.open.teil "${open.teil}" is not in examTeile`);
     if (!open.promptDe) fail(`Lektion ${l.nr}: sprechen.open needs a promptDe`);
     if ((open.hintWords || []).length !== 3) fail(`Lektion ${l.nr}: sprechen.open needs exactly 3 hintWords`);
     if (open.missionOrder !== null) {

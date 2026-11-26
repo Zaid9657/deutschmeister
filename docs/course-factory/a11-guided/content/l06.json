@@ -93,7 +93,7 @@
       {
         "from": 4,
         "to": 6,
-        "meaningLines": "f067e137",
+        "meaningLines": "a46b936a",
         "meaning": {
           "promptDe": "Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Weber say about a mobile phone? Choose the meaning.",
@@ -116,7 +116,7 @@
       {
         "from": 6,
         "to": 8,
-        "meaningLines": "bc4ddad0",
+        "meaningLines": "c2eabe50",
         "meaning": {
           "promptDe": "Was möchte Ana wissen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana want to know? Choose the meaning.",

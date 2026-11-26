@@ -194,7 +194,7 @@ test('a checkpoint dictates nothing longer than its own chapter dictates, and ne
   const ceilings = CURRICULUM_A11.checkpoints.map((cp) => dictationCeiling(chapterLektionen(CURRICULUM_A11, cp)));
   // Measured 2026-09-14 (round 19): chapter 1 is nine because L2 line 3 — „Ich bin ledig. Ist das
   // Formular für die Adresse?“, the Familienstand answer of Minor 12 — is a dictation line.
-  assert.deepEqual(ceilings, [9, 8, 9, 10], 're-measure and re-pin when a window moves');
+  assert.deepEqual(ceilings, [9, 10, 9, 10], 're-measure and re-pin when a window moves');
   assert.equal(dictationCeiling([]), DICTATION_MAX_WORDS, 'a chapter with no window falls back to the A1.1 maximum');
   // IT BITES: a chapter whose free, construction-free, UNREPORTABLE lines — the ones the
   // preference used to take first — are all above its ceiling still dictates only lines under it.

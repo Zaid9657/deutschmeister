@@ -170,6 +170,16 @@ const REGISTER_EXEMPT = [
     line: `out.push(<bdi key={m.index} dir="ltr" lang="de" className={m.run.length > 24 ? undefined : 'whitespace-nowrap'}>{m.run}</bdi>);`,
     reason: 'the HTML text-direction attribute that keeps a German run left-to-right inside the Arabic help.',
   },
+  {
+    file: 'src/components/lesson/CommandHelp.jsx',
+    line: `<dl lang="ar" dir="rtl" className="mt-2 space-y-2 leading-relaxed">`,
+    reason: 'the HTML text-direction attribute for Arabic command help, not the German pronoun.',
+  },
+  {
+    file: 'src/components/lesson/CommandHelp.jsx',
+    line: `<dt lang="de" dir="ltr" className="font-bold text-ink">{command}</dt>`,
+    reason: 'the HTML text-direction attribute that isolates a German command inside Arabic help.',
+  },
 ];
 
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
@@ -773,4 +783,37 @@ test('second Codex review, accessibility: names match what is shown, focus lands
   const welcome = read('src/components/course/CourseWelcome.jsx');
   assert.doesNotMatch(welcome, /overflow-x-auto|role="region"/, 'the steps wrap instead of scrolling sideways');
   for (const lang of ['en', 'de']) assert.ok(read('src/lib/lesson/strings.js').includes("'wortfeld.flipHint': '{word}: {en}',"), lang);
+});
+
+test('optional Arabic command help is shared by lesson stages and isolates reading direction', async () => {
+  const { TASK_COMMANDS_AR, t } = await import('../src/lib/lesson/strings.js');
+  assert.deepEqual(TASK_COMMANDS_AR.map(x => x[0]), ['Lesen', 'Hören', 'Ergänzen', 'Satz bilden', 'Fragen', 'Sprechen', 'Schreiben', 'Prüfen']);
+  for (const [, text] of TASK_COMMANDS_AR) assert.match(text, /\p{Script=Arabic}/u);
+  for (const lang of ['en', 'de']) assert.notEqual(t('help.commandsArabic', lang), 'help.commandsArabic');
+  assert.match(read('src/components/lesson/StageShell.jsx'), /<CommandHelp \/>/u);
+  const help = read('src/components/lesson/CommandHelp.jsx');
+  assert.match(help, /<details/u);
+  assert.match(help, /lang="ar" dir="rtl"/u);
+  assert.match(help, /lang="de" dir="ltr"/u);
+});
+
+test('all four checkpoint exchanges hand personal turns to the existing coach and return to the same checkpoint', async () => {
+  const { checkpointExchange, checkpointSpeakingContext } = await import('../src/lib/checkpoint/speaking.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const task = checkpointExchange(cp.nr);
+    assert.ok(task.promptDe && task.promptEn);
+    assert.match(task.promptDe, /Fragen Sie/u);
+    const context = checkpointSpeakingContext(CURRICULUM_A11, cp, 'Back to checkpoint');
+    assert.equal(context.returnTo, '/course/a1.1/checkpoint/' + cp.nr + '#checkpoint-conversation');
+    assert.equal(context.openPrompt, task.promptDe);
+    assert.equal(context.openTeil, 'Gesprächsübung');
+    assert.equal(context.itemId, undefined, 'a checkpoint must not be marked as a finished legacy lesson');
+  }
+  const page = read('src/pages/lesson/CheckpointPage.jsx');
+  const stage = read('src/components/lesson/SpeakingStage.jsx');
+  assert.match(page, /<PersonalExchange/u);
+  assert.match(stage, /saveCourseContext\(context\)/u);
+  assert.match(stage, /type="checkbox" checked=\{reflected\}/u);
+  assert.match(stage, /checkpoint.exchange.honest/u);
 });

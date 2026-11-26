@@ -36,6 +36,14 @@ export {
 
 export const STRINGS = {
   en: {
+    'help.commandsArabic': 'Task commands · مساعدة بالعربية',
+    'checkpoint.exchange.title': 'A short personal conversation',
+    'checkpoint.exchange.lead': 'Try these few turns with the speaking coach, using your own details and without reading a model answer.',
+    'checkpoint.exchange.open': 'Open the speaking coach',
+    'checkpoint.exchange.back': 'Back to checkpoint',
+    'checkpoint.exchange.return': 'In the coach, use “Back to checkpoint”. Then reflect here on how it went.',
+    'checkpoint.exchange.self': 'I answered personally and asked a question without reading an answer.',
+    'checkpoint.exchange.honest': 'Your own self-check, not a conversation score. It does not change the checkpoint result.',
     'sound.correct': 'Yes, that matches the sound model.',
     'sound.correction': 'The sound model is: {answer}',
     "sound.title": "Listen, notice, then say it",
@@ -547,6 +555,14 @@ export const STRINGS = {
   },
 
   de: {
+    'help.commandsArabic': 'Aufgaben verstehen · مساعدة بالعربية',
+    'checkpoint.exchange.title': 'Ein kurzes persönliches Gespräch',
+    'checkpoint.exchange.lead': 'Üben Sie diese wenigen Gesprächsschritte mit dem Sprechcoach: mit Ihren eigenen Angaben und ohne eine Musterantwort abzulesen.',
+    'checkpoint.exchange.open': 'Sprechcoach öffnen',
+    'checkpoint.exchange.back': 'Zurück zum Checkpoint',
+    'checkpoint.exchange.return': 'Wählen Sie im Coach „Zurück zum Checkpoint“. Schätzen Sie danach hier ein, wie es ging.',
+    'checkpoint.exchange.self': 'Ich habe persönlich geantwortet und eine Frage gestellt, ohne eine Antwort abzulesen.',
+    'checkpoint.exchange.honest': 'Ihre eigene Einschätzung, keine Gesprächsnote. Das Checkpoint-Ergebnis bleibt davon unabhängig.',
     'sound.correct': 'Ja, das passt zur Lautvorlage.',
     'sound.correction': 'Die Lautvorlage ist: {answer}',
     "sound.title": "Hören, erkennen, nachsprechen",
@@ -1078,3 +1094,16 @@ export const partEyebrow = (part, name, lang = DEFAULT_LESSON_LANG) =>
  */
 export const lessonDateFormat = (lang, options) =>
   new Intl.DateTimeFormat(normalizeLessonLang(lang) === 'de' ? 'de-DE' : 'en-GB', options);
+
+// Optional help for recurring instructions; Arabic is isolated from German
+// content in CommandHelp. Owner's native reader reviews these short lines.
+export const TASK_COMMANDS_AR = [
+  ['Lesen', 'اقرأ النص بهدوء.'],
+  ['Hören', 'استمع أولًا، ثم أجب.'],
+  ['Ergänzen', 'اكتب الكلمة المناسبة في الفراغ.'],
+  ['Satz bilden', 'رتّب الكلمات، وابدأ بالكلمة المطلوبة.'],
+  ['Fragen', 'اطرح سؤالًا يناسب الموقف.'],
+  ['Sprechen', 'أجب بصوتك وبمعلوماتك.'],
+  ['Schreiben', 'اكتب جملًا كاملة عن المطلوب.'],
+  ['Prüfen', 'راجع إجابتك، ثم اضغط زر التحقّق.'],
+];

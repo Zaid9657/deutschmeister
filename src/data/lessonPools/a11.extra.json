@@ -262,17 +262,20 @@
   {
    "id": "extra-a11-l02-08",
    "topic": "verb-sein",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 28,
-   "questionDe": "Ohne Artikel, bitte: „Ich bin ein Lehrer.“",
-   "questionEn": "Without the article, please: \"Ich bin ein Lehrer.\"",
+   "questionDe": "Bilden Sie den Satz ohne Artikel (Beginnen Sie mit „Ich“): [ich / sein / von Beruf / Studentin]",
+   "questionEn": "Practise the usual form without an article. Build the sentence, beginning with “Ich”.",
    "options": null,
-   "answer": "Ich bin Lehrer.",
-   "accepted": ["Ich bin Lehrer.", "Ich bin Lehrer"],
-   "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.",
-   "hint": null
+   "answer": "Ich bin von Beruf Studentin.",
+   "accepted": [
+    "Ich bin von Beruf Studentin."
+   ],
+   "explanationDe": "„Ich bin ein Lehrer.“ ist korrektes Deutsch. Den Beruf nennen Sie meist ohne Artikel.",
+   "hint": null,
+   "explanationEn": "“Ich bin ein Lehrer.” is correct German. Jobs usually have no article. This task practises that usual form: Ich bin von Beruf Studentin."
   },
   {
    "id": "extra-a11-l02-09",

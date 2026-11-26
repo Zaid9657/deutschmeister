@@ -178,7 +178,7 @@ const PAPERS = [
       gap(7, 'Ich ___ gern. (schwimmen)', 'schwimme', 'praesens'),
       gap(4, 'Das Zimmer kostet ___ Euro. (94)', 'vierundneunzig', 'zahl'),
       gap(6, 'Ich kaufe ___ Computer. (unbestimmter Artikel)', 'einen', 'einen'),
-      build(7, 'Frau Krause / hören / gern Musik', 'Frau Krause hört gern Musik.', 'Frau Krause', 'zwei'),
+      build(7, 'Frau Krause / hören / gern / Musik', 'Frau Krause hört gern Musik.', 'Frau Krause', 'zwei'),
       build(8, 'wann / kommen / der Kellner', 'Wann kommt der Kellner?', 'Wann', 'wfrage'),
     ],
     [

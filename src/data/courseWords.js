@@ -68,46 +68,46 @@ kaufhaus kaufst kauft kaya ke kei kein keine keinen keller kellner kellnerin kel
 kilo kind kinder kinderzimmer kino kinos kirche kirchen kissen klassenzimmer kleid kleider kleidung
 klein kleine klingt koche kochen kochst kocht koeln koelner koennen koennt koennte koepfe koerper
 koerperteile koffer kollege kollegen kollegin kolleginnen komm komme kommen kommst kommt konjugiert
-konjugierte konzert konzerte kopf kopfschmerzen kosten kostet krank krankenhaeuser krankenhaus
-krause krueger ku kuchen kueche kuechen kuehlschraenke kuehlschrank kugelschreiber kurs kursmaterial
-kursraum kurz kurze kurzen kurzer kurzes kurzform lade laden laedt laender laesst laeufst lam lampe
-lampen land lang lange langer langes langsam laufen laut lautet le lebe leben lebensmittel lecker
-ledig lehnen lehrer lehrerin lehrerinnen leider lektion lena lenas lern lerne lernen lernst lernt
-lese lesen letzte letzten leute li libanon liebe lieben lieber liest lig lineal lineale links liste
-lo loest lorenz mach mache machen machs machst macht maenner maennlich maentel maerkte maerz magst
-mai mail male mama mamas man manchmal mann mantel markiert markt marokkaner marokkanerin
-marokkanerinnen marokkanisch marokko maskulin maskulines maskulinum material mehr mehrere mein meine
-meinem meinen meiner meist meistens melden meldet menge meyer mia mich miete milch mineralwasser
-minute minuten mir mit mitbewohnerin mitbringen mitkommen mittagspause mitte mittwoch mittwoche
-modalverb modalverben moebel moebeln moebelstueck moech moechte moechten moechtest moeglich moment
-monat monate montag montage morgen morgens muede muell muender muessen muesst muet muetter muetze
-muetzen mund museen museum musik muss muster mutter na nach nachbar nachbarin nachbarinnen nachbarn
-nachgefragt nachmittag nachmittags nachname nachnamen nachricht nacht naechste name namen nase nasen
-nationalitaet ne neben nehme nehmen nehmt nein nen nennen nennt neu neue neuen neuer neun
-neunundsechzig neunzehn neunzig neutral neutrales neutrum nicht nichts nie nimmt noch nomen
-nominativ normalerweise notwendigkeit novak november nudel nudeln null nummer nummern nur ob objekt
-obst oder oe oesterreich offiziell offizielle offiziellen oft ohne okay oktober oma omas onkel opa
-opas orangensaefte orangensaft ordnungszahl ordnungszahlen ort paar paare packen papa papas papier
-papiere park parks partizip party partys passen passieren passt paul pause pausen pe per perfekt
-person personalpronomen personen plaene plaetze plan planen plant platz plural pluralform
-pluralnomen plus polen position possessivartikel post praedikat praefix praeposition praepositionen
-praesens praeteritum praxen praxis preis preise prima pronomen puenktlich pullover quittung
-quittungen ra rabatt rabatte radio raeumen ramos rathaeuser rathaus re reagieren rechnung rechnungen
-rechts regal regale regel regelmaessig regelmaessige regeln regen regnen regnet reihenfolge reis
-reise reisen reiseziel reklamation reklamieren ren reserviert reservierungskarte restaurant
-restaurants rezeption richten richtig richtung ro rock roecke rot rucksack rucksaecke ruecken rueckt
-rufe rufen rufst ruft ruhe rutscht sache sachen saefte saetze saft sag sagen sagt salat salate
-samstag samstage sara satz satzanfang satzende satzes satzklammer satzmelodie satznegation sch schal
-schals schalter scharfes sche schere scheren schickt schild schla schlaefst schlaeft schlafe
-schlafen schlafzimmer schliessen schluessel schmidt schnee schneien schneit schnell schoen schoenen
-schoener schokolade schon schraenke schrank schreiben schreibt schreibweise schritt schuh schuhe
-schule schulen schwarz schweiz schwer schwester schwestern schwimme schwimmen schwimmst schwimmt
-sechs sechsunddreissig sechzehn sechzig sehe sehen sehr seid seidel sein seine seinem seit sekt
-selbst sen september setzen she sich sicher sicherheit sie sieben siebenundachtzig siebenundfuenfzig
-siebzehn siebzig siehst sieht silbe sind singular sitzt so socke socken soehne sofa sofas sofort
-sohn soll sollen sommer son sondern sonne sonnig sonntag sonntage spaet spaeter spanien spiegel
-spiel spiele spielen spielst spielt sport sportkurs sportverein sprache sprachen sprachkurs
-sprachschule spreche sprechen sprechende sprecht sprich sprichst spricht ss sser st
+konjugierte konzert konzerte kopf kopfschmerzen korrektes kosten kostet krank krankenhaeuser
+krankenhaus krause krueger ku kuchen kueche kuechen kuehlschraenke kuehlschrank kugelschreiber kurs
+kursmaterial kursraum kurz kurze kurzen kurzer kurzes kurzform lade laden laedt laender laesst
+laeufst lam lampe lampen land lang lange langer langes langsam laufen laut lautet le lebe leben
+lebensmittel lecker ledig lehnen lehrer lehrerin lehrerinnen leider lektion lena lenas lern lerne
+lernen lernst lernt lese lesen letzte letzten leute li libanon liebe lieben lieber liest lig lineal
+lineale links liste lo loest lorenz mach mache machen machs machst macht maenner maennlich maentel
+maerkte maerz magst mai mail male mama mamas man manchmal mann mantel markiert markt marokkaner
+marokkanerin marokkanerinnen marokkanisch marokko maskulin maskulines maskulinum material mehr
+mehrere mein meine meinem meinen meiner meist meistens melden meldet menge meyer mia mich miete
+milch mineralwasser minute minuten mir mit mitbewohnerin mitbringen mitkommen mittagspause mitte
+mittwoch mittwoche modalverb modalverben moebel moebeln moebelstueck moech moechte moechten
+moechtest moeglich moment monat monate montag montage morgen morgens muede muell muender muessen
+muesst muet muetter muetze muetzen mund museen museum musik muss muster mutter na nach nachbar
+nachbarin nachbarinnen nachbarn nachgefragt nachmittag nachmittags nachname nachnamen nachricht
+nacht naechste name namen nase nasen nationalitaet ne neben nehme nehmen nehmt nein nen nennen nennt
+neu neue neuen neuer neun neunundsechzig neunzehn neunzig neutral neutrales neutrum nicht nichts nie
+nimmt noch nomen nominativ normalerweise notwendigkeit novak november nudel nudeln null nummer
+nummern nur ob objekt obst oder oe oesterreich offiziell offizielle offiziellen oft ohne okay
+oktober oma omas onkel opa opas orangensaefte orangensaft ordnungszahl ordnungszahlen ort paar paare
+packen papa papas papier papiere park parks partizip party partys passen passieren passt paul pause
+pausen pe per perfekt person personalpronomen personen plaene plaetze plan planen plant platz plural
+pluralform pluralnomen plus polen position possessivartikel post praedikat praefix praeposition
+praepositionen praesens praeteritum praxen praxis preis preise prima pronomen puenktlich pullover
+quittung quittungen ra rabatt rabatte radio raeumen ramos rathaeuser rathaus re reagieren rechnung
+rechnungen rechts regal regale regel regelmaessig regelmaessige regeln regen regnen regnet
+reihenfolge reis reise reisen reiseziel reklamation reklamieren ren reserviert reservierungskarte
+restaurant restaurants rezeption richten richtig richtung ro rock roecke rot rucksack rucksaecke
+ruecken rueckt rufe rufen rufst ruft ruhe rutscht sache sachen saefte saetze saft sag sagen sagt
+salat salate samstag samstage sara satz satzanfang satzende satzes satzklammer satzmelodie
+satznegation sch schal schals schalter scharfes sche schere scheren schickt schild schla schlaefst
+schlaeft schlafe schlafen schlafzimmer schliessen schluessel schmidt schnee schneien schneit schnell
+schoen schoenen schoener schokolade schon schraenke schrank schreiben schreibt schreibweise schritt
+schuh schuhe schule schulen schwarz schweiz schwer schwester schwestern schwimme schwimmen schwimmst
+schwimmt sechs sechsunddreissig sechzehn sechzig sehe sehen sehr seid seidel sein seine seinem seit
+sekt selbst sen september setzen she sich sicher sicherheit sie sieben siebenundachtzig
+siebenundfuenfzig siebzehn siebzig siehst sieht silbe sind singular sitzt so socke socken soehne
+sofa sofas sofort sohn soll sollen sommer son sondern sonne sonnig sonntag sonntage spaet spaeter
+spanien spiegel spiel spiele spielen spielst spielt sport sportkurs sportverein sprache sprachen
+sprachkurs sprachschule spreche sprechen sprechende sprecht sprich sprichst spricht ss sser st
 staatsangehoerigkeit staatsangehoerigkeiten stadt stadtbibliothek staedte stamm stammvokal stand
 startort ste steckdose steckdosen stehe stehen stehst steht steig steigende steigt stelle stellen
 stellt stift stifte stockwerk stockwerke stolz strasse strassenbahn strassenbahnen student studenten
@@ -119,7 +119,7 @@ telefoniert telefonnummer telefonnummern temperatur temperaturen tempo teppich t
 termine terrasse terrassen teu teuer text thema they thomas ticket tickets tim tims tippen tisch
 tische tochter toechter toilette toiletten toll traegt trage tragen tragt traurig trennbar trennbare
 trennbaren trennbares treppe treppen trinke trinken trinkst trinkt tschuess tuer tueren tuerkei tun
-tut ue ueber ueberlegen uebernachtet uebungen uhr uhren uhrzeit uhrzeiten um umgangssprachlich
+tut ue ueben ueber ueberlegen uebernachtet uebungen uhr uhren uhrzeit uhrzeiten um umgangssprachlich
 umlaut umsteigen umwelt umzug unbekannt unbestimmte unbestimmtem unbestimmter unbetont und ungefaehr
 ungefaehre unregelmaessig unregelmaessige uns unser unsere unter unterhalten unterschrift unterwegs
 urlaub usa uː vaeter vase vater vau ver verabreden verabredet verabredung verabredungen

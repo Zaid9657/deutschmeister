@@ -1364,6 +1364,16 @@ for (const item of items) {
 }
 if (middleFieldRepaired.length) console.log(`middle field: ${middleFieldRepaired.length} item(s) gained licensed orders:\n  ${middleFieldRepaired.join('\n  ')}`);
 
+// A named opening is a task constraint, also after every expansion above.
+// Keep valid middle-field variants while removing old fronted keys that do
+// not perform the authored task. A1.1's source is the takeover scope.
+if (level === 'a1.1') for (const item of items) {
+  if (item.type !== 'sentence_building') continue;
+  const opening = item.questionDe?.match(/Beginnen Sie mit „([^“]+)“/u)?.[1];
+  if (!opening) continue;
+  if (!opensWith(item.answer, opening)) throw Error(item.id + ': model does not keep the required opening');
+  item.accepted = (item.accepted || [item.answer]).filter(answer => opensWith(answer, opening));
+}
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 // DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so
 // no checkpoint makes the learner type or say a dialogue line built on grammar taught later.

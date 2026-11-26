@@ -16,13 +16,14 @@ const PERSONS = /^(?:ich|du|er|sie|wir|ihr|man|alle|viele|beide|niemand|jemand)$
 const frameText = (a) => (typeof a === 'string' ? a : a?.frame || '');
 
 /** What the turn asks: { kind, … }, read off its accepted answers; null where no sentence answers it (a greeting, a goodbye). */
+export const requiresVerbFirst = turn => /Ja\s*\/\s*Nein[-– ]*Frage|(?:das )?Verb (?:steht vorn|auf Position 1)/iu.test(turn?.taskDe || '');
 const kinds = new WeakMap();
 export function asked(turn) {
   if (!kinds.has(turn)) {
     const q = findKind(turn);
     const task = turn.taskDe || '';
     const journey = q && (q.train || q.kind === 'askPrice');
-    kinds.set(turn, q && { ...q, mine: /(?<!\p{L})Ihr(?:e|en|em|er)?\s+\p{Lu}/u.test(task), to: journey ? (turn.only || []).map(fold) : [], withHave: /mit „Ich habe/u.test(task), byPronoun: (turn.accepted || []).map(frameText).some((f) => /(?<!\p{L})(?:er|sie|es|der|die|das)(?:\s+ab)?\?$/u.test(f) && !/,|\?.+\?/u.test(f) && !(q.things || []).some((t) => fold(f).includes(t))) });
+    kinds.set(turn, q && { ...q, verbFirst: requiresVerbFirst(turn), mine: /(?<!\p{L})Ihr(?:e|en|em|er)?\s+\p{Lu}/u.test(task), to: journey ? (turn.only || []).map(fold) : [], withHave: /mit „Ich habe/u.test(task), byPronoun: (turn.accepted || []).map(frameText).some((f) => /(?<!\p{L})(?:er|sie|es|der|die|das)(?:\s+ab)?\?$/u.test(f) && !/,|\?.+\?/u.test(f) && !(q.things || []).some((t) => fold(f).includes(t))) });
   }
   return kinds.get(turn);
 }
@@ -44,6 +45,7 @@ function findKind(turn) {
   if (/^Ich wohne in/.test(a)) return { kind: 'live' };
   if (/von Beruf\?|beruflich\?/.test(all) && /\?/.test(a)) return { kind: 'askJob' };
   if (turn.slot === 'job') return { kind: 'job' };
+  if (turn.slot === 'date' && /geboren|Geburtsdatum/u.test(all)) return { kind: 'birth' };
   if (turn.slot === 'phone') return { kind: 'phone' };
   if (/^Das ist mein/.test(a) && turn.slotIn) return { kind: 'photo', people: turn.slotIn.map(fold) };
   if (/^(?:Sie|Er) ist (?:jung|alt)/.test(a)) return { kind: 'age', third: fold(a.split(' ')[0]), people: peopleOf(turn) };
@@ -325,6 +327,7 @@ const doable = (c, env) => { const t = OBJECTS[c.lemma]; if (!t || !c.acc || NO_
 const backwards = (c) => (c.adj || []).some((a) => { const d = a.degree || []; const not = d.includes('nicht'); const still = d.includes('noch'); const young = a.words.includes('jung'); const old = a.words.includes('alt'); return (young && ((d.includes('schon') && !not) || (still && not))) || (old && ((still && !not) || (not && d.includes('mehr')))); });
 const NO_MOOD = new Set(['nicht', 'sehr', 'so', 'auch', 'heute', 'jetzt', 'hier', 'leider', 'danke', 'noch', 'schon', 'immer', 'dann', 'da', 'ganz', 'bitte', 'gerade', 'im moment', 'zurzeit', 'eigentlich', 'ja', 'denn']);
 const SAYING = {
+  birth: (c, q, env) => (birth(c) && !(c.lemma === 'geboren' && c.past) && timesOf(c).some(t => env.isDate(t))) || (['geburtsdatum', 'geburtstag'].includes(c.subj?.head) && c.subj.det === 'mein' && c.pred?.kind === 'date' && env.isDate(c.pred)),
   name: (c) => {
     const named = (n) => n && ['own', 'name'].includes(n.kind);
     if (c.lemma === 'heißen' && c.subj?.head === 'ich' && named(c.pred)) return true;
@@ -616,6 +619,7 @@ export function meaning(turn, sentences, env) {
   if (frags.some((c) => c.adj.length && c.elems.every((e) => e.kind === 'adj')) && q && QUESTION_KINDS.includes(q.kind)) return { say: null };
   if (!pronounsFit(all, env)) return { say: 'pronoun' };
   if (!q) return { say: null };
+  if (q.verbFirst && clauses.length && !clauses.some(c => c.question && !c.wh && !c.before && !c.sub)) return { say: 'task' };
   // A day named in a fragment or an earlier clause („Und am Freitag um zehn? Hast du da Zeit?“) counts for the clause that asks.
   const lone = [...frags, ...clauses];
   for (const c of clauses) c.all = lone;
@@ -632,7 +636,7 @@ export function meaning(turn, sentences, env) {
     const named = clauses.some((c) => SAYING.name(c, q, e2));
     const born = clauses.some((c) => (birth(c) && !(c.lemma === 'geboren' && c.past) && timesOf(c).some((t) => env.isDate(t))) || (['geburtsdatum', 'geburtstag'].includes(c.subj?.head) && c.subj.det === 'mein' && c.pred?.kind === 'date' && env.isDate(c.pred)));
     // (How one feels belongs in no message to an office.)
-    if (named && born && !clauses.some((c) => c.question || adjs(c).some((a) => FEEL.has(a)))) return { say: 'yes', clauses };
+    if (named && born) return { say: null, clauses }; // Per-sentence grading lives in messageResult, shared with single turns.
     return { say: clauses.length === 1 && !frags.length && (born || named) ? 'task' : null, clauses };
   }
   const test = ASKING[q.kind] || SAYING[q.kind];
@@ -641,7 +645,14 @@ export function meaning(turn, sentences, env) {
   const asks = QUESTION_KINDS.includes(q.kind);
   // A question is no statement: „Brauche ich einen Computer?“ answers nothing (a guest may ask for a thing, a host invite).
   const states = !asks && !['invite', 'order', 'accept', 'wish', 'join', 'agree'].includes(q.kind);
-  const hit = clauses.filter((c) => !(states && c.question && !c.wh && I(c)) && test(c, q, e2));
+  const matches = clauses.filter((c) => !(states && c.question && !c.wh && I(c)) && test(c, q, e2));
+  const verbFirst = c => c.question && !c.wh && !c.before && !c.sub;
+  const performsForm = c => verbFirst(c) || (c.sub === 'ob' && sentences.some(s => {
+    const at = s.clauses.findIndex(x => x.start === c.start && x.end === c.end);
+    return at > 0 && verbFirst(s.clauses[at - 1]);
+  }));
+  const hit = matches.filter(c => !q.verbFirst || performsForm(c));
+  if (q.verbFirst && matches.length && !hit.length) return { say: 'task' };
   // A part of an answer without a verb: „Eine heiße Schokolade, bitte.“, „Nach Kiel. Dort wohnt mein Sohn.“
   const part = /einem Satz|ganze Sätze/.test(turn.taskDe || '') && !clauses.length ? null : FRAGMENTS[q.kind];
   if (!hit.length && q.kind === 'mood' && frags.some((c) => adjs(c).some((a) => COLOURS.has(a)))) return { say: null };

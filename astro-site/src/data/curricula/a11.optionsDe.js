@@ -19,7 +19,7 @@ export const A11_OPTIONS_DE = {
       ['Ist Ana ledig oder verheiratet?', 'Ist Ana Studentin oder Lehrerin?', 'Wohnt Ana in Bremen oder in Berlin?'],
       ['Sie kommt aus Bremen und wohnt in Marokko.', 'Sie kommt aus Spanien und wohnt in Berlin.', 'Sie kommt aus Marokko und wohnt in Bremen.'],
       ['Er fragt nach Anas Beruf.', 'Er fragt: Wo wohnt Ana?', 'Er fragt: Wie alt ist Ana?'],
-      ['0167', '0176', '1076'],
+      ['0172 9925409', '0172 9925904', '0172 9952904'],
     ],
     read: [['Das Nomen „Marokkanerin“.', 'Der Name des Landes: „Marokko“.', 'Das Adjektiv „marokkanisch“.'], ['Wann Sie geboren sind.', 'Wo Sie jetzt wohnen.', 'Was Sie von Beruf sind.']],
   },

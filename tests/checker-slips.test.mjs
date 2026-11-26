@@ -35,7 +35,7 @@ test('Arabic-Indic and Persian digits are the same digits, for every item kind t
   assert.ok(seen >= 5, `items with digits: ${seen}`);
   // The dictated phone number of A1.1 Lektion 6, typed on an Arabic keyboard.
   const phone = dictations.find((d) => /Null vier zwei/.test(d.answer));
-  assert.notEqual(grade(phone, '٠٤٢ ٣٣٨١'), RESULT.WRONG);
+  assert.notEqual(grade(phone, '٠٤٢١ ٣٠٨٠٠٠١'), RESULT.WRONG);
 });
 
 /** Every swap of two neighbouring letters inside a word of five letters or more, not two vowels, not the last letter. */

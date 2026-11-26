@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import Button from '../ui/Button.jsx';
+import CommandHelp from './CommandHelp.jsx';
 import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // Wave 2 (2026-09-19): a background wash per stage kind, so ten screens in a
@@ -58,6 +59,7 @@ export default function StageShell({
           </h1>
         )}
         {lead && <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{lead}</p>}
+        <CommandHelp />
       </header>
 
       <div className="flex-1">{children}</div>

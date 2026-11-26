@@ -189,20 +189,20 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "f5fc633f",
+        "meaningLines": "71eff06c",
         "meaning": {
           "promptDe": "Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.",
           "promptEn": "What is Ana’s phone number? Choose the numbers.",
           "options": [
-            "0167",
-            "0176",
-            "1076"
+            "0172 9925409",
+            "0172 9925904",
+            "0172 9952904"
           ],
-          "answer": "0176",
+          "answer": "0172 9925904",
           "optionsDe": [
-            "0167",
-            "0176",
-            "1076"
+            "0172 9925409",
+            "0172 9925904",
+            "0172 9952904"
           ]
         },
         "say": {

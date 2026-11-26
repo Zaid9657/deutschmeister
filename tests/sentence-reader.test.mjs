@@ -246,3 +246,58 @@ test('practice: an item stands in one Lektion, and Lektionen 4 to 6 practise the
   }
   assert.deepEqual([...seats].filter(([, l]) => l.size > 1).map(([id]) => id), []);
 });
+
+test('motion goals close the middle field, while manner PPs may follow', () => {
+  for (const [turn, answer] of [[at(7, 1), 'Ich gehe ins Kino gern.'], [at(10, 1), 'Ich fahre nach Berlin morgen.'], [at(10, 3), 'Wann fährt nach Berlin der Zug?'], [at(7, 1), 'Ich gehe zur Arbeit morgens.'], [at(10, 4), 'Was kostet nach Berlin die Fahrkarte?']]) {
+    assert.equal(typedResult(turn, answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(turn, answer), 'order', answer);
+    assert.notEqual(readOnce(turn, answer).say, 'yes', answer);
+  }
+  for (const answer of ['Ich fahre morgen nach Berlin.', 'Ich fahre nach Berlin mit dem Zug.', 'Ich gehe ins Kino zu Fuß.']) {
+    const turn = answer.includes('gehe') ? at(7, 1) : at(10, 1);
+    assert.equal(typedResult(turn, answer), RESULT.CORRECT, answer);
+  }
+  assert.equal(typedResult(at(10, 2), 'Fährt von hier ein Zug nach Berlin?'), RESULT.CORRECT);
+  assert.equal(wrongReason(at(10, 2), 'Fährt von hier ein Zug nach Berlin?'), null);
+  assert.equal(typedResult(at(10, 2), 'Fährt nach Berlin ein Zug?'), RESULT.WRONG);
+  assert.equal(wrongReason(at(10, 2), 'Fährt nach Berlin ein Zug?'), 'order');
+});
+test('an explicit yes/no task requires the verb-first form in every sitting', () => {
+  for (let s = 0; s < 3; s += 1) {
+    const train = at(10, 2, s);
+    const city = ['Berlin', 'Österreich', 'Köln'][s];
+    const bad = 'Der Zug fährt nach ' + city + '?';
+    assert.equal(typedResult(train, bad), RESULT.WRONG, bad);
+    assert.notEqual(readOnce(train, bad).say, 'yes', bad);
+    assert.equal(typedResult(train, 'Fährt der Zug nach ' + city + '?'), RESULT.CORRECT);
+    const shop = at(11, 6, s);
+    const day = ['Samstag', 'Freitag', 'Montag'][s];
+    assert.equal(typedResult(shop, 'Du kaufst am ' + day + ' ein?'), RESULT.WRONG);
+    assert.equal(typedResult(shop, 'Kaufst du am ' + day + ' ein?'), RESULT.CORRECT);
+  }
+});
+
+test('the order rule preserves normal availability questions and explicit minute descriptions', () => {
+  assert.equal(typedResult(at(9, 4), 'Ist bei Ihnen Tee erhältlich?'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8, 1), 'Es ist dreißig Minuten nach acht.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8, 1), 'Es ist dreißig nach acht.'), RESULT.WRONG);
+});
+
+test('the requested yes/no form belongs to the target question, not an unrelated extra question', () => {
+  for (const [turn, answer] of [[at(10, 2), 'Der Zug fährt nach Berlin? Haben Sie Zeit?'], [at(11, 6), 'Du kaufst am Samstag ein? Hast du Hunger?']]) {
+    assert.equal(typedResult(turn, answer), RESULT.WRONG, answer);
+    assert.equal(readOnce(turn, answer).say, 'task', answer);
+  }
+  assert.equal(typedResult(at(10, 2), 'Können Sie mir sagen, ob der Zug nach Berlin fährt?'), RESULT.CORRECT);
+});
+
+test('a nominalized activity after a PP is valid German even when the idiom stays unverified', () => {
+  for (let s = 0; s < 3; s += 1) {
+    const day = ['Samstag', 'Freitag', 'Montag'][s];
+    const turn = at(11, 6, s);
+    const answer = 'Steht bei dir am ' + day + ' Einkaufen auf dem Plan?';
+    assert.equal(typedResult(turn, answer), BEYOND, answer);
+    assert.equal(wrongReason(turn, answer), null, answer);
+    assert.notEqual(readOnce(turn, answer).say, 'order', answer);
+  }
+});

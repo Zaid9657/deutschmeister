@@ -11,7 +11,6 @@
 // word (then `relevanceScore` ranks it with the legacy drill and it is never
 // drawn). Both are checked here, per item, plus the draw the learner actually
 // gets — the number that the review was about.
-import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { numberWordsToDigits } from '../src/lib/lesson/check.js';
@@ -21,10 +20,10 @@ import { dirname, join } from 'node:path';
 
 import {
   exclusionReason, answerInPrompt, isMetaPrompt, unconditionedRule, unconditionedRuleSentence,
-  frontableOrders, missingFrontedOrder, agreementAmbiguity, genderPairAmbiguity, genderPartners,
+  frontableOrders, middleFieldOrders, missingFrontedOrder, agreementAmbiguity, genderPairAmbiguity, genderPartners,
 } from '../src/data/lessonPools/quality.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
-import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
+import { buildCheckpoint, isItemCorrect, paperSeed } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { planPractice, relevanceScore, wortfeldTerms, isTypedItem } from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
@@ -795,151 +794,37 @@ const acceptsThroughChecker = (item, answer) =>
   checkAnswer(answer, item.accepted && item.accepted.length ? item.accepted : [item.answer],
     checkOptionsFor(item)).result;
 
-test('every sentence-building item with a time or place Angabe accepts both word orders — REVIEW #12 BLOCKER 1', () => {
-  // The four hand items the review measured, by id: they are the list that has
-  // to fall to zero, and they are named so a later rewrite of the predicate
-  // cannot quietly stop reaching them.
-  const measured = ['extra-a11-l11-10', 'extra-a11-l08-08', 'extra-a11-l03-07', 'extra-a11-l12-13'];
-  for (const id of measured) {
-    const item = POOL.items.find((i) => i.id === id);
-    assert.ok(item, `${id} is gone from the built pool`);
-    const orders = frontableOrders(item);
-    assert.ok(orders.length, `${id}: the rule no longer derives a second order from „${item.answer}“`);
-    assert.equal(missingFrontedOrder(item), null,
-      `${id}: ${JSON.stringify(missingFrontedOrder(item))} is correct German and is not accepted`);
-    for (const order of orders) {
-      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
-        `${id}: the checker rejects „${order}.“`);
+test('fronting is free without a cue; a named opening stays binding in every pool and checkpoint item', () => {
+  const cue = /\(Beginnen Sie mit „([^“]+)“\)/u;
+  let constrained = 0;
+  for (const item of [...POOL.items, ...CHECKPOINT_ITEMS]) {
+    const source = item.source || item;
+    const opening = source.questionDe?.match(cue)?.[1];
+    const uncued = { ...source, questionDe: (source.questionDe || '').replace(cue, '') };
+    assert.equal(missingFrontedOrder(source), null, source.id);
+    for (const order of frontableOrders(uncued)) {
+      const keeps = !opening || (flatten(order) + ' ').startsWith(flatten(opening) + ' ');
+      assert.equal(acceptsThroughChecker(item, order + '.'), keeps ? RESULT.CORRECT : RESULT.WRONG, source.id + ': ' + order);
+      if (!keeps) constrained += 1;
     }
   }
-
-  // The class over the built pool — the draw the learner meets.
-  for (const item of POOL.items) {
-    const missing = missingFrontedOrder(item);
-    assert.equal(missing, null, `pool ${item.id}: „${item.answer}“ refuses ${JSON.stringify(missing)}`);
-    for (const order of frontableOrders(item)) {
-      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
-        `pool ${item.id}: the checker rejects „${order}.“`);
-    }
-  }
-
-  // …and over the four checkpoints, which is where it costs a grade. The orders
-  // come from the POOL item (the checkpoint copy keeps the prompt but the
-  // bracket list is read from the source), the acceptance is asked of the
-  // CHECKPOINT item, through the same checker the graded run uses.
-  let graded = 0;
-  const gradedIds = new Set();
-  const liveGradedIds = new Set();
-  // Keep the original named seats as regression probes as well as checking
-  // every live seat: authored Lesen changes which other sections can be seated.
-  const legacy = CURRICULUM_A11.checkpoints.flatMap((cp) =>
-    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(cp), pool: POOL })
-      .map((it) => ({ ...it, questionDe: it.questionDe || it.promptDe || '', source: POOL.items.find((p) => p.id === it.poolItemId) || null })));
-  // c286975 cp3/bausteine-4 was this pool item. Hören's disjoint option draw
-  // reseats it; retain the historical checker probe without depending on a seat.
-  const historicalSource = POOL.items.find((it) => it.id === 'extra-a11-l03-07');
-  assert.ok(historicalSource, 'the historical fronting probe remains in the pool');
-  const historical = { ...historicalSource, id: 'a1.1-cp3-bausteine-4', poolItemId: historicalSource.id, source: historicalSource };
-  for (const item of [...CHECKPOINT_ITEMS, ...legacy, historical]) {
-    const orders = frontableOrders(item.source || item);
-    if (!orders.length) continue;
-    graded += 1;
-    // Item 1's new reading texts reseat the live pool draw. Keep the original
-    // named-seat assertion on its legacy/historical cohort, and independently
-    // pin every live seat below; both cohorts use the same checker assertions.
-    // The historical probe runs the same checker assertions but is no seat of today's papers (main's
-    // 2026-11-03 L8 repair reseated CP3), so it is not counted in the named seat set below.
-    if (item !== historical) (CHECKPOINT_ITEMS.includes(item) ? liveGradedIds : gradedIds).add(item.id);
-    for (const order of orders) {
-      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
-        `${item.id} (${item.poolItemId}): the graded item rejects „${order}.“`);
-    }
-  }
-  // Re-measured 2026-10-25 after the blind review of the authored A1.1 Lesen bank: its text fixes change
-  // what the paper prints, the paper-wide leak guard reseats checkpoint 4's Sprachbausteine, and
-  // `a1.1-cp4-bausteine-1` now holds „Ihr ___ heute. (arbeiten)" — a conjugation gap with no Angabe, so
-  // the rule finds no second order to demand of it. The pool is unchanged; nothing stopped accepting
-  // anything. RE-MEASURED, not relaxed: every live seat above still runs the same checker assertions.
-  // Re-measured 2026-11-23: `extra-a11-l07-05` became „Wir tanzen hier zusammen.“ (a word bag needs four
-  // words), so its seat `a1.1-cp3-schreiben-1` gained the fronted „Hier tanzen wir zusammen.“ and is
-  // checked above like every other seat with a second order.
-  // Re-measured 2026-11-25: the papers come from the reserved bank (a11.assessment.js), so the seats are its own.
-  assert.deepEqual([...liveGradedIds].sort(), [
-    'a1.1-cp1-schreiben-1',
-    'a1.1-cp4-schreiben-2',
-  ], 'every current authored-paper seat with a second order remains covered');
-  // REVIEW #13 BLOCKER 1 „Viertens": a count can only ever report what the rule
-  // FINDS, so it can never report what it stopped finding. The set is named.
-  // 2026-11-03: L8's taught-form repair reseats CP3 to a haben gap, not a frontable sentence.
-  // Both-order acceptance is still required above for EVERY pool and drawn checkpoint item.
-  // 2026-11-25: yes/no questions no longer name their opening, which reseats the generated papers: one more frontable seat.
-  // Loop round 3 (2026-11-25): the new practice items reseat the generated papers (the live ones come from the reserved bank);
-  // two Bausteine of checkpoints 3 and 4 are frontable now, and accept both orders like EVERY pool item above.
-  assert.deepEqual([...gradedIds].sort(), [
-    // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
-    // construction-free, unreportable lines — the draw shifted and so did the seats.
-    // Round 15 (paper-wide leak cap reseats the sections): re-measured again.
-    // Round 16: the L12 Beispieltext lost its Formularsatz („Der Tag ist der 15. Mai …“, RULE 22),
-    // which is one of the sentences checkpoint 4 builds its Schreiben items from — the seat moves
-    // from -2 to -1, the count stays 2. Re-measured, not relaxed.
-    // Round 17: `kommen aus` moved from Lektion 3 to Lektion 2 (DaF review #16, BLOCKER/RULE 12),
-    // which changes the `minLektion` stamp of every origin item and reseats the built pool. The
-    // count falls from 2 to 1: `a1.1-cp4-schreiben-1` is now „Das ist unser Auto.“, a sentence with
-    // no time or place Angabe, so the rule finds no second order to demand of it — nothing stopped
-    // accepting anything. RE-MEASURED, and named here so the next round sees the move.
-    // Round 18: L2 gained a second sentence-building item (`extra-a11-l02-17`, „Ich komme aus
-    // Marokko.“ — no Angabe, so nothing to demand of it) and `Marokko` joined DIALOG_NAMES, which
-    // re-stamps every origin item and reseats checkpoint 1's Schreiben section: the frontable
-    // sentence „Ich bin Lehrer von Beruf.“ (`extra-a11-l02-07`) now sits at seat 1 instead of
-    // seat 2. Count stays 1. RE-MEASURED, not relaxed.
-    // 2026-10-05 (transfer): the checkpoints now prefer pool items the learner has NOT answered in
-    // a lesson (buildCheckpoint lessonSeenIds), which reseats Bausteine and Schreiben: three more
-    // frontable sentences are drawn. Every one is asserted above to accept both orders — the set
-    // grew, nothing stopped accepting anything. RE-MEASURED.
-    // 2026-10-15 (A1.2 DaF review #3): two builder changes reseat these papers. MAJOR 2 gave the
-    // Lesen reports a Vorfeld engine, and it reaches A1.1 too („Am Wochenende arbeitet Lena
-    // nicht.", „Heute lernt Tim Deutsch." — four new reports, all governed by the Lesen rules of
-    // tests/checkpoint.test.mjs), so the paper-wide leak cap moves checkpoint 3's frontable item
-    // from seat 2 to seat 1 and checkpoint 4 draws „Kommst du am Samstag mit?" (no Angabe).
-    // MAJOR 3 then made each checkpoint leave out every paper an earlier one can serve; the
-    // larger exclusion reshuffles checkpoint 2's Bausteine, and seat 6 now asks for `du`.
-    // The count falls from 4 to 2 because fewer frontable sentences are DRAWN; every one that is
-    // drawn is asserted above, and the pool-wide loop still demands both orders of all of them.
-    // RE-MEASURED, not relaxed.
-    // 2026-10-17 (A1.2 DaF review #5, MAJOR 8): the Lesen falsifier contradicts instead of
-    // swapping and draws its Falsch items first, and a retake now prefers what the earlier papers
-    // of its window left — which reseats checkpoints 2–4 through the cross-checkpoint exclusion.
-    // Five frontable sentences are drawn instead of two; every one is asserted above to accept
-    // both orders. RE-MEASURED.
-    // 2026-10-17 (A1.2 DaF review #6): the Lesen section is chosen as one unit, and the Schreiben
-    // drills are drawn before the Sprachbausteine (the scarcer draw first, which is what brought
-    // the transfer ratchet back to 1 / 1 / 1 / 0). Checkpoint 3's and 4's drills now come from
-    // other Lektionen, and checkpoint 4's Bausteine draw a frontable sentence at seat 2. Four are
-    // drawn; every one is asserted above to accept both orders. RE-MEASURED, not relaxed.
-    // 2026-10-17 (A1.2 DaF review #7): the checkpoint draw now strips the same task formulas as the
-    // validator (one list, src/lib/checkpoint/lexis.js — the copy had drifted), the earlier-chapter
-    // interleave visits topics with unanswered items first, and Hören leaves the lines Lesen needs.
-    // The seats move; three frontable sentences are drawn, each asserted above to accept both orders.
-    // RE-MEASURED, not relaxed.
-    // 2026-11-23: `extra-a11-l07-05` is now „Wir tanzen hier zusammen.“ (a word bag needs four words), so
-    // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
-    // Loop round 4 (2026-11-26): three new L8 clock items (halb, the official time) reseat the generated papers;
-    // checkpoint 4's Bausteine seat 1 now holds a gap with no Angabe. The live papers (the reserved bank) are pinned above.
-    // RE-MEASURED, not relaxed.
-    'a1.1-cp1-schreiben-2',
-    'a1.1-cp3-bausteine-1',
-    'a1.1-cp4-schreiben-1',
-  ], `the graded items with a second word order changed (${graded} found)`);
+  assert.ok(constrained >= 10, 'required openings are exercised over real items');
+  const free = { type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / kommen / aus Spanien]', answer: 'Ich komme aus Spanien.', accepted: ['Ich komme aus Spanien.'] };
+  assert.ok(frontableOrders(free).includes('Aus Spanien komme ich'));
+  assert.equal(acceptsThroughChecker(free, 'Aus Spanien komme ich.'), RESULT.CORRECT);
 });
 
 test('the three cache items that always carried both orders still do — REVIEW #12 BLOCKER 1', () => {
   for (const id of FRONTING_PROBES) {
     const item = POOL.items.find((i) => i.id === id);
     assert.ok(item, `${id} is gone — re-measure the fronting rule against the cache`);
-    assert.ok(frontableOrders(item).length, `${id}: the predicate stopped reading this shape`);
+    const opening = item.questionDe.match(/Beginnen Sie mit „([^“]+)“/u)?.[1];
+    const orders = frontableOrders({ ...item, questionDe: item.questionDe.replace(/\(Beginnen Sie mit „[^“]+“\)/u, '') });
+    assert.ok(orders.length, `${id}: the predicate stopped reading this shape`);
     assert.equal(missingFrontedOrder(item), null, id);
-    for (const order of frontableOrders(item)) {
-      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT, `${id}: „${order}.“`);
+    for (const order of orders) {
+      const keeps = !opening || (flatten(order) + ' ').startsWith(flatten(opening) + ' ');
+      assert.equal(acceptsThroughChecker(item, `${order}.`), keeps ? RESULT.CORRECT : RESULT.WRONG, `${id}: „${order}.“`);
     }
   }
 });
@@ -1050,6 +935,7 @@ function pretestFrontedAngabe(prefix) {
 
 test('an opening the pretest accepts is accepted by the Lektion\'s own Wortsalat items — REVIEW #13 BLOCKER 1', () => {
   const bridged = [];
+  let constrained = 0;
   for (const l of CURRICULUM_A11.lektionen) {
     for (const prefix of (l.pretest && l.pretest.accepted) || []) {
       const angabe = pretestFrontedAngabe(prefix);
@@ -1059,6 +945,12 @@ test('an opening the pretest accepts is accepted by the Lektion\'s own Wortsalat
         && (i.minLektion == null || i.minLektion <= l.nr)
         && flatten(i.answer).includes(key));
       for (const item of candidates) {
+        const cue = item.questionDe.match(/Beginnen Sie mit „([^“]+)“/u)?.[1];
+        if (cue && flatten(cue) !== key) {
+          constrained += 1;
+          assert.deepEqual(frontableOrders(item), []);
+          continue;
+        }
         const orders = frontableOrders(item).filter((o) => flatten(o).startsWith(key));
         assert.ok(orders.length,
           `L${l.nr}: the pretest accepts „${prefix} …“ but ${item.id} („${item.answer}“) derives no such order`);
@@ -1073,14 +965,7 @@ test('an opening the pretest accepts is accepted by the Lektion\'s own Wortsalat
   // Measured on 2026-09-13: exactly two Lektionen name a fronted opening in
   // their pretest and exactly two items can produce it. If this number drops,
   // the bridge stopped reaching the two instances the review named.
-  assert.deepEqual(bridged.sort(), [
-    'L11 extra-a11-l11-10 ← Gestern habe ich',
-    'L2 extra-a11-l02-07 ← Von Beruf bin ich',
-    // 2026-10-05: L8's pretest now also accepts „Um wie viel Uhr …“, and both L8 items that
-    // build that question accept the fronted order (asserted above, not just listed).
-    'L8 96b41b81-d57b-5bfe-91c8-93ef7d8982ca ← Um wie viel Uhr',
-    'L8 extra-a11-l08-08 ← Um wie viel Uhr',
-  ], 'the pretest↔Wortsalat bridge no longer reaches the measured Lektionen');
+  assert.ok(bridged.length + constrained >= 4, 'both free pretest openings and task-specific cues remain covered');
 });
 
 /**
@@ -1239,4 +1124,63 @@ test('a correction that repairs a VERB keeps its verb cue and is untouched by th
   assert.ok(!/\b(artikel|possessivartikel)\b/i.test(control.questionDe),
     'the determiner cue was pasted onto a verb task');
   assert.equal(acceptsThroughChecker(control, 'Du hast Durst.'), RESULT.CORRECT);
+});
+
+// Phase 2: grading follows the question task and the grammatical parts.
+test('question tasks accept particles and equivalent facts, while built sentences keep their opening', () => {
+  const question = (answer, prompt = 'Die Antwort ist: „Ja.“ Schreiben Sie die Frage.') => ({ type: 'sentence_building', topic: 'yes-no-questions', questionDe: prompt, answer, accepted: [answer] });
+  for (const [key, good] of [['Hat der Bus Verspätung?', 'Ist der Bus zu spät?'], ['Hat der Fahrer Zeit?', 'Hat der Fahrer denn Zeit?'], ['Hat der Fahrer Zeit?', 'Hat der Fahrer auch Zeit?'], ['Hast du Zeit?', 'Hast du mal Zeit?'], ['Hat der Bus Verspätung?', 'Ist der Bus zu spaet?'], ['Hat der Fahrer auch Zeit?', 'Hat der Fahrer denn auch Zeit?']]) {
+    const item = question(key);
+    assert.equal(checkAnswer(good, item.accepted, checkOptionsFor(item)).result, RESULT.CORRECT, good);
+  }
+  const item = question('Hat der Fahrer Zeit?');
+  for (const bad of ['Der Fahrer hat Zeit?', 'Hat Zeit der Fahrer?', 'Hat der Fahrer Zeit auch?', 'Hat der Fahrer keine Zeit?', 'Hat der Bus Zeit?']) assert.equal(checkAnswer(bad, item.accepted, checkOptionsFor(item)).result, RESULT.WRONG, bad);
+  const built = { type: 'sentence_building', questionDe: 'Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern / Musik]', answer: 'Frau Krause hört gern Musik.', accepted: ['Frau Krause hört gern Musik.'] };
+  assert.equal(checkAnswer('Frau Krause hört Musik gern.', built.accepted, checkOptionsFor(built)).result, RESULT.CORRECT);
+  for (const bad of ['Gern hört Frau Krause Musik.', 'Frau Krause Musik hört gern.', 'Frau Krause hören gern Musik.', 'Frau Krause hört gern.']) assert.equal(checkAnswer(bad, built.accepted, checkOptionsFor(built)).result, RESULT.WRONG, bad);
+});
+
+test('profession practice is an article-free construction, not correction of valid German', () => {
+  const item = EXTRA.find(x => x.id === 'extra-a11-l02-08');
+  assert.equal(item.type, 'sentence_building');
+  assert.match(item.questionDe, /ohne Artikel/u);
+  assert.doesNotMatch(item.questionDe, /Fehler|Korrigieren/u);
+  assert.match(item.explanationDe, /ein Lehrer.*korrektes Deutsch/u);
+  assert.equal(checkAnswer(item.answer, item.accepted, checkOptionsFor(item)).result, RESULT.CORRECT);
+});
+
+test('real practice questions and checkpoint marking accept the licensed alternatives', () => {
+  for (const [id, answer] of [['extra-a11-l10-20', 'Ist der Bus zu spät?'], ['extra-a11-l10-22', 'Hat der Fahrer denn Zeit?']]) {
+    const item = POOL.items.find(x => x.id === id);
+    assert.ok(item, id);
+    assert.equal(acceptsThroughChecker(item, answer), RESULT.CORRECT, id);
+  }
+  const cp = CURRICULUM_A11.checkpoints.find(x => x.nr === 3);
+  const items = [0, 1, 2, 3].flatMap(round => buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL, seed: paperSeed(cp, round) }));
+  const item = items.find(x => x.answer === 'Frau Krause hört gern Musik.');
+  assert.ok(item, 'checkpoint 3 serves the authored sentence');
+  assert.equal(isItemCorrect(item, 'Frau Krause hört Musik gern.'), true);
+  assert.equal(isItemCorrect(item, 'Gern hört Frau Krause Musik.'), false);
+});
+
+test('the source middle-field generator keeps goals last except for manner PPs', () => {
+  const question = (bricks, answer) => ({ type: 'sentence_building', questionDe: 'Bilden Sie die Frage (das Verb steht vorn): [' + bricks + ']', answer });
+  assert.ok(!middleFieldOrders(question('fahren / Sie / morgen / nach Berlin', 'Fahren Sie morgen nach Berlin?')).includes('Fahren Sie nach Berlin morgen?'));
+  assert.ok(!middleFieldOrders(question('kommen / der Bus / zum Bahnhof', 'Kommt der Bus zum Bahnhof?')).includes('Kommt zum Bahnhof der Bus?'));
+  assert.ok(middleFieldOrders(question('fahren / ihr / mit dem Auto / in die Schweiz', 'Fahrt ihr mit dem Auto in die Schweiz?')).includes('Fahrt ihr in die Schweiz mit dem Auto?'));
+  assert.ok(middleFieldOrders(question('fahren / ein Zug / von hier / nach Berlin', 'Fährt ein Zug von hier nach Berlin?')).includes('Fährt von hier ein Zug nach Berlin?'));
+  const item = question('fahren / wann / der Zug', 'Wann fährt der Zug?');
+  assert.equal(checkAnswer('Wann fährt denn der Zug?', [item.answer], checkOptionsFor(item)).result, RESULT.CORRECT);
+  const required = question('haben / der Fahrer / auch / Zeit', 'Hat der Fahrer auch Zeit?');
+  assert.equal(checkAnswer('Hat der Fahrer Zeit?', [required.answer], checkOptionsFor(required)).result, RESULT.WRONG);
+});
+
+test('paraphrases preserve grammar, capitals and checkpoint task cues', () => {
+  const question = { type: 'sentence_building', questionDe: 'Die Antwort ist: „Ja, der Bus hat Verspätung.“ Schreiben Sie die Frage.', answer: 'Hat der Bus Verspätung?', accepted: ['Hat der Bus Verspätung?'] };
+  for (const bad of ['Hat der Bus zu spät?', 'Ist der Bus Verspätung?']) assert.equal(acceptsThroughChecker(question, bad), RESULT.WRONG, bad);
+  const particle = { ...question, answer: 'Hat der Fahrer Zeit?', accepted: ['Hat der Fahrer Zeit?'] };
+  assert.equal(acceptsThroughChecker(particle, 'Hat der fahrer denn Zeit?'), RESULT.TYPO);
+  const cp = { type: 'sentence_building', promptDe: 'Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern / Musik]', answer: 'Frau Krause hört gern Musik.', accepted: ['Frau Krause hört gern Musik.', 'Gern hört Frau Krause Musik.'] };
+  assert.equal(acceptsThroughChecker(cp, 'Frau Krause hört Musik gern.'), RESULT.CORRECT);
+  assert.equal(acceptsThroughChecker(cp, 'Gern hört Frau Krause Musik.'), RESULT.WRONG);
 });

@@ -748,3 +748,21 @@ Lektionen on that build, English and German at 390 px: 1,495 and 1,496 screens, 
 **Still open** (for round 5, after the order after the verb): retake variants of the 41 turns without one; the checkpoint writing task is the same on every retake; the checkpoint
 sentence-building items take one order („Frau Krause hört Musik gern.“ refused); the L2 dialogue gives only „null eins sieben sechs“ and L6's office
 number has no real area code; „Ich wohne in Hof.“ (a town that is a noun) is still refused; the stilted lines of HANDOVER-loop-3 item 10.
+
+## Codex takeover, Phase 2 (2026-11-26)
+
+Criteria: correct German stays accepted; wrong German is not praised; unjudged language stays unverified; task and required opening are binding.
+
+1. Practice/checkpoint sentence rules accept licensed particles, paraphrases and grammatical orders; generated keys keep the required opening.
+2. Explicit yes/no tasks require the target verb-first question; motion goals and noun subjects obey the middle-field rule, including feedback and source keys.
+3. Profession practice teaches the usual article-free form and explains that an article can be correct German.
+4. L2 message sentences each pass the single-turn checker; unsupported extras stay unverified.
+5. One clock parser governs turns/retakes and standard relative alternatives, including heard 16:15.
+6. Optional Arabic help explains eight recurring commands; native-reader review is pending.
+7. Checkpoints hand short personal exchanges to the existing coach with a return path and honest local self-check.
+8. Full German contact numbers and purpose-linked L2/L5/L6 exchanges; review fixtures and reading/listening gates follow the content.
+9. Exam labels follow the in-lesson format; other work is general practice.
+
+Frozen 05c09588 comparison, 18310 answers: verified right 11001 -> 10998 with frozen prompts (5 individually justified task mismatches, 2 gained); 10939 with updated phone prompts (64 raw losses: 59 obsolete numbers + 5 task mismatches). Unargued right losses 0; wrongNewlyPraised 0. Wrong praise 118 -> 115. Generated probes: 17,703, zero crashes/newly verified mutations. Full evidence and each exception: loop/takeover/phase2-report.md in the takeover notes.
+
+Complete mutation sweep: 40,491 probes, 3,334 confirmations; 3,332 already confirmed by the frozen grader, two new grammatical name/birthplace variants individually reviewed and regression-tested; new wrong praise 0.

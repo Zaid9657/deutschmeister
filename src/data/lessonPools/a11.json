@@ -5481,9 +5481,7 @@
    "answer": "Wir kommen aus Marokko.",
    "accepted": [
     "Wir kommen aus Marokko.",
-    "Wir kommen aus Marokko",
-    "Aus Marokko kommen wir.",
-    "Aus Marokko kommen wir"
+    "Wir kommen aus Marokko"
    ],
    "explanationDe": "Bei wir endet das Verb auf -en.",
    "hint": null,
@@ -5676,9 +5674,7 @@
    "answer": "Es ist da.",
    "accepted": [
     "Es ist da.",
-    "Es ist da",
-    "Da ist es.",
-    "Da ist es"
+    "Es ist da"
    ],
    "explanationDe": "das Lineal: es. Das Verb steht auf Platz zwei: Es ist da.",
    "hint": null,
@@ -5698,9 +5694,7 @@
    "answer": "Sie kommt aus Marokko.",
    "accepted": [
     "Sie kommt aus Marokko.",
-    "Sie kommt aus Marokko",
-    "Aus Marokko kommt sie.",
-    "Aus Marokko kommt sie"
+    "Sie kommt aus Marokko"
    ],
    "explanationDe": "die Mutter: sie. Das Verb steht auf Platz zwei: Sie kommt aus Marokko.",
    "hint": null,
@@ -6402,9 +6396,7 @@
    "options": null,
    "answer": "Mein Bruder feiert am Sonntag.",
    "accepted": [
-    "Mein Bruder feiert am Sonntag.",
-    "Am Sonntag feiert mein Bruder.",
-    "Am Sonntag feiert mein Bruder"
+    "Mein Bruder feiert am Sonntag."
    ],
    "explanationDe": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; vor die-Wörtern und im Plural mit -e.",
    "explanationEn": "ich – mein, du – dein, er – sein, sie – ihr, wir – unser, ihr – euer, Sie – Ihr; with -e before die-words and in the plural.",
@@ -6535,9 +6527,7 @@
    "answer": "Mein Geburtstag ist im Mai.",
    "accepted": [
     "Mein Geburtstag ist im Mai.",
-    "Mein Geburtstag ist im Mai",
-    "Im Mai ist mein Geburtstag.",
-    "Im Mai ist mein Geburtstag"
+    "Mein Geburtstag ist im Mai"
    ],
    "explanationDe": "Possessivartikel vor dem Nomen, Verb auf Platz zwei.",
    "hint": null,
@@ -6657,9 +6647,7 @@
    "answer": "Meine Gäste kommen am Samstag.",
    "accepted": [
     "Meine Gäste kommen am Samstag.",
-    "Meine Gäste kommen am Samstag",
-    "Am Samstag kommen meine Gäste.",
-    "Am Samstag kommen meine Gäste"
+    "Meine Gäste kommen am Samstag"
    ],
    "explanationDe": "die Gäste: Plural, also kommen. Das Verb steht auf Platz zwei.",
    "hint": null,
@@ -7492,8 +7480,6 @@
    "accepted": [
     "Wir tanzen hier zusammen.",
     "Wir tanzen hier zusammen",
-    "Hier tanzen wir zusammen.",
-    "Hier tanzen wir zusammen",
     "Wir tanzen zusammen hier.",
     "Wir tanzen zusammen hier"
    ],
@@ -7549,12 +7535,14 @@
    "stage": 5,
    "difficulty": 2,
    "order": 106,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern Musik]",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern / Musik]",
    "questionEn": "Build the sentence. Begin with “Frau Krause”.",
    "options": null,
    "answer": "Frau Krause hört gern Musik.",
    "accepted": [
-    "Frau Krause hört gern Musik."
+    "Frau Krause hört gern Musik.",
+    "Frau Krause hört Musik gern.",
+    "Frau Krause hört Musik gern"
    ],
    "explanationDe": "Im Satz steht das Verb auf Platz zwei.",
    "explanationEn": "In a sentence the verb stands in second place.",
@@ -7604,9 +7592,7 @@
    "options": null,
    "answer": "Er arbeitet am Dienstag.",
    "accepted": [
-    "Er arbeitet am Dienstag.",
-    "Am Dienstag arbeitet er.",
-    "Am Dienstag arbeitet er"
+    "Er arbeitet am Dienstag."
    ],
    "explanationDe": "Ein Stamm auf -t bekommt ein e dazu: du arbeitest, er arbeitet.",
    "explanationEn": "A stem in -t takes an extra e: du arbeitest, er arbeitet.",
@@ -8302,9 +8288,7 @@
    "options": null,
    "answer": "Ich stehe um 7 Uhr auf.",
    "accepted": [
-    "Ich stehe um 7 Uhr auf",
-    "Um 7 Uhr stehe ich auf.",
-    "Um 7 Uhr stehe ich auf"
+    "Ich stehe um 7 Uhr auf"
    ],
    "explanationDe": "Auf Platz zwei steht „stehe“, am Ende steht „auf“. Die Zeitangabe kann auch am Satzanfang stehen.",
    "explanationEn": "Aufstehen splits: **stehe** (ich-form) stands second, the prefix **auf** at the very end: **Ich stehe um 7 Uhr auf.** The time may also open the sentence.",
@@ -8323,9 +8307,7 @@
    "options": null,
    "answer": "Wir kaufen heute ein.",
    "accepted": [
-    "Wir kaufen heute ein",
-    "Heute kaufen wir ein.",
-    "Heute kaufen wir ein"
+    "Wir kaufen heute ein"
    ],
    "explanationDe": "Auf Platz zwei steht „kaufen“, am Ende steht „ein“. „heute“ kann auch am Satzanfang stehen.",
    "explanationEn": "Einkaufen splits: **kaufen** (wir-form) stands second, the prefix **ein** at the very end: **Wir kaufen heute ein.** Heute may also open the sentence.",
@@ -8344,9 +8326,7 @@
    "options": null,
    "answer": "Er holt dich um 8 Uhr ab.",
    "accepted": [
-    "Er holt dich um 8 Uhr ab",
-    "Um 8 Uhr holt er dich ab.",
-    "Um 8 Uhr holt er dich ab"
+    "Er holt dich um 8 Uhr ab"
    ],
    "explanationDe": "Auf Platz zwei steht „holt“, am Ende steht „ab“. Die Zeitangabe kann auch am Satzanfang stehen.",
    "explanationEn": "Abholen splits: **holt** (er-form) stands second, the prefix **ab** at the very end: **Er holt dich um 8 Uhr ab.**",
@@ -8365,9 +8345,7 @@
    "options": null,
    "answer": "Die Eltern kaufen morgen ein.",
    "accepted": [
-    "Die Eltern kaufen morgen ein.",
-    "Morgen kaufen die Eltern ein.",
-    "Morgen kaufen die Eltern ein"
+    "Die Eltern kaufen morgen ein."
    ],
    "explanationDe": "Bei trennbaren Verben steht die Vorsilbe am Ende: Ich stehe um sieben auf.",
    "explanationEn": "A separable verb puts its prefix at the end: Ich stehe um sieben auf.",
@@ -8453,9 +8431,7 @@
    "answer": "Ich habe gestern gearbeitet.",
    "accepted": [
     "Ich habe gestern gearbeitet.",
-    "Ich habe gestern gearbeitet",
-    "Gestern habe ich gearbeitet.",
-    "Gestern habe ich gearbeitet"
+    "Ich habe gestern gearbeitet"
    ],
    "explanationDe": "„Ich habe … gearbeitet“ ist ein fester Ausdruck für gestern.",
    "hint": null,
@@ -9205,12 +9181,6 @@
    "accepted": [
     "Der Termin ist am Dienstag um acht Uhr.",
     "Der Termin ist am Dienstag um acht Uhr",
-    "Am Dienstag ist der Termin um acht Uhr.",
-    "Am Dienstag ist der Termin um acht Uhr",
-    "Um acht Uhr ist der Termin am Dienstag.",
-    "Um acht Uhr ist der Termin am Dienstag",
-    "Am Dienstag um acht Uhr ist der Termin.",
-    "Am Dienstag um acht Uhr ist der Termin",
     "Der Termin ist um acht Uhr am Dienstag.",
     "Der Termin ist um acht Uhr am Dienstag"
    ],
@@ -11033,9 +11003,7 @@
     "Ich bin von Beruf Lehrer.",
     "Ich bin Lehrer von Beruf.",
     "Ich bin Lehrer von Beruf",
-    "Ich bin von Beruf Lehrer",
-    "Von Beruf bin ich Lehrer.",
-    "Von Beruf bin ich Lehrer"
+    "Ich bin von Beruf Lehrer"
    ],
    "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin von Beruf Lehrer.",
    "hint": null,
@@ -11045,22 +11013,21 @@
   {
    "id": "extra-a11-l02-08",
    "topic": "verb-sein",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 28,
-   "questionDe": "Ohne Artikel, bitte: „Ich bin ein Lehrer.“",
-   "questionEn": "Without the article, please: \"Ich bin ein Lehrer.\"",
+   "questionDe": "Bilden Sie den Satz ohne Artikel (Beginnen Sie mit „Ich“): [ich / sein / von Beruf / Studentin]",
+   "questionEn": "Practise the usual form without an article. Build the sentence, beginning with “Ich”. Begin with “Ich”.",
    "options": null,
-   "answer": "Ich bin Lehrer.",
+   "answer": "Ich bin von Beruf Studentin.",
    "accepted": [
-    "Ich bin Lehrer.",
-    "Ich bin Lehrer"
+    "Ich bin von Beruf Studentin."
    ],
-   "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.",
+   "explanationDe": "„Ich bin ein Lehrer.“ ist korrektes Deutsch. Den Beruf nennen Sie meist ohne Artikel.",
    "hint": null,
-   "minLektion": 2,
-   "explanationEn": "After **ich bin** a job usually takes no article: **Ich bin Lehrer.** With an adjective the article comes back: *Ich bin ein guter Lehrer.*"
+   "explanationEn": "After **ich bin** a job usually takes no article: **Ich bin Lehrer.** With an adjective the article comes back: *Ich bin ein guter Lehrer.*",
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-14",
@@ -11133,9 +11100,7 @@
    "answer": "Ich komme aus Marokko.",
    "accepted": [
     "Ich komme aus Marokko.",
-    "Ich komme aus Marokko",
-    "Aus Marokko komme ich.",
-    "Aus Marokko komme ich"
+    "Ich komme aus Marokko"
    ],
    "explanationDe": "Woher? Ich komme aus Marokko.",
    "hint": null,
@@ -11154,9 +11119,7 @@
    "options": null,
    "answer": "Die Eltern kommen aus Italien.",
    "accepted": [
-    "Die Eltern kommen aus Italien.",
-    "Aus Italien kommen die Eltern.",
-    "Aus Italien kommen die Eltern"
+    "Die Eltern kommen aus Italien."
    ],
    "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
    "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
@@ -11181,9 +11144,7 @@
    "options": null,
    "answer": "Der Vater kommt aus Spanien.",
    "accepted": [
-    "Der Vater kommt aus Spanien.",
-    "Aus Spanien kommt der Vater.",
-    "Aus Spanien kommt der Vater"
+    "Der Vater kommt aus Spanien."
    ],
    "explanationDe": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
    "explanationEn": "kommen: ich komme, du kommst, er/sie kommt, wir kommen, ihr kommt, sie/Sie kommen.",
@@ -11355,9 +11316,7 @@
    "answer": "Meine Adresse ist im Formular.",
    "accepted": [
     "Meine Adresse ist im Formular.",
-    "Meine Adresse ist im Formular",
-    "Im Formular ist meine Adresse.",
-    "Im Formular ist meine Adresse"
+    "Meine Adresse ist im Formular"
    ],
    "explanationDe": "die Adresse: Singular, also ist. Das Verb steht auf Platz zwei.",
    "hint": null,
@@ -11962,9 +11921,7 @@
    "answer": "Fahren Sie morgen nach Deutschland?",
    "accepted": [
     "Fahren Sie morgen nach Deutschland?",
-    "Fahren Sie morgen nach Deutschland",
-    "Fahren Sie nach Deutschland morgen?",
-    "Fahren Sie nach Deutschland morgen"
+    "Fahren Sie morgen nach Deutschland"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null,
@@ -11985,9 +11942,7 @@
    "answer": "Ist die Ankunft an Gleis vier?",
    "accepted": [
     "Ist die Ankunft an Gleis vier?",
-    "Ist die Ankunft an Gleis vier",
-    "Ist an Gleis vier die Ankunft?",
-    "Ist an Gleis vier die Ankunft"
+    "Ist die Ankunft an Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null,
@@ -12047,9 +12002,7 @@
    "answer": "Kommt der Bus zum Bahnhof?",
    "accepted": [
     "Kommt der Bus zum Bahnhof?",
-    "Kommt der Bus zum Bahnhof",
-    "Kommt zum Bahnhof der Bus?",
-    "Kommt zum Bahnhof der Bus"
+    "Kommt der Bus zum Bahnhof"
    ],
    "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null,
@@ -12134,9 +12087,7 @@
    "answer": "Ist die Abfahrt von Gleis vier?",
    "accepted": [
     "Ist die Abfahrt von Gleis vier?",
-    "Ist die Abfahrt von Gleis vier",
-    "Ist von Gleis vier die Abfahrt?",
-    "Ist von Gleis vier die Abfahrt"
+    "Ist die Abfahrt von Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null,

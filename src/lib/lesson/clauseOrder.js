@@ -116,6 +116,7 @@ function asksBefore(prev) {
 }
 
 function clauseInOrder(c) {
+  if (!middleFieldInOrder(c)) return false;
   const all = c.elems || [];
   if (!all.every(listOfOne)) return false;
   const mid = c.sub || c.imperative ? all : all.slice(c.before || 0);
@@ -213,6 +214,7 @@ export function certainlyNot(sentences) {
     if (c.around || c.frag) continue;
     const all = c.elems || [];
     const { subj } = c;
+    if (!middleFieldInOrder(c)) return 'order';
     if (c.lemma === 'sein' && subj && isPron(subj) && ['er', 'sie'].includes(subj.head) && c.pred?.kind === 'np' && !c.pred.job && KINSHIP.test(c.pred.head) && !personFits(subj, c)) return 'word';
     if (all.some((e, k) => e.kind === 'adv' && e.word === 'nicht' && all[k + 1]?.kind === 'np' && all[k + 1].det === 'ein' && !all[k + 1].list)) return 'word';
     if (c.lemma === 'sein' && ['ich', 'wir', 'du'].includes(subj?.head) && c.pred?.kind === 'np' && !c.pred.job && (c.pred.stuff || ['hunger', 'durst'].includes(c.pred.head)) && !NAMED.test(c.pred.head)) return 'verb';
@@ -281,4 +283,24 @@ function fragmentInOrder(c, isFare) {
   if (all.filter((e) => e.kind === 'adj').length > 1) return false;
   // „Und Stuhl? Was kostet er?“: a thing that can be counted keeps its article.
   return !all.some((e) => e.kind === 'np' && e.bare && !e.list && !e.unknown?.length && !e.job && !GREETS.has(e.head) && !isFare(e.head) && (!e.bareOk || NEEDS_ARTICLE.has(e.head) || KIN.has(e.head)));
+}
+
+// A motion goal closes the middle field. A following manner phrase is common
+// speech (nach Berlin mit dem Zug / zu Fuß); time and adverbs precede the goal.
+const MOTION = set('gehen fahren kommen reisen fliegen laufen abfahren mitfahren zurückfahren zurückkommen');
+export function middleFieldInOrder(c) {
+  if (c.frag || c.around) return true;
+  const mid = c.sub || c.imperative ? c.elems || [] : (c.elems || []).slice(c.before || 0);
+  const nonTimePP = e => e.kind === 'pp' && !e.attr;
+  const subjectAt = mid.indexOf(c.subj);
+  const availability = c.lemma === 'sein' && (c.adj || []).some(a => (a.words || []).some(w => ['erhältlich', 'verfügbar'].includes(w)));
+  // A source may introduce a new indefinite subject: "Fährt von hier ein Zug
+  // nach Berlin?". It still cannot put that subject after the motion goal.
+  const introduced = MOTION.has(c.lemma) && c.subj?.det === 'ein';
+  if (!availability && c.subj && !c.subj.infinitive && !isPron(c.subj) && subjectAt > 0 && mid.slice(0, subjectAt).some(e => nonTimePP(e) && !(introduced && ['von', 'aus'].includes(e.prep)))) return false;
+  if (!MOTION.has(c.lemma)) return true;
+  const goal = e => (e.kind === 'adv' && e.word === 'nach hause') || nonTimePP(e) && ['nach', 'zu', 'in', 'an', 'auf'].includes(e.prep)
+    && !['fuss', 'fuß'].includes(e.np?.head)
+    && (['nach', 'zu'].includes(e.prep) || e.c === 'a');
+  return !mid.some((e, i) => goal(e) && mid.slice(i + 1).some(x => x === c.subj || (['adv', 'time', 'adj'].includes(x.kind) && x.word !== 'zu fuss')));
 }

@@ -1447,9 +1447,9 @@
    "id": "extra-a11-l07-assessment-3-1-7",
    "solved": "Frau Krause hört gern Musik.",
    "verdict": "ok",
-   "note": "",
+   "note": "Phase 2, 2026-11-26: split the two existing words into separate bricks. The previously reviewed sentence and solution are unchanged; this is an equivalent task-format edit, not a new blind review.",
    "round": 2,
-   "text": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern Musik]"
+   "text": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern / Musik]"
   },
   {
    "id": "extra-a11-l08-assessment-3-1-8",

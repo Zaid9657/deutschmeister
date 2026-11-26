@@ -28,7 +28,8 @@ import { certainFault, nearestFrame, pronounSwap } from './certainFault.js';
 import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.js';
 import { COUNTRY_STEMS } from './countries.js';
 import { reader } from './clause.js';
-import { asked, meaning, senseless, valencyFault } from './taskMeaning.js';
+import { clockMinutes, relativeClock, invalidClock } from './clockTime.js';
+import { requiresVerbFirst, asked, meaning, senseless, valencyFault } from './taskMeaning.js';
 import { certainlyNot, inOrder } from './clauseOrder.js';
 import { ADVERBS as GERMAN_ADVERBS, adjectiveForm, determinerOf, verbReadings } from './germanForms.js';
 import { repairs, smallWordsKnown } from './oneRepair.js';
@@ -490,14 +491,16 @@ export function clockOf(text) {
   const plain = fold(text).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf');
   const t = numberWordsToDigits(plain.replace(/\bein uhr\b/g, '1 uhr').replace(/\bum\b/g, ' '))
     .replace(/[.,!?]+$/, '').replace(/\s+/g, ' ').trim();
-  const dial = (h, min) => (Number.isInteger(h) && Number.isInteger(min) && h >= 0 && h <= 24 && min >= 0 && min < 60 ? (h % 12) * 60 + min : null);
+  const dial = clockMinutes;
   let m;
   if ((m = t.match(/^(\d{1,2})\s*[:.]\s*(\d{2})(?:\s*uhr)?$/))) return dial(+m[1], +m[2]);
   if ((m = t.match(/^(\d{1,2})\s*uhr(?:\s+(\d{1,2}))?$/))) return dial(+m[1], +(m[2] || 0));
-  if ((m = t.match(/^halb\s+(\d{1,2})$/))) return dial(+m[1] - 1, 30);
-  if ((m = t.match(/^viertel\s+(nach|vor)\s+(\d{1,2})$/))) return m[1] === 'nach' ? dial(+m[2], 15) : dial(+m[2] - 1, 45);
-  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+halb\s+(\d{1,2})$/))) return dial(+m[3] - 1, m[2] === 'nach' ? 30 + +m[1] : 30 - +m[1]);
-  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+(\d{1,2})$/))) return m[2] === 'nach' ? dial(+m[3], +m[1]) : dial(+m[3] - 1, 60 - +m[1]);
+  if ((m = t.match(/^halb\s+(\d{1,2})$/))) return +m[1] >= 1 && +m[1] <= 12 ? dial(+m[1] - 1, 30) : null;
+  if ((m = t.match(/^(viertel|dreiviertel|drei viertel)\s+(\d{1,2})$/))) return +m[2] >= 1 && +m[2] <= 12 ? dial(+m[2] - 1, m[1] === 'viertel' ? 15 : 45) : null;
+  if ((m = t.match(/^viertel\s+(nach|vor)\s+(\d{1,2})$/))) return relativeClock(15, m[1], +m[2]);
+  if ((m = t.match(/^(\d{1,2})\s+(?:minuten|min|minute)\s+(nach|vor)\s+(halb\s+)?(\d{1,2})$/))) return relativeClock(+m[1], m[2], +m[4], Boolean(m[3]), true);
+  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+halb\s+(\d{1,2})$/))) return relativeClock(+m[1], m[2], +m[3], true);
+  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+(\d{1,2})$/))) return relativeClock(+m[1], m[2], +m[3]);
   if ((m = t.match(/^(\d{1,2})$/))) return dial(+m[1], 0);
   return null;
 }
@@ -573,7 +576,7 @@ export function whenOf(text, { inSentence = false } = {}) {
   if (toEnd && clockOf(endWords.join(' ')) === null) return null;
   if (day === null && part === null && time === null) return null;
   const partHalf = ['nachmittag', 'abend', 'nacht'].includes(part) ? 'pm' : ['morgen', 'vormittag', 'früh'].includes(part) ? 'am' : null;
-  return { day, part, time, typo, half: clockHalf(timeWords.join(' ')) || partHalf };
+  return { day, part, time, typo, relative: /halb|viertel|nach|vor/u.test(timeWords.join(' ')), half: clockHalf(timeWords.join(' ')) || partHalf };
 }
 
 /** Morning or afternoon when a clock time says so (an hour from 13 on, „abends", „morgens"), else null. */
@@ -603,7 +606,7 @@ function sameWhen(given, expected, { partial = false, writtenNote = false } = {}
   const eh = halfOf24(expected);
   // A note of a heard afternoon time keeps the afternoon: „Freitag, 4.15 Uhr" reads as 4.15 in the
   // morning (fourth DaF review of Lektion 8); „16.15" or „nachmittags um Viertel nach vier" keep it.
-  if (writtenNote && e.time !== null && eh === 'pm' && given.half !== 'pm') return false;
+  if (writtenNote && e.time !== null && eh === 'pm' && !given.relative && given.half !== 'pm') return false;
   return !(e.time !== null && eh && given.half && given.half !== eh);
 }
 
@@ -1282,36 +1285,65 @@ const GREETING = /^(hallo|guten (morgen|tag|abend)|sehr geehrte|liebe|lieber|vie
  * may join two sentences („Ich heiße Ana, ich bin am …").
  */
 function messageResult(turn, value) {
+  const single = accepted => {
+    const first = accepted.find(a => typeof a === 'object');
+    return { ...turn, parts: null, extras: null, ownName: false, ...first, accepted };
+  };
+  const score = (accepted, s) => {
+    const checked = typedResult(single(accepted), s);
+    return checked === BEYOND && accepted.some(a => a?.slot === 'date') && /geboren|Geburtsdatum/u.test(s) ? sentenceResult(accepted, s, turn) : checked;
+  };
+  const closing = s => {
+    const match = s.match(/^(?:mit\s+)?(?:viele[n]?|liebe[n]?|beste[n]?|freundliche[n]?|schöne[n]?)\s+gr(?:ü|ue)(?:ß|ss)e[n]?\b\s*[,!]?\s*(.*)$/iu);
+    if (!match) return s;
+    const tail = match[1].trim().replace(/^[.!]$/u, '');
+    // Turn a signature into a name sentence, then split and grade every
+    // following clause too. No words disappear behind a sign-off.
+    return tail ? 'Ich heiße ' + tail : '';
+  };
   // After a comma „ich" is rightly small, so the clause it opens is graded as a sentence of its own.
   // „Ich heiße Ali und bin am 3.5.1998 geboren" is two clauses: the second has its „ich" back.
   // The full stop of a day („am 12. März", „am 1. 3. 1990") does not end the sentence.
   const pieces = String(value || '').split(/(?<=[.!?])\s+|\n+/).reduce((acc, p) => {
     const last = acc[acc.length - 1];
-    if (last && /(^|\s)\d{1,2}\.$/.test(last) && (/^\d/.test(p) || monthOf(p.split(/\s+/)[0]))) acc[acc.length - 1] = `${last} ${p}`;
+    if (last && ((/(^|\s)\d{1,2}\.$/.test(last) && (/^\d/.test(p) || monthOf(p.split(/\s+/)[0])))
+      || (/(^|\s)\d{1,2}\.\d{1,2}\.$/.test(last) && /^geboren\b/iu.test(p)))) acc[acc.length - 1] = `${last} ${p}`;
     else acc.push(p);
     return acc;
   }, []);
   // A letter's greeting and its sign-off with the name are no sentences of the message („Sehr geehrter Herr Weber, …“,
   // „… Mit freundlichen Grüßen, Ana Chakiri“).
-  const letter = pieces.map((s) => s.replace(/^(?:sehr\s+geehrte[rs]?|liebe[rs]?|hallo|guten\s+(?:morgen|tag|abend))\s*,?\s*(?:herr|frau)\s+\p{Lu}\p{L}*\s*[,!]\s*/iu, '')
-    .replace(/^(?:mit\s+)?(?:viele[n]?|liebe[n]?|beste[n]?|freundliche[n]?|schöne[n]?)\s+grüße[n]?\b.*$/iu, '')).filter((s) => s.trim())
+  const letter = pieces.map((s) => closing(s.replace(/^sehr\s+geehrte\s+Damen\s+und\s+Herren\s*[,!]\s*/iu, '').replace(/^(?:sehr\s+geehrte[rs]?|liebe[rs]?|hallo|guten\s+(?:morgen|tag|abend))\s*,?\s*(?:herr|frau)\s+\p{Lu}\p{L}*\s*[,!]\s*/iu, ''))).filter((s) => s.trim())
     .map((s, i) => (s === pieces[i] ? s : s.charAt(0).toLocaleUpperCase('de') + s.slice(1)));
   const sentences = letter
-    .flatMap((s) => s.split(/,\s+(?=(?:ich|mein|meine|am)\b)/i).map((c, i) => (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c)))
-    .flatMap((s) => s.split(/\s+und\s+(?=(?:ich|bin|wohne|komme|mein|meine)\b)/i).map((c, i) => (i && /^(bin|wohne|komme)\b/i.test(c) ? `Ich ${c}` : (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c))))
+    .flatMap((s) => s.split(/,\s+(?=(?:ich|mein|meine|am|geboren)\b)/i).map((c, i) => (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c)))
+    .flatMap((s) => s.split(/\s+und\s+(?=(?:ich|bin|wurde|wohne|komme|mein|meine)\b)/i).map((c, i) => (i && /^(bin|wurde|wohne|komme)\b/i.test(c) ? `Ich ${c}` : (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c))))
     .map((s) => s.trim()).filter(Boolean);
   const free = [...sentences];
   let result = RESULT.CORRECT;
   for (const part of turn.parts) {
-    const scored = free.map((s) => sentenceResult(part, s, turn));
+    const scored = free.map((s) => score(part, s));
     const at = scored.reduce((b, r, i) => (b < 0 || RANK[r] > RANK[scored[b]] ? i : b), -1);
     if (at < 0 || scored[at] === RESULT.WRONG) return RESULT.WRONG;
     result = worst(result, scored[at]);
     free.splice(at, 1);
   }
   // What is left is a greeting, a sign-off, or more about the learner in a form the check knows (`extras`).
-  const extra = (s) => GREETING.test(s.replace(/^[„"]/, '')) || (turn.extras && sentenceResult(turn.extras, s, turn) !== RESULT.WRONG);
-  return free.every(extra) ? result : RESULT.WRONG;
+  for (const s of free) {
+    // A greeting with further words is itself checked as a whole turn.
+    const candidates = [...(turn.extras || []).map(a => [a]), ...turn.parts].map(group => score(group, s));
+    if (courtesyOnly(s, turn)) candidates.push(RESULT.CORRECT);
+    if (GREETING.test(s.replace(/^[„"]/, ''))) candidates.push(score(['Guten Tag!', 'Hallo!', 'Vielen Dank!', 'Viele Grüße!'], s));
+    const checked = best(candidates);
+    if (verifiedResult(checked)) result = worst(result, checked);
+    else {
+      // Unsupported extra details are unverified. A frame for the name and
+      // birth date cannot certify the German in another sentence.
+      const generic = single([]);
+      result = worst(result, typedResult(generic, s) === RESULT.WRONG ? RESULT.WRONG : BEYOND);
+    }
+  }
+  return result;
 }
 
 // The taught adverbs that may stand in the middle or in front of a statement without changing it.
@@ -1356,8 +1388,9 @@ function verbSecond(text, { drop = false } = {}) {
       const front = w.slice(0, k - 1).map((x, i) => (i === 0 ? x.charAt(0).toLocaleLowerCase('de') + x.slice(1) : x));
       if (/^\p{Lu}/u.test(w[0]) && front.length) {
         const first = fold(w[0]);
-        // Keep the capital of a noun in front („Fußball spiele ich gern"): only small words lose it.
-        if (!CLOSED.has(first) && !ADVERBS.has(first) && !WHEN_GLUE.has(first)) front[0] = w[0];
+        // Nouns keep their capital; a fronted participle loses its sentence-
+        // initial capital when moved inside ("Geboren wurde ich …").
+        if (!CLOSED.has(first) && !ADVERBS.has(first) && !WHEN_GLUE.has(first) && !verbReadings(first).some(v => v.mood === 'part')) front[0] = w[0];
       }
       out.push([cap(w[k]), w[k - 1], ...w.slice(k + 1), ...front].join(' ') + end);
       // …or right after the verb and its subject: „Gestern habe ich gearbeitet“ → „Ich habe gestern gearbeitet“.
@@ -1365,6 +1398,12 @@ function verbSecond(text, { drop = false } = {}) {
     }
   }
   return out;
+}
+
+function frontedPartCase(value) {
+  const w = wordsOf(String(value));
+  return verbReadings(fold(w[0] || '')).some(v => v.mood === 'part')
+    && (/^\p{Ll}/u.test(w[0] || '') || /^\p{Lu}/u.test(w[1] || '')) && SUBJECTS.has(fold(w[2] || ''));
 }
 
 /**
@@ -2566,6 +2605,7 @@ function taskFault(turn, text) {
  * kind, task, sentence, german.
  */
 export function wrongReason(turn, value) {
+  if (turn.parts) return typedResult(turn, value) === RESULT.WRONG ? 'message' : null;
   if (slipFixed(turn, value)) return null;
   const core = typedCore(turn, value);
   if (verifiedResult(core)) return doubted(turn, value, core) ? READ_FAULT[secondReading(turn, value).say] || (notRead(turn, value) && SURE.has(readFault(turn, value)) ? readFault(turn, value) : null) : null;
@@ -3110,10 +3150,12 @@ const unknownNouns = (turn, text) => wordsOf(text.replace(/[.,!?;:„“"()]/g, 
 export function readOnce(turn, value) {
   const none = { say: null, unknown: [] };
   if (!turn.lexicon || turn.spell || turn.listen) return none;
+  if (turn.parts) return { ...none, say: verifiedResult(messageResult(turn, value)) ? 'yes' : null };
   const text = spelledOut(westernDigits(value), turn.lexicon).trim();
   if (text.length > 160 || !/\p{L}/u.test(text) || /(?<!\p{L})(\p{L}{2,})\s+\1(?!\p{L})/iu.test(text) || CUT_OFF.some((re) => re.test(text)) || surnameAlone(turn, text)) return none;
   if (malformedNoun(text, turn.lexicon) || languageForm(turn, text) || wrongPlural(text, turn.lexicon)) return { ...none, say: 'ending' };
   if ((turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, text)) return { ...none, say: 'task' };
+  if (invalidClock(numberWordsToDigits(fold(text)))) return { ...none, say: 'word' };
   const sentences = readAnswer(turn, text);
   if (!sentences) return none;
   if (!ownWordFits(sentences, Boolean(turn.ownName || turn.parts || turn.slot === 'name'))) return { ...none, sentences };
@@ -3219,10 +3261,12 @@ export function capitalsOnly(turn, value) {
 }
 export function typedResult(turn, value) {
   const result = gradeTyped(turn, value);
-  if (result === RESULT.TYPO) return result;
+  if (result === RESULT.TYPO || (result === RESULT.CORRECT && frontedPartCase(value))) return RESULT.TYPO;
   return slipFixed(turn, value) ? RESULT.TYPO : result;
 }
 function gradeTyped(turn, value) {
+  if (turn.parts) return messageResult(turn, value);
+  if (!turn.spell && invalidClock(numberWordsToDigits(fold(value)))) return RESULT.WRONG;
   if (['live', 'origin', 'travel'].includes(asked(turn)?.kind) && townNames(value) !== String(value)) return gradeTyped(turn, townNames(value));
   // („Ich wohne in Hof.“: a town may be called as a thing is; where one lives it is a town.)
   const town = ['live', 'origin', 'travel'].includes(asked(turn)?.kind) && String(value).match(/(?<!\p{L})(?:in|aus|nach)\s+(\p{Lu}\p{L}{2,})(?=\s*(?:[.,!?]|$|\s+und\s))/u);
@@ -3242,14 +3286,17 @@ function gradeTyped(turn, value) {
 const readInFull = (turn, value, reason) => { if (['english', 'address'].includes(reason)) return false; return secondReading(turn, value).say === 'yes' && !secondReading(turn, value).unknown.length && verifiedResult(readResult(turn, value)); };
 // A frame verifies words around a gap, not their order: what it verifies is read as German too where the reader knows every word
 // („Am Montag Zeit habe ich.“, „Ich gehe nach Schule.“, „Es ist blaue.“: independent score of c6918f2d).
-const READ_TOO = new Set(['routine', 'freeTime', 'workWhen', 'colour', 'askColour', 'hobby', 'did', 'getUp', 'live', 'age', 'buy', 'need', 'hungry', 'language', 'clock']);
-const notRead = (turn, value) => READ_TOO.has(asked(turn)?.kind) && (asked(turn).kind !== 'askColour' || /^(?:Ist|Sind)\s/u.test(String(value).trim())) && !/(?<!\p{L})Hobbys?\s+(?:ist|sind)/u.test(String(value)) && (() => { const r = readable(turn, value); return r.known && !r.read; })();
+const READ_TOO = new Set(['routine', 'freeTime', 'workWhen', 'colour', 'askColour', 'hobby', 'did', 'getUp', 'live', 'age', 'buy', 'need', 'hungry', 'language', 'clock', 'travel', 'askTrain', 'askWhen', 'askPrice', 'askShop', 'guests']);
+// These new kinds need the specific order/valency veto, not a demand that every
+// otherwise verified paraphrase be parsed in full.
+const ORDER_ONLY = new Set(['travel', 'askTrain', 'askWhen', 'askPrice', 'askShop', 'guests']);
+const notRead = (turn, value) => READ_TOO.has(asked(turn)?.kind) && !ORDER_ONLY.has(asked(turn)?.kind) && (asked(turn).kind !== 'askColour' || /^(?:Ist|Sind)\s/u.test(String(value).trim())) && !/(?<!\p{L})Hobbys?\s+(?:ist|sind)/u.test(String(value)) && (() => { const r = readable(turn, value); return r.known && !r.read; })();
 /** „Ich spreche ein Arabisch“, „Ich wohne in Hauptstraße“: a language has no article, a street has one. */
 const ARTICLE_AND_NAME = [/(?<!\p{L})(?:ein|eine|einen|das)\s+(\p{Lu}\p{L}+isch|Deutsch)(?!\p{L}|\s+\p{Lu})/u, /(?<!\p{L})in\s+\p{Lu}\p{L}*(?:straße|strasse|weg|allee|gasse|platz)(?!\p{L})/u];
 const articleOfName = (turn, value) => (asked(turn)?.kind === 'language' && ARTICLE_AND_NAME[0].test(String(value))) || ARTICLE_AND_NAME[1].test(String(value));
 /** Of an answer a frame verifies, only these repairs are sure enough to call it wrong. */
 const SURE = new Set(['order', 'ending', 'extra', 'article', 'verb']);
-const doubted = (turn, value, result) => (turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, value) ? true : madeUpWord(turn, value) || malformedNoun(value, turn.lexicon) || wrongPlural(value, turn.lexicon) || unknownVerb(turn, value) || Boolean(secondReading(turn, value).valency) || foreignWord(turn, value) || otherWordTyped(turn, value, result) || articleOfName(turn, value) || notRead(turn, value) || (() => { const r = secondReading(turn, value); return Boolean(r.sentences && r.env) && senseless(turn, r.sentences, r.env); })();
+const doubted = (turn, value, result) => (turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, value) ? true : madeUpWord(turn, value) || malformedNoun(value, turn.lexicon) || wrongPlural(value, turn.lexicon) || unknownVerb(turn, value) || (READ_TOO.has(asked(turn)?.kind) && Boolean(secondReading(turn, value).valency)) || foreignWord(turn, value) || otherWordTyped(turn, value, result) || articleOfName(turn, value) || notRead(turn, value) || (READ_TOO.has(asked(turn)?.kind) && (() => { const r = secondReading(turn, value); return r.say === 'order' || (requiresVerbFirst(turn) && r.say === 'task') || (Boolean(r.sentences && r.env) && senseless(turn, r.sentences, r.env)); })());
 // The faults the second reader is sure of: another task, another thing, a pronoun of another gender, the other form of address.
 const READ_FAULT = { task: 'task', word: 'word', pronoun: 'word', address: 'address', sentence: 'sentence', missing: 'missing', case: 'case', ending: 'ending', order: 'order', verb: 'verb', article: 'article' };
 function readResult(turn, value) {
@@ -3698,14 +3745,14 @@ function coreTries(turn, value) {
   for (const t of [...tries]) {
     // Also with a noun as the subject („Der Zug fährt nach Berlin?“, first DaF review of Lektion 10).
     const q = t.trim().match(/^(du|sie|er|es|(?:der|die|das|mein|meine|dein|deine)\s+\p{L}+)\s+(\p{L}+)\s+(.*\?)$/iu);
-    if (q && !SUBJECTS.has(fold(q[2]))) {
+    if (!requiresVerbFirst(turn) && q && !SUBJECTS.has(fold(q[2]))) {
       const asked = `${q[2]} ${/^(du|sie|er|es)$/i.test(q[1]) ? q[1].toLocaleLowerCase('de') : q[1].charAt(0).toLocaleLowerCase('de') + q[1].slice(1)} ${q[3]}`;
       add(asked, 'statement order');
       // „du Tanzt gern?“: a small first letter or a capital verb stays the slip it is.
       if (/^\p{Ll}/u.test(t.trim()) || /^\p{Lu}/u.test(q[2])) smallStart.add(cap(asked.trim()));
     }
   }
-  for (const t of [...tries]) for (const s of questionWordLast(t)) add(s, 'statement order');
+  if (!requiresVerbFirst(turn)) for (const t of [...tries]) for (const s of questionWordLast(t)) add(s, 'statement order');
   for (const t of [...tries]) if (/\bgerne\b/i.test(t)) add(t.replace(/\b(g)erne\b/gi, '$1ern'), 'variant');
   for (const t of [...tries]) for (const s of verbSecond(t)) push(s, 'verb second');
   for (const t of [...tries]) if (via.get(t) === 'verb second') for (const s of withoutSmallWord(t, finite)) shape(s, 'small word', t);
@@ -3981,7 +4028,7 @@ function tolerantCore(turn, value) {
   for (const t of [...tries]) {
     // Also with a noun as the subject („Der Zug fährt nach Berlin?“, first DaF review of Lektion 10).
     const q = t.trim().match(/^(du|sie|er|es|(?:der|die|das|mein|meine|dein|deine)\s+\p{L}+)\s+(\p{L}+)\s+(.*\?)$/iu);
-    if (q && !SUBJECTS.has(fold(q[2]))) {
+    if (!requiresVerbFirst(turn) && q && !SUBJECTS.has(fold(q[2]))) {
       const asked = `${q[2]} ${/^(du|sie|er|es)$/i.test(q[1]) ? q[1].toLocaleLowerCase('de') : q[1].charAt(0).toLocaleLowerCase('de') + q[1].slice(1)} ${q[3]}`;
       add(asked);
       // „du Tanzt gern?“: a small first letter or a capital verb stays the slip it is.

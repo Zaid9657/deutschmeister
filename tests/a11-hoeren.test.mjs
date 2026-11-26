@@ -40,7 +40,7 @@ test('the gate bites: a scene line, an untaught word or form, a cast name, a lon
     [/cast name/, (b) => { b['a1.1-cp1'].papers[1].hear[2].text += ' Lena ist auch hier.'; }],
     [/never names/, (b) => { b['a1.1-cp1'].papers[0].hear[0].options[0] = 'In Italien.'; }],
     [/one place throughout/, (b) => { for (const u of b['a1.1-cp1'].papers[0].hear) u.options = [u.answer, ...u.options.filter((o) => o !== u.answer)]; }],
-    [/a dictation has 5 to/, (b) => { b['a1.1-cp2'].papers[0].say[0].de = 'Das Regal kostet vierzig Euro, der Tisch kostet dreißig Euro.'; }],
+    [/a dictation has 5 to/, (b) => { b['a1.1-cp2'].papers[0].say[0].de = 'Das Regal kostet vierzig Euro, der Tisch kostet dreißig Euro und der Stuhl kostet noch einmal zwanzig Euro.'; }],
     [/evidence/, (b) => { b['a1.1-cp1'].papers[0].hear[0].evidence = 'Ich wohne in Köln.'; }],
     [/twice in the bank/, (b) => { b['a1.1-cp1'].papers[1].read[0].de = b['a1.1-cp1'].papers[0].read[0].de; }],
     [/exactly four papers/, (b) => { b['a1.1-cp3'].papers.pop(); }],

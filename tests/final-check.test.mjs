@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { requiresVerbFirst } from '../src/lib/lesson/taskMeaning.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { RESULT, numberWordsToDigits } from '../src/lib/lesson/check.js';
@@ -101,7 +102,7 @@ test('a retake is not the same paper: every turn with variants changes, and Lekt
   assert.ok(l1.guided.check.turns.every((t) => !t.variants));
   assert.deepEqual(checkTurns(l1.guided.check, 0).filter((t) => !t.spell), l1.guided.check.turns.filter((t) => !t.spell));
   const [first, second] = [0, 1].map((r) => checkTurns(l2.guided.check, r).find((t) => t.listen));
-  assert.equal(first.accepted[0], '0421 3618');
+  assert.equal(first.accepted[0], '0421 3618001');
   assert.notEqual(first.accepted[0], second.accepted[0]);
   // Lektion 3: the person in the photo and every pronoun after it change together (sie, then er).
   const [she, he] = [0, 1].map((r) => checkTurns(l3.guided.check, r));
@@ -151,13 +152,13 @@ test('own answers: the learner fills the gap, the words around it are graded lik
   assert.equal(typedResult(ask, 'Sind Sie Lehrer?'), RESULT.CORRECT);
   assert.equal(typedResult(ask, 'Was bist du von Beruf?'), RESULT.WRONG, 'Sie at the counter');
   assert.equal(typedResult(ask, 'Herr Weber, welchen Beruf haben Sie?'), RESULT.CORRECT, 'a reply may name the person it is said to');
-  assert.equal(typedResult(number, 'Telefonnummer: 0421 3618'), RESULT.CORRECT, 'a label before the right number');
+  assert.equal(typedResult(number, 'Telefonnummer: 0421 3618001'), RESULT.CORRECT, 'a label before the right number');
   assert.equal(typedResult(phone, 'Meine Telefonnummer ist null eins sieben sechs.'), RESULT.CORRECT);
   assert.equal(typedResult(phone, 'Meine Telefonnummer ist ٠١٧٦ ٢٣٤٥٦٧'), RESULT.CORRECT, 'Arabic-Indic digits are digits');
   assert.equal(typedResult(phone, 'Meine Telefonnummer ist Bremen.'), RESULT.WRONG);
-  assert.equal(typedResult(number, '0421-3618'), RESULT.CORRECT);
-  assert.equal(typedResult(number, '٠٤٢١٣٦١٨'), RESULT.CORRECT);
-  assert.equal(typedResult(number, '0421 3619'), RESULT.WRONG);
+  assert.equal(typedResult(number, '0421-3618001'), RESULT.CORRECT);
+  assert.equal(typedResult(number, '٠٤٢١٣٦١٨٠٠١'), RESULT.CORRECT);
+  assert.equal(typedResult(number, '0421 3618002'), RESULT.WRONG);
   assert.equal(modelAnswer(origin), 'Ich komme aus Marokko.', 'after a miss, a complete example');
   const [photo, age, origin3, languages, own, askLena] = sitting(l3);
   assert.equal(typedResult(photo, 'Das ist meine Mutter.'), RESULT.CORRECT);
@@ -236,8 +237,8 @@ test('the orchestrator’s spot-check (2026-11-19): correct German that was refu
   // What was working keeps working.
   assert.equal(typedResult(origin, 'Ich kommen aus Syrien.'), RESULT.WRONG);
   assert.equal(typedResult(job, 'Ich bin müde.'), RESULT.WRONG);
-  assert.equal(typedResult(number, '0421 3619'), RESULT.WRONG);
-  assert.equal(typedResult(number, '٠٤٢١٣٦١٨'), RESULT.CORRECT);
+  assert.equal(typedResult(number, '0421 3618002'), RESULT.WRONG);
+  assert.equal(typedResult(number, '٠٤٢١٣٦١٨٠٠١'), RESULT.CORRECT);
   assert.equal(refused(message, 'Ich bin am 3.5.1990 geboren.'), RESULT.WRONG, 'the name part is missing');
 });
 
@@ -514,7 +515,7 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(where, 'Ich fahre nach Damaskus.'), RESULT.CORRECT, 'a place of the learner’s own');
   assert.equal(refused(where, 'Ich fahre in Berlin.'), RESULT.WRONG);
   assert.equal(typedResult(yesNo, 'Fährt der Zug nach Berlin?'), RESULT.CORRECT);
-  assert.equal(typedResult(yesNo, 'Der Zug fährt nach Berlin?'), RESULT.CORRECT, 'a question in statement order, as everywhere in the course (first DaF review)');
+  assert.equal(typedResult(yesNo, 'Der Zug fährt nach Berlin?'), RESULT.WRONG, 'valid confirmation question, but this task explicitly asks for verb-first form');
   assert.equal(typedResult(heardPrice, 'fünfzehn Uhr'), RESULT.WRONG, 'a price is no clock time');
   assert.equal(typedResult(platform, 'um sieben Uhr'), RESULT.WRONG);
   assert.equal(typedResult(when, 'Wann fährt der Zug ab?'), RESULT.CORRECT);
@@ -834,8 +835,8 @@ test('the whole answer (third score, Rule 1): what follows a verified beginning 
   for (const wrong of ['Ich heiße Omar und kommen aus Syrien.', 'Ich heiße Omar und ich ist Student.', 'Ich heiße Omar bin.', 'Ich bin Omar und du bist.', 'Ich heiße Omar Haddad ist.']) assert.equal(typedResult(name, wrong), RESULT.WRONG, wrong);
   assert.equal(typedResult(sitting(l2)[0], 'Ich komme aus Marokko und wohne in Bremen.'), RESULT.CORRECT, 'the scene’s own line');
   assert.equal(refused(sitting(l2)[0], 'Ich komme aus Marokko und ich ist Student.'), RESULT.WRONG);
-  assert.equal(typedResult(sitting(l2)[5], '0421 3618 bin.'), RESULT.WRONG, 'a heard number and nothing after it but a unit');
-  assert.equal(typedResult(sitting(l2)[5], 'Telefonnummer: 0421 3618'), RESULT.CORRECT);
+  assert.equal(typedResult(sitting(l2)[5], '0421 3618001 bin.'), RESULT.WRONG, 'a heard number and nothing after it but a unit');
+  assert.equal(typedResult(sitting(l2)[5], 'Telefonnummer: 0421 3618001'), RESULT.CORRECT);
 });
 
 test('nothing is wrong by default (third score, Rule 2): a WRONG names its fault, unverified on-task German is BEYOND (2026-11-22)', () => {
@@ -1014,7 +1015,8 @@ test('a word said again after a comma or a sentence end is German, no repetition
           if (q && !/^(?:wie|was|wo|woher|wohin|wann|wer|welche[nrs]?)$/i.test(q[1])) {
             const answer = `Und ${q[2]}? ${cap(q[2])} ${q[1].toLocaleLowerCase('de')} ${q[3]}`;
             echo += 1;
-            assert.notEqual(typedResult(turn, answer), RESULT.WRONG, `${where}: ${answer}`);
+            if (requiresVerbFirst(turn)) assert.equal(typedResult(turn, answer), RESULT.WRONG, `${where}: requested verb-first form`);
+            else assert.notEqual(typedResult(turn, answer), RESULT.WRONG, `${where}: ${answer}`);
           }
         }
       });
@@ -1286,4 +1288,65 @@ test('the partner\'s name is not one\'s own (Claude score of f0847faa)', () => {
   const name = sitting(CURRICULUM_A11.lektionen[0])[1];
   for (const wrong of ['Ich heiße Frau Kaya.', 'Ich bin Frau Kaya.']) assert.equal(faultHintKey(name, wrong), 'check.fault.task', wrong);
   for (const right of ['Ich heiße Ana.', 'Guten Tag, Frau Kaya! Ich heiße Ana.']) assert.ok(verified(typedResult(name, right)), right);
+});
+
+test('a message checks every sentence like a single turn, with unsupported additions unverified', () => {
+  const message = sitting(l2)[6];
+  const base = 'Ich heiße Omar. Ich bin am 3.5.1998 geboren.';
+  assert.equal(typedResult(sitting(l2)[2], 'Ich bin ein Lehrer.'), RESULT.CORRECT);
+  for (const tail of ['Ich komme von Syrien.', 'Ich habe 30 Jahre.', 'Ich wohne aus Berlin.', 'Ich bin ein Lehrerin.']) {
+    assert.equal(verifiedResult(typedResult(message, base + ' ' + tail)), false, tail);
+  }
+  for (const tail of ['Ich komme aus Syrien.', 'Ich wohne in Berlin.', 'Ich bin ein Lehrer.', 'Meine Telefonnummer ist 030 12345678.']) assert.equal(typedResult(message, base + ' ' + tail), RESULT.CORRECT, tail);
+  assert.equal(verifiedResult(typedResult(message, base + ' Ich blable heute.')), false);
+  assert.equal(verifiedResult(typedResult(message, 'Ich komme von Syrien. ' + base)), false);
+});
+
+test('clock expressions use the same rules in every turn and retake', () => {
+  const lesson = CURRICULUM_A11.lektionen[7];
+  for (let s = 0; s < 3; s += 1) {
+    const time = sitting(lesson, s)[0];
+    const extras = ['Es ist dreißig nach acht.', 'Es ist halb sieben Uhr.', 'Es ist Viertel nach sieben Uhr.'];
+    for (const answer of extras) assert.equal(verifiedResult(typedResult(time, answer)), false, answer);
+  }
+  const note = sitting(lesson, 1)[6];
+  assert.equal(typedResult(note, 'Freitag, Viertel nach vier'), RESULT.CORRECT);
+  assert.equal(typedResult(note, 'Freitag, nachmittags um Viertel nach vier'), RESULT.CORRECT);
+  assert.equal(verifiedResult(typedResult(note, 'Freitag, morgens um Viertel nach vier')), false);
+});
+
+test('checking message sentences preserves passive birth clauses and standard letter greetings', () => {
+  const turn = sitting(l2)[6];
+  for (const answer of [
+    'Ich heiße Huda Salem und wurde am 11.12.1992 geboren.',
+    'Sehr geehrte Damen und Herren, mein Name ist Rosa Vega. Ich bin am 08.02.1983 geboren. Mit freundlichen Grüßen Rosa Vega',
+    'Sehr geehrter Herr Weber, mein Name ist Tran Linh. Ich bin am 30. März 1996 in Hanoi geboren.',
+    'Sehr geehrter Herr Weber, mein Name ist Tran. Ich bin am 30. März 1996 in Hanoi geboren.',
+  ]) assert.equal(typedResult(turn, answer), RESULT.CORRECT, answer);
+});
+
+test('message feedback agrees with its result, incomplete dates stay whole, and signatures cannot hide clauses', () => {
+  const message = sitting(l2)[6];
+  const start = 'Ich heiße Omar. Ich bin am 3.5.1998 geboren. ';
+  for (const closing of ['Viele Grüße, Omar', 'Viele Gruesse, Omar', 'Mit freundlichen Grüßen.']) assert.equal(typedResult(message, start + closing), RESULT.CORRECT, closing);
+  for (const answer of ['Ich heiße Omar. Ich bin am 12.03. geboren.', 'Ich bin am 3.5.1998 geboren.']) {
+    assert.equal(typedResult(message, answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(message, answer), 'message', answer);
+  }
+  for (const ending of ['Viele Gruesse, Omar, ich komme von Syrien.', 'Viele Grüße, Omar und ich habe 30 Jahre.']) {
+    const result = typedResult(message, start + ending);
+    assert.ok(!verifiedResult(result), ending);
+    assert.equal(Boolean(wrongReason(message, start + ending)), result === RESULT.WRONG, ending);
+  }
+});
+
+test('fronted participles keep their correct case classification when a frame normalizes word order', () => {
+  const message = sitting(l2)[6];
+  const part = message.parts[1];
+  const born = { ...message, parts: null, extras: null, ...part[0], accepted: part };
+  assert.equal(typedResult(born, 'Geboren wurde ich am 23. März 1997.'), RESULT.CORRECT);
+  assert.equal(typedResult(message, 'Ich bin Salma Amin. Geboren wurde ich am 23. März 1997.'), RESULT.CORRECT);
+  assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[10])[0], 'Gearbeitet habe ich gestern.'), RESULT.CORRECT);
+  assert.equal(typedResult(born, 'geboren wurde ich am 23. März 1997.'), RESULT.TYPO);
+  assert.equal(typedResult(born, 'Geboren Wurde ich am 23. März 1997.'), RESULT.TYPO);
 });

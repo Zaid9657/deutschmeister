@@ -1750,10 +1750,9 @@ test('a yes/no question to build says where the verb stands, never which form op
     if (/das Verb steht vorn/.test(it.questionDe)) assert.match(it.questionEn || '', /verb comes first/i, `${it.id}: the English says it too`);
   }
   assert.ok(n >= 9, `yes/no questions to build: ${n}`);
-  // With no opening named, the phrases after the verb and its subject keep their free order (Codex score, 2026-11-25).
-  for (const [id, other] of [['extra-a11-l10-07', 'Fahrt ihr in die Schweiz mit dem Auto?'], ['extra-a11-l10-08', 'Fahren Sie nach Deutschland morgen?']]) {
-    assert.ok(POOL.items.find((it) => it.id === id).accepted.includes(other), `${id}: ${other}`);
-  }
+  // A manner PP may follow the goal; a time belongs before it (approved Phase 2 rule).
+  assert.ok(POOL.items.find((it) => it.id === 'extra-a11-l10-07').accepted.includes('Fahrt ihr in die Schweiz mit dem Auto?'));
+  assert.ok(!POOL.items.find((it) => it.id === 'extra-a11-l10-08').accepted.includes('Fahren Sie nach Deutschland morgen?'));
 });
 
 // The Claude score of 2026-11-25: a spelling task took the word itself, a gap inside a sentence its capital, and „Ihre“ for
