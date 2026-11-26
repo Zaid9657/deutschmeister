@@ -67,3 +67,36 @@ test('Lektion 1’s Arabic is split into the same German runs as before the patt
   const ar = withArabic[0].notice.bodyAr;
   assert.deepEqual(latinRuns(ar), [...ar.matchAll(OLD)].map((m) => m[0]));
 });
+
+test('Phase 2b: every final-check turn and checkpoint task has complete optional Arabic help', async () => {
+  const { checkTurns } = await import('../src/lib/lesson/finalCheck.js');
+  const { buildCheckpoint, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { taskArabic } = await import('../src/lib/lesson/arabicHelp.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const check = (en) => { assert.ok(en, 'English source task'); assert.match(taskArabic(en) || '', /[\u0600-\u06ff]/, en); };
+  for (const lesson of CURRICULUM_A11.lektionen) for (let round = 0; round < 6; round++) {
+    for (const turn of checkTurns(lesson.guided.check, round)) check(turn.taskEn);
+  }
+  for (const checkpoint of CURRICULUM_A11.checkpoints) for (let round = 0; round < 8; round++) {
+    for (const item of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: paperSeed(checkpoint, round) })) check(item.task?.taskEn || item.promptEn);
+  }
+});
+
+test('Phase 2b: every visible final-check correction and recovery key has Arabic, without a third interface mode', async () => {
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  const { FEEDBACK_AR, feedbackArabic } = await import('../src/lib/lesson/arabicHelp.js');
+  const { LESSON_LANGS } = await import('../src/lib/lesson/lessonLang.js');
+  const { readFileSync } = await import('node:fs');
+  const keys = [...Object.keys(STRINGS.en).filter((k) => /^check\.(fault\.|beyond|unchecked)/.test(k)),
+    'feedback.typo', 'feedback.typo.case', 'otter.retry', 'otter.check.missed', 'feedback.correctIs', 'check.example', 'check.letters', 'check.practised'];
+  for (const key of keys) assert.match(FEEDBACK_AR[key] || '', /[\u0600-\u06ff]/, key);
+  assert.ok(feedbackArabic('check.unchecked', { word: 'Ticket' }).includes('Ticket'));
+  assert.deepEqual(LESSON_LANGS, ['en', 'de']);
+  const source = readFileSync(new URL('../src/components/lesson/ArabicHelp.jsx', import.meta.url), 'utf8');
+  assert.match(source, /<details lang="ar" dir="rtl"/);
+  assert.doesNotMatch(source, /<details[^>]*\bopen[= >]/);
+  assert.match(source, /isolateLatin\(text\)/);
+  const stage = readFileSync(new URL('../src/components/lesson/CheckStage.jsx', import.meta.url), 'utf8');
+  for (const key of keys.filter((key) => !key.startsWith('check.fault.'))) assert.ok(stage.includes(key), key + ' is wired into the final-check help');
+});

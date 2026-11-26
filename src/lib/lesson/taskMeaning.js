@@ -53,7 +53,7 @@ function findKind(turn) {
   if (/^Woher kommen/.test(a)) return { kind: 'askOrigin', things: ['eltern', 'vater', 'mutter'] };
   if (/^Was ist das\?/.test(a)) return { kind: 'askWhat' };
   if (/^(?:Was|Wie viel) kostet/.test(a)) return { kind: 'askPrice', things: thingsOf(nouns(/kostet (?:der|die|das|eine?) (\p{Lu}\p{L}+)/u)), main: [...new Set(nouns(/kostet (?:der|die|das|eine?) (\p{Lu}\p{L}+)/u))] };
-  if (/^Ich kaufe/.test(a)) return { kind: 'buy' };
+  if (/^Ich kaufe/.test(a)) return { kind: 'buy', allowNothing: /whether.*buy|buy.*anything|ob.*kaufen/iu.test(`${turn.taskEn || ''} ${turn.taskDe || ''}`) };
   if (turn.slot === 'object' && /^Das ist …/.test(a)) return { kind: 'thing' };
   if (/^(?:Es|Er|Sie) (?:ist|sind) (?:hier|da)/.test(a)) return { kind: 'here', things: thingsOf(Object.values(turn.nounFor || {}).flat().map((n) => fold(n.split(' ').at(-1)))) };
   if (/^Wo ist/.test(a)) return { kind: 'askPlace', things: thingsOf(nouns(/^Wo ist (?:mein|meine|der|die|das) (\p{Lu}\p{L}+)/u)) };
@@ -182,7 +182,7 @@ const COST = (c, q, env) => {
   if (whNoun(c) === 'preis' && c.lemma === 'haben' && thing(c.subj)) return true;
   if (c.lemma === 'sein' && w === 'was' && ['preis', 'fahrpreis'].includes(c.subj?.head)) return true;
   if ((w === 'was' || w === 'wie viel') && ['möchten', 'wollen', 'verlangen', 'bekommen', 'haben', 'nehmen', 'kriegen'].includes(c.lemma) && forThing && (you(c) || I(c) || c.subj?.head === 'man')) return true;
-  if ((w === 'was' || w === 'wie viel') && ['bezahlen', 'zahlen'].includes(c.lemma) && (forThing || thing(c.acc))) return true;
+  if ((w === 'was' || w === 'wie viel') && ['bezahlen', 'zahlen'].includes(c.lemma) && (forThing || thing(c.acc) || (I(c) && (c.acc?.wh || (w === 'wie viel' && !c.acc)) && !pps(c, 'für').length))) return true;
   if (['sagen', 'nennen', 'geben'].includes(c.lemma) && ['preis', 'fahrpreis'].includes(c.acc?.head)) return true;
   return Boolean(w === 'was' && c.lemma === 'machen' && c.subj?.head === 'das');
 };
@@ -359,7 +359,7 @@ const SAYING = {
   },
   photo: (c, q) => (c.acc?.det === 'mein' && headsOf(c.acc).some((h) => q.people.includes(h)) && ((c.lemma === 'sehen' && c.subj?.head === 'du') || (c.lemma === 'zeigen' && I(c)))) || (c.lemma === 'sein' && c.subj?.det === 'mein' && headsOf(c.subj).some((h) => q.people.includes(h)) && pps(c, 'auf').some((p) => ['foto', 'bild'].includes(p.np.head))) || (c.lemma === 'sein' && c.pred?.head === 'das' && c.subj?.det === 'mein' && headsOf(c.subj).some((h) => q.people.includes(h))) || c.lemma === 'sein' && headsOf(c.pred).some((h) => q.people.includes(h) || q.people.some((p) => (SAME_PERSON[p] || []).includes(h))) && c.pred.det === 'mein' && ['das', 'sie', 'er', 'es', 'hier'].includes(c.subj?.head),
   age: (c, q) => c.lemma === 'sein' && !backwards(c) && !c.elems.some((e) => e !== c.subj && (['own', 'name'].includes(e.kind) || (e.kind === 'num' && adjs(c).length > 0) || (e.kind === 'np' && /^jahre?$/u.test(e.head) && e.det !== 'num'))) && (third(c, q) || (c.subj?.kind === 'name' || c.subj?.kind === 'own')) && (adjs(c).some((a) => ['jung', 'alt', 'älter', 'jünger'].includes(a)) || headsOf(c.pred).some((h) => ['jahre', 'jahr'].includes(h)) || c.pred?.kind === 'num'),
-  buy: (c, q, env) => I(c) && !negated(c) && c.acc && (['kaufen', 'nehmen', 'bestellen'].includes(c.lemma) || (['möchten', 'wollen'].includes(c.lemma)) || (c.lemma === 'haben' && (c.polite || c.modal === 'möchten'))) && goods(c.acc, env),
+  buy: (c, q, env) => I(c) && c.acc && (['kaufen', 'nehmen', 'bestellen'].includes(c.lemma) || (['möchten', 'wollen'].includes(c.lemma)) || (c.lemma === 'haben' && (c.polite || c.modal === 'möchten'))) && ((!negated(c) && goods(c.acc, env)) || (q.allowNothing && c.acc.head === 'nichts')),
   thing: (c) => !negated(c) && ((c.lemma === 'sein' && ['das', 'dies', 'hier', 'es'].includes(c.subj?.head) && c.pred && c.pred.kind === 'np' && !FAMILY.has(c.pred.head)) || (c.lemma === 'sein' && (adv(c, 'hier', 'da') || pps(c, 'in').some((p) => ['tasche', 'rucksack', 'hand', 'handtasche'].includes(p.np.head))) && c.subj?.kind === 'np' && !c.adj?.length) || (c.lemma === 'haben' && I(c) && c.acc?.kind === 'np' && (adv(c, 'hier', 'da') || pps(c, 'in').length > 0))),
   here: (c, q, env) => adv(c, ...HERE) && ['sein', 'liegen', 'stehen', 'stecken'].includes(c.lemma) && !negated(c) && isThing(c.subj, q, env) && picksUp(c.subj, env) && !notMine(c.subj) && !(c.subj.kind === 'pron' && c.subj.head === 'sie' && !c.reading?.persons?.includes('er') && !env.thingGenders.includes('pl')),
   colour: (c, q, env) => {

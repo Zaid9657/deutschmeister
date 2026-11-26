@@ -4,6 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import OtterSays from '../illustrations/OtterSays.jsx';
 import StageShell from './StageShell.jsx';
+import { TaskArabicHelp, FeedbackArabicHelp } from './ArabicHelp.jsx';
 import PlayButton from './PlayButton.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
@@ -22,7 +23,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   const [mode, setMode] = useState(canSpeak && !writtenOnly(turn) ? 'speak' : 'type');
   const [value, setValue] = useState('');
   const [tries, setTries] = useState(0);
-  const [outcome, setOutcome] = useState(null); // 'shown' | 'missed' | 'unverified'
+  const [outcome, setOutcome] = useState(null); // 'shown' | 'practised' | 'missed' | 'unverified'
   const [retry, setRetry] = useState(null); // null | 'typo' | 'retry'
   const [showLetters, setShowLetters] = useState(false);
   // What the learner answered (typed, or the transcript), so a later turn can follow their choice.
@@ -37,13 +38,14 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   // What the learner answered when the check could not judge it, so the screen does not tell them to begin as they did.
   const [beyondSaid, setBeyondSaid] = useState('');
   const start = beyondStart(turn, beyondSaid);
+  const correct = outcome === 'shown' || outcome === 'practised';
   const onBeyond = (said = '') => { if (beyond) setOutcome('unverified'); else { setBeyond(true); setRetry(null); setBeyondSaid(said); } };
 
   const submit = () => {
     const result = typedResult(turn, value);
     if (result === BEYOND) { onBeyond(value); return; }
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
-    if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
+    if (ok) { setOutcome(showLetters ? 'practised' : 'shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
     else if (tries === 0) { setRetry(result === RESULT.TYPO ? 'typo' : 'retry'); setHint(result === RESULT.TYPO ? (capitalsOnly(turn, value) ? 'feedback.typo.case' : null) : faultHintKey(turn, value)); }
     else setOutcome('missed');
     setTries(tries + 1);
@@ -51,7 +53,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   const spoken = (r) => {
     if (r.selfConfirmed) { setMode('type'); return; } // not measured: typing is the proof
     if (r.transcript && typedResult(turn, r.transcript) === BEYOND) { setMode('type'); onBeyond(r.transcript); return; }
-    if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); setUnchecked(uncheckedWords(turn, r.transcript || '')); }
+    if (spokenShown(r, turn)) { setOutcome(showLetters ? 'practised' : 'shown'); setAnswer(r.transcript || ''); setUnchecked(uncheckedWords(turn, r.transcript || '')); }
     else if (r.attempts >= SPOKEN_TRIES) setMode('type'); // speech recognition may be the problem, not the learner
   };
 
@@ -63,9 +65,10 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       primaryDisabled={!outcome}
-      onPrimary={() => onOutcome(outcome, answer)}
+      onPrimary={() => onOutcome({ outcome, revealed: showLetters }, answer)}
     >
       {n === 1 && <OtterSays lektionId={lektion.id} className="mb-5">{opening}</OtterSays>}
+      <TaskArabicHelp taskEn={turn.taskEn} />
       {turn.cue && (
         <Card tone="wash" className="mb-4 p-5">
           <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{partner}</p>
@@ -80,6 +83,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
           {/* Without sound there is nothing to write down: the turn can be passed over, neither right nor wrong. */}
           <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-listen-${n}`} text={turn.spoken} rate={0.8} label={t('action.listen', lang)}
             onFallback={outcome ? undefined : () => onOutcome('unverified', '')} fallbackLabel={t('audio.skipItem', lang)} /></div>
+          <FeedbackArabicHelp keys={['audio.skipItem']} />
         </Card>
       )}
       {turn.spell && (
@@ -87,13 +91,15 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
           <PlayButton lektionId={lektion.id} audioKey={`check-spell-${n}`} text={turn.spoken} rate={0.7} label={t('action.listen', lang)} />
           {showLetters
             ? <p className="mt-3 text-[1.0625rem] text-ink" lang="de">{turn.letterNames}</p>
-            : <button type="button" className="mt-3 min-h-11 text-sm font-bold text-siegel-deep underline" onClick={() => setShowLetters(true)}>{t('check.letters', lang)}</button>}
+            : !outcome && <button type="button" className="mt-3 min-h-11 text-sm font-bold text-siegel-deep underline" onClick={() => setShowLetters(true)}>{t('check.letters', lang)}</button>}
+          <FeedbackArabicHelp keys={['check.letters']} />
         </Card>
       )}
 
-      {beyond && outcome !== 'shown' && (
+      {beyond && !correct && (
         <Card tone="wash" className="mb-4 p-5" role="status">
           <p className="text-[0.9375rem] leading-snug text-ink">{t(outcome ? 'check.beyond.end' : start.started ? 'check.beyond.started' : 'check.beyond', lang)}</p>
+          <FeedbackArabicHelp keys={[outcome ? 'check.beyond.end' : start.started ? 'check.beyond.started' : 'check.beyond']} />
           <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{outcome ? modelAnswer(turn) : start.text}</p>
         </Card>
       )}
@@ -101,6 +107,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
         <>
           <ReadAloudLine lektionId={lektion.id} lineKey={`check-${n}`} text={spokenTarget(turn)} guided hideModel keepVoice onResult={spoken} />
           <button type="button" className="mt-3 min-h-11 text-sm font-bold text-siegel-deep underline" onClick={() => setMode('type')}>{t('check.typeInstead', lang)}</button>
+          <FeedbackArabicHelp keys={['check.typeInstead']} />
         </>
       )}
       {!outcome && mode === 'type' && (
@@ -123,6 +130,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
             />
           )}
           {retry && <p role="status" className="mt-2 text-[0.875rem] text-ink">{t(retry === 'typo' ? 'feedback.typo' : 'otter.retry', lang)}{hint ? ` ${t(hint, lang)}` : ''}</p>}
+          {retry && <FeedbackArabicHelp keys={[retry === 'typo' ? 'feedback.typo' : 'otter.retry', hint]} />}
           <Button className="mt-3" disabled={!value.trim()} onClick={submit}>{t('action.check', lang)}</Button>
         </Card>
       )}
@@ -135,18 +143,23 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
           <p className="mt-1 whitespace-pre-line text-[1.0625rem] text-ink" lang="de">{answer || value}</p>
         </Card>
       )}
-      {outcome === 'shown' && (
+      {correct && (
         <p role="status" className="flex items-center gap-2 text-[0.9375rem] font-bold text-siegel-deep">
-          <Check className="h-4 w-4" aria-hidden="true" /> {t('feedback.correct', lang)}
+          {!showLetters && <Check className="h-4 w-4" aria-hidden="true" />} {t(showLetters ? 'check.practised' : 'feedback.correct', lang)}
         </p>
       )}
-      {outcome === 'shown' && unchecked.length > 0 && (
-        <p className="mt-2 text-[0.875rem] text-graphite">{t('check.unchecked', lang, { word: unchecked.join(', ') })}</p>
+      {correct && <FeedbackArabicHelp keys={[showLetters ? 'check.practised' : 'feedback.correct']} />}
+      {correct && unchecked.length > 0 && (
+        <>
+          <p className="mt-2 text-[0.875rem] text-graphite">{t('check.unchecked', lang, { word: unchecked.join(', ') })}</p>
+          <FeedbackArabicHelp keys={['check.unchecked']} values={{ word: unchecked.join(', ') }} />
+        </>
       )}
       {outcome === 'missed' && (
         <Card tone="wash" className="p-5" role="status">
           <OtterSays lektionId={lektion.id} className="mb-3">{t('otter.check.missed', lang)}</OtterSays>
           <p className="text-sm text-graphite">{t(turn.example ? 'check.example' : 'feedback.correctIs', lang)}</p>
+          <FeedbackArabicHelp keys={['otter.check.missed', turn.example ? 'check.example' : 'feedback.correctIs']} />
           <p className="mt-1 font-display text-xl font-semibold text-ink" lang="de">{modelAnswer(turn)}</p>
           {(turn.example || !ownAnswer(turn)) && !turn.listen && <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-answer-${n}`} text={modelAnswer(turn)} label={t('action.listen', lang)} /></div>}
         </Card>

@@ -22,6 +22,7 @@ import { checkpointFeedback, defersFeedback, sectionComplete } from '../../lib/c
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import CommandHelp from '../../components/lesson/CommandHelp.jsx';
+import { TaskArabicHelp } from '../../components/lesson/ArabicHelp.jsx';
 import { PersonalExchange } from '../../components/lesson/SpeakingStage.jsx';
 import { checkpointExchange, checkpointSpeakingContext } from '../../lib/checkpoint/speaking.js';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
@@ -175,6 +176,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
         {header}
         <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
         {lang !== 'de' && item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+        <TaskArabicHelp taskEn={item.promptEn} />
         <div className="mt-4">
           <ReadAloudLine
             lektionId={item.lektionId}
@@ -216,6 +218,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
         {header}
         <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
         {lang !== 'de' && item.task?.taskEn && <p className="mt-1 text-sm text-graphite">{item.task.taskEn}</p>}
+        <TaskArabicHelp taskEn={item.task?.taskEn} />
         <div className="mt-4">
           <GradedWriting task={item.task} lektionId={item.lektionId} onResult={setPending} />
         </div>
@@ -239,6 +242,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
 
       <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
       {lang !== 'de' && item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+      <TaskArabicHelp taskEn={item.promptEn} />
 
       {isAudio && (
         <div className="mt-4">

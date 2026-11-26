@@ -182,11 +182,23 @@ const REGISTER_EXEMPT = [
   },
 ];
 
+// An HTML direction attribute is code, never a German form of address.
+const registerSurface = (line) => line.replace(/(<[A-Za-z][^>]*\s)dir(?=\s*=)/g, '$1');
+
+test('direction attributes are not informal German, while learner-facing pronouns still are', () => {
+  for (const line of ['<details lang="ar" dir="rtl">', '<bdi dir="ltr" lang="de">', '<p dir={textLang === "ar" ? "rtl" : undefined}>']) {
+    assert.equal(DU_TOKENS.test(registerSurface(line)), false, line);
+  }
+  for (const line of ['<p dir="rtl">Prüfe deine Antwort.</p>', '<span aria-label="Sag es dir">', 'Bitte prüfe, was du schreibst.']) {
+    assert.equal(DU_TOKENS.test(registerSurface(line)), true, line);
+  }
+});
+
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
   const offenders = [];
   for (const f of CHROME_FILES) {
     read(f).split('\n').forEach((line, i) => {
-      if (!DU_TOKENS.test(line)) return;
+      if (!DU_TOKENS.test(registerSurface(line))) return;
       const trimmed = line.trim();
       if (REGISTER_EXEMPT.some((ex) => ex.file === f && ex.line === trimmed)) return;
       offenders.push(`${f}:${i + 1}  ${trimmed}`);

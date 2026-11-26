@@ -70,14 +70,18 @@ function asReadAloud(v) {
   return out;
 }
 
-const CHECK_OUTCOMES = new Set(['shown', 'missed', 'unverified']);
+const CHECK_OUTCOMES = new Set(['shown', 'practised', 'missed', 'unverified']);
 /**
  * Where the final check stands (2026-11-25): the sitting, the verdict of each finished turn, and the person
  * the learner chose from the check's own list („Schwester"), which the later turns are about. Never an answer.
  */
 function asCheck(v) {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
-  const outcomes = asList(v.outcomes).filter((o) => CHECK_OUTCOMES.has(o)).slice(0, 40);
+  const outcomes = asList(v.outcomes).map((o) => {
+    if (CHECK_OUTCOMES.has(o)) return o; // older snapshots
+    return o && CHECK_OUTCOMES.has(o.outcome) && typeof o.revealed === 'boolean'
+      ? { outcome: o.outcome, revealed: o.revealed } : null;
+  }).filter(Boolean).slice(0, 40);
   if (!outcomes.length && !asIndex(v.retake)) return null;
   return { retake: asIndex(v.retake), outcomes, chosen: typeof v.chosen === 'string' && v.chosen ? v.chosen.slice(0, 40) : null };
 }

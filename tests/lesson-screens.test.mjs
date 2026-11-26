@@ -323,3 +323,58 @@ test('I4: the final check reads every can-do state aloud, and a graded answer st
     assert.ok(text(tree).includes(modelAnswer(turns[0])), `${lng}: next to the model answer`);
   }
 });
+
+test('Phase 2b: revealing spelling is persisted as assisted practice and cannot earn a can-do', async () => {
+  const CheckStage = await component('CheckStage');
+  const lesson = c.lektionen[0];
+  const stage = buildLesson({ curriculum: c, lektion: lesson, pool }).stages.find((s) => s.kind === 'check');
+  const turns = checkTurns(stage.check, 0);
+  const index = turns.findIndex((t) => t.spell);
+  for (const lng of LANGS) {
+    lang = lng;
+    for (const revealed of [false, true]) {
+      fresh();
+      let result;
+      const props = { stage, lektion: lesson, onBack: noop, onDone: noop, resume: { retake: 0, outcomes: Array(index).fill('shown') } };
+      let tree = render(CheckStage, props);
+      if (revealed) {
+        elements(tree, (el) => el.type === 'button' && text(el) === t('check.letters', lng))[0].props.onClick();
+        tree = render(CheckStage, props);
+      }
+      elements(tree, (el) => el.type === 'input')[0].props.onChange({ target: { value: turns[index].accepted[0] } });
+      tree = render(CheckStage, props);
+      elements(tree, (el) => el.type === 'Button' && text(el) === t('action.check', lng))[0].props.onClick();
+      tree = render(CheckStage, props);
+      assert.ok(text(tree).includes(t(revealed ? 'check.practised' : 'feedback.correct', lng)));
+      assert.equal(elements(tree, (el) => el.type === 'button' && text(el) === t('check.letters', lng)).length, 0, 'a later reveal cannot erase independent evidence');
+      // The shell advances the real turn; the outer check stores its evidence object.
+      elements(tree, (el) => el.type === 'StageShell')[0].props.onPrimary();
+      hooks.cursor = 0;
+      result = CheckStage(props).props;
+      assert.deepEqual(JSON.parse(JSON.stringify(hooks.slots[2][index])), { outcome: revealed ? 'practised' : 'shown', revealed });
+      assert.ok(result);
+    }
+  }
+});
+
+test('Phase 2b: the actual Arabic help renders closed, RTL, with German examples isolated in Latin letters', async () => {
+  const { isolateLatin } = await load('src/components/lesson/NoticeStage.jsx');
+  const arabic = await import('../src/lib/lesson/arabicHelp.js');
+  const { default: ArabicHelp } = await loadJsxModule('src/components/lesson/ArabicHelp.jsx', {
+    './NoticeStage.jsx': { isolateLatin },
+    '../../lib/lesson/arabicHelp.js': arabic,
+  });
+  const tree = ArabicHelp({ text: arabic.feedbackArabic('check.fault.article') });
+  assert.equal(tree.type, 'details');
+  assert.equal(tree.props.lang, 'ar');
+  assert.equal(tree.props.dir, 'rtl');
+  assert.equal(tree.props.open, undefined);
+  assert.ok(text(tree).includes('مساعدة بالعربية'));
+  const german = elements(tree, (el) => el.type === 'bdi');
+  assert.ok(german.some((el) => text(el).includes('der, die, das, ein, mein')));
+  for (const run of german) {
+    assert.equal(run.props.dir, 'ltr');
+    assert.equal(run.props.lang, 'de');
+    assert.doesNotMatch(text(run), /[\u0600-\u06ff]/);
+  }
+});

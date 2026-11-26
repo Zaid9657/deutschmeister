@@ -339,7 +339,7 @@ test('the welcome, the outcomes and „Kann ich" speak one language: German in D
     const panel = elements(welcome, (el) => el.type === Outcomes)[0];
     const outcomes = await render('src/components/course/CourseOutcomes.jsx', lang, panel.props);
     const done = new Set(['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-cp1']);
-    const kann = await render('src/components/course/KannIch.jsx', lang, { items: canDoList(CURRICULUM_A11, done), checkpointsPassed: 1, checkpointsTotal: 4, streak: 3 });
+    const kann = await render('src/components/course/KannIch.jsx', lang, { items: canDoList(CURRICULUM_A11, done, Object.fromEntries(CURRICULUM_A11.lektionen.slice(0, 3).map((l) => [l.id, l.canDo.map(() => true)]))), checkpointsPassed: 1, checkpointsTotal: 4, streak: 3 });
     // „Line" is KannIch's own component: what it is handed decides its language.
     const lines = elements(kann, (el) => typeof el.type === 'function' && el.props.item).map((el) => words(el.type(el.props)));
     assert.ok(lines.length >= 3);
@@ -385,4 +385,15 @@ test('while steps are open the course comes first and carries the primary button
 test('the intro pill stays off every course page, where it covered their buttons on a phone', () => {
   const routes = read('src/components/FloatingIntroButton.jsx').match(/SUPPRESSED_ROUTES = \[([\s\S]*?)\];/)[1];
   assert.match(routes, /'\/course',/);
+});
+
+test('Phase 2b: Arabic task help sits under typed, read-aloud and writing checkpoint tasks in either interface mode', async () => {
+  for (const lang of LANGS) for (const kind of ['typed', 'readAloud', 'gradedWriting']) {
+    const { PracticeItem, state } = await practiceItem(lang);
+    const item = { ...typedItem, kind, promptEn: 'Read the sentence aloud.', task: { taskEn: 'Write a short message.' } };
+    const tree = state.render(PracticeItem, { item });
+    const help = elements(tree, (el) => el.type === 'TaskArabicHelp');
+    assert.equal(help.length, 1, lang + '/' + kind);
+    assert.equal(help[0].props.taskEn, kind === 'gradedWriting' ? item.task.taskEn : item.promptEn);
+  }
 });

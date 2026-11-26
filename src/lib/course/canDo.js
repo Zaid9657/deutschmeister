@@ -1,16 +1,5 @@
-// "Kann ich": what a learner has practised to do in German, from what the course already records
-// (Wave 1 item 7, 2026-10-14). The course home used to lead with XP — the minutes of finished
-// nodes, i.e. activity. This shows the course's own can-do lines instead:
-//
-//   open   the Lektion is not finished yet;
-//   shown  the Lektion is finished: its tasks asked for exactly these things;
-//   again  the checkpoint that closes the Lektion's chapter is passed as well — a later check with
-//          new tasks (a retake is a new paper). It checks the CHAPTER, not every line one by one,
-//          and the copy says so.
-//
-// No new storage: both facts are path nodes the course home already loads. How much help a run
-// needed is not stored per Lektion yet (lesson_progress has no column for it) — that waits for the
-// owner-applied migration batch, with FSRS.
+// Course-home ticks require the individual final-check evidence saved on this device.
+// A chapter pass has no per-can-do or skill evidence and cannot supply missing ticks.
 import { A11_META } from '../../data/curricula/a11.meta.js';
 
 // ponytail: an id is `<lektionId>#<n>`, the line's place in `lektion.canDo`; give the entries
@@ -37,18 +26,13 @@ export function shownLines(lektion, lang = 'en') {
   return canDoLines(lektion, lang).map((line, i) => shown[i]?.[lang === 'de' ? 'de' : 'en'] || line);
 }
 
-/**
- * Every can-do of the level in course order, with its state; `done` is the set of finished path node ids. `checked` is what the
- * Lektionen's final checks showed on this device (`checkShown.js`): a can-do the check did not show is `practise`, never ticked
- * (Claude score of fd8f8dba, MAJOR); until the chapter checkpoint is passed, that is.
- */
+/** Every can-do in course order; completion alone is not evidence of an ability. */
 export function canDoList(curriculum, done = new Set(), checked = {}) {
   return curriculum.lektionen.flatMap((l) => {
-    const cp = checkpointFor(curriculum, l.nr);
-    const state = !done.has(l.id) ? 'open' : cp && done.has(cp.id) ? 'again' : 'shown';
+    const state = !done.has(l.id) ? 'open' : 'shown';
     // A finished Lektion claims what its check showed (`shownLines`), an open one the can-do it works towards.
     const [de, en] = state === 'open' ? [l.canDo || [], canDoLines(l, 'en')] : [shownLines(l, 'de'), shownLines(l, 'en')];
     const seen = checked?.[l.id];
-    return de.map((line, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de: line, en: en[i], state: state === 'shown' && Array.isArray(seen) && seen[i] === false ? 'practise' : state }));
+    return de.map((line, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de: line, en: en[i], state: state === 'open' ? 'open' : seen?.[i] === true ? 'shown' : 'practise' }));
   });
 }

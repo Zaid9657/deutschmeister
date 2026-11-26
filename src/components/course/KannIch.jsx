@@ -4,8 +4,7 @@ import { useLessonLang } from '../../lib/lesson/strings.js';
 /**
  * "Kann ich" on the course home (Wave 1, 2026-10-14): ability, not activity. It took the place of
  * the XP tile, and it is the first thing a returning learner reads. The lines are the course's own
- * can-dos and their states come from src/lib/course/canDo.js; a double tick means the chapter
- * checkpoint after that Lektion is passed too. Chrome and can-dos follow the language toggle, like
+ * can-dos and their states come from src/lib/course/canDo.js; ticks name only abilities shown in a final check. Chrome and can-dos follow the language toggle, like
  * the rest of the course home.
  */
 export default function KannIch({ items, checkpointsPassed, checkpointsTotal, streak = 0 }) {
@@ -18,11 +17,11 @@ export default function KannIch({ items, checkpointsPassed, checkpointsTotal, st
   return (
     <section aria-labelledby="kann-ich-title" className="rounded-clay border border-rule bg-white p-4">
       <h2 id="kann-ich-title" className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">
-        {de ? 'Kann ich · was Sie auf Deutsch können' : 'Kann ich · what you can do in German'}
+        {de ? 'Kann ich · was Sie im Abschlusscheck gezeigt haben' : 'Kann ich · what you showed in your final checks'}
       </h2>
       <p className="mt-1 text-[0.875rem] text-graphite">
         <span className="font-display text-[1.5rem] font-semibold leading-none text-ink">{shown.length}</span>{' '}
-        {de ? `von ${items.length} Zielen, aus Ihren abgeschlossenen Lektionen` : `of ${items.length} can-dos, from your finished Lektionen`}
+        {de ? `von ${items.length} Zielen, in Ihren Abschlusschecks gezeigt` : `of ${items.length} can-dos, shown in your final checks`}
         {practise > 0 && <span className="block">{de ? `${practise} ${practise === 1 ? 'Ziel' : 'Ziele'} noch zu üben` : `${practise} still to practise`}</span>}
       </p>
       <ul className="mt-3 space-y-1.5">
@@ -53,13 +52,11 @@ export default function KannIch({ items, checkpointsPassed, checkpointsTotal, st
 }
 
 function Line({ item, de }) {
-  const Icon = item.state === 'again' ? CheckCheck : Check;
   return (
     <li className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
+      <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
       <span>
         {de ? item.de : item.en || item.de}
-        {item.state === 'again' && <span className="sr-only">{de ? ' (Checkpoint des Kapitels bestanden)' : ' (chapter checkpoint passed)'}</span>}
       </span>
     </li>
   );

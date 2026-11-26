@@ -1350,3 +1350,58 @@ test('fronted participles keep their correct case classification when a frame no
   assert.equal(typedResult(born, 'geboren wurde ich am 23. März 1997.'), RESULT.TYPO);
   assert.equal(typedResult(born, 'Geboren Wurde ich am 23. März 1997.'), RESULT.TYPO);
 });
+
+test('Phase 2b: individual evidence excludes a reveal, also after saving and resuming', async () => {
+  const { packRun, unpackRun } = await import('../src/lib/lesson/runState.js');
+  const turns = checkTurns({ ...CURRICULUM_A11.lektionen[0].guided.check, lexicon: courseLexicon(CURRICULUM_A11) }, 0);
+  const outcomes = turns.map(() => ({ outcome: 'shown', revealed: false }));
+  const spelling = turns.findIndex((turn) => turn.spell);
+  assert.ok(spelling >= 0);
+  assert.equal(typedResult(turns[spelling], turns[spelling].accepted[0]), RESULT.CORRECT);
+  outcomes[spelling] = { outcome: 'practised', revealed: true, answer: 'never retain this' };
+  const saved = packRun({ flow: 'guided', stageKey: 'check', check: { retake: 0, outcomes } }, 1000);
+  const resumed = unpackRun(saved, 1001, 'guided');
+  assert.deepEqual(resumed.check.outcomes[spelling], { outcome: 'practised', revealed: true });
+  assert.equal(JSON.stringify(saved).includes('never retain this'), false);
+  assert.equal(canDoShown(turns, resumed.check.outcomes, 4)[turns[spelling].canDo], false);
+  outcomes[spelling] = { outcome: 'shown', revealed: false };
+  assert.ok(canDoShown(turns, outcomes, 4).every(Boolean));
+  assert.deepEqual(canDoShown([], [], 1), [false], 'no turn is no evidence');
+});
+
+test('Phase 2b: the task distinguishes naming a purchase from choosing whether to buy', () => {
+  const lexicon = courseLexicon(CURRICULUM_A11);
+  const turn = checkTurns({ ...CURRICULUM_A11.lektionen[3].guided.check, lexicon }, 0).find((t) => t.taskEn.startsWith('Say what you are buying'));
+  const whether = { ...turn, taskEn: 'Say whether you are buying anything, in one sentence.', taskDe: 'Sagen Sie in einem Satz, ob Sie etwas kaufen.' };
+  for (const answer of ['Ich kaufe nichts.', 'Heute kaufe ich nichts.']) {
+    assert.equal(typedResult(turn, answer), RESULT.WRONG);
+    assert.equal(faultHintKey(turn, answer), 'check.fault.task', 'German is fine; it names no purchase');
+    assert.equal(typedResult(whether, answer), RESULT.CORRECT, 'a whether-task permits buying nothing');
+  }
+  assert.equal(typedResult(turn, 'Heute kaufe ich den Stuhl.'), RESULT.CORRECT);
+  assert.equal(typedResult(whether, 'Heute ich kaufe nichts.'), RESULT.WRONG);
+});
+
+test('Phase 2b: a payment question can ask the current price without repeating the object', () => {
+  const lexicon = courseLexicon(CURRICULUM_A11);
+  for (const nr of [4, 10]) {
+    const turn = checkTurns({ ...CURRICULUM_A11.lektionen[nr - 1].guided.check, lexicon }, 0).find((t) => t.taskEn === (nr === 4 ? 'Ask what it costs.' : 'Ask what the ticket costs.'));
+    for (const answer of ['Was muss ich bezahlen?', 'Wie viel muss ich bezahlen?', 'Was muss ich zahlen?']) assert.equal(typedResult(turn, answer), RESULT.CORRECT, answer);
+    for (const answer of ['Was ich muss bezahlen?', 'Was muss ich bezahle?']) assert.notEqual(typedResult(turn, answer), RESULT.CORRECT, answer);
+  }
+});
+
+test('Phase 2b: correct determiners with subject-number errors receive the verb hint', () => {
+  const lexicon = courseLexicon(CURRICULUM_A11);
+  for (const [nr, task, bad, good] of [
+    [5, 'Say what colour your exercise book is, in one sentence.', 'Mein Heft sind blau.', 'Mein Heft ist blau.'],
+    [12, 'Say who is coming to your party, in one sentence.', 'Meine Eltern kommt.', 'Meine Eltern kommen.'],
+  ]) {
+    const turn = checkTurns({ ...CURRICULUM_A11.lektionen[nr - 1].guided.check, lexicon }, 0).find((t) => t.taskEn === task);
+    assert.equal(typedResult(turn, bad), RESULT.WRONG);
+    assert.equal(faultHintKey(turn, bad), 'check.fault.verb');
+    assert.equal(typedResult(turn, good), RESULT.CORRECT);
+  }
+  const turn = checkTurns({ ...CURRICULUM_A11.lektionen[11].guided.check, lexicon }, 0).find((t) => t.people);
+  assert.equal(faultHintKey(turn, 'Mein Eltern kommt.'), 'check.fault.article', 'a wrong determiner still gets its own hint');
+});

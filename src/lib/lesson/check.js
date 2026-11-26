@@ -432,6 +432,8 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  * what the standard §3 says capitalisation is worth; it is NOT silently correct
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
+const accentsFolded = (s) => s.normalize('NFD').replace(/\p{M}/gu, '');
+
 export function checkAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false, spelledLine = null,
   contractions = false, numerals = false, sentence = null,
@@ -458,7 +460,7 @@ export function checkAnswer(userInput, expected, {
   if (sentence?.opening && !keepsOpening(userInput, sentence.opening)) {
     const opening = String(userInput).trim().split(/\s+/).slice(0, sentence.opening.split(/\s+/).length).join(' ');
     // The required opening still permits the same spelling slip as the sentence.
-    if (checkAnswer(opening, sentence.opening, { caseSensitive }).result === RESULT.WRONG) {
+    if (checkAnswer(accentsFolded(opening), accentsFolded(sentence.opening), { caseSensitive }).result === RESULT.WRONG) {
       return { result: RESULT.WRONG, expected: accepted[0] || '', reason: 'task' };
     }
   }
@@ -491,6 +493,13 @@ export function checkAnswer(userInput, expected, {
     return caseSensitive && !firstLetterOnly(rawUser, raw(a))
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
+  }
+  // Phone keyboards often omit accents in loanwords. German umlauts were already folded
+  // by prepare, so schon/schön remain different words. A selected/tiled/spelled answer gets no slip credit.
+  if (!spellingMode && !choice && !wordOrder) {
+    const accented = accepted.find((a) => accentsFolded(prepare(a)) === accentsFolded(user)
+      && (!caseSensitive || accentsFolded(rawUser) === accentsFolded(raw(a))));
+    if (accented) return { result: RESULT.TYPO, expected: accented };
   }
   // The whole spelled word typed where one letter of it was asked („T-S-C-H-Ü-S-S“ for „T-S-C-H-___-S-S“).
   if (spelledLine && /^\s*\p{L}(?:\s*[-–\s]\s*\p{L})+[.!]?\s*$/u.test(String(userInput))) {

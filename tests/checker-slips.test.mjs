@@ -141,3 +141,15 @@ test('no short-word slip the checker forgives is itself a grammar word or anothe
   }
   assert.ok(forgiven > 0, 'the rule forgives some short slips');
 });
+
+test('Phase 2b: required openings fold accents while the full answer retains its typo verdict', () => {
+  for (const opening of ['Das Café', 'Das Café hat']) {
+    const options = { sentence: { opening } };
+    assert.equal(checkAnswer('Das Cafe hat auch Kuchen.', 'Das Café hat auch Kuchen.', options).result, RESULT.TYPO);
+    assert.equal(checkAnswer('Das Café hat auch Kuchen.', 'Das Café hat auch Kuchen.', options).result, RESULT.CORRECT);
+    assert.equal(checkAnswer('Heute hat das Café auch Kuchen.', 'Das Café hat auch Kuchen.', options).reason, 'task');
+  }
+  const item = items.find((i) => i.answer === 'Das Café hat auch Kuchen.');
+  assert.ok(item);
+  assert.equal(grade(item, 'Das Cafe hat auch Kuchen.'), RESULT.TYPO);
+});

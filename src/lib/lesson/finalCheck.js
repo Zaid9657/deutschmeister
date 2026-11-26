@@ -118,16 +118,19 @@ const bareNounFault = (lexicon) => (prep, noun) => {
   return true;
 };
 /** A determiner that does not fit its noun anywhere in a typed answer, an own noun's included. */
-export const articleFaultIn = (lexicon, typed) => {
+const determinerFaultIn = (lexicon, typed) => {
   // („Was für ein Gegenstand ist das?“: „für“ asks for no case here.)
   // („um ein Uhr“ is one o'clock: no article.)
   const text = String(typed).replace(/(?<!\p{L})(was)\s+für\s+(?=ein)/giu, '$1 ').replace(/(?<=(?<!\p{L})(?:um|ist(?:\s+es)?|ab|bis|gegen|vor|nach)\s+)ein(?=\s+Uhr(?!\p{L}))/giu, '1');
   const opts = { readings: (n) => readingsIn(lexicon, n), bareFault: bareNounFault(lexicon) };
-  return nounPhraseFault(text, opts) || subjectNumberFault(text, opts)
+  return nounPhraseFault(text, opts)
     || phraseFault(text, { readings: opts.readings, isVerbNoun: (n) => Boolean(lexicon?.verbs?.has?.(fold(n))), isLanguage: (n) => OWN_KIND.language.has(fold(n)),
       isPlace: (n) => { const w = fold(n); return OWN_KIND.place.has(w) && !COUNTRY_ARTICLE[w] && !COUNTRY_MAY_HAVE[w]; },
       countable: (n) => { const w = fold(n); const g = lexicon?.genders?.get?.(w); return Boolean(g) && !g.includes('pl') && !MASS.has(w) && !DONE_BARE.has(w) && !DAYS.includes(w) && !MONTHS.includes(asciiUmlauts(w)) && !DAY_PARTS.includes(w) && !['fussball', 'fußball', 'zeit', 'durst', 'hunger'].includes(w); } });
 };
+// Preserve the grading veto while keeping its diagnostic cause separate.
+export const articleFaultIn = (lexicon, typed) => determinerFaultIn(lexicon, typed)
+  || subjectNumberFault(typed, { readings: (n) => readingsIn(lexicon, n) });
 const STEMS = new Set(COUNTRY_STEMS.map((s) => fold(s)));
 /** A language or a nationality is no place („Ich komme aus Syrisch.“, „… aus Syrer.“). */
 const notPlace = (w) => OWN_KIND.language.has(w) || LANGUAGE_SHAPE_FOLDED.test(w) || (/(?:er|erin|in|e)$/.test(w) && !OWN_KIND.place.has(w) && [2, 4].some((n) => STEMS.has(w.slice(0, -n)) && /(?:er|erin)$/.test(w)));
@@ -3340,7 +3343,11 @@ function reasonFor(turn, value, core) {
   if (englishIn(turn, value)) return 'english';
   if ((turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, value)) return 'task';
   if (!turn.listen && !turn.spell && addressFault(String(value), turn)) return 'address';
-  if (!turn.listen && !turn.spell && !turn.ownName && articleFaultIn(turn.lexicon, spelledOut(westernDigits(value), turn.lexicon))) return 'article';
+  if (!turn.listen && !turn.spell && !turn.ownName) {
+    const text = spelledOut(westernDigits(value), turn.lexicon);
+    if (determinerFaultIn(turn.lexicon, text)) return 'article';
+    if (subjectNumberFault(text, { readings: (n) => readingsIn(turn.lexicon, n) })) return 'agreement';
+  }
   // What the last look of `coreRule` found wrong wherever it stands („Ich gehe gern im Kino.“, „Gern ich komme mit.“).
   const [vetoed, veto] = core === RESULT.WRONG && !turn.spell && !turn.listen ? coreRule(turn, value) : [];
   if (vetoed === RESULT.WRONG && VETOES.has(veto)) return veto;
@@ -4176,7 +4183,9 @@ export const modelAnswer = (turn) => turn.example || (turn.ownName ? `${turn.acc
 
 /** Per can-do (by index): true when every turn of it was shown. */
 export function canDoShown(turns, outcomes, count) {
-  return Array.from({ length: count }, (_, i) => turns.every((turn, j) => turn.canDo !== i || outcomes[j] === 'shown'));
+  return Array.from({ length: count }, (_, i) => turns.some((turn) => turn.canDo === i)
+    && turns.every((turn, j) => turn.canDo !== i || (outcomes[j] === 'shown'
+      || (outcomes[j]?.outcome === 'shown' && outcomes[j].revealed === false))));
 }
 
 /** The parts to repeat for the can-dos not shown, each named once (a can-do may name more than one part). */
