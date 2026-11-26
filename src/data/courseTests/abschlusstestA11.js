@@ -57,7 +57,7 @@ export const abschlusstestA11 = {
   title: 'Abschlusstest A1.1 (Kurzversion)',
   intro:
     'Das ist der Abschlusstest Ihres A1.1-Kurses. Hören und Lesen werden automatisch bewertet; ' +
-    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 5 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 6 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
     'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Eine freie Mitteilung und Sprechen sind nicht enthalten. ' +
     'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
     'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +
@@ -85,9 +85,10 @@ export const abschlusstestA11 = {
       key: 'hoeren',
       title: 'Hören',
       minutes: 15,
-      // Its keys come from the database, so its mark is written here: one answer throughout („b“) takes 4 of the 8
-      // (tests/fixtures/a11-final-listening.json), so the section needs 5, like Lesen (Claude score, 2026-11-25).
-      passMark: 5,
+      // Its keys come from the database, so its mark is written here. One answer throughout („b“) takes 4 of the 8, and one
+      // place throughout (always the second option, as the runner shows them in stored order) takes 5
+      // (tests/fixtures/a11-final-listening.json): the section needs one more than either, 6 (Claude score of fd8f8dba, 2026-11-25).
+      passMark: 6,
       instructions: 'Eine Aufnahme mit kurzen Dialogen und Durchsagen am Bahnhof. Sie hören sie zweimal. Die acht Fragen gehören zu den ersten sechs Teilen der Aufnahme.',
       instructionsEn: 'A recording with short conversations and announcements at a station. You hear it twice. The eight questions belong to the first six parts of the recording.',
       parts: [

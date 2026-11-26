@@ -1,0 +1,4410 @@
+{
+ "L1T0S0": {
+  "right": [
+   "Guten Tag!",
+   "Guten Tag, Frau Kaya!",
+   "Hallo!",
+   "Hallo, Frau Kaya!",
+   "Guten Tag! Ich heiße Samira.",
+   "Guten Tag, ich bin Omar Haddad.",
+   "Guten Morgen, Frau Kaya!",
+   "Guten Tag, Frau Kaya. Mein Name ist Karim Nasser.",
+   "Hallo, guten Tag!",
+   "Guten Tag! Ich bin neu hier.",
+   "Guten Tag, Frau Kaya! Wie geht es Ihnen?",
+   "Guten Tag! Ich habe ein Zimmer reserviert."
+  ],
+  "wrong": [
+   {
+    "a": "Guten Tak!",
+    "why": "Spelling: Tag, not Tak",
+    "fix": "Guten Tag!"
+   },
+   {
+    "a": "Gute Tag, Frau Kaya!",
+    "why": "Wrong ending: der Tag needs guten",
+    "fix": "Guten Tag, Frau Kaya!"
+   },
+   {
+    "a": "Hallo, Herr Kaya!",
+    "why": "Frau Kaya is a woman: Frau, not Herr",
+    "fix": "Hallo, Frau Kaya!"
+   },
+   {
+    "a": "Hello, Frau Kaya!",
+    "why": "English word",
+    "fix": "Hallo, Frau Kaya!"
+   },
+   {
+    "a": "Guten Tag! Ich heißt Samira.",
+    "why": "Wrong verb ending: ich heiße",
+    "fix": "Guten Tag! Ich heiße Samira."
+   },
+   {
+    "a": "Guten Tag! Bin ich Omar.",
+    "why": "Verb in the wrong place: ich bin",
+    "fix": "Guten Tag! Ich bin Omar."
+   },
+   {
+    "a": "Tschüss, Frau Kaya!",
+    "why": "Does not do the task: this says goodbye",
+    "fix": "Hallo, Frau Kaya!"
+   },
+   {
+    "a": "Guten Tag, Frau Kaya! Wie geht es dir?",
+    "why": "Wrong register: Frau Kaya gets Sie, so Ihnen",
+    "fix": "Guten Tag, Frau Kaya! Wie geht es Ihnen?"
+   }
+  ]
+ },
+ "L1T1S0": {
+  "right": [
+   "Ich heiße Samira.",
+   "Ich heiße Omar Haddad.",
+   "Mein Name ist Karim Nasser.",
+   "Ich bin Fatima.",
+   "Ich heiße Yusuf Demir.",
+   "Mein Name ist Maria Schneider.",
+   "Ich heiße Ahmad.",
+   "Mein Name ist Nour Khalil.",
+   "Ich bin Hassan Saleh.",
+   "Ich heiße Leila, und Sie?",
+   "Guten Tag, ich heiße Tarek Mansour.",
+   "Mein Vorname ist Rana, mein Nachname ist Haddad."
+  ],
+  "wrong": [
+   {
+    "a": "Ich heißen Samira.",
+    "why": "Wrong verb ending: ich heiße",
+    "fix": "Ich heiße Samira."
+   },
+   {
+    "a": "Heiße Omar.",
+    "why": "Missing subject ich",
+    "fix": "Ich heiße Omar."
+   },
+   {
+    "a": "Ich Karim heiße.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich heiße Karim."
+   },
+   {
+    "a": "Mein Name bin Fatima.",
+    "why": "Wrong verb: mein Name ist",
+    "fix": "Mein Name ist Fatima."
+   },
+   {
+    "a": "Meine Name ist Nour.",
+    "why": "Wrong possessive: der Name, so mein",
+    "fix": "Mein Name ist Nour."
+   },
+   {
+    "a": "My name ist Hassan.",
+    "why": "English words",
+    "fix": "Mein Name ist Hassan."
+   },
+   {
+    "a": "Ich heiße Ahmad, und du?",
+    "why": "Wrong register: Frau Kaya gets Sie",
+    "fix": "Ich heiße Ahmad, und Sie?"
+   },
+   {
+    "a": "Ich komme aus Syrien.",
+    "why": "Does not do the task: says where you come from, not your name",
+    "fix": "Ich heiße Rana."
+   }
+  ]
+ },
+ "L1T3S0": {
+  "right": [
+   "Gut, danke.",
+   "Danke, gut.",
+   "Mir geht es gut, danke.",
+   "Sehr gut, danke! Und Ihnen?",
+   "Es geht mir gut, danke.",
+   "Gut, danke. Und Ihnen?",
+   "Es geht.",
+   "Nicht so gut, ich bin müde.",
+   "Danke, mir geht es sehr gut.",
+   "Mir geht's gut, danke.",
+   "Ganz gut, danke, und Ihnen?",
+   "Prima, danke! Wie geht es Ihnen?"
+  ],
+  "wrong": [
+   {
+    "a": "Ich geht es gut.",
+    "why": "Wrong case: mir, not ich",
+    "fix": "Mir geht es gut."
+   },
+   {
+    "a": "Mir geht gut, danke.",
+    "why": "Missing subject es",
+    "fix": "Mir geht es gut, danke."
+   },
+   {
+    "a": "Mir gehe es gut.",
+    "why": "Wrong verb ending: es geht",
+    "fix": "Mir geht es gut."
+   },
+   {
+    "a": "Gut, danke. Und dir?",
+    "why": "Wrong register: Frau Kaya gets Sie, so Ihnen",
+    "fix": "Gut, danke. Und Ihnen?"
+   },
+   {
+    "a": "Gut, Dank.",
+    "why": "Spelling: danke, not the noun Dank",
+    "fix": "Gut, danke."
+   },
+   {
+    "a": "Gut, merci.",
+    "why": "French word",
+    "fix": "Gut, danke."
+   },
+   {
+    "a": "Mir es geht gut.",
+    "why": "Verb in the wrong place",
+    "fix": "Mir geht es gut."
+   },
+   {
+    "a": "Ich heiße Omar.",
+    "why": "Does not do the task: says your name, not how you are",
+    "fix": "Gut, danke."
+   }
+  ]
+ },
+ "L1T4S0": {
+  "right": [
+   "Wie geht es Ihnen?",
+   "Und Ihnen?",
+   "Und wie geht es Ihnen?",
+   "Wie geht es Ihnen, Frau Kaya?",
+   "Und Ihnen, Frau Kaya?",
+   "Wie geht's Ihnen?",
+   "Frau Kaya, wie geht es Ihnen?",
+   "Und wie geht es Ihnen, Frau Kaya?",
+   "Wie geht es Ihnen denn?",
+   "Geht es Ihnen auch gut?",
+   "Danke, gut. Und Ihnen?",
+   "Wie geht es Ihnen heute?"
+  ],
+  "wrong": [
+   {
+    "a": "Wie geht es dir?",
+    "why": "Wrong register: Frau Kaya gets Sie",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wie geht es Sie?",
+    "why": "Wrong case: Ihnen, not Sie",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wie geht es ihnen?",
+    "why": "Spelling: ihnen means them; polite Ihnen has a capital I",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wie gehst es Ihnen?",
+    "why": "Wrong verb ending: es geht",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wie es geht Ihnen?",
+    "why": "Verb in the wrong place",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wo geht es Ihnen?",
+    "why": "Wrong question word: wie",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "How geht es Ihnen?",
+    "why": "English word",
+    "fix": "Wie geht es Ihnen?"
+   },
+   {
+    "a": "Wie heißen Sie?",
+    "why": "Does not do the task: asks her name",
+    "fix": "Wie geht es Ihnen?"
+   }
+  ]
+ },
+ "L2T0S0": {
+  "right": [
+   "Ich komme aus Syrien.",
+   "Ich komme aus dem Irak.",
+   "Ich komme aus Marokko.",
+   "Ich komme aus der Türkei.",
+   "Guten Tag, ich komme aus Ägypten.",
+   "Ich komme aus dem Libanon.",
+   "Ich komme aus Afghanistan.",
+   "Ich komme aus Damaskus in Syrien.",
+   "Ich komme aus Tunesien, aus Tunis.",
+   "Ich bin aus Jordanien.",
+   "Ich komme aus der Ukraine.",
+   "Ich komme aus Algerien, aber ich wohne jetzt in Köln."
+  ],
+  "wrong": [
+   {
+    "a": "Ich komme aus Türkei.",
+    "why": "Missing article: aus der Türkei",
+    "fix": "Ich komme aus der Türkei."
+   },
+   {
+    "a": "Ich komme aus die Türkei.",
+    "why": "Wrong case: aus takes the dative, der Türkei",
+    "fix": "Ich komme aus der Türkei."
+   },
+   {
+    "a": "Ich kommt aus Syrien.",
+    "why": "Wrong verb ending: ich komme",
+    "fix": "Ich komme aus Syrien."
+   },
+   {
+    "a": "Ich komme von Marokko.",
+    "why": "Wrong preposition: aus",
+    "fix": "Ich komme aus Marokko."
+   },
+   {
+    "a": "Komme aus Ägypten.",
+    "why": "Missing subject ich",
+    "fix": "Ich komme aus Ägypten."
+   },
+   {
+    "a": "Ich aus Tunesien komme.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich komme aus Tunesien."
+   },
+   {
+    "a": "Ich komme aus Syrien, und du?",
+    "why": "Wrong register: Herr Weber gets Sie",
+    "fix": "Ich komme aus Syrien, und Sie?"
+   },
+   {
+    "a": "Ich wohne in Berlin.",
+    "why": "Does not do the task: says where you live, not where you come from",
+    "fix": "Ich komme aus dem Irak."
+   }
+  ]
+ },
+ "L2T3S0": {
+  "right": [
+   "Was sind Sie von Beruf?",
+   "Und Sie? Was sind Sie von Beruf?",
+   "Was machen Sie beruflich?",
+   "Was ist Ihr Beruf?",
+   "Herr Weber, was sind Sie von Beruf?",
+   "Und was sind Sie von Beruf, Herr Weber?",
+   "Was arbeiten Sie?",
+   "Was ist denn Ihr Beruf?",
+   "Was sind Sie denn von Beruf?",
+   "Und Ihr Beruf, Herr Weber?",
+   "Was ist Ihr Beruf, Herr Weber?",
+   "Entschuldigung, was machen Sie beruflich?"
+  ],
+  "wrong": [
+   {
+    "a": "Was bist du von Beruf?",
+    "why": "Wrong register: Herr Weber gets Sie",
+    "fix": "Was sind Sie von Beruf?"
+   },
+   {
+    "a": "Was ist Ihre Beruf?",
+    "why": "Wrong possessive ending: der Beruf, so Ihr",
+    "fix": "Was ist Ihr Beruf?"
+   },
+   {
+    "a": "Was sind Sie vom Beruf?",
+    "why": "Wrong preposition form: von Beruf",
+    "fix": "Was sind Sie von Beruf?"
+   },
+   {
+    "a": "Was Sie sind von Beruf?",
+    "why": "Verb in the wrong place",
+    "fix": "Was sind Sie von Beruf?"
+   },
+   {
+    "a": "Was seid Sie von Beruf?",
+    "why": "Wrong verb ending: Sie sind",
+    "fix": "Was sind Sie von Beruf?"
+   },
+   {
+    "a": "Wer sind Sie von Beruf?",
+    "why": "Wrong question word: was",
+    "fix": "Was sind Sie von Beruf?"
+   },
+   {
+    "a": "Was ist Ihr Job?",
+    "why": "English word: Beruf",
+    "fix": "Was ist Ihr Beruf?"
+   },
+   {
+    "a": "Ich bin Krankenschwester von Beruf.",
+    "why": "Does not do the task: tells your own job",
+    "fix": "Was sind Sie von Beruf?"
+   }
+  ]
+ },
+ "L2T4S0": {
+  "right": [
+   "Meine Telefonnummer ist 0176 2345 678.",
+   "Meine Nummer ist 0151 9876 543.",
+   "Die Nummer ist 030 456 789.",
+   "Meine Handynummer ist 0172 3344 556.",
+   "Meine Telefonnummer ist null eins sieben sechs, zwei drei vier fünf.",
+   "Meine Nummer ist die 0157 8899 001.",
+   "Meine Telefonnummer lautet 0221 765 432.",
+   "Ich habe die Nummer 0178 5566 778.",
+   "Meine Telefonnummer ist 0176 1122 334, bitte.",
+   "Die Telefonnummer ist 089 123 456.",
+   "Gern, meine Telefonnummer ist 0163 4455 667.",
+   "Meine Handynummer ist 0152 7788 990."
+  ],
+  "wrong": [
+   {
+    "a": "Mein Telefonnummer ist 0176 2345 678.",
+    "why": "Wrong possessive: die Telefonnummer, so meine",
+    "fix": "Meine Telefonnummer ist 0176 2345 678."
+   },
+   {
+    "a": "Meine Telefonnummer bin 0151 9876 543.",
+    "why": "Wrong verb: ist",
+    "fix": "Meine Telefonnummer ist 0151 9876 543."
+   },
+   {
+    "a": "Ist meine Telefonnummer 030 456 789.",
+    "why": "Verb in the wrong place",
+    "fix": "Meine Telefonnummer ist 030 456 789."
+   },
+   {
+    "a": "Deine Telefonnummer ist 0172 3344 556.",
+    "why": "Wrong possessive: your own number is meine",
+    "fix": "Meine Telefonnummer ist 0172 3344 556."
+   },
+   {
+    "a": "Meine Telefonnumer ist 0160 1234 567.",
+    "why": "Spelling: Telefonnummer with mm",
+    "fix": "Meine Telefonnummer ist 0160 1234 567."
+   },
+   {
+    "a": "My Nummer ist 0157 8899 001.",
+    "why": "English word: meine",
+    "fix": "Meine Nummer ist 0157 8899 001."
+   },
+   {
+    "a": "Meine Telefonzahl ist 0178 5566 778.",
+    "why": "Invented word: Telefonnummer",
+    "fix": "Meine Telefonnummer ist 0178 5566 778."
+   },
+   {
+    "a": "Ich wohne in der Bahnhofstraße 5.",
+    "why": "Does not do the task: gives the address, not a phone number",
+    "fix": "Meine Telefonnummer ist 0176 1122 334."
+   }
+  ]
+ },
+ "L2T6S0": {
+  "right": [
+   "Ich heiße Samira Haddad. Ich bin am 12. März 1990 geboren.",
+   "Mein Name ist Omar Khalil. Ich bin am 3. Mai 1985 geboren.",
+   "Guten Tag, ich heiße Fatima Nasser. Ich bin am 21. Juli 1998 geboren.",
+   "Ich heiße Karim Saleh und ich bin am 7. Januar 1979 geboren.",
+   "Sehr geehrte Damen und Herren, mein Name ist Leila Mansour. Ich bin am 15.08.1992 geboren. Mit freundlichen Grüßen, Leila Mansour",
+   "Mein Name ist Yusuf Demir. Geboren bin ich am 30. September 1964.",
+   "Ich heiße Nour Haddad. Mein Geburtsdatum ist der 2. Februar 2001.",
+   "Guten Tag! Ich bin Ahmad Ali. Ich bin am 19. Oktober 1988 geboren. Vielen Dank!",
+   "Ich heiße Rana Saad. Ich bin am 1. April 1995 in Aleppo geboren.",
+   "Mein Vorname ist Tarek, mein Familienname ist Mansour. Ich bin am 25. Dezember 1970 geboren.",
+   "Ich heiße Hassan Ibrahim. Ich wurde am 11. Juni 1983 geboren.",
+   "Ich heiße Mariam Youssef. Am 9. November 1999 bin ich geboren."
+  ],
+  "wrong": [
+   {
+    "a": "Ich heiße Samira Haddad. Ich bin im 12. März 1990 geboren.",
+    "why": "Wrong preposition: am with a date",
+    "fix": "Ich heiße Samira Haddad. Ich bin am 12. März 1990 geboren."
+   },
+   {
+    "a": "Ich heiße Omar Khalil. Ich habe am 3. Mai 1985 geboren.",
+    "why": "Wrong verb: ich bin geboren",
+    "fix": "Ich heiße Omar Khalil. Ich bin am 3. Mai 1985 geboren."
+   },
+   {
+    "a": "Ich heiße Fatima Nasser. Ich am 21. Juli 1998 bin geboren.",
+    "why": "Verb in the wrong place: ich bin am …",
+    "fix": "Ich heiße Fatima Nasser. Ich bin am 21. Juli 1998 geboren."
+   },
+   {
+    "a": "Ich heiße Karim Saleh. Ich bin am 7. Januar geboren.",
+    "why": "Does not do the task: the year is missing",
+    "fix": "Ich heiße Karim Saleh. Ich bin am 7. Januar 1979 geboren."
+   },
+   {
+    "a": "Mein Name ist Leila Mansour. Bin am 15. August 1992 geboren.",
+    "why": "Missing subject ich",
+    "fix": "Mein Name ist Leila Mansour. Ich bin am 15. August 1992 geboren."
+   },
+   {
+    "a": "Ich heißt Yusuf Demir. Ich bin am 30. September 1964 geboren.",
+    "why": "Wrong verb ending: ich heiße",
+    "fix": "Ich heiße Yusuf Demir. Ich bin am 30. September 1964 geboren."
+   },
+   {
+    "a": "Ich heiße Nour Haddad. Ich bin am 2. February 2001 geboren.",
+    "why": "English word: Februar",
+    "fix": "Ich heiße Nour Haddad. Ich bin am 2. Februar 2001 geboren."
+   },
+   {
+    "a": "Meine Name ist Ahmad Ali. Ich bin am 19. Oktober 1988 geboren.",
+    "why": "Wrong possessive: der Name, so mein",
+    "fix": "Mein Name ist Ahmad Ali. Ich bin am 19. Oktober 1988 geboren."
+   }
+  ]
+ },
+ "L3T0S0": {
+  "right": [
+   "Das ist meine Mutter.",
+   "Das ist meine Schwester.",
+   "Meine Mutter.",
+   "Das ist meine Schwester Amal.",
+   "Das ist meine Mutter, sie heißt Salma.",
+   "Das ist meine Mama.",
+   "Das ist meine Schwester. Sie wohnt in Hamburg.",
+   "Das ist meine Mutter, nicht meine Schwester.",
+   "Meine Schwester! Sie ist zwanzig.",
+   "Das ist meine große Schwester Lina.",
+   "Das ist meine Mutter. Sie ist sehr nett.",
+   "Das ist meine kleine Schwester, sie studiert in Damaskus."
+  ],
+  "wrong": [
+   {
+    "a": "Das ist mein Mutter.",
+    "why": "Wrong possessive: die Mutter, so meine",
+    "fix": "Das ist meine Mutter."
+   },
+   {
+    "a": "Das ist deine Schwester.",
+    "why": "Wrong possessive: your own sister is meine",
+    "fix": "Das ist meine Schwester."
+   },
+   {
+    "a": "Das sind meine Mutter.",
+    "why": "Wrong verb ending: das ist",
+    "fix": "Das ist meine Mutter."
+   },
+   {
+    "a": "Ist das meine Schwester.",
+    "why": "Verb in the wrong place: this is question order",
+    "fix": "Das ist meine Schwester."
+   },
+   {
+    "a": "Das ist meine Schwester. Er heißt Amal.",
+    "why": "Wrong pronoun: die Schwester, so sie",
+    "fix": "Das ist meine Schwester. Sie heißt Amal."
+   },
+   {
+    "a": "Das ist meine Sister.",
+    "why": "English word",
+    "fix": "Das ist meine Schwester."
+   },
+   {
+    "a": "Das ist meine Mutter. Sie heißen Salma.",
+    "why": "Wrong verb ending: sie heißt",
+    "fix": "Das ist meine Mutter. Sie heißt Salma."
+   },
+   {
+    "a": "Das ist mein Vater.",
+    "why": "Does not do the task: Lena asks about mother or sister",
+    "fix": "Das ist meine Mutter."
+   }
+  ]
+ },
+ "L3T1S0": {
+  "right": [
+   "Sie ist jung.",
+   "Sie ist alt.",
+   "Sie ist noch jung.",
+   "Sie ist schon alt.",
+   "Sie ist jung, sie ist zweiundzwanzig.",
+   "Sie ist nicht alt, sie ist jung.",
+   "Sie ist ziemlich jung.",
+   "Sie ist sehr jung, erst sechzehn.",
+   "Sie ist alt, sie ist schon siebzig.",
+   "Meine Schwester ist jung.",
+   "Meine Mutter ist nicht mehr jung.",
+   "Sie ist jung, sie ist erst 19 Jahre alt."
+  ],
+  "wrong": [
+   {
+    "a": "Er ist jung.",
+    "why": "Wrong pronoun: she is sie",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Sie sind jung.",
+    "why": "Wrong verb ending: sie ist",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Ist jung.",
+    "why": "Missing subject sie",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Sie jung ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Sie ist junge.",
+    "why": "Wrong ending: after ist the adjective has no ending",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Sie ist young.",
+    "why": "English word",
+    "fix": "Sie ist jung."
+   },
+   {
+    "a": "Sie ist all.",
+    "why": "Spelling makes another word: alt, not all",
+    "fix": "Sie ist alt."
+   },
+   {
+    "a": "Sie ist meine Schwester.",
+    "why": "Does not do the task: says who she is, not young or old",
+    "fix": "Sie ist jung."
+   }
+  ]
+ },
+ "L3T5S0": {
+  "right": [
+   "Woher kommen deine Eltern?",
+   "Und deine Eltern? Woher kommen sie?",
+   "Woher kommen deine Eltern, Lena?",
+   "Lena, woher kommen deine Eltern?",
+   "Und woher kommen deine Eltern?",
+   "Woher kommen denn deine Eltern?",
+   "Woher sind deine Eltern?",
+   "Kommen deine Eltern auch aus Deutschland?",
+   "Und deine Eltern, woher kommen die?",
+   "Wo kommen deine Eltern her?",
+   "Woher stammen deine Eltern?",
+   "Sag mal, woher kommen deine Eltern?"
+  ],
+  "wrong": [
+   {
+    "a": "Woher kommen Ihre Eltern?",
+    "why": "Wrong register: Lena gets du, so deine",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Woher kommt deine Eltern?",
+    "why": "Wrong verb ending: Eltern is plural, so kommen",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Woher kommen dein Eltern?",
+    "why": "Wrong possessive ending: deine Eltern",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Wo kommen deine Eltern?",
+    "why": "Wrong question word: woher",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Woher deine Eltern kommen?",
+    "why": "Verb in the wrong place",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Woher kommen deine Parents?",
+    "why": "English word",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Woher kommen meine Eltern?",
+    "why": "Wrong possessive: her parents are deine Eltern",
+    "fix": "Woher kommen deine Eltern?"
+   },
+   {
+    "a": "Wo wohnen deine Eltern?",
+    "why": "Does not do the task: asks where they live, not where they come from",
+    "fix": "Woher kommen deine Eltern?"
+   }
+  ]
+ },
+ "L3T0S1": {
+  "right": [
+   "Das ist mein Vater.",
+   "Das ist mein Bruder.",
+   "Mein Bruder.",
+   "Das ist mein Vater, er heißt Khaled.",
+   "Das ist mein Bruder Sami.",
+   "Das ist mein Papa.",
+   "Das ist mein Vater. Er wohnt in Kairo.",
+   "Das ist mein Bruder, nicht mein Vater.",
+   "Mein Vater! Er ist sechzig.",
+   "Das ist mein großer Bruder Ali.",
+   "Das ist mein Vater. Er ist Lehrer.",
+   "Das ist mein kleiner Bruder, er spielt gern Fußball."
+  ],
+  "wrong": [
+   {
+    "a": "Das ist meine Vater.",
+    "why": "Wrong possessive: der Vater, so mein",
+    "fix": "Das ist mein Vater."
+   },
+   {
+    "a": "Das ist dein Bruder.",
+    "why": "Wrong possessive: your own brother is mein",
+    "fix": "Das ist mein Bruder."
+   },
+   {
+    "a": "Das ist mein Bruder. Sie heißt Sami.",
+    "why": "Wrong pronoun: der Bruder, so er",
+    "fix": "Das ist mein Bruder. Er heißt Sami."
+   },
+   {
+    "a": "Das ist mein Vater. Er heißen Khaled.",
+    "why": "Wrong verb ending: er heißt",
+    "fix": "Das ist mein Vater. Er heißt Khaled."
+   },
+   {
+    "a": "Das mein Vater ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Das ist mein Vater."
+   },
+   {
+    "a": "Das ist mein Brother.",
+    "why": "English word",
+    "fix": "Das ist mein Bruder."
+   },
+   {
+    "a": "Ist mein Vater.",
+    "why": "Missing subject das",
+    "fix": "Das ist mein Vater."
+   },
+   {
+    "a": "Das ist meine Mutter.",
+    "why": "Does not do the task: Lena asks about father or brother",
+    "fix": "Das ist mein Vater."
+   }
+  ]
+ },
+ "L4T0S0": {
+  "right": [
+   "Was ist das?",
+   "Entschuldigung, was ist das?",
+   "Frau Wolf, was ist das?",
+   "Was ist das, bitte?",
+   "Was ist das denn?",
+   "Guten Tag! Was ist das?",
+   "Entschuldigung, Frau Wolf, was ist das hier?",
+   "Was ist das da?",
+   "Können Sie mir sagen, was das ist?",
+   "Was ist das hier, bitte?",
+   "Hallo, Frau Wolf! Was ist das?",
+   "Und was ist das?"
+  ],
+  "wrong": [
+   {
+    "a": "Was ist dass?",
+    "why": "Spelling makes another word: dass; here das",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "Was das ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "Wer ist das?",
+    "why": "Wrong question word: wer is for people",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "Was bist das?",
+    "why": "Wrong verb ending: das ist",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "What ist das?",
+    "why": "English word",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "Kannst du mir sagen, was das ist?",
+    "why": "Wrong register: Frau Wolf gets Sie",
+    "fix": "Können Sie mir sagen, was das ist?"
+   },
+   {
+    "a": "Was kostet das?",
+    "why": "Does not do the task: asks the price, not what it is",
+    "fix": "Was ist das?"
+   },
+   {
+    "a": "Entschuldigung, Herr Wolf, was ist das?",
+    "why": "Frau Wolf is a woman: Frau, not Herr",
+    "fix": "Entschuldigung, Frau Wolf, was ist das?"
+   }
+  ]
+ },
+ "L4T1S0": {
+  "right": [
+   "Was kostet die Uhr?",
+   "Was kostet das?",
+   "Wie viel kostet die Uhr?",
+   "Und was kostet die Uhr?",
+   "Was kostet die Uhr, bitte?",
+   "Wie teuer ist die Uhr?",
+   "Was kostet sie?",
+   "Schön! Was kostet die Uhr?",
+   "Frau Wolf, wie viel kostet die Uhr?",
+   "Was kostet die denn?",
+   "Und wie viel kostet das?",
+   "Entschuldigung, was kostet die Uhr hier?"
+  ],
+  "wrong": [
+   {
+    "a": "Was kostet der Uhr?",
+    "why": "Wrong article: die Uhr",
+    "fix": "Was kostet die Uhr?"
+   },
+   {
+    "a": "Was kosten die Uhr?",
+    "why": "Wrong verb ending: die Uhr kostet",
+    "fix": "Was kostet die Uhr?"
+   },
+   {
+    "a": "Was die Uhr kostet?",
+    "why": "Verb in the wrong place",
+    "fix": "Was kostet die Uhr?"
+   },
+   {
+    "a": "Wie viele kostet die Uhr?",
+    "why": "Wrong question word: wie viel for a price",
+    "fix": "Wie viel kostet die Uhr?"
+   },
+   {
+    "a": "Was kostet er?",
+    "why": "Wrong pronoun: die Uhr, so sie",
+    "fix": "Was kostet sie?"
+   },
+   {
+    "a": "Was ist der Price?",
+    "why": "English word: der Preis",
+    "fix": "Was ist der Preis?"
+   },
+   {
+    "a": "Was kostet die Ur?",
+    "why": "Spelling: Uhr with h",
+    "fix": "Was kostet die Uhr?"
+   },
+   {
+    "a": "Ich kaufe die Uhr.",
+    "why": "Does not do the task: does not ask the price",
+    "fix": "Was kostet die Uhr?"
+   }
+  ]
+ },
+ "L4T3S0": {
+  "right": [
+   "Was kostet der Stuhl?",
+   "Wie viel kostet der Stuhl?",
+   "Und der Stuhl? Was kostet der?",
+   "Was kostet der Stuhl, bitte?",
+   "Wie teuer ist der Stuhl?",
+   "Und was kostet der Stuhl?",
+   "Entschuldigung, was kostet der Stuhl?",
+   "Frau Wolf, was kostet der Stuhl hier?",
+   "Was kostet denn der Stuhl?",
+   "Und wie viel kostet der Stuhl da?",
+   "Was kostet dieser Stuhl?",
+   "Der Stuhl ist schön. Was kostet er?"
+  ],
+  "wrong": [
+   {
+    "a": "Was kostet die Stuhl?",
+    "why": "Wrong article: der Stuhl",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Was kostet Stuhl?",
+    "why": "Missing article: der Stuhl",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Was kostest der Stuhl?",
+    "why": "Wrong verb ending: der Stuhl kostet",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Der Stuhl was kostet?",
+    "why": "Verb in the wrong place",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Der Stuhl ist schön. Was kostet sie?",
+    "why": "Wrong pronoun: der Stuhl, so er",
+    "fix": "Der Stuhl ist schön. Was kostet er?"
+   },
+   {
+    "a": "Was kostet der Chair?",
+    "why": "English word",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Wo kostet der Stuhl?",
+    "why": "Wrong question word: was or wie viel",
+    "fix": "Was kostet der Stuhl?"
+   },
+   {
+    "a": "Was ist das? Ein Stuhl?",
+    "why": "Does not do the task: does not ask the price",
+    "fix": "Was kostet der Stuhl?"
+   }
+  ]
+ },
+ "L4T5S0": {
+  "right": [
+   "Ich kaufe den Stuhl.",
+   "Ich kaufe die Lampe.",
+   "Ich kaufe einen Tisch.",
+   "Ich kaufe die Uhr und die Lampe.",
+   "Ich nehme den Tisch.",
+   "Ich kaufe das Regal.",
+   "Ich kaufe zwei Stühle.",
+   "Ich kaufe den Stuhl und den Tisch.",
+   "Ich möchte die Uhr kaufen.",
+   "Ich kaufe heute ein Sofa.",
+   "Ich nehme die Lampe, bitte.",
+   "Ich kaufe den Tisch, er ist schön und billig."
+  ],
+  "wrong": [
+   {
+    "a": "Ich kaufe der Stuhl.",
+    "why": "Wrong case: accusative den Stuhl",
+    "fix": "Ich kaufe den Stuhl."
+   },
+   {
+    "a": "Ich kaufe ein Tisch.",
+    "why": "Wrong case: accusative einen Tisch",
+    "fix": "Ich kaufe einen Tisch."
+   },
+   {
+    "a": "Ich kauft die Lampe.",
+    "why": "Wrong verb ending: ich kaufe",
+    "fix": "Ich kaufe die Lampe."
+   },
+   {
+    "a": "Ich die Uhr kaufe.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich kaufe die Uhr."
+   },
+   {
+    "a": "Kaufe die Lampe.",
+    "why": "Missing subject ich",
+    "fix": "Ich kaufe die Lampe."
+   },
+   {
+    "a": "Ich kaufe den Lampe.",
+    "why": "Wrong article: die Lampe",
+    "fix": "Ich kaufe die Lampe."
+   },
+   {
+    "a": "Ich kaufe die Table.",
+    "why": "French/English word: der Tisch",
+    "fix": "Ich kaufe den Tisch."
+   },
+   {
+    "a": "Ich verkaufe den Stuhl.",
+    "why": "Wrong word: verkaufen means sell, you are buying",
+    "fix": "Ich kaufe den Stuhl."
+   }
+  ]
+ },
+ "L4T3S1": {
+  "right": [
+   "Was kostet die Lampe?",
+   "Wie viel kostet die Lampe?",
+   "Und die Lampe? Was kostet die?",
+   "Was kostet die Lampe, bitte?",
+   "Wie teuer ist die Lampe?",
+   "Und was kostet die Lampe?",
+   "Entschuldigung, wie viel kostet die Lampe?",
+   "Frau Wolf, was kostet die Lampe da?",
+   "Was kostet denn die Lampe?",
+   "Die Lampe ist schön. Was kostet sie?",
+   "Was kostet diese Lampe?",
+   "Und die Lampe hier, wie viel kostet sie?"
+  ],
+  "wrong": [
+   {
+    "a": "Was kostet der Lampe?",
+    "why": "Wrong article: die Lampe",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Was kostet Lampe?",
+    "why": "Missing article: die Lampe",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Was kosten die Lampe?",
+    "why": "Wrong verb ending: die Lampe kostet",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Was die Lampe kostet?",
+    "why": "Verb in the wrong place",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Die Lampe ist schön. Was kostet er?",
+    "why": "Wrong pronoun: die Lampe, so sie",
+    "fix": "Die Lampe ist schön. Was kostet sie?"
+   },
+   {
+    "a": "Was kostet die Lamp?",
+    "why": "English word",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Wo kostet die Lampe?",
+    "why": "Wrong question word: was or wie viel",
+    "fix": "Was kostet die Lampe?"
+   },
+   {
+    "a": "Ist die Lampe neu?",
+    "why": "Does not do the task: does not ask the price",
+    "fix": "Was kostet die Lampe?"
+   }
+  ]
+ },
+ "L4T3S2": {
+  "right": [
+   "Was kostet der Tisch?",
+   "Wie viel kostet der Tisch?",
+   "Und der Tisch? Was kostet der?",
+   "Was kostet der Tisch, bitte?",
+   "Wie teuer ist der Tisch?",
+   "Und was kostet der Tisch?",
+   "Entschuldigung, was kostet der Tisch?",
+   "Frau Wolf, wie viel kostet der Tisch hier?",
+   "Was kostet denn der Tisch?",
+   "Der Tisch ist schön. Was kostet er?",
+   "Was kostet dieser Tisch?",
+   "Und wie teuer ist der Tisch da?"
+  ],
+  "wrong": [
+   {
+    "a": "Was kostet die Tisch?",
+    "why": "Wrong article: der Tisch",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Was kostet den Tisch?",
+    "why": "Wrong case: der Tisch is the subject, so der",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Was kostest der Tisch?",
+    "why": "Wrong verb ending: der Tisch kostet",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Was der Tisch kostet?",
+    "why": "Verb in the wrong place",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Der Tisch ist schön. Was kostet es?",
+    "why": "Wrong pronoun: der Tisch, so er",
+    "fix": "Der Tisch ist schön. Was kostet er?"
+   },
+   {
+    "a": "Was kostet der Table?",
+    "why": "English word: der Tisch",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Was kostet der Fisch?",
+    "why": "Spelling makes another word: Fisch is fish; Tisch",
+    "fix": "Was kostet der Tisch?"
+   },
+   {
+    "a": "Ich kaufe den Tisch.",
+    "why": "Does not do the task: does not ask the price",
+    "fix": "Was kostet der Tisch?"
+   }
+  ]
+ },
+ "L5T0S0": {
+  "right": [
+   "Das ist ein Stift.",
+   "Das ist mein Handy.",
+   "Das ist ein Buch.",
+   "Das ist eine Flasche Wasser.",
+   "Das ist mein Wörterbuch.",
+   "Das ist ein Heft und ein Kuli.",
+   "Das ist meine Brille.",
+   "Das sind meine Schlüssel.",
+   "Das ist ein Apfel.",
+   "Das ist mein Ladekabel.",
+   "Das ist eine Schere.",
+   "Das ist mein Portemonnaie, und das ist mein Schlüssel."
+  ],
+  "wrong": [
+   {
+    "a": "Das ist ein Flasche.",
+    "why": "Wrong article: die Flasche, so eine",
+    "fix": "Das ist eine Flasche."
+   },
+   {
+    "a": "Das ist eine Buch.",
+    "why": "Wrong article: das Buch, so ein",
+    "fix": "Das ist ein Buch."
+   },
+   {
+    "a": "Das ist Stift.",
+    "why": "Missing article: ein Stift",
+    "fix": "Das ist ein Stift."
+   },
+   {
+    "a": "Das sind mein Handy.",
+    "why": "Wrong verb ending: one thing, das ist",
+    "fix": "Das ist mein Handy."
+   },
+   {
+    "a": "Das mein Wörterbuch ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Das ist mein Wörterbuch."
+   },
+   {
+    "a": "Das ist meine Handy.",
+    "why": "Wrong possessive: das Handy, so mein",
+    "fix": "Das ist mein Handy."
+   },
+   {
+    "a": "Das ist ein Pen.",
+    "why": "English word: der Stift",
+    "fix": "Das ist ein Stift."
+   },
+   {
+    "a": "Wo ist mein Stift?",
+    "why": "Does not do the task: asks a question instead of saying what it is",
+    "fix": "Das ist mein Stift."
+   }
+  ]
+ },
+ "L5T1S0": {
+  "right": [
+   "Hier.",
+   "Da.",
+   "Hier ist es.",
+   "Es ist hier.",
+   "Da ist es.",
+   "Mein Wörterbuch ist hier.",
+   "Es ist da.",
+   "Hier, in meiner Tasche.",
+   "Da, auf dem Tisch.",
+   "Das Wörterbuch ist da drüben.",
+   "Hier ist mein Wörterbuch.",
+   "Es ist da, neben deinem Heft."
+  ],
+  "wrong": [
+   {
+    "a": "Er ist hier.",
+    "why": "Wrong pronoun: das Wörterbuch, so es",
+    "fix": "Es ist hier."
+   },
+   {
+    "a": "Meine Wörterbuch ist hier.",
+    "why": "Wrong possessive: das Wörterbuch, so mein",
+    "fix": "Mein Wörterbuch ist hier."
+   },
+   {
+    "a": "Es sind hier.",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Es ist hier."
+   },
+   {
+    "a": "Ist hier.",
+    "why": "Missing subject es",
+    "fix": "Es ist hier."
+   },
+   {
+    "a": "Hier es ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Hier ist es."
+   },
+   {
+    "a": "Es ist here.",
+    "why": "English word",
+    "fix": "Es ist hier."
+   },
+   {
+    "a": "Dein Wörterbuch ist da.",
+    "why": "Wrong possessive: your own dictionary is mein",
+    "fix": "Mein Wörterbuch ist da."
+   },
+   {
+    "a": "Das ist ein Wörterbuch.",
+    "why": "Does not do the task: says what it is, not where",
+    "fix": "Es ist hier."
+   }
+  ]
+ },
+ "L5T2S0": {
+  "right": [
+   "Wo ist mein Stift?",
+   "Lena, wo ist mein Stift?",
+   "Wo ist denn mein Stift?",
+   "Entschuldigung, wo ist mein Stift?",
+   "Weißt du, wo mein Stift ist?",
+   "Wo ist mein Stift, Lena?",
+   "Hast du meinen Stift? Wo ist er?",
+   "Mein Stift! Wo ist er?",
+   "Wo ist bloß mein Stift?",
+   "Sag mal, wo ist mein Stift?",
+   "Lena, weißt du, wo mein Kuli ist?",
+   "Ich suche meinen Stift. Wo ist er?"
+  ],
+  "wrong": [
+   {
+    "a": "Wo ist meine Stift?",
+    "why": "Wrong possessive: der Stift, so mein",
+    "fix": "Wo ist mein Stift?"
+   },
+   {
+    "a": "Wo ist dein Stift?",
+    "why": "Wrong possessive: you look for your own pen, mein",
+    "fix": "Wo ist mein Stift?"
+   },
+   {
+    "a": "Wo mein Stift ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wo ist mein Stift?"
+   },
+   {
+    "a": "Wer ist mein Stift?",
+    "why": "Wrong question word: wo",
+    "fix": "Wo ist mein Stift?"
+   },
+   {
+    "a": "Ich suche mein Stift. Wo ist er?",
+    "why": "Wrong case: accusative meinen Stift",
+    "fix": "Ich suche meinen Stift. Wo ist er?"
+   },
+   {
+    "a": "Wissen Sie, wo mein Stift ist?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Weißt du, wo mein Stift ist?"
+   },
+   {
+    "a": "Wo ist mein Pen?",
+    "why": "English word",
+    "fix": "Wo ist mein Stift?"
+   },
+   {
+    "a": "Mein Stift ist hier.",
+    "why": "Does not do the task: does not ask where",
+    "fix": "Wo ist mein Stift?"
+   }
+  ]
+ },
+ "L5T3S0": {
+  "right": [
+   "Mein Heft ist blau.",
+   "Es ist rot.",
+   "Mein Heft ist grün.",
+   "Es ist gelb.",
+   "Mein Heft hat die Farbe Blau.",
+   "Mein Heft ist schwarz und weiß.",
+   "Es ist hellblau.",
+   "Mein Heft ist rosa.",
+   "Das Heft ist orange.",
+   "Mein Heft ist braun, wie mein Buch.",
+   "Es ist dunkelgrün.",
+   "Mein Heft ist lila, das ist meine Lieblingsfarbe."
+  ],
+  "wrong": [
+   {
+    "a": "Meine Heft ist blau.",
+    "why": "Wrong possessive: das Heft, so mein",
+    "fix": "Mein Heft ist blau."
+   },
+   {
+    "a": "Er ist rot.",
+    "why": "Wrong pronoun: das Heft, so es",
+    "fix": "Es ist rot."
+   },
+   {
+    "a": "Mein Heft sind grün.",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Mein Heft ist grün."
+   },
+   {
+    "a": "Mein Heft grün ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Mein Heft ist grün."
+   },
+   {
+    "a": "Mein Heft ist blaue.",
+    "why": "Wrong ending: after ist the colour has no ending",
+    "fix": "Mein Heft ist blau."
+   },
+   {
+    "a": "Mein Heft ist blue.",
+    "why": "English word",
+    "fix": "Mein Heft ist blau."
+   },
+   {
+    "a": "Ist gelb.",
+    "why": "Missing subject es",
+    "fix": "Es ist gelb."
+   },
+   {
+    "a": "Mein Heft ist neu.",
+    "why": "Does not do the task: says new, not the colour",
+    "fix": "Mein Heft ist blau."
+   }
+  ]
+ },
+ "L5T4S0": {
+  "right": [
+   "Welche Farbe hat deine Tasche?",
+   "Und deine Tasche? Welche Farbe hat sie?",
+   "Welche Farbe hat deine Tasche, Lena?",
+   "Lena, welche Farbe hat deine Tasche?",
+   "Und welche Farbe hat deine Tasche?",
+   "Welche Farbe hat denn deine Tasche?",
+   "Ist deine Tasche rot?",
+   "Was für eine Farbe hat deine Tasche?",
+   "Und deine Tasche, welche Farbe hat die?",
+   "Ist deine Tasche schwarz oder braun?",
+   "Sag mal, welche Farbe hat deine Tasche?",
+   "Meine Tasche ist grün. Welche Farbe hat deine?"
+  ],
+  "wrong": [
+   {
+    "a": "Welche Farbe hat dein Tasche?",
+    "why": "Wrong possessive: die Tasche, so deine",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welche Farbe hat Ihre Tasche?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welche Farbe hast deine Tasche?",
+    "why": "Wrong verb ending: die Tasche hat",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welche Farbe deine Tasche hat?",
+    "why": "Verb in the wrong place",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welcher Farbe hat deine Tasche?",
+    "why": "Wrong ending: die Farbe, so welche",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welche Color hat deine Tasche?",
+    "why": "English word",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Welche Farbe hat deine Tasse?",
+    "why": "Spelling makes another word: Tasse is a cup; Tasche",
+    "fix": "Welche Farbe hat deine Tasche?"
+   },
+   {
+    "a": "Wo ist deine Tasche?",
+    "why": "Does not do the task: asks where, not the colour",
+    "fix": "Welche Farbe hat deine Tasche?"
+   }
+  ]
+ },
+ "L5T2S1": {
+  "right": [
+   "Wo ist mein Heft?",
+   "Lena, wo ist mein Heft?",
+   "Wo ist denn mein Heft?",
+   "Entschuldigung, wo ist mein Heft?",
+   "Weißt du, wo mein Heft ist?",
+   "Wo ist mein Heft, Lena?",
+   "Hast du mein Heft? Wo ist es?",
+   "Mein Heft! Wo ist es?",
+   "Sag mal, wo ist mein Heft?",
+   "Ich suche mein Heft. Wo ist es?",
+   "Lena, weißt du, wo mein Heft ist?",
+   "Wo ist mein blaues Heft?"
+  ],
+  "wrong": [
+   {
+    "a": "Wo ist meine Heft?",
+    "why": "Wrong possessive: das Heft, so mein",
+    "fix": "Wo ist mein Heft?"
+   },
+   {
+    "a": "Wo ist dein Heft?",
+    "why": "Wrong possessive: your own book is mein",
+    "fix": "Wo ist mein Heft?"
+   },
+   {
+    "a": "Wo mein Heft ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wo ist mein Heft?"
+   },
+   {
+    "a": "Ich suche mein Heft. Wo ist er?",
+    "why": "Wrong pronoun: das Heft, so es",
+    "fix": "Ich suche mein Heft. Wo ist es?"
+   },
+   {
+    "a": "Wo sind mein Heft?",
+    "why": "Wrong verb ending: one book, ist",
+    "fix": "Wo ist mein Heft?"
+   },
+   {
+    "a": "Wissen Sie, wo mein Heft ist?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Weißt du, wo mein Heft ist?"
+   },
+   {
+    "a": "Wo ist mein Heftbuch?",
+    "why": "Invented word: das Heft",
+    "fix": "Wo ist mein Heft?"
+   },
+   {
+    "a": "Welche Farbe hat mein Heft?",
+    "why": "Does not do the task: asks the colour, not where",
+    "fix": "Wo ist mein Heft?"
+   }
+  ]
+ },
+ "L5T4S1": {
+  "right": [
+   "Welche Farbe hat dein Stift?",
+   "Und dein Stift? Welche Farbe hat er?",
+   "Welche Farbe hat dein Stift, Lena?",
+   "Lena, welche Farbe hat dein Stift?",
+   "Und welche Farbe hat dein Stift?",
+   "Welche Farbe hat denn dein Stift?",
+   "Ist dein Stift blau?",
+   "Was für eine Farbe hat dein Stift?",
+   "Und dein Stift, welche Farbe hat der?",
+   "Ist dein Stift rot oder schwarz?",
+   "Sag mal, welche Farbe hat dein Kuli?",
+   "Mein Stift ist grün. Welche Farbe hat deiner?"
+  ],
+  "wrong": [
+   {
+    "a": "Welche Farbe hat deine Stift?",
+    "why": "Wrong possessive: der Stift, so dein",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Welche Farbe hat Ihr Stift?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Welche Farbe haben dein Stift?",
+    "why": "Wrong verb ending: der Stift hat",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Welche Farbe dein Stift hat?",
+    "why": "Verb in the wrong place",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Und dein Stift? Welche Farbe hat sie?",
+    "why": "Wrong pronoun: der Stift, so er",
+    "fix": "Und dein Stift? Welche Farbe hat er?"
+   },
+   {
+    "a": "Welche Farbe hat dein Pen?",
+    "why": "English word",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Welche Farbe hat mein Stift?",
+    "why": "Wrong possessive: her pen is dein",
+    "fix": "Welche Farbe hat dein Stift?"
+   },
+   {
+    "a": "Wo ist dein Stift?",
+    "why": "Does not do the task: asks where, not the colour",
+    "fix": "Welche Farbe hat dein Stift?"
+   }
+  ]
+ },
+ "L5T2S2": {
+  "right": [
+   "Wo ist meine Schere?",
+   "Lena, wo ist meine Schere?",
+   "Wo ist denn meine Schere?",
+   "Entschuldigung, wo ist meine Schere?",
+   "Weißt du, wo meine Schere ist?",
+   "Wo ist meine Schere, Lena?",
+   "Hast du meine Schere? Wo ist sie?",
+   "Meine Schere! Wo ist sie?",
+   "Sag mal, wo ist meine Schere?",
+   "Ich suche meine Schere. Wo ist sie?",
+   "Lena, weißt du, wo meine Schere ist?",
+   "Wo ist nur meine Schere?"
+  ],
+  "wrong": [
+   {
+    "a": "Wo ist mein Schere?",
+    "why": "Wrong possessive: die Schere, so meine",
+    "fix": "Wo ist meine Schere?"
+   },
+   {
+    "a": "Wo ist deine Schere?",
+    "why": "Wrong possessive: your own scissors are meine",
+    "fix": "Wo ist meine Schere?"
+   },
+   {
+    "a": "Wo meine Schere ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wo ist meine Schere?"
+   },
+   {
+    "a": "Ich suche meine Schere. Wo ist er?",
+    "why": "Wrong pronoun: die Schere, so sie",
+    "fix": "Ich suche meine Schere. Wo ist sie?"
+   },
+   {
+    "a": "Wo bist meine Schere?",
+    "why": "Wrong verb ending: die Schere ist",
+    "fix": "Wo ist meine Schere?"
+   },
+   {
+    "a": "Wissen Sie, wo meine Schere ist?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Weißt du, wo meine Schere ist?"
+   },
+   {
+    "a": "Wo ist meine Schwere?",
+    "why": "Spelling makes another word: Schwere is weight; Schere",
+    "fix": "Wo ist meine Schere?"
+   },
+   {
+    "a": "Das ist meine Schere.",
+    "why": "Does not do the task: does not ask where",
+    "fix": "Wo ist meine Schere?"
+   }
+  ]
+ },
+ "L5T4S2": {
+  "right": [
+   "Welche Farbe hat dein Buch?",
+   "Und dein Buch? Welche Farbe hat es?",
+   "Welche Farbe hat dein Buch, Lena?",
+   "Lena, welche Farbe hat dein Buch?",
+   "Und welche Farbe hat dein Buch?",
+   "Welche Farbe hat denn dein Buch?",
+   "Ist dein Buch gelb?",
+   "Was für eine Farbe hat dein Buch?",
+   "Und dein Buch, welche Farbe hat das?",
+   "Ist dein Buch grün oder blau?",
+   "Sag mal, welche Farbe hat dein Buch?",
+   "Mein Buch ist rot. Welche Farbe hat deins?"
+  ],
+  "wrong": [
+   {
+    "a": "Welche Farbe hat deine Buch?",
+    "why": "Wrong possessive: das Buch, so dein",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Welche Farbe hat Ihr Buch?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Welche Farbe hast dein Buch?",
+    "why": "Wrong verb ending: das Buch hat",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Welche Farbe dein Buch hat?",
+    "why": "Verb in the wrong place",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Und dein Buch? Welche Farbe hat er?",
+    "why": "Wrong pronoun: das Buch, so es",
+    "fix": "Und dein Buch? Welche Farbe hat es?"
+   },
+   {
+    "a": "Welche Farbe hat dein Book?",
+    "why": "English word",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Welches Farbe hat dein Buch?",
+    "why": "Wrong ending: die Farbe, so welche",
+    "fix": "Welche Farbe hat dein Buch?"
+   },
+   {
+    "a": "Ist das dein Buch?",
+    "why": "Does not do the task: does not ask the colour",
+    "fix": "Welche Farbe hat dein Buch?"
+   }
+  ]
+ },
+ "L6T0S0": {
+  "right": [
+   "Ich brauche einen Computer.",
+   "Ich brauche einen Stift, bitte.",
+   "Ich brauche ein Telefon.",
+   "Guten Morgen, ich brauche einen Schlüssel für das Büro.",
+   "Ich brauche einen Computer und einen Drucker.",
+   "Ich brauche Papier und einen Kuli.",
+   "Ich brauche bitte einen Laptop.",
+   "Ich brauche eine Tasse Kaffee.",
+   "Ich brauche einen Tisch und einen Stuhl.",
+   "Guten Morgen! Ich brauche das Passwort für den Computer.",
+   "Ich brauche eine Liste mit den Telefonnummern.",
+   "Ich brauche nur einen Stift und ein Heft."
+  ],
+  "wrong": [
+   {
+    "a": "Ich brauche ein Computer.",
+    "why": "Wrong case: accusative einen Computer",
+    "fix": "Ich brauche einen Computer."
+   },
+   {
+    "a": "Ich brauche einen Telefon.",
+    "why": "Wrong article: das Telefon, so ein",
+    "fix": "Ich brauche ein Telefon."
+   },
+   {
+    "a": "Ich braucht einen Stift.",
+    "why": "Wrong verb ending: ich brauche",
+    "fix": "Ich brauche einen Stift."
+   },
+   {
+    "a": "Ich einen Schlüssel brauche.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich brauche einen Schlüssel."
+   },
+   {
+    "a": "Brauche einen Laptop.",
+    "why": "Missing subject ich",
+    "fix": "Ich brauche einen Laptop."
+   },
+   {
+    "a": "Ich brauche Computer.",
+    "why": "Missing article: einen Computer",
+    "fix": "Ich brauche einen Computer."
+   },
+   {
+    "a": "Ich brauche einen Pencil.",
+    "why": "English word: einen Stift",
+    "fix": "Ich brauche einen Stift."
+   },
+   {
+    "a": "Ich habe einen Computer.",
+    "why": "Does not do the task: says what you have, not what you need",
+    "fix": "Ich brauche einen Computer."
+   }
+  ]
+ },
+ "L6T1S0": {
+  "right": [
+   "Wo ist mein Büro?",
+   "Herr Weber, wo ist mein Büro?",
+   "Entschuldigung, wo ist mein Büro?",
+   "Wo ist mein Büro, bitte?",
+   "Wo ist denn mein Büro?",
+   "Können Sie mir sagen, wo mein Büro ist?",
+   "Und wo ist mein Büro?",
+   "Wissen Sie, wo mein Büro ist?",
+   "Entschuldigung, Herr Weber, wo ist mein Büro?",
+   "Ich suche mein Büro. Wo ist es?",
+   "Wo finde ich mein Büro?",
+   "Wo ist mein Büro, Herr Weber? Im ersten Stock?"
+  ],
+  "wrong": [
+   {
+    "a": "Wo ist meine Büro?",
+    "why": "Wrong possessive: das Büro, so mein",
+    "fix": "Wo ist mein Büro?"
+   },
+   {
+    "a": "Wo ist Ihr Büro?",
+    "why": "Wrong possessive: you ask about your own office, mein",
+    "fix": "Wo ist mein Büro?"
+   },
+   {
+    "a": "Wo mein Büro ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wo ist mein Büro?"
+   },
+   {
+    "a": "Weißt du, wo mein Büro ist?",
+    "why": "Wrong register: Herr Weber gets Sie",
+    "fix": "Wissen Sie, wo mein Büro ist?"
+   },
+   {
+    "a": "Ich suche mein Büro. Wo ist er?",
+    "why": "Wrong pronoun: das Büro, so es",
+    "fix": "Ich suche mein Büro. Wo ist es?"
+   },
+   {
+    "a": "Wohin ist mein Büro?",
+    "why": "Wrong question word: wo",
+    "fix": "Wo ist mein Büro?"
+   },
+   {
+    "a": "Wo ist mein Office?",
+    "why": "English word",
+    "fix": "Wo ist mein Büro?"
+   },
+   {
+    "a": "Wann ist die Pause?",
+    "why": "Does not do the task: asks about the break, not the office",
+    "fix": "Wo ist mein Büro?"
+   }
+  ]
+ },
+ "L6T2S0": {
+  "right": [
+   "Wann ist die Pause?",
+   "Wann ist Pause?",
+   "Herr Weber, wann ist die Pause?",
+   "Entschuldigung, wann ist die Pause?",
+   "Und wann ist die Pause?",
+   "Wann ist denn die Pause?",
+   "Wann haben wir Pause?",
+   "Um wie viel Uhr ist die Pause?",
+   "Wann machen wir Pause?",
+   "Können Sie mir sagen, wann die Pause ist?",
+   "Wann ist die Mittagspause?",
+   "Und die Pause? Wann ist sie, bitte?"
+  ],
+  "wrong": [
+   {
+    "a": "Wann ist der Pause?",
+    "why": "Wrong article: die Pause",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Wann sind die Pause?",
+    "why": "Wrong verb ending: die Pause ist",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Wann die Pause ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Wo ist die Pause?",
+    "why": "Wrong question word: wann",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Kannst du mir sagen, wann die Pause ist?",
+    "why": "Wrong register: Herr Weber gets Sie",
+    "fix": "Können Sie mir sagen, wann die Pause ist?"
+   },
+   {
+    "a": "Wann ist die Break?",
+    "why": "English word",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Wann ist die Pose?",
+    "why": "Spelling makes another word: Pose; Pause",
+    "fix": "Wann ist die Pause?"
+   },
+   {
+    "a": "Die Pause ist um zwölf Uhr.",
+    "why": "Does not do the task: tells the time instead of asking",
+    "fix": "Wann ist die Pause?"
+   }
+  ]
+ },
+ "L6T3S0": {
+  "right": [
+   "Haddad, guten Tag!",
+   "Hier ist Samira Haddad.",
+   "Guten Tag, Herr Weber! Hier ist Omar Khalil.",
+   "Guten Tag, hier spricht Fatima Nasser.",
+   "Nasser, guten Tag!",
+   "Hallo, Herr Weber, hier ist Karim.",
+   "Guten Tag, mein Name ist Leila Mansour.",
+   "Hier ist Yusuf Demir, guten Tag!",
+   "Ja, hier ist Rana Saad. Guten Tag, Herr Weber!",
+   "Guten Tag, Herr Weber, hier ist Hassan Ibrahim.",
+   "Guten Tag! Ich bin Tarek Mansour.",
+   "Mansour hier, guten Tag!"
+  ],
+  "wrong": [
+   {
+    "a": "Hier bin Samira Haddad.",
+    "why": "Wrong verb: hier ist",
+    "fix": "Hier ist Samira Haddad."
+   },
+   {
+    "a": "Guten Tag, hier ist Herr Weber.",
+    "why": "Does not do the task: you must say your own name",
+    "fix": "Guten Tag, hier ist Omar Khalil."
+   },
+   {
+    "a": "Guten Tag, hier sprecht Fatima Nasser.",
+    "why": "Wrong verb ending: hier spricht",
+    "fix": "Guten Tag, hier spricht Fatima Nasser."
+   },
+   {
+    "a": "Guten Tag, meine Name ist Leila Mansour.",
+    "why": "Wrong possessive: der Name, so mein",
+    "fix": "Guten Tag, mein Name ist Leila Mansour."
+   },
+   {
+    "a": "Guten Tag! Ich Tarek Mansour bin.",
+    "why": "Verb in the wrong place",
+    "fix": "Guten Tag! Ich bin Tarek Mansour."
+   },
+   {
+    "a": "Guten Tag! Bin Karim.",
+    "why": "Missing subject ich",
+    "fix": "Guten Tag! Ich bin Karim."
+   },
+   {
+    "a": "Hallo, Weber! Hier ist Rana.",
+    "why": "Wrong register: say Herr Weber",
+    "fix": "Hallo, Herr Weber! Hier ist Rana."
+   },
+   {
+    "a": "Guten Tak, hier ist Yusuf Demir.",
+    "why": "Spelling: Tag, not Tak",
+    "fix": "Guten Tag, hier ist Yusuf Demir."
+   }
+  ]
+ },
+ "L7T0S0": {
+  "right": [
+   "Mein Hobby ist Fußball.",
+   "Ich lese gern.",
+   "Mein Hobby ist Kochen.",
+   "Ich spiele gern Fußball.",
+   "Mein Hobby ist Schwimmen.",
+   "Ich tanze gern.",
+   "Mein Hobby ist Musik, ich spiele Gitarre.",
+   "Ich fahre gern Fahrrad.",
+   "Meine Hobbys sind Lesen und Kochen.",
+   "Ich gehe gern spazieren.",
+   "Mein Hobby ist Fotografieren.",
+   "Ich male gern, und ich höre gern Musik."
+  ],
+  "wrong": [
+   {
+    "a": "Meine Hobby ist Fußball.",
+    "why": "Wrong possessive: das Hobby, so mein",
+    "fix": "Mein Hobby ist Fußball."
+   },
+   {
+    "a": "Ich gern lese.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich lese gern."
+   },
+   {
+    "a": "Ich spielt gern Fußball.",
+    "why": "Wrong verb ending: ich spiele",
+    "fix": "Ich spiele gern Fußball."
+   },
+   {
+    "a": "Spiele gern Gitarre.",
+    "why": "Missing subject ich",
+    "fix": "Ich spiele gern Gitarre."
+   },
+   {
+    "a": "Mein Hobby ist Swimming.",
+    "why": "English word: Schwimmen",
+    "fix": "Mein Hobby ist Schwimmen."
+   },
+   {
+    "a": "Dein Hobby ist Kochen.",
+    "why": "Wrong possessive: your own hobby is mein",
+    "fix": "Mein Hobby ist Kochen."
+   },
+   {
+    "a": "Ich tanze gern, und Sie?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Ich tanze gern, und du?"
+   },
+   {
+    "a": "Ich bin Lehrerin.",
+    "why": "Does not do the task: says your job, not your hobby",
+    "fix": "Mein Hobby ist Lesen."
+   }
+  ]
+ },
+ "L7T2S0": {
+  "right": [
+   "Was ist dein Hobby?",
+   "Und du? Was ist dein Hobby?",
+   "Und was ist dein Hobby, Lena?",
+   "Lena, was ist dein Hobby?",
+   "Und dein Hobby?",
+   "Was machst du gern?",
+   "Was ist denn dein Hobby?",
+   "Was sind deine Hobbys?",
+   "Hast du ein Hobby?",
+   "Und was machst du gern in der Freizeit?",
+   "Was machst du in deiner Freizeit?",
+   "Sag mal, was ist dein Hobby?"
+  ],
+  "wrong": [
+   {
+    "a": "Was ist Ihr Hobby?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Was ist dein Hobby?"
+   },
+   {
+    "a": "Was ist deine Hobby?",
+    "why": "Wrong possessive: das Hobby, so dein",
+    "fix": "Was ist dein Hobby?"
+   },
+   {
+    "a": "Was ist mein Hobby?",
+    "why": "Wrong possessive: her hobby is dein",
+    "fix": "Was ist dein Hobby?"
+   },
+   {
+    "a": "Was machen du gern?",
+    "why": "Wrong verb ending: du machst",
+    "fix": "Was machst du gern?"
+   },
+   {
+    "a": "Was du machst gern?",
+    "why": "Verb in the wrong place",
+    "fix": "Was machst du gern?"
+   },
+   {
+    "a": "Wer ist dein Hobby?",
+    "why": "Wrong question word: was",
+    "fix": "Was ist dein Hobby?"
+   },
+   {
+    "a": "Was ist dein Hobbie?",
+    "why": "Spelling: Hobby",
+    "fix": "Was ist dein Hobby?"
+   },
+   {
+    "a": "Mein Hobby ist Tanzen.",
+    "why": "Does not do the task: tells your hobby instead of asking",
+    "fix": "Was ist dein Hobby?"
+   }
+  ]
+ },
+ "L7T3S0": {
+  "right": [
+   "Tanzt du gern?",
+   "Lena, tanzt du gern?",
+   "Tanzt du auch gern?",
+   "Und du, tanzt du gern?",
+   "Magst du tanzen?",
+   "Tanzt du gerne?",
+   "Tanzen, machst du das gern?",
+   "Sag mal, tanzt du gern?",
+   "Tanzt du denn gern?",
+   "Gehst du gern tanzen?",
+   "Tanzt du gern, Lena?",
+   "Ich tanze gern. Und du? Tanzt du auch gern?"
+  ],
+  "wrong": [
+   {
+    "a": "Tanzen Sie gern?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Tanzst du gern?",
+    "why": "Wrong verb ending: du tanzt",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Du gern tanzt?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Tanzt gern?",
+    "why": "Missing subject du",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Tanzt du fern?",
+    "why": "Spelling makes another word: fern means far; gern",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Do tanzt du gern?",
+    "why": "English word: German has no do here",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Tanzt dich gern?",
+    "why": "Wrong case: du, not dich",
+    "fix": "Tanzt du gern?"
+   },
+   {
+    "a": "Ich tanze gern.",
+    "why": "Does not do the task: tells about you instead of asking Lena",
+    "fix": "Tanzt du gern?"
+   }
+  ]
+ },
+ "L7T3S1": {
+  "right": [
+   "Kochst du gern?",
+   "Lena, kochst du gern?",
+   "Kochst du auch gern?",
+   "Und du, kochst du gern?",
+   "Kochst du gerne?",
+   "Kochst du denn gern?",
+   "Sag mal, kochst du gern?",
+   "Kochen, machst du das gern?",
+   "Kochst du gern, Lena?",
+   "Kochst du gern für deine Freunde?",
+   "Ich koche gern. Kochst du auch gern?",
+   "Magst du kochen?"
+  ],
+  "wrong": [
+   {
+    "a": "Kochen Sie gern?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Kocht du gern?",
+    "why": "Wrong verb ending: du kochst",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Gern du kochst?",
+    "why": "Verb in the wrong place",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Kochst gern?",
+    "why": "Missing subject du",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Cookst du gern?",
+    "why": "English word: kochen",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Kochst dich gern?",
+    "why": "Wrong case: du, not dich",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Kochst du Kern?",
+    "why": "Spelling makes another word: Kern is a seed; gern",
+    "fix": "Kochst du gern?"
+   },
+   {
+    "a": "Ich koche gern.",
+    "why": "Does not do the task: tells about you instead of asking Lena",
+    "fix": "Kochst du gern?"
+   }
+  ]
+ },
+ "L7T3S2": {
+  "right": [
+   "Schwimmst du gern?",
+   "Lena, schwimmst du gern?",
+   "Schwimmst du auch gern?",
+   "Und du, schwimmst du gern?",
+   "Schwimmst du gerne?",
+   "Schwimmst du denn gern?",
+   "Sag mal, schwimmst du gern?",
+   "Gehst du gern schwimmen?",
+   "Schwimmst du gern, Lena?",
+   "Magst du schwimmen?",
+   "Ich schwimme gern. Und du? Schwimmst du auch gern?",
+   "Schwimmst du gern im See?"
+  ],
+  "wrong": [
+   {
+    "a": "Schwimmen Sie gern?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Schwimmt du gern?",
+    "why": "Wrong verb ending: du schwimmst",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Du gern schwimmst?",
+    "why": "Verb in the wrong place",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Schwimmst gern?",
+    "why": "Missing subject du",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Swimmst du gern?",
+    "why": "English word: schwimmen",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Gehst du gern in Schwimmbad?",
+    "why": "Missing article: ins Schwimmbad",
+    "fix": "Gehst du gern ins Schwimmbad?"
+   },
+   {
+    "a": "Schwimmst du fern?",
+    "why": "Spelling makes another word: fern means far; gern",
+    "fix": "Schwimmst du gern?"
+   },
+   {
+    "a": "Ich schwimme gern.",
+    "why": "Does not do the task: tells about you instead of asking Lena",
+    "fix": "Schwimmst du gern?"
+   }
+  ]
+ },
+ "L8T0S0": {
+  "right": [
+   "Es ist halb neun.",
+   "Es ist acht Uhr dreißig.",
+   "Halb neun.",
+   "Es ist 8.30 Uhr.",
+   "Es ist jetzt halb neun.",
+   "Es ist schon halb neun!",
+   "Acht Uhr dreißig.",
+   "Es ist halb neun, Lena.",
+   "Meine Uhr zeigt halb neun.",
+   "Es ist erst halb neun.",
+   "Es ist 8:30 Uhr.",
+   "Jetzt ist es halb neun."
+  ],
+  "wrong": [
+   {
+    "a": "Es ist halb acht.",
+    "why": "Wrong time: halb acht is 7.30; 8.30 is halb neun",
+    "fix": "Es ist halb neun."
+   },
+   {
+    "a": "Es sind halb neun.",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Es ist halb neun."
+   },
+   {
+    "a": "Ist halb neun.",
+    "why": "Missing subject es",
+    "fix": "Es ist halb neun."
+   },
+   {
+    "a": "Es halb neun ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Es ist halb neun."
+   },
+   {
+    "a": "Es ist acht Uhren dreißig.",
+    "why": "Wrong form: Uhr has no plural in clock times",
+    "fix": "Es ist acht Uhr dreißig."
+   },
+   {
+    "a": "Es ist half neun.",
+    "why": "English word: halb",
+    "fix": "Es ist halb neun."
+   },
+   {
+    "a": "Es ist acht Ur dreißig.",
+    "why": "Spelling: Uhr with h",
+    "fix": "Es ist acht Uhr dreißig."
+   },
+   {
+    "a": "Ich stehe um halb neun auf.",
+    "why": "Does not do the task: says when you get up, not the time now",
+    "fix": "Es ist halb neun."
+   }
+  ]
+ },
+ "L8T1S0": {
+  "right": [
+   "Wie spät ist es?",
+   "Wie viel Uhr ist es?",
+   "Lena, wie spät ist es?",
+   "Wie spät ist es jetzt?",
+   "Entschuldigung, wie spät ist es?",
+   "Wie spät ist es denn?",
+   "Weißt du, wie spät es ist?",
+   "Lena, wie viel Uhr ist es jetzt?",
+   "Sag mal, wie spät ist es?",
+   "Wie spät ist es eigentlich?",
+   "Kannst du mir sagen, wie spät es ist?",
+   "Hast du eine Uhr? Wie spät ist es?"
+  ],
+  "wrong": [
+   {
+    "a": "Wie spät bist es?",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Wie spät ist es?"
+   },
+   {
+    "a": "Wie spät es ist?",
+    "why": "Verb in the wrong place",
+    "fix": "Wie spät ist es?"
+   },
+   {
+    "a": "Wie spät ist?",
+    "why": "Missing subject es",
+    "fix": "Wie spät ist es?"
+   },
+   {
+    "a": "Wissen Sie, wie spät es ist?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Weißt du, wie spät es ist?"
+   },
+   {
+    "a": "Wie viele Uhr ist es?",
+    "why": "Wrong form: wie viel Uhr",
+    "fix": "Wie viel Uhr ist es?"
+   },
+   {
+    "a": "Wann spät ist es?",
+    "why": "Wrong question word: wie",
+    "fix": "Wie spät ist es?"
+   },
+   {
+    "a": "Wie late ist es?",
+    "why": "English word: spät",
+    "fix": "Wie spät ist es?"
+   },
+   {
+    "a": "Es ist drei Uhr.",
+    "why": "Does not do the task: tells the time instead of asking",
+    "fix": "Wie spät ist es?"
+   }
+  ]
+ },
+ "L8T2S0": {
+  "right": [
+   "Ich stehe um sieben Uhr auf.",
+   "Ich stehe um halb sieben auf.",
+   "Um sechs Uhr stehe ich auf.",
+   "Ich stehe meistens um sieben auf.",
+   "Morgens stehe ich um sechs Uhr auf.",
+   "Ich stehe um Viertel nach sechs auf.",
+   "Ich stehe früh auf, um fünf Uhr.",
+   "Ich stehe immer um 6.30 Uhr auf.",
+   "Ich stehe um acht Uhr auf, ich bin kein Morgenmensch.",
+   "Normalerweise stehe ich um Viertel vor sieben auf.",
+   "Ich stehe um sieben auf, am Samstag um neun.",
+   "Ich stehe jeden Tag um halb sechs auf."
+  ],
+  "wrong": [
+   {
+    "a": "Ich stehe um sieben Uhr.",
+    "why": "Missing prefix: aufstehen, so ich stehe … auf",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich aufstehe um sieben Uhr.",
+    "why": "Verb in the wrong place: the prefix auf goes to the end",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich stehst um sechs Uhr auf.",
+    "why": "Wrong verb ending: ich stehe",
+    "fix": "Ich stehe um sechs Uhr auf."
+   },
+   {
+    "a": "Ich stehe am sieben Uhr auf.",
+    "why": "Wrong preposition: um with a clock time",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Stehe um sechs Uhr auf.",
+    "why": "Missing subject ich",
+    "fix": "Ich stehe um sechs Uhr auf."
+   },
+   {
+    "a": "Ich stehe um seven Uhr auf.",
+    "why": "English word: sieben",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich stehe um sieben Uhr ab.",
+    "why": "Wrong prefix: aufstehen, not abstehen",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich gehe um elf Uhr ins Bett.",
+    "why": "Does not do the task: says when you go to bed",
+    "fix": "Ich stehe um sieben Uhr auf."
+   }
+  ]
+ },
+ "L8T3S0": {
+  "right": [
+   "Hast du am Freitag um zehn Uhr Zeit?",
+   "Hast du am Freitag um zehn Zeit?",
+   "Lena, hast du am Freitag um 10 Uhr Zeit?",
+   "Am Freitag um zehn Uhr, hast du da Zeit?",
+   "Hast du Freitag um zehn Zeit?",
+   "Hast du am Freitag um zehn Uhr vielleicht Zeit?",
+   "Bist du am Freitag um zehn Uhr frei?",
+   "Hast du am Freitag um zehn Uhr morgens Zeit?",
+   "Passt dir Freitag um zehn Uhr?",
+   "Und am Freitag um zehn? Hast du dann Zeit?",
+   "Sag mal, hast du am Freitag um zehn Uhr Zeit?",
+   "Hast du denn am Freitag um 10 Uhr Zeit?"
+  ],
+  "wrong": [
+   {
+    "a": "Haben Sie am Freitag um zehn Uhr Zeit?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Hast du im Freitag um zehn Uhr Zeit?",
+    "why": "Wrong preposition: am Freitag",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Habst du am Freitag um zehn Uhr Zeit?",
+    "why": "Wrong verb ending: du hast",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Du am Freitag um zehn Uhr Zeit hast?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Hast am Freitag um zehn Uhr Zeit?",
+    "why": "Missing subject du",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Hast du am Friday um zehn Uhr Zeit?",
+    "why": "English word: Freitag",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Hast du am Freitag um zehn Uhr Zeitung?",
+    "why": "Wrong word: Zeitung is a newspaper; Zeit",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   },
+   {
+    "a": "Ich habe am Freitag um zehn Uhr Zeit.",
+    "why": "Does not do the task: says you have time instead of asking",
+    "fix": "Hast du am Freitag um zehn Uhr Zeit?"
+   }
+  ]
+ },
+ "L8T4S0": {
+  "right": [
+   "Super, dann am Freitag um zehn!",
+   "Gut, bis Freitag!",
+   "Ja, das passt.",
+   "Prima, dann treffen wir uns am Freitag um zehn Uhr.",
+   "Okay, Freitag um zehn ist gut.",
+   "Toll! Bis Freitag um zehn.",
+   "Ja, gern! Dann bis Freitag.",
+   "Gut, das passt mir auch.",
+   "Perfekt, also Freitag um zehn Uhr.",
+   "Sehr gut, ich komme am Freitag um zehn.",
+   "Ja, Freitag um zehn ist super für mich.",
+   "Schön, dann sehen wir uns am Freitag."
+  ],
+  "wrong": [
+   {
+    "a": "Gut, bis Freitag um zehn Uhren.",
+    "why": "Wrong form: Uhr has no plural in clock times",
+    "fix": "Gut, bis Freitag um zehn Uhr."
+   },
+   {
+    "a": "Ja, das passen.",
+    "why": "Wrong verb ending: das passt",
+    "fix": "Ja, das passt."
+   },
+   {
+    "a": "Prima, dann wir treffen uns am Freitag.",
+    "why": "Verb in the wrong place: dann treffen wir",
+    "fix": "Prima, dann treffen wir uns am Freitag."
+   },
+   {
+    "a": "Gut, bis im Freitag!",
+    "why": "Wrong preposition: bis Freitag",
+    "fix": "Gut, bis Freitag!"
+   },
+   {
+    "a": "Okay, Freitag um zehn ist perfect.",
+    "why": "English word: perfekt",
+    "fix": "Okay, Freitag um zehn ist perfekt."
+   },
+   {
+    "a": "Komme am Freitag um zehn.",
+    "why": "Missing subject ich",
+    "fix": "Ich komme am Freitag um zehn."
+   },
+   {
+    "a": "Ja, das passt mich.",
+    "why": "Wrong case: das passt mir",
+    "fix": "Ja, das passt mir."
+   },
+   {
+    "a": "Nein, am Freitag habe ich keine Zeit.",
+    "why": "Does not do the task: says no instead of yes",
+    "fix": "Ja, am Freitag um zehn passt es."
+   }
+  ]
+ },
+ "L8T0S1": {
+  "right": [
+   "Es ist Viertel nach sieben.",
+   "Es ist sieben Uhr fünfzehn.",
+   "Viertel nach sieben.",
+   "Es ist 7.15 Uhr.",
+   "Es ist jetzt Viertel nach sieben.",
+   "Es ist schon Viertel nach sieben!",
+   "Sieben Uhr fünfzehn.",
+   "Es ist erst Viertel nach sieben.",
+   "Meine Uhr zeigt Viertel nach sieben.",
+   "Es ist 7:15 Uhr.",
+   "Jetzt ist es Viertel nach sieben.",
+   "Es ist Viertel nach sieben, Lena."
+  ],
+  "wrong": [
+   {
+    "a": "Es ist Viertel vor sieben.",
+    "why": "Wrong time: Viertel vor sieben is 6.45; 7.15 is Viertel nach sieben",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Es sind Viertel nach sieben.",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Ist Viertel nach sieben.",
+    "why": "Missing subject es",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Es Viertel nach sieben ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Es ist Viertel von sieben.",
+    "why": "Wrong preposition: Viertel nach",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Es ist Quarter nach sieben.",
+    "why": "English word: Viertel",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Es ist Vierte nach sieben.",
+    "why": "Spelling makes another word: Vierte is fourth; Viertel",
+    "fix": "Es ist Viertel nach sieben."
+   },
+   {
+    "a": "Ich frühstücke um sieben Uhr.",
+    "why": "Does not do the task: says when you eat, not the time now",
+    "fix": "Es ist Viertel nach sieben."
+   }
+  ]
+ },
+ "L8T3S1": {
+  "right": [
+   "Hast du am Donnerstag um Viertel nach vier Zeit?",
+   "Hast du am Donnerstag um 16.15 Uhr Zeit?",
+   "Lena, hast du am Donnerstag um sechzehn Uhr fünfzehn Zeit?",
+   "Am Donnerstag um Viertel nach vier, hast du da Zeit?",
+   "Hast du Donnerstag um Viertel nach vier Zeit?",
+   "Hast du am Donnerstag um Viertel nach vier vielleicht Zeit?",
+   "Bist du am Donnerstag um 16.15 Uhr frei?",
+   "Hast du am Donnerstagnachmittag um Viertel nach vier Zeit?",
+   "Passt dir Donnerstag um Viertel nach vier?",
+   "Und am Donnerstag um 16.15 Uhr? Hast du dann Zeit?",
+   "Sag mal, hast du am Donnerstag um Viertel nach vier Zeit?",
+   "Hast du denn am Donnerstag um 16:15 Uhr Zeit?"
+  ],
+  "wrong": [
+   {
+    "a": "Haben Sie am Donnerstag um Viertel nach vier Zeit?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Hast du im Donnerstag um Viertel nach vier Zeit?",
+    "why": "Wrong preposition: am Donnerstag",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Hat du am Donnerstag um Viertel nach vier Zeit?",
+    "why": "Wrong verb ending: du hast",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Du am Donnerstag um Viertel nach vier Zeit hast?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Hast du am Donnerstag um Viertel vor vier Zeit?",
+    "why": "Wrong time: Viertel vor vier is 15.45; 16.15 is Viertel nach vier",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Hast du am Thursday um Viertel nach vier Zeit?",
+    "why": "English word: Donnerstag",
+    "fix": "Hast du am Donnerstag um Viertel nach vier Zeit?"
+   },
+   {
+    "a": "Hast am Donnerstag um 16.15 Uhr Zeit?",
+    "why": "Missing subject du",
+    "fix": "Hast du am Donnerstag um 16.15 Uhr Zeit?"
+   },
+   {
+    "a": "Ich habe am Donnerstag um 16.15 Uhr Zeit.",
+    "why": "Does not do the task: says you have time instead of asking",
+    "fix": "Hast du am Donnerstag um 16.15 Uhr Zeit?"
+   }
+  ]
+ },
+ "L8T0S2": {
+  "right": [
+   "Es ist Viertel vor zehn.",
+   "Es ist neun Uhr fünfundvierzig.",
+   "Viertel vor zehn.",
+   "Es ist 9.45 Uhr.",
+   "Es ist jetzt Viertel vor zehn.",
+   "Es ist schon Viertel vor zehn!",
+   "Neun Uhr fünfundvierzig.",
+   "Es ist gleich zehn, Viertel vor zehn.",
+   "Meine Uhr zeigt Viertel vor zehn.",
+   "Es ist 9:45 Uhr.",
+   "Jetzt ist es Viertel vor zehn.",
+   "Es ist Viertel vor zehn, Lena."
+  ],
+  "wrong": [
+   {
+    "a": "Es ist Viertel vor neun.",
+    "why": "Wrong time: Viertel vor neun is 8.45; 9.45 is Viertel vor zehn",
+    "fix": "Es ist Viertel vor zehn."
+   },
+   {
+    "a": "Es sind Viertel vor zehn.",
+    "why": "Wrong verb ending: es ist",
+    "fix": "Es ist Viertel vor zehn."
+   },
+   {
+    "a": "Ist Viertel vor zehn.",
+    "why": "Missing subject es",
+    "fix": "Es ist Viertel vor zehn."
+   },
+   {
+    "a": "Es Viertel vor zehn ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Es ist Viertel vor zehn."
+   },
+   {
+    "a": "Es ist Viertel bis zehn.",
+    "why": "Wrong preposition: Viertel vor",
+    "fix": "Es ist Viertel vor zehn."
+   },
+   {
+    "a": "Es ist neun Uhr forty-five.",
+    "why": "English word: fünfundvierzig",
+    "fix": "Es ist neun Uhr fünfundvierzig."
+   },
+   {
+    "a": "Es ist neun Uhr vierundfünfzig.",
+    "why": "Wrong number: 45 is fünfundvierzig",
+    "fix": "Es ist neun Uhr fünfundvierzig."
+   },
+   {
+    "a": "Wie spät ist es?",
+    "why": "Does not do the task: asks instead of telling the time",
+    "fix": "Es ist Viertel vor zehn."
+   }
+  ]
+ },
+ "L8T3S2": {
+  "right": [
+   "Hast du am Montag um halb zehn Zeit?",
+   "Hast du am Montag um 9.30 Uhr Zeit?",
+   "Lena, hast du am Montag um neun Uhr dreißig Zeit?",
+   "Am Montag um halb zehn, hast du da Zeit?",
+   "Hast du Montag um halb zehn Zeit?",
+   "Hast du am Montag um halb zehn vielleicht Zeit?",
+   "Bist du am Montag um halb zehn frei?",
+   "Hast du am Montagmorgen um halb zehn Zeit?",
+   "Passt dir Montag um halb zehn?",
+   "Und am Montag um 9.30 Uhr? Hast du dann Zeit?",
+   "Sag mal, hast du am Montag um halb zehn Zeit?",
+   "Hast du denn am Montag um 9:30 Uhr Zeit?"
+  ],
+  "wrong": [
+   {
+    "a": "Haben Sie am Montag um halb zehn Zeit?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Hast du am Montag um halb neun Zeit?",
+    "why": "Wrong time: halb neun is 8.30; 9.30 is halb zehn",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Hast du in Montag um halb zehn Zeit?",
+    "why": "Wrong preposition: am Montag",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Habt du am Montag um halb zehn Zeit?",
+    "why": "Wrong verb ending: du hast",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Du am Montag um halb zehn Zeit hast?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Hast du am Monday um halb zehn Zeit?",
+    "why": "English word: Montag",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Hast du am Monat um halb zehn Zeit?",
+    "why": "Spelling makes another word: Monat is month; Montag",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   },
+   {
+    "a": "Ich habe am Montag um halb zehn Zeit.",
+    "why": "Does not do the task: says you have time instead of asking",
+    "fix": "Hast du am Montag um halb zehn Zeit?"
+   }
+  ]
+ },
+ "L9T0S0": {
+  "right": [
+   "Ja, ich habe Hunger.",
+   "Ja, ich habe großen Hunger.",
+   "Ja, ich habe richtig Hunger.",
+   "Ja, ich habe Hunger, danke.",
+   "Oh ja, ich habe Hunger!",
+   "Ja, ich bin hungrig.",
+   "Ja, sehr, ich habe Hunger.",
+   "Ja, ich habe Hunger und möchte etwas essen.",
+   "Ja, ich habe einen Bärenhunger.",
+   "Ja, ich habe Hunger, die Speisekarte bitte.",
+   "Ja, ich habe Hunger, was empfehlen Sie?",
+   "Guten Tag! Ja, ich habe Hunger."
+  ],
+  "wrong": [
+   {
+    "a": "Ja, ich bin Hunger.",
+    "why": "Wrong verb: ich habe Hunger",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, ich hat Hunger.",
+    "why": "Wrong verb ending: ich habe",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, habe Hunger.",
+    "why": "Missing subject ich",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, ich Hunger habe.",
+    "why": "Verb in the wrong place",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, ich habe einen Hunger.",
+    "why": "Extra article: Hunger haben has no article",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, ich habe Hungry.",
+    "why": "English word",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Ja, ich habe Hummer.",
+    "why": "Spelling makes another word: Hummer is lobster; Hunger",
+    "fix": "Ja, ich habe Hunger."
+   },
+   {
+    "a": "Nein, ich habe keinen Hunger.",
+    "why": "Does not do the task: you are hungry",
+    "fix": "Ja, ich habe Hunger."
+   }
+  ]
+ },
+ "L9T1S0": {
+  "right": [
+   "Einen Kaffee, bitte.",
+   "Ich möchte einen Tee, bitte.",
+   "Ein Wasser, bitte.",
+   "Ich nehme eine Cola.",
+   "Einen Orangensaft, bitte.",
+   "Ich hätte gern einen Cappuccino.",
+   "Ich möchte bitte ein Glas Wasser.",
+   "Eine Tasse Tee mit Milch, bitte.",
+   "Für mich einen Apfelsaft, bitte.",
+   "Ich trinke einen Kaffee mit Zucker.",
+   "Ich möchte gern eine Limonade, bitte.",
+   "Einen Kaffee und ein Wasser, bitte."
+  ],
+  "wrong": [
+   {
+    "a": "Ein Kaffee, bitte.",
+    "why": "Wrong case: accusative einen Kaffee",
+    "fix": "Einen Kaffee, bitte."
+   },
+   {
+    "a": "Ich möchte eine Tee.",
+    "why": "Wrong article: der Tee, so einen",
+    "fix": "Ich möchte einen Tee."
+   },
+   {
+    "a": "Ich möchtet ein Wasser.",
+    "why": "Wrong verb ending: ich möchte",
+    "fix": "Ich möchte ein Wasser."
+   },
+   {
+    "a": "Ich einen Orangensaft möchte.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich möchte einen Orangensaft."
+   },
+   {
+    "a": "Möchte eine Cola, bitte.",
+    "why": "Missing subject ich",
+    "fix": "Ich möchte eine Cola, bitte."
+   },
+   {
+    "a": "Einen Coffee, bitte.",
+    "why": "English word: Kaffee",
+    "fix": "Einen Kaffee, bitte."
+   },
+   {
+    "a": "Hast du Cola? Dann eine Cola, bitte.",
+    "why": "Wrong register: Paul gets Sie",
+    "fix": "Haben Sie Cola? Dann eine Cola, bitte."
+   },
+   {
+    "a": "Ich möchte eine Suppe, bitte.",
+    "why": "Does not do the task: soup is food, not a drink",
+    "fix": "Ich möchte einen Tee, bitte."
+   }
+  ]
+ },
+ "L9T2S0": {
+  "right": [
+   "Eine Suppe, bitte.",
+   "Ich möchte eine Pizza, bitte.",
+   "Ich nehme den Salat.",
+   "Ein Käsebrot, bitte.",
+   "Ich hätte gern ein Stück Kuchen.",
+   "Ich möchte bitte eine Tomatensuppe.",
+   "Für mich das Hähnchen mit Reis, bitte.",
+   "Ich esse einen Salat mit Brot.",
+   "Einen Apfelkuchen, bitte.",
+   "Ich möchte gern Nudeln mit Gemüse.",
+   "Ich nehme ein Schnitzel mit Pommes, bitte.",
+   "Eine Suppe und ein Brötchen, bitte."
+  ],
+  "wrong": [
+   {
+    "a": "Ich möchte ein Suppe.",
+    "why": "Wrong article: die Suppe, so eine",
+    "fix": "Ich möchte eine Suppe."
+   },
+   {
+    "a": "Ich nehme der Salat.",
+    "why": "Wrong case: accusative den Salat",
+    "fix": "Ich nehme den Salat."
+   },
+   {
+    "a": "Ich nimmt eine Pizza.",
+    "why": "Wrong verb ending: ich nehme",
+    "fix": "Ich nehme eine Pizza."
+   },
+   {
+    "a": "Ich eine Pizza möchte.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich möchte eine Pizza."
+   },
+   {
+    "a": "Möchte einen Salat.",
+    "why": "Missing subject ich",
+    "fix": "Ich möchte einen Salat."
+   },
+   {
+    "a": "Ich möchte ein Sandwich mit Chicken.",
+    "why": "English word: Hähnchen",
+    "fix": "Ich möchte ein Sandwich mit Hähnchen."
+   },
+   {
+    "a": "Ich möchte eine Supe.",
+    "why": "Spelling: Suppe with pp",
+    "fix": "Ich möchte eine Suppe."
+   },
+   {
+    "a": "Ich möchte einen Kaffee.",
+    "why": "Does not do the task: coffee is a drink, not food",
+    "fix": "Ich möchte eine Suppe."
+   }
+  ]
+ },
+ "L9T3S0": {
+  "right": [
+   "Haben Sie Tee, bitte?",
+   "Haben Sie auch Tee, bitte?",
+   "Entschuldigung, haben Sie Tee?",
+   "Gibt es hier Tee, bitte?",
+   "Gibt es auch Tee, bitte?",
+   "Haben Sie bitte Tee?",
+   "Entschuldigung, gibt es Tee?",
+   "Haben Sie vielleicht Tee?",
+   "Haben Sie auch Tee? Das wäre schön.",
+   "Gibt es bei Ihnen Tee, bitte?",
+   "Können Sie mir sagen, ob es Tee gibt?",
+   "Haben Sie grünen Tee, bitte?"
+  ],
+  "wrong": [
+   {
+    "a": "Hast du Tee, bitte?",
+    "why": "Wrong register: Paul gets Sie",
+    "fix": "Haben Sie Tee, bitte?"
+   },
+   {
+    "a": "Habt Sie Tee, bitte?",
+    "why": "Wrong verb ending: Sie haben",
+    "fix": "Haben Sie Tee, bitte?"
+   },
+   {
+    "a": "Sie Tee haben, bitte?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Haben Sie Tee, bitte?"
+   },
+   {
+    "a": "Gibt es eine Tee, bitte?",
+    "why": "Wrong article: der Tee, so einen or no article",
+    "fix": "Gibt es Tee, bitte?"
+   },
+   {
+    "a": "Gibt Tee, bitte?",
+    "why": "Missing subject es",
+    "fix": "Gibt es Tee, bitte?"
+   },
+   {
+    "a": "Haben Sie Tea, bitte?",
+    "why": "English word: Tee",
+    "fix": "Haben Sie Tee, bitte?"
+   },
+   {
+    "a": "Haben Sie Tee, bitter?",
+    "why": "Spelling makes another word: bitter; bitte",
+    "fix": "Haben Sie Tee, bitte?"
+   },
+   {
+    "a": "Einen Tee, bitte.",
+    "why": "Does not do the task: orders instead of asking if they have it",
+    "fix": "Haben Sie Tee, bitte?"
+   }
+  ]
+ },
+ "L9T4S0": {
+  "right": [
+   "Ja, gern.",
+   "Ja, bitte.",
+   "Ja, gerne, danke.",
+   "Ja, ein Wasser, bitte.",
+   "Gern, danke!",
+   "Ja, sehr gern.",
+   "Ja, ich möchte auch Wasser.",
+   "Ja, bitte, ein Glas Wasser.",
+   "Oh ja, das ist eine gute Idee.",
+   "Ja, ein Wasser ohne Kohlensäure, bitte.",
+   "Ja, gern, ich habe Durst.",
+   "Ja, bitte, mit Eis."
+  ],
+  "wrong": [
+   {
+    "a": "Ja, ich möchte auch ein Wasser, danke dir.",
+    "why": "Wrong register: Paul gets Sie, so just danke",
+    "fix": "Ja, ich möchte auch ein Wasser, danke."
+   },
+   {
+    "a": "Ja, ich möchtest auch Wasser.",
+    "why": "Wrong verb ending: ich möchte",
+    "fix": "Ja, ich möchte auch Wasser."
+   },
+   {
+    "a": "Ja, ich auch Wasser möchte.",
+    "why": "Verb in the wrong place",
+    "fix": "Ja, ich möchte auch Wasser."
+   },
+   {
+    "a": "Ja, möchte auch Wasser.",
+    "why": "Missing subject ich",
+    "fix": "Ja, ich möchte auch Wasser."
+   },
+   {
+    "a": "Ja, eine Wasser, bitte.",
+    "why": "Wrong article: das Wasser, so ein",
+    "fix": "Ja, ein Wasser, bitte."
+   },
+   {
+    "a": "Yes, bitte.",
+    "why": "English word",
+    "fix": "Ja, bitte."
+   },
+   {
+    "a": "Ja, ein Glas Wasser, bitter.",
+    "why": "Spelling makes another word: bitter; bitte",
+    "fix": "Ja, ein Glas Wasser, bitte."
+   },
+   {
+    "a": "Nein, danke.",
+    "why": "Does not do the task: says no instead of accepting",
+    "fix": "Ja, gern."
+   }
+  ]
+ },
+ "L9T5S0": {
+  "right": [
+   "Nein, danke.",
+   "Nein, vielen Dank.",
+   "Nein, danke, ich bin satt.",
+   "Danke, aber ich möchte keinen Kuchen.",
+   "Nein, danke, heute nicht.",
+   "Nein, danke schön.",
+   "Vielen Dank, aber nein.",
+   "Nein, danke, das ist zu viel für mich.",
+   "Nein, danke, ich esse keinen Kuchen.",
+   "Das ist nett, aber nein, danke.",
+   "Nein, danke, ich möchte nur das Wasser.",
+   "Lieber nicht, danke."
+  ],
+  "wrong": [
+   {
+    "a": "Nein, ich möchte kein Kuchen.",
+    "why": "Wrong case: accusative keinen Kuchen",
+    "fix": "Nein, ich möchte keinen Kuchen."
+   },
+   {
+    "a": "Nein, ich möchte nicht Kuchen.",
+    "why": "Wrong negation: keinen Kuchen",
+    "fix": "Nein, ich möchte keinen Kuchen."
+   },
+   {
+    "a": "Nein, danke, ich bist satt.",
+    "why": "Wrong verb ending: ich bin",
+    "fix": "Nein, danke, ich bin satt."
+   },
+   {
+    "a": "Nein, danke, ich satt bin.",
+    "why": "Verb in the wrong place",
+    "fix": "Nein, danke, ich bin satt."
+   },
+   {
+    "a": "Nein, danke, bin satt.",
+    "why": "Missing subject ich",
+    "fix": "Nein, danke, ich bin satt."
+   },
+   {
+    "a": "Nein, merci.",
+    "why": "French word",
+    "fix": "Nein, danke."
+   },
+   {
+    "a": "Nein!",
+    "why": "Not polite: add danke",
+    "fix": "Nein, danke."
+   },
+   {
+    "a": "Ja, gern.",
+    "why": "Does not do the task: accepts instead of saying no",
+    "fix": "Nein, danke."
+   }
+  ]
+ },
+ "L9T0S1": {
+  "right": [
+   "Ja, ich habe Durst.",
+   "Ja, ich habe großen Durst.",
+   "Ja, ich habe richtig Durst.",
+   "Ja, ich habe Durst, danke.",
+   "Oh ja, ich habe Durst!",
+   "Ja, ich bin durstig.",
+   "Ja, sehr, ich habe Durst.",
+   "Ja, ich habe Durst und möchte etwas trinken.",
+   "Ja, ich habe Durst, ein Wasser bitte.",
+   "Ja, ich habe Durst, was haben Sie zu trinken?",
+   "Guten Tag! Ja, ich habe Durst.",
+   "Ja, ich habe Durst, es ist so heiß heute."
+  ],
+  "wrong": [
+   {
+    "a": "Ja, ich bin Durst.",
+    "why": "Wrong verb: ich habe Durst",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich hast Durst.",
+    "why": "Wrong verb ending: ich habe",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, habe Durst.",
+    "why": "Missing subject ich",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich Durst habe.",
+    "why": "Verb in the wrong place",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich habe einen Durst.",
+    "why": "Extra article: Durst haben has no article",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich habe Thirst.",
+    "why": "English word",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich habe Wurst.",
+    "why": "Spelling makes another word: Wurst is sausage; Durst",
+    "fix": "Ja, ich habe Durst."
+   },
+   {
+    "a": "Ja, ich habe Hunger.",
+    "why": "Does not do the task: you are thirsty, not hungry",
+    "fix": "Ja, ich habe Durst."
+   }
+  ]
+ },
+ "L9T3S1": {
+  "right": [
+   "Haben Sie Suppe, bitte?",
+   "Haben Sie auch Suppe, bitte?",
+   "Entschuldigung, haben Sie Suppe?",
+   "Gibt es hier Suppe, bitte?",
+   "Gibt es auch eine Suppe, bitte?",
+   "Haben Sie bitte eine Suppe?",
+   "Entschuldigung, gibt es heute Suppe?",
+   "Haben Sie vielleicht eine Suppe?",
+   "Gibt es bei Ihnen Suppe, bitte?",
+   "Können Sie mir sagen, ob es Suppe gibt?",
+   "Haben Sie heute eine Tomatensuppe, bitte?",
+   "Entschuldigung, gibt es eine Suppe des Tages?"
+  ],
+  "wrong": [
+   {
+    "a": "Hast du Suppe, bitte?",
+    "why": "Wrong register: Paul gets Sie",
+    "fix": "Haben Sie Suppe, bitte?"
+   },
+   {
+    "a": "Gibt es einen Suppe, bitte?",
+    "why": "Wrong article: die Suppe, so eine",
+    "fix": "Gibt es eine Suppe, bitte?"
+   },
+   {
+    "a": "Hat Sie Suppe, bitte?",
+    "why": "Wrong verb ending: Sie haben",
+    "fix": "Haben Sie Suppe, bitte?"
+   },
+   {
+    "a": "Sie Suppe haben, bitte?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Haben Sie Suppe, bitte?"
+   },
+   {
+    "a": "Gibt eine Suppe, bitte?",
+    "why": "Missing subject es",
+    "fix": "Gibt es eine Suppe, bitte?"
+   },
+   {
+    "a": "Haben Sie Soup, bitte?",
+    "why": "English word: Suppe",
+    "fix": "Haben Sie Suppe, bitte?"
+   },
+   {
+    "a": "Haben Sie eine Puppe, bitte?",
+    "why": "Spelling makes another word: Puppe is a doll; Suppe",
+    "fix": "Haben Sie eine Suppe, bitte?"
+   },
+   {
+    "a": "Eine Suppe, bitte.",
+    "why": "Does not do the task: orders instead of asking if they have it",
+    "fix": "Haben Sie Suppe, bitte?"
+   }
+  ]
+ },
+ "L9T0S2": {
+  "right": [
+   "Ja, ich habe Hunger und Durst.",
+   "Ja, ich habe großen Hunger und Durst.",
+   "Ja, ich habe Hunger und auch Durst.",
+   "Ja, ich habe Hunger und Durst, danke.",
+   "Oh ja, ich habe Hunger und Durst!",
+   "Ja, ich bin hungrig und durstig.",
+   "Ja, ich habe Hunger und ich habe Durst.",
+   "Ja, beides, ich habe Hunger und Durst.",
+   "Ja, ich habe Hunger und Durst, die Karte bitte.",
+   "Guten Tag! Ja, ich habe Hunger und Durst.",
+   "Ja, ich habe richtig Hunger und Durst.",
+   "Ja, ich habe Hunger und Durst, ich möchte essen und trinken."
+  ],
+  "wrong": [
+   {
+    "a": "Ja, ich bin Hunger und Durst.",
+    "why": "Wrong verb: ich habe",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich haben Hunger und Durst.",
+    "why": "Wrong verb ending: ich habe",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, habe Hunger und Durst.",
+    "why": "Missing subject ich",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich Hunger und Durst habe.",
+    "why": "Verb in the wrong place",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich habe Hunger and Durst.",
+    "why": "English word: und",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich habe Hunger und Wurst.",
+    "why": "Spelling makes another word: Wurst is sausage; Durst",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich habe Hunger und einen Durst.",
+    "why": "Extra article: Durst haben has no article",
+    "fix": "Ja, ich habe Hunger und Durst."
+   },
+   {
+    "a": "Ja, ich habe Hunger.",
+    "why": "Does not do the task: you are thirsty too",
+    "fix": "Ja, ich habe Hunger und Durst."
+   }
+  ]
+ },
+ "L9T3S2": {
+  "right": [
+   "Haben Sie Orangensaft, bitte?",
+   "Haben Sie auch Orangensaft, bitte?",
+   "Entschuldigung, haben Sie Orangensaft?",
+   "Gibt es hier Orangensaft, bitte?",
+   "Gibt es auch Orangensaft, bitte?",
+   "Haben Sie bitte einen Orangensaft?",
+   "Entschuldigung, gibt es Orangensaft?",
+   "Haben Sie vielleicht Orangensaft?",
+   "Gibt es bei Ihnen frischen Orangensaft, bitte?",
+   "Können Sie mir sagen, ob es Orangensaft gibt?",
+   "Haben Sie vielleicht auch einen Orangensaft, bitte?",
+   "Entschuldigung, haben Sie einen O-Saft?"
+  ],
+  "wrong": [
+   {
+    "a": "Hast du Orangensaft, bitte?",
+    "why": "Wrong register: Paul gets Sie",
+    "fix": "Haben Sie Orangensaft, bitte?"
+   },
+   {
+    "a": "Haben Sie eine Orangensaft, bitte?",
+    "why": "Wrong article: der Orangensaft, so einen",
+    "fix": "Haben Sie einen Orangensaft, bitte?"
+   },
+   {
+    "a": "Haben Sie ein Orangensaft, bitte?",
+    "why": "Wrong case: accusative einen Orangensaft",
+    "fix": "Haben Sie einen Orangensaft, bitte?"
+   },
+   {
+    "a": "Habst Sie Orangensaft, bitte?",
+    "why": "Wrong verb ending: Sie haben",
+    "fix": "Haben Sie Orangensaft, bitte?"
+   },
+   {
+    "a": "Sie Orangensaft haben, bitte?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Haben Sie Orangensaft, bitte?"
+   },
+   {
+    "a": "Haben Sie Orange Juice, bitte?",
+    "why": "English words: Orangensaft",
+    "fix": "Haben Sie Orangensaft, bitte?"
+   },
+   {
+    "a": "Gibt Orangensaft, bitte?",
+    "why": "Missing subject es",
+    "fix": "Gibt es Orangensaft, bitte?"
+   },
+   {
+    "a": "Einen Orangensaft, bitte.",
+    "why": "Does not do the task: orders instead of asking if they have it",
+    "fix": "Haben Sie Orangensaft, bitte?"
+   }
+  ]
+ },
+ "L10T0S0": {
+  "right": [
+   "Ich fahre nach Hamburg.",
+   "Nach München.",
+   "Ich fahre nach Frankfurt, bitte.",
+   "Ich fahre heute nach Leipzig.",
+   "Nach Dresden, bitte.",
+   "Ich möchte nach Stuttgart fahren.",
+   "Ich fahre nach Bremen zu meiner Schwester.",
+   "Ich fahre in die Schweiz.",
+   "Ich fahre nach Hannover und dann nach Kassel.",
+   "Ich fahre zum Flughafen.",
+   "Ich fahre nach Düsseldorf, zu einem Vorstellungsgespräch.",
+   "Guten Tag! Ich fahre nach Nürnberg."
+  ],
+  "wrong": [
+   {
+    "a": "Ich fahre zu Hamburg.",
+    "why": "Wrong preposition: nach with city names",
+    "fix": "Ich fahre nach Hamburg."
+   },
+   {
+    "a": "Ich fahre in Schweiz.",
+    "why": "Missing article: in die Schweiz",
+    "fix": "Ich fahre in die Schweiz."
+   },
+   {
+    "a": "Ich fährt nach Leipzig.",
+    "why": "Wrong verb ending: ich fahre",
+    "fix": "Ich fahre nach Leipzig."
+   },
+   {
+    "a": "Ich nach Dresden fahre.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich fahre nach Dresden."
+   },
+   {
+    "a": "Fahre nach Stuttgart.",
+    "why": "Missing subject ich",
+    "fix": "Ich fahre nach Stuttgart."
+   },
+   {
+    "a": "Ich fahre nach Bremen zu mein Schwester.",
+    "why": "Wrong possessive: zu meiner Schwester",
+    "fix": "Ich fahre nach Bremen zu meiner Schwester."
+   },
+   {
+    "a": "Ich fahre nach Munich.",
+    "why": "English word: München",
+    "fix": "Ich fahre nach München."
+   },
+   {
+    "a": "Ich komme aus Hamburg.",
+    "why": "Does not do the task: says where you come from",
+    "fix": "Ich fahre nach Hamburg."
+   }
+  ]
+ },
+ "L10T1S0": {
+  "right": [
+   "Fährt der Zug nach Berlin?",
+   "Fährt dieser Zug nach Berlin?",
+   "Entschuldigung, fährt der Zug nach Berlin?",
+   "Herr Schmidt, fährt der Zug nach Berlin?",
+   "Fährt der Zug auch nach Berlin?",
+   "Fährt der Zug nach Berlin, bitte?",
+   "Fährt der Zug hier nach Berlin?",
+   "Geht der Zug nach Berlin?",
+   "Fährt dieser Zug direkt nach Berlin?",
+   "Entschuldigung, fährt der Zug heute nach Berlin?",
+   "Fährt der Zug von Gleis 3 nach Berlin?",
+   "Ist das der Zug nach Berlin?"
+  ],
+  "wrong": [
+   {
+    "a": "Fahrt der Zug nach Berlin?",
+    "why": "Spelling makes another word: die Fahrt; the verb is fährt",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Fährt die Zug nach Berlin?",
+    "why": "Wrong article: der Zug",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Fährt der Zug in Berlin?",
+    "why": "Wrong preposition: nach Berlin",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Der Zug nach Berlin fährt?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Wohin fährt der Zug?",
+    "why": "Does not do the task: not a yes/no question about Berlin",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Fährt der Train nach Berlin?",
+    "why": "English word: Zug",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Fährt Zug nach Berlin?",
+    "why": "Missing article: der Zug",
+    "fix": "Fährt der Zug nach Berlin?"
+   },
+   {
+    "a": "Fährt der Zug nach Berlin? Weißt du das?",
+    "why": "Wrong register: Herr Schmidt gets Sie",
+    "fix": "Fährt der Zug nach Berlin? Wissen Sie das?"
+   }
+  ]
+ },
+ "L10T2S0": {
+  "right": [
+   "Wann fährt der Zug?",
+   "Um wie viel Uhr fährt der Zug?",
+   "Wann fährt der Zug ab?",
+   "Entschuldigung, wann fährt der Zug?",
+   "Und wann fährt er?",
+   "Wann fährt der Zug, bitte?",
+   "Um wie viel Uhr fährt er ab?",
+   "Wann fährt denn der Zug?",
+   "Herr Schmidt, wann fährt der Zug genau?",
+   "Können Sie mir sagen, wann der Zug fährt?",
+   "Wann fährt der nächste Zug?",
+   "Gut! Und um wie viel Uhr fährt der Zug?"
+  ],
+  "wrong": [
+   {
+    "a": "Wann fährt die Zug?",
+    "why": "Wrong article: der Zug",
+    "fix": "Wann fährt der Zug?"
+   },
+   {
+    "a": "Wann fahrt der Zug?",
+    "why": "Wrong verb form: der Zug fährt, with ä",
+    "fix": "Wann fährt der Zug?"
+   },
+   {
+    "a": "Wann der Zug fährt?",
+    "why": "Verb in the wrong place",
+    "fix": "Wann fährt der Zug?"
+   },
+   {
+    "a": "Wo fährt der Zug?",
+    "why": "Wrong question word: wann",
+    "fix": "Wann fährt der Zug?"
+   },
+   {
+    "a": "Kannst du mir sagen, wann der Zug fährt?",
+    "why": "Wrong register: Herr Schmidt gets Sie",
+    "fix": "Können Sie mir sagen, wann der Zug fährt?"
+   },
+   {
+    "a": "Wann fährt der Zug an?",
+    "why": "Wrong prefix: abfahren, not anfahren",
+    "fix": "Wann fährt der Zug ab?"
+   },
+   {
+    "a": "Um wie viel Uhren fährt der Zug?",
+    "why": "Wrong form: Uhr has no plural here",
+    "fix": "Um wie viel Uhr fährt der Zug?"
+   },
+   {
+    "a": "Was kostet die Fahrkarte?",
+    "why": "Does not do the task: asks the price, not the time",
+    "fix": "Wann fährt der Zug?"
+   }
+  ]
+ },
+ "L10T3S0": {
+  "right": [
+   "Was kostet die Fahrkarte?",
+   "Wie viel kostet die Fahrkarte?",
+   "Was kostet das Ticket?",
+   "Entschuldigung, was kostet die Fahrkarte?",
+   "Wie teuer ist die Fahrkarte?",
+   "Was kostet die Fahrkarte, bitte?",
+   "Und was kostet die Fahrkarte?",
+   "Wie viel kostet eine Fahrkarte nach Berlin?",
+   "Herr Schmidt, wie viel kostet die Fahrkarte?",
+   "Können Sie mir sagen, was die Fahrkarte kostet?",
+   "Was kostet denn die Fahrkarte?",
+   "Was kostet die Fahrkarte hin und zurück?"
+  ],
+  "wrong": [
+   {
+    "a": "Was kostet der Fahrkarte?",
+    "why": "Wrong article: die Fahrkarte",
+    "fix": "Was kostet die Fahrkarte?"
+   },
+   {
+    "a": "Was kosten die Fahrkarte?",
+    "why": "Wrong verb ending: die Fahrkarte kostet",
+    "fix": "Was kostet die Fahrkarte?"
+   },
+   {
+    "a": "Was die Fahrkarte kostet?",
+    "why": "Verb in the wrong place",
+    "fix": "Was kostet die Fahrkarte?"
+   },
+   {
+    "a": "Wie viele kostet die Fahrkarte?",
+    "why": "Wrong question word: wie viel for a price",
+    "fix": "Wie viel kostet die Fahrkarte?"
+   },
+   {
+    "a": "Kannst du mir sagen, was die Fahrkarte kostet?",
+    "why": "Wrong register: Herr Schmidt gets Sie",
+    "fix": "Können Sie mir sagen, was die Fahrkarte kostet?"
+   },
+   {
+    "a": "Was kostet die Fahrkarte, please?",
+    "why": "English word: bitte",
+    "fix": "Was kostet die Fahrkarte, bitte?"
+   },
+   {
+    "a": "Was kostet die Fahrtkarte?",
+    "why": "Invented word: Fahrkarte, without t",
+    "fix": "Was kostet die Fahrkarte?"
+   },
+   {
+    "a": "Wann fährt der Zug?",
+    "why": "Does not do the task: asks the time, not the price",
+    "fix": "Was kostet die Fahrkarte?"
+   }
+  ]
+ },
+ "L10T1S1": {
+  "right": [
+   "Fährt der Zug nach Österreich?",
+   "Fährt dieser Zug nach Österreich?",
+   "Entschuldigung, fährt der Zug nach Österreich?",
+   "Herr Schmidt, fährt der Zug nach Österreich?",
+   "Fährt der Zug auch nach Österreich?",
+   "Fährt der Zug nach Österreich, bitte?",
+   "Fährt der Zug bis nach Österreich?",
+   "Geht der Zug nach Österreich?",
+   "Fährt dieser Zug direkt nach Österreich?",
+   "Entschuldigung, fährt der Zug heute nach Österreich?",
+   "Fährt der Zug nach Österreich, nach Wien?",
+   "Ist das der Zug nach Österreich?"
+  ],
+  "wrong": [
+   {
+    "a": "Fährt der Zug in Österreich?",
+    "why": "Wrong preposition: nach Österreich",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Fährt der Zug nach das Österreich?",
+    "why": "Extra article: nach Österreich, no article",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Fahrt der Zug nach Österreich?",
+    "why": "Spelling makes another word: die Fahrt; the verb is fährt",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Der Zug nach Österreich fährt?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Fährt der Zug nach Austria?",
+    "why": "English word: Österreich",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Fährt der Zug nach Osterreich?",
+    "why": "Spelling: Österreich with Ö",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Fährt den Zug nach Österreich?",
+    "why": "Wrong case: der Zug is the subject",
+    "fix": "Fährt der Zug nach Österreich?"
+   },
+   {
+    "a": "Wann fährt der Zug nach Österreich?",
+    "why": "Does not do the task: not a yes/no question",
+    "fix": "Fährt der Zug nach Österreich?"
+   }
+  ]
+ },
+ "L10T1S2": {
+  "right": [
+   "Fährt der Zug nach Köln?",
+   "Fährt dieser Zug nach Köln?",
+   "Entschuldigung, fährt der Zug nach Köln?",
+   "Herr Schmidt, fährt der Zug nach Köln?",
+   "Fährt der Zug auch nach Köln?",
+   "Fährt der Zug nach Köln, bitte?",
+   "Fährt der Zug hier nach Köln?",
+   "Geht der Zug nach Köln?",
+   "Fährt dieser Zug direkt nach Köln?",
+   "Entschuldigung, fährt der Zug heute nach Köln?",
+   "Fährt der Zug nach Köln Hauptbahnhof?",
+   "Ist das der Zug nach Köln?"
+  ],
+  "wrong": [
+   {
+    "a": "Fährt der Zug zu Köln?",
+    "why": "Wrong preposition: nach Köln",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Fährt die Zug nach Köln?",
+    "why": "Wrong article: der Zug",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Fährst der Zug nach Köln?",
+    "why": "Wrong verb ending: der Zug fährt",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Der Zug nach Köln fährt?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Fährt der Zug nach Cologne?",
+    "why": "English word: Köln",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Fährt der Zug nach Koln?",
+    "why": "Spelling: Köln with ö",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Fährt Zug nach Köln?",
+    "why": "Missing article: der Zug",
+    "fix": "Fährt der Zug nach Köln?"
+   },
+   {
+    "a": "Wohin fährt der Zug?",
+    "why": "Does not do the task: not a yes/no question about Köln",
+    "fix": "Fährt der Zug nach Köln?"
+   }
+  ]
+ },
+ "L11T0S0": {
+  "right": [
+   "Ich habe Fußball gespielt.",
+   "Ich habe gekocht.",
+   "Ich habe ein Buch gelesen.",
+   "Ich habe gestern gearbeitet.",
+   "Ich habe Deutsch gelernt.",
+   "Ich habe meine Mutter angerufen.",
+   "Ich habe gestern einen Film gesehen.",
+   "Ich habe mit meinen Kindern gespielt.",
+   "Ich habe den ganzen Tag im Krankenhaus gearbeitet.",
+   "Ich habe eingekauft und dann gekocht.",
+   "Ich habe Musik gehört.",
+   "Ich habe gestern Abend mit Freunden gegessen."
+  ],
+  "wrong": [
+   {
+    "a": "Ich habe Fußball spielen.",
+    "why": "Wrong verb form: Partizip gespielt",
+    "fix": "Ich habe Fußball gespielt."
+   },
+   {
+    "a": "Ich hat ein Buch gelesen.",
+    "why": "Wrong verb ending: ich habe",
+    "fix": "Ich habe ein Buch gelesen."
+   },
+   {
+    "a": "Ich habe gelesen ein Buch.",
+    "why": "Verb in the wrong place: the Partizip goes to the end",
+    "fix": "Ich habe ein Buch gelesen."
+   },
+   {
+    "a": "Habe Deutsch gelernt.",
+    "why": "Missing subject ich",
+    "fix": "Ich habe Deutsch gelernt."
+   },
+   {
+    "a": "Ich habe einen Buch gelesen.",
+    "why": "Wrong article: das Buch, so ein",
+    "fix": "Ich habe ein Buch gelesen."
+   },
+   {
+    "a": "Ich habe einen Film geseht.",
+    "why": "Wrong Partizip: gesehen",
+    "fix": "Ich habe einen Film gesehen."
+   },
+   {
+    "a": "Ich habe mit meine Kinder gespielt.",
+    "why": "Wrong case: mit meinen Kindern",
+    "fix": "Ich habe mit meinen Kindern gespielt."
+   },
+   {
+    "a": "Ich spiele gern Fußball.",
+    "why": "Does not do the task: not about yesterday, not with Ich habe",
+    "fix": "Ich habe Fußball gespielt."
+   }
+  ]
+ },
+ "L11T1S0": {
+  "right": [
+   "Was hast du gestern gemacht?",
+   "Und du? Was hast du gestern gemacht?",
+   "Und was hast du gestern gemacht, Lena?",
+   "Lena, was hast du gestern gemacht?",
+   "Und du, was hast du gestern gemacht?",
+   "Was hast du denn gestern gemacht?",
+   "Was hast du gestern Abend gemacht?",
+   "Wie war dein Tag gestern?",
+   "Und dein Tag gestern? Was hast du gemacht?",
+   "Was hast du gestern so gemacht?",
+   "Hast du gestern gearbeitet?",
+   "Sag mal, was hast du gestern gemacht?"
+  ],
+  "wrong": [
+   {
+    "a": "Was haben Sie gestern gemacht?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Was hat du gestern gemacht?",
+    "why": "Wrong verb ending: du hast",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Was hast du gestern machen?",
+    "why": "Wrong verb form: Partizip gemacht",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Was du hast gestern gemacht?",
+    "why": "Verb in the wrong place",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Was hast gestern gemacht?",
+    "why": "Missing subject du",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Wie war deine Tag gestern?",
+    "why": "Wrong possessive: der Tag, so dein",
+    "fix": "Wie war dein Tag gestern?"
+   },
+   {
+    "a": "Was hast du yesterday gemacht?",
+    "why": "English word: gestern",
+    "fix": "Was hast du gestern gemacht?"
+   },
+   {
+    "a": "Was machst du morgen?",
+    "why": "Does not do the task: asks about tomorrow, not yesterday",
+    "fix": "Was hast du gestern gemacht?"
+   }
+  ]
+ },
+ "L11T2S0": {
+  "right": [
+   "Ich trinke morgens Kaffee.",
+   "Morgens frühstücke ich.",
+   "Ich dusche und frühstücke.",
+   "Morgens gehe ich zur Arbeit.",
+   "Ich bringe morgens meine Kinder in die Schule.",
+   "Ich lese morgens die Zeitung.",
+   "Morgens mache ich Sport.",
+   "Ich stehe auf und trinke einen Tee.",
+   "Morgens lerne ich Deutsch.",
+   "Ich fahre morgens mit dem Bus zur Uni.",
+   "Morgens gehe ich mit meinem Hund spazieren.",
+   "Ich arbeite morgens im Restaurant, ich bin Koch."
+  ],
+  "wrong": [
+   {
+    "a": "Morgens ich trinke Kaffee.",
+    "why": "Verb in the wrong place: morgens trinke ich",
+    "fix": "Morgens trinke ich Kaffee."
+   },
+   {
+    "a": "Ich trinkt morgens Kaffee.",
+    "why": "Wrong verb ending: ich trinke",
+    "fix": "Ich trinke morgens Kaffee."
+   },
+   {
+    "a": "Frühstücke morgens.",
+    "why": "Missing subject ich",
+    "fix": "Ich frühstücke morgens."
+   },
+   {
+    "a": "Ich bringe morgens mein Kinder in die Schule.",
+    "why": "Wrong possessive: meine Kinder",
+    "fix": "Ich bringe morgens meine Kinder in die Schule."
+   },
+   {
+    "a": "Ich fahre morgens mit der Bus zur Uni.",
+    "why": "Wrong case: mit dem Bus",
+    "fix": "Ich fahre morgens mit dem Bus zur Uni."
+   },
+   {
+    "a": "Morgens gehe ich nach Arbeit.",
+    "why": "Wrong preposition: zur Arbeit",
+    "fix": "Morgens gehe ich zur Arbeit."
+   },
+   {
+    "a": "Ich lese morgens die Newspaper.",
+    "why": "English word: Zeitung",
+    "fix": "Ich lese morgens die Zeitung."
+   },
+   {
+    "a": "Ich schlafe um elf Uhr abends.",
+    "why": "Does not do the task: about the evening, not the morning",
+    "fix": "Ich trinke morgens Kaffee."
+   }
+  ]
+ },
+ "L11T3S0": {
+  "right": [
+   "Ich stehe um sieben Uhr auf.",
+   "Ich stehe um halb sieben auf.",
+   "Um sechs Uhr stehe ich auf.",
+   "Ich stehe meistens um Viertel nach sechs auf.",
+   "Ich stehe um 5.30 Uhr auf.",
+   "Ich stehe um acht auf.",
+   "Normalerweise stehe ich um sieben Uhr auf.",
+   "Ich stehe um Viertel vor sieben auf.",
+   "Ich stehe jeden Tag um sechs Uhr auf, auch am Sonntag.",
+   "Um halb acht stehe ich auf.",
+   "Ich stehe früh auf, um fünf Uhr.",
+   "Ich stehe um sieben auf, aber am Wochenende um zehn."
+  ],
+  "wrong": [
+   {
+    "a": "Ich stehe um sieben Uhr.",
+    "why": "Missing prefix: ich stehe … auf",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich aufstehe um sieben Uhr.",
+    "why": "Verb in the wrong place: auf goes to the end",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich steht um sechs Uhr auf.",
+    "why": "Wrong verb ending: ich stehe",
+    "fix": "Ich stehe um sechs Uhr auf."
+   },
+   {
+    "a": "Ich stehe im sieben Uhr auf.",
+    "why": "Wrong preposition: um with a clock time",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Stehe um acht Uhr auf.",
+    "why": "Missing subject ich",
+    "fix": "Ich stehe um acht Uhr auf."
+   },
+   {
+    "a": "Ich stehe um sieben o'clock auf.",
+    "why": "English word: Uhr",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich stehe um sieben Uhren auf.",
+    "why": "Wrong form: Uhr has no plural in clock times",
+    "fix": "Ich stehe um sieben Uhr auf."
+   },
+   {
+    "a": "Ich stehe früh auf.",
+    "why": "Does not do the task: no clock time",
+    "fix": "Ich stehe um sieben Uhr auf."
+   }
+  ]
+ },
+ "L11T5S0": {
+  "right": [
+   "Gehst du am Samstag einkaufen?",
+   "Kaufst du am Samstag ein?",
+   "Lena, gehst du am Samstag einkaufen?",
+   "Gehst du Samstag einkaufen?",
+   "Und am Samstag? Gehst du da einkaufen?",
+   "Gehst du am Samstag auch einkaufen?",
+   "Kaufst du am Samstag im Supermarkt ein?",
+   "Gehst du am Samstag vielleicht einkaufen?",
+   "Sag mal, kaufst du am Samstag ein?",
+   "Gehst du am Samstag in die Stadt einkaufen?",
+   "Am Samstag, gehst du da einkaufen?",
+   "Gehst du am Samstagvormittag einkaufen?"
+  ],
+  "wrong": [
+   {
+    "a": "Gehen Sie am Samstag einkaufen?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Gehst du am Samstag einkaufen?"
+   },
+   {
+    "a": "Einkaufst du am Samstag?",
+    "why": "Verb in the wrong place: kaufst du … ein",
+    "fix": "Kaufst du am Samstag ein?"
+   },
+   {
+    "a": "Kaufst du am Samstag?",
+    "why": "Missing prefix: kaufst du … ein",
+    "fix": "Kaufst du am Samstag ein?"
+   },
+   {
+    "a": "Geht du am Samstag einkaufen?",
+    "why": "Wrong verb ending: du gehst",
+    "fix": "Gehst du am Samstag einkaufen?"
+   },
+   {
+    "a": "Gehst du im Samstag einkaufen?",
+    "why": "Wrong preposition: am Samstag",
+    "fix": "Gehst du am Samstag einkaufen?"
+   },
+   {
+    "a": "Gehst du am Saturday einkaufen?",
+    "why": "English word: Samstag",
+    "fix": "Gehst du am Samstag einkaufen?"
+   },
+   {
+    "a": "Gehst am Samstag einkaufen?",
+    "why": "Missing subject du",
+    "fix": "Gehst du am Samstag einkaufen?"
+   },
+   {
+    "a": "Wann gehst du einkaufen?",
+    "why": "Does not do the task: not a yes/no question about Saturday",
+    "fix": "Gehst du am Samstag einkaufen?"
+   }
+  ]
+ },
+ "L11T6S0": {
+  "right": [
+   "Ja, ich komme mit.",
+   "Ja, gern, ich komme mit.",
+   "Ja, ich komme gern mit.",
+   "Klar, ich komme mit!",
+   "Ja, ich komme auch mit.",
+   "Gute Idee, ich komme mit.",
+   "Ja, ich komme am Samstag mit.",
+   "Super, ich komme mit, ich brauche auch Brot.",
+   "Ja, natürlich komme ich mit.",
+   "Ja, ich gehe mit dir einkaufen.",
+   "Ja, ich komme sehr gern mit.",
+   "Okay, ich komme mit, wann treffen wir uns?"
+  ],
+  "wrong": [
+   {
+    "a": "Ja, ich mitkomme.",
+    "why": "Verb in the wrong place: ich komme … mit",
+    "fix": "Ja, ich komme mit."
+   },
+   {
+    "a": "Ja, ich kommt mit.",
+    "why": "Wrong verb ending: ich komme",
+    "fix": "Ja, ich komme mit."
+   },
+   {
+    "a": "Ja, komme mit.",
+    "why": "Missing subject ich",
+    "fix": "Ja, ich komme mit."
+   },
+   {
+    "a": "Ja, ich gehe mit du einkaufen.",
+    "why": "Wrong case: mit dir",
+    "fix": "Ja, ich gehe mit dir einkaufen."
+   },
+   {
+    "a": "Ja, ich komme gern mit Ihnen.",
+    "why": "Wrong register: Lena gets du, so mit dir",
+    "fix": "Ja, ich komme gern mit dir."
+   },
+   {
+    "a": "Yes, ich komme mit.",
+    "why": "English word: ja",
+    "fix": "Ja, ich komme mit."
+   },
+   {
+    "a": "Ja, ich komme mit zu Supermarkt.",
+    "why": "Wrong preposition form: zum Supermarkt",
+    "fix": "Ja, ich komme mit zum Supermarkt."
+   },
+   {
+    "a": "Nein, ich habe keine Zeit.",
+    "why": "Does not do the task: says no",
+    "fix": "Ja, ich komme mit."
+   }
+  ]
+ },
+ "L11T5S1": {
+  "right": [
+   "Gehst du am Freitag einkaufen?",
+   "Kaufst du am Freitag ein?",
+   "Lena, gehst du am Freitag einkaufen?",
+   "Gehst du Freitag einkaufen?",
+   "Und am Freitag? Gehst du da einkaufen?",
+   "Gehst du am Freitag auch einkaufen?",
+   "Kaufst du am Freitag auf dem Markt ein?",
+   "Gehst du am Freitag vielleicht einkaufen?",
+   "Sag mal, kaufst du am Freitag ein?",
+   "Gehst du am Freitag nach der Arbeit einkaufen?",
+   "Am Freitag, gehst du da einkaufen?",
+   "Gehst du am Freitagnachmittag einkaufen?"
+  ],
+  "wrong": [
+   {
+    "a": "Gehen Sie am Freitag einkaufen?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Gehst du am Freitag einkaufen?"
+   },
+   {
+    "a": "Einkaufst du am Freitag?",
+    "why": "Verb in the wrong place: kaufst du … ein",
+    "fix": "Kaufst du am Freitag ein?"
+   },
+   {
+    "a": "Kaufst du am Freitag?",
+    "why": "Missing prefix: kaufst du … ein",
+    "fix": "Kaufst du am Freitag ein?"
+   },
+   {
+    "a": "Gehts du am Freitag einkaufen?",
+    "why": "Spelling: gehst",
+    "fix": "Gehst du am Freitag einkaufen?"
+   },
+   {
+    "a": "Gehst du um Freitag einkaufen?",
+    "why": "Wrong preposition: am Freitag",
+    "fix": "Gehst du am Freitag einkaufen?"
+   },
+   {
+    "a": "Gehst du am Friday einkaufen?",
+    "why": "English word: Freitag",
+    "fix": "Gehst du am Freitag einkaufen?"
+   },
+   {
+    "a": "Gehst du am Freitag einkaufe?",
+    "why": "Wrong verb form: infinitive einkaufen",
+    "fix": "Gehst du am Freitag einkaufen?"
+   },
+   {
+    "a": "Ich gehe am Freitag einkaufen.",
+    "why": "Does not do the task: tells instead of asking",
+    "fix": "Gehst du am Freitag einkaufen?"
+   }
+  ]
+ },
+ "L11T5S2": {
+  "right": [
+   "Gehst du am Montag einkaufen?",
+   "Kaufst du am Montag ein?",
+   "Lena, gehst du am Montag einkaufen?",
+   "Gehst du Montag einkaufen?",
+   "Und am Montag? Gehst du da einkaufen?",
+   "Gehst du am Montag auch einkaufen?",
+   "Kaufst du am Montag im Supermarkt ein?",
+   "Gehst du am Montag vielleicht einkaufen?",
+   "Sag mal, kaufst du am Montag ein?",
+   "Gehst du am Montag nach dem Kurs einkaufen?",
+   "Am Montag, gehst du da einkaufen?",
+   "Gehst du am Montagabend einkaufen?"
+  ],
+  "wrong": [
+   {
+    "a": "Gehen Sie am Montag einkaufen?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Gehst du am Montag einkaufen?"
+   },
+   {
+    "a": "Du am Montag einkaufen gehst?",
+    "why": "Verb in the wrong place: a yes/no question starts with the verb",
+    "fix": "Gehst du am Montag einkaufen?"
+   },
+   {
+    "a": "Kaufst du am Montag?",
+    "why": "Missing prefix: kaufst du … ein",
+    "fix": "Kaufst du am Montag ein?"
+   },
+   {
+    "a": "Kauft du am Montag ein?",
+    "why": "Wrong verb ending: du kaufst",
+    "fix": "Kaufst du am Montag ein?"
+   },
+   {
+    "a": "Gehst du im Montag einkaufen?",
+    "why": "Wrong preposition: am Montag",
+    "fix": "Gehst du am Montag einkaufen?"
+   },
+   {
+    "a": "Gehst du am Monday einkaufen?",
+    "why": "English word: Montag",
+    "fix": "Gehst du am Montag einkaufen?"
+   },
+   {
+    "a": "Gehst du am Monat einkaufen?",
+    "why": "Spelling makes another word: Monat is month; Montag",
+    "fix": "Gehst du am Montag einkaufen?"
+   },
+   {
+    "a": "Ich kaufe am Montag ein.",
+    "why": "Does not do the task: tells instead of asking",
+    "fix": "Kaufst du am Montag ein?"
+   }
+  ]
+ },
+ "L12T0S0": {
+  "right": [
+   "Ich mache am Samstag eine Party. Kommst du?",
+   "Ich feiere am Samstag. Möchtest du kommen?",
+   "Am Samstag feiere ich meinen Geburtstag. Komm doch auch!",
+   "Ich lade dich zu meiner Party am Samstag ein.",
+   "Ich habe am Samstag eine Party, kommst du auch?",
+   "Am Samstag ist meine Party. Hast du Lust?",
+   "Ich feiere am Samstag ein Fest. Kommst du mit deinem Freund?",
+   "Ich mache am Samstag ein Fest bei mir zu Hause. Kommst du?",
+   "Möchtest du am Samstag zu meiner Party kommen?",
+   "Komm doch am Samstag zu meinem Fest!",
+   "Am Samstag feiere ich, und du bist eingeladen!",
+   "Ich feiere am Samstag Geburtstag. Kommst du um acht Uhr?"
+  ],
+  "wrong": [
+   {
+    "a": "Ich mache am Samstag ein Party. Kommst du?",
+    "why": "Wrong article: die Party, so eine",
+    "fix": "Ich mache am Samstag eine Party. Kommst du?"
+   },
+   {
+    "a": "Ich lade du zu meiner Party ein.",
+    "why": "Wrong case: accusative dich",
+    "fix": "Ich lade dich zu meiner Party ein."
+   },
+   {
+    "a": "Möchtest du am Samstag zu mein Fest kommen?",
+    "why": "Wrong possessive: zu meinem Fest",
+    "fix": "Möchtest du am Samstag zu meinem Fest kommen?"
+   },
+   {
+    "a": "Ich feiere am Samstag. Möchten Sie kommen?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Ich feiere am Samstag. Möchtest du kommen?"
+   },
+   {
+    "a": "Ich feiert am Samstag. Kommst du?",
+    "why": "Wrong verb ending: ich feiere",
+    "fix": "Ich feiere am Samstag. Kommst du?"
+   },
+   {
+    "a": "Am Samstag ich mache eine Party. Kommst du?",
+    "why": "Verb in the wrong place: am Samstag mache ich",
+    "fix": "Am Samstag mache ich eine Party. Kommst du?"
+   },
+   {
+    "a": "Ich mache am Saturday eine Party. Kommst du?",
+    "why": "English word: Samstag",
+    "fix": "Ich mache am Samstag eine Party. Kommst du?"
+   },
+   {
+    "a": "Ich mache am Samstag eine Party.",
+    "why": "Does not do the task: says it but does not invite Lena",
+    "fix": "Ich mache am Samstag eine Party. Kommst du?"
+   }
+  ]
+ },
+ "L12T1S0": {
+  "right": [
+   "Mein Geburtstag ist am 14. Mai.",
+   "Am 3. Juni.",
+   "Mein Geburtstag ist am Samstag.",
+   "Ich habe am 22. August Geburtstag.",
+   "Am 12.9.",
+   "Mein Geburtstag ist am ersten März.",
+   "Er ist am 30. Januar.",
+   "Ich habe am Samstag Geburtstag, am 18. Oktober.",
+   "Mein Geburtstag ist am 7. Juli, also am Samstag.",
+   "Am 25.11. habe ich Geburtstag.",
+   "Mein Geburtstag ist im Dezember, am 5.",
+   "Am Samstag! Ich werde dreißig."
+  ],
+  "wrong": [
+   {
+    "a": "Mein Geburtstag ist im 14. Mai.",
+    "why": "Wrong preposition: am with a date",
+    "fix": "Mein Geburtstag ist am 14. Mai."
+   },
+   {
+    "a": "Meine Geburtstag ist am 3. Juni.",
+    "why": "Wrong possessive: der Geburtstag, so mein",
+    "fix": "Mein Geburtstag ist am 3. Juni."
+   },
+   {
+    "a": "Ich bin am 22. August Geburtstag.",
+    "why": "Wrong verb: ich habe Geburtstag",
+    "fix": "Ich habe am 22. August Geburtstag."
+   },
+   {
+    "a": "Ich hat am 22. August Geburtstag.",
+    "why": "Wrong verb ending: ich habe",
+    "fix": "Ich habe am 22. August Geburtstag."
+   },
+   {
+    "a": "Mein Geburtstag am 30. Januar ist.",
+    "why": "Verb in the wrong place",
+    "fix": "Mein Geburtstag ist am 30. Januar."
+   },
+   {
+    "a": "Dein Geburtstag ist am 7. Juli.",
+    "why": "Wrong possessive: your own birthday is mein",
+    "fix": "Mein Geburtstag ist am 7. Juli."
+   },
+   {
+    "a": "Mein Geburtstag ist am 1. March.",
+    "why": "English word: März",
+    "fix": "Mein Geburtstag ist am 1. März."
+   },
+   {
+    "a": "Ich bin dreißig Jahre alt.",
+    "why": "Does not do the task: says your age, not the date",
+    "fix": "Mein Geburtstag ist am 14. Mai."
+   }
+  ]
+ },
+ "L12T2S0": {
+  "right": [
+   "Wann ist dein Geburtstag?",
+   "Und du? Wann ist dein Geburtstag?",
+   "Wann hast du Geburtstag?",
+   "Lena, wann ist dein Geburtstag?",
+   "Und wann hast du Geburtstag?",
+   "Und dein Geburtstag? Wann ist der?",
+   "Wann ist denn dein Geburtstag?",
+   "Wann hast du eigentlich Geburtstag, Lena?",
+   "Sag mal, wann ist dein Geburtstag?",
+   "Und wann feierst du Geburtstag?",
+   "Wann ist dein Geburtstag, im Sommer oder im Winter?",
+   "Und du, wann hast du Geburtstag?"
+  ],
+  "wrong": [
+   {
+    "a": "Wann ist Ihr Geburtstag?",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Wann ist dein Geburtstag?"
+   },
+   {
+    "a": "Wann ist deine Geburtstag?",
+    "why": "Wrong possessive: der Geburtstag, so dein",
+    "fix": "Wann ist dein Geburtstag?"
+   },
+   {
+    "a": "Wann ist mein Geburtstag?",
+    "why": "Wrong possessive: her birthday is dein",
+    "fix": "Wann ist dein Geburtstag?"
+   },
+   {
+    "a": "Wann hat du Geburtstag?",
+    "why": "Wrong verb ending: du hast",
+    "fix": "Wann hast du Geburtstag?"
+   },
+   {
+    "a": "Wann du hast Geburtstag?",
+    "why": "Verb in the wrong place",
+    "fix": "Wann hast du Geburtstag?"
+   },
+   {
+    "a": "Wo ist dein Geburtstag?",
+    "why": "Wrong question word: wann",
+    "fix": "Wann ist dein Geburtstag?"
+   },
+   {
+    "a": "Wann ist dein Birthday?",
+    "why": "English word: Geburtstag",
+    "fix": "Wann ist dein Geburtstag?"
+   },
+   {
+    "a": "Wie alt bist du?",
+    "why": "Does not do the task: asks her age, not her birthday",
+    "fix": "Wann ist dein Geburtstag?"
+   }
+  ]
+ },
+ "L12T3S0": {
+  "right": [
+   "Tim kommt auch.",
+   "Meine Schwester kommt.",
+   "Tim und Paul kommen auch.",
+   "Meine Eltern und mein Bruder kommen.",
+   "Meine Freundin Sara kommt auch.",
+   "Alle aus dem Deutschkurs kommen.",
+   "Mein Kollege Ahmad kommt mit seiner Frau.",
+   "Es kommen zehn Freunde.",
+   "Herr Weber kommt vielleicht auch.",
+   "Meine Nachbarin und ihre Kinder kommen.",
+   "Tim, Paul und meine Cousine Rana kommen.",
+   "Nur meine Familie kommt, und du natürlich!"
+  ],
+  "wrong": [
+   {
+    "a": "Tim und Paul kommt auch.",
+    "why": "Wrong verb ending: two people, kommen",
+    "fix": "Tim und Paul kommen auch."
+   },
+   {
+    "a": "Meine Bruder kommt.",
+    "why": "Wrong possessive: der Bruder, so mein",
+    "fix": "Mein Bruder kommt."
+   },
+   {
+    "a": "Kommt meine Schwester.",
+    "why": "Verb in the wrong place: meine Schwester kommt",
+    "fix": "Meine Schwester kommt."
+   },
+   {
+    "a": "Mein Kollege Ahmad kommt mit seine Frau.",
+    "why": "Wrong case: mit seiner Frau",
+    "fix": "Mein Kollege Ahmad kommt mit seiner Frau."
+   },
+   {
+    "a": "Meine Nachbarin und seine Kinder kommen.",
+    "why": "Wrong possessive: her children are ihre Kinder",
+    "fix": "Meine Nachbarin und ihre Kinder kommen."
+   },
+   {
+    "a": "Mein Friend Tim kommt.",
+    "why": "English word: Freund",
+    "fix": "Mein Freund Tim kommt."
+   },
+   {
+    "a": "Meine Geschwisterin kommt.",
+    "why": "Invented word: Schwester",
+    "fix": "Meine Schwester kommt."
+   },
+   {
+    "a": "Die Party ist am Samstag.",
+    "why": "Does not do the task: does not say who comes",
+    "fix": "Tim kommt auch."
+   }
+  ]
+ },
+ "L12T4S0": {
+  "right": [
+   "Ich möchte ein Buch.",
+   "Ein Buch!",
+   "Ich wünsche mir eine Uhr.",
+   "Ich möchte gern eine Tasche.",
+   "Ich hätte gern Blumen.",
+   "Ich wünsche mir einen Kuchen.",
+   "Ich möchte einen Gutschein für das Kino.",
+   "Ich brauche eine neue Lampe, das wünsche ich mir.",
+   "Vielleicht ein Wörterbuch?",
+   "Ich wünsche mir einen Schal, gern in Blau.",
+   "Ich möchte eine Pflanze für mein Zimmer.",
+   "Schokolade! Ich liebe Schokolade."
+  ],
+  "wrong": [
+   {
+    "a": "Ich möchte einen Buch.",
+    "why": "Wrong article: das Buch, so ein",
+    "fix": "Ich möchte ein Buch."
+   },
+   {
+    "a": "Ich wünsche mir ein Kuchen.",
+    "why": "Wrong case: accusative einen Kuchen",
+    "fix": "Ich wünsche mir einen Kuchen."
+   },
+   {
+    "a": "Ich wünsche mich eine Uhr.",
+    "why": "Wrong case: ich wünsche mir",
+    "fix": "Ich wünsche mir eine Uhr."
+   },
+   {
+    "a": "Ich möchtest eine Tasche.",
+    "why": "Wrong verb ending: ich möchte",
+    "fix": "Ich möchte eine Tasche."
+   },
+   {
+    "a": "Ich eine Uhr möchte.",
+    "why": "Verb in the wrong place",
+    "fix": "Ich möchte eine Uhr."
+   },
+   {
+    "a": "Möchte ein Buch.",
+    "why": "Missing subject ich",
+    "fix": "Ich möchte ein Buch."
+   },
+   {
+    "a": "Ich möchte Flowers.",
+    "why": "English word: Blumen",
+    "fix": "Ich möchte Blumen."
+   },
+   {
+    "a": "Mein Geburtstag ist am 14. Mai.",
+    "why": "Does not do the task: says the date, not a present",
+    "fix": "Ich möchte ein Buch."
+   }
+  ]
+ },
+ "L12T5S0": {
+  "right": [
+   "Schönen Tag!",
+   "Einen schönen Tag!",
+   "Ich wünsche dir einen schönen Tag!",
+   "Schönen Tag noch, Lena!",
+   "Viel Spaß beim Einkaufen und einen schönen Tag!",
+   "Okay, einen schönen Tag dir!",
+   "Hab einen schönen Tag!",
+   "Schönen Tag, Lena! Bis später.",
+   "Einen schönen Tag noch!",
+   "Alles klar, ich wünsche dir einen tollen Tag!",
+   "Dann einen schönen Tag, Lena!",
+   "Gut, schönen Tag! Bis Samstag!"
+  ],
+  "wrong": [
+   {
+    "a": "Schöne Tag!",
+    "why": "Wrong ending: einen schönen Tag",
+    "fix": "Schönen Tag!"
+   },
+   {
+    "a": "Ich wünsche dich einen schönen Tag!",
+    "why": "Wrong case: dative dir",
+    "fix": "Ich wünsche dir einen schönen Tag!"
+   },
+   {
+    "a": "Ich wünsche Ihnen einen schönen Tag!",
+    "why": "Wrong register: Lena gets du",
+    "fix": "Ich wünsche dir einen schönen Tag!"
+   },
+   {
+    "a": "Ich wünsche dir ein schönen Tag!",
+    "why": "Wrong article: der Tag, so einen",
+    "fix": "Ich wünsche dir einen schönen Tag!"
+   },
+   {
+    "a": "Ich wünschst dir einen schönen Tag!",
+    "why": "Wrong verb ending: ich wünsche",
+    "fix": "Ich wünsche dir einen schönen Tag!"
+   },
+   {
+    "a": "Ich dir einen schönen Tag wünsche!",
+    "why": "Verb in the wrong place",
+    "fix": "Ich wünsche dir einen schönen Tag!"
+   },
+   {
+    "a": "Have einen schönen Tag!",
+    "why": "English word: hab",
+    "fix": "Hab einen schönen Tag!"
+   },
+   {
+    "a": "Gute Nacht, Lena!",
+    "why": "Does not do the task: says good night, not a nice day",
+    "fix": "Schönen Tag, Lena!"
+   }
+  ]
+ },
+ "L12T6S0": {
+  "right": [
+   "Tschüss!",
+   "Tschüss, Lena!",
+   "Bis bald!",
+   "Tschüss, bis Samstag!",
+   "Bis dann!",
+   "Bis später, Lena!",
+   "Tschüss und viel Spaß!",
+   "Mach's gut, Lena!",
+   "Bis morgen!",
+   "Tschüs, bis Samstag auf der Party!",
+   "Tschüss! Bis zum nächsten Mal.",
+   "Tschüss, mach's gut!"
+  ],
+  "wrong": [
+   {
+    "a": "Bis zu Samstag!",
+    "why": "Wrong preposition: bis Samstag",
+    "fix": "Bis Samstag!"
+   },
+   {
+    "a": "Auf Wiedersehen, Frau Lena!",
+    "why": "Wrong register: Lena is a friend, no Frau",
+    "fix": "Auf Wiedersehen, Lena!"
+   },
+   {
+    "a": "Bis bold!",
+    "why": "Spelling: bald",
+    "fix": "Bis bald!"
+   },
+   {
+    "a": "Macht's gut, Lena!",
+    "why": "Wrong verb ending: to one friend, mach's gut",
+    "fix": "Mach's gut, Lena!"
+   },
+   {
+    "a": "Bye, Lena!",
+    "why": "English word",
+    "fix": "Tschüss, Lena!"
+   },
+   {
+    "a": "Bis Morgen!",
+    "why": "Spelling makes another word: der Morgen is the morning; morgen means tomorrow",
+    "fix": "Bis morgen!"
+   },
+   {
+    "a": "Tschüss! Bis zur nächsten Mal.",
+    "why": "Wrong article: das Mal, so zum nächsten Mal",
+    "fix": "Tschüss! Bis zum nächsten Mal."
+   },
+   {
+    "a": "Hallo, Lena!",
+    "why": "Does not do the task: this is a greeting, not goodbye",
+    "fix": "Tschüss, Lena!"
+   }
+  ]
+ }
+}

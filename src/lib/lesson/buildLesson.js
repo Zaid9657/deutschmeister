@@ -730,10 +730,13 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   // the three polite items out of reach and a case-variant shares their key (DaF review #10
   // MAJOR 2, measured once the guard walked attempt 3). So the raw string travels with the key and
   // an item whose answer IS that string is preferred over one that merely shares its key.
+  // A seat may name several answers (`['vierzehn Uhr dreißig', 'zwanzig Uhr fünfundvierzig']`): any one of them takes it, so the
+  // draws of one Lektion rotate through them (round 4 of the loop: one official-time item stood in all three draws of L8).
   const coverKeys = [];
-  for (const raw of (rule && rule.mustCover) || []) {
-    const key = answerKey({ answer: raw });
-    if (key && !coverKeys.some((c) => c.key === key)) coverKeys.push({ raw: String(raw).trim(), key });
+  for (const entry of (rule && rule.mustCover) || []) {
+    const raws = (Array.isArray(entry) ? entry : [entry]).map((x) => String(x).trim());
+    const keys = raws.map((x) => answerKey({ answer: x })).filter(Boolean);
+    if (keys.length && !coverKeys.some((c) => c.keys.some((k) => keys.includes(k)))) coverKeys.push({ raws, keys, key: keys[0], raw: raws[0] });
   }
 
   const eligible = [];
@@ -824,10 +827,10 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // typed and on the primary slug for preference, under the same caps as every
     // other pick. A key the pool cannot supply is a no-op — the draw is never
     // padded with something off-topic to satisfy it.
-    for (const { raw, key } of coverKeys) {
+    for (const { raws, keys } of coverKeys) {
       if (chosen.size >= PRACTICE_SIZE) break;
-      const all = ranked.filter((it) => read.answerKey(it) === key);
-      const exact = all.filter((it) => String(it.answer || '').trim() === raw);
+      const all = ranked.filter((it) => keys.includes(read.answerKey(it)));
+      const exact = all.filter((it) => raws.includes(String(it.answer || '').trim()));
       const candidates = [...exact, ...all.filter((it) => !exact.includes(it))];
       const preferred = [
         ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),

@@ -204,6 +204,24 @@ function clauseInOrder(c) {
   return true;
 }
 
+/**
+ * What a sentence out of order certainly is, where one of these is why: the hint names it (round 4; the older answer was „not checked“).
+ * Only faults no context makes right: another person's pronoun, „nicht Kuchen“, „ich bin kein Hunger“, „viel alt“, „die halb neun“, „nach Schule“.
+ */
+export function certainlyNot(sentences) {
+  for (const c of sentences.flatMap((s) => s.clauses)) {
+    if (c.around || c.frag) continue;
+    const all = c.elems || [];
+    const { subj } = c;
+    if (c.lemma === 'sein' && subj && isPron(subj) && ['er', 'sie'].includes(subj.head) && c.pred?.kind === 'np' && !c.pred.job && KINSHIP.test(c.pred.head) && !personFits(subj, c)) return 'word';
+    if (all.some((e, k) => e.kind === 'adv' && e.word === 'nicht' && all[k + 1]?.kind === 'np' && all[k + 1].det === 'ein' && !all[k + 1].list)) return 'word';
+    if (c.lemma === 'sein' && ['ich', 'wir', 'du'].includes(subj?.head) && c.pred?.kind === 'np' && !c.pred.job && (c.pred.stuff || ['hunger', 'durst'].includes(c.pred.head)) && !NAMED.test(c.pred.head)) return 'verb';
+    if (all.some((e) => e.kind === 'adj' && (e.degree || []).includes('viel') && !(e.words || [e.word]).some((w) => /er$/u.test(w)))) return 'word';
+    if (c.lemma === 'sein' && subj?.head === 'es' && all.some((e) => e !== subj && isPron(e) && POINTING.has(e.head)) && all.some((e) => e.bareClock)) return 'article';
+    if (all.some((e) => e.kind === 'pp' && e.np?.kind === 'np' && e.np.bare && !e.np.list && ['schule', 'arbeit'].includes(e.np.head) && e.prep === 'nach')) return 'word';
+  }
+  return null;
+}
 const KINSHIP = /^(?:mutter|vater|mama|papa|mutti|vati|oma|opa|bruder|schwester|sohn|tochter|mann|frau|tante|onkel|cousin|cousine|neffe|nichte|eltern|geschwister|brüder|schwestern|großmutter|großvater|grossmutter|grossvater)$/u;
 function personFits(subj, c) {
   const one = c.reading?.persons?.includes('er');

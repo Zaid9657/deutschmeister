@@ -40,7 +40,7 @@ export const RULE_CARDS = {
       {
         "wrong": "V und W haben denselben Namen.",
         "correct": "V heißt Vau, W heißt We.",
-        "explanationDe": "Zwei Buchstaben, zwei Namen. So heißen die Buchstaben V und W."
+        "explanationDe": "Der Buchstabe V heißt Vau, der Buchstabe W heißt We."
       },
       {
         "wrong": "Ich buchstabiere Tschüss: T-S-C-H-U-S-S.",

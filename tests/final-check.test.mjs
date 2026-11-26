@@ -7,7 +7,7 @@ import { RESULT, numberWordsToDigits } from '../src/lib/lesson/check.js';
 import { alignTranscript } from '../src/lib/lesson/readaloud.js';
 import { buildLesson } from '../src/lib/lesson/buildLesson.js';
 import { STRINGS as T } from '../src/lib/lesson/strings.js';
-import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, optionalPieces, partsToRepeat, sequenceFault, spokenShown, spokenTarget, typedResult, verifiedResult, verifiedRule, writtenOnly, wrongReason } from '../src/lib/lesson/finalCheck.js';
+import { BEYOND, untaughtIn, canDoShown, faultHintKey, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, optionalPieces, partsToRepeat, sequenceFault, spokenShown, spokenTarget, typedResult, verifiedResult, verifiedRule, writtenOnly, wrongReason } from '../src/lib/lesson/finalCheck.js';
 import { guidedCheckVocabulary } from '../scripts/validate-curriculum.mjs';
 
 const withCheck = CURRICULUM_A11.lektionen.filter((l) => l.guided?.check);
@@ -60,8 +60,9 @@ test('Lektion 1 keeps its partner and its two otter lines word for word', () => 
   assert.equal(partner, 'Frau Kaya');
   assert.equal(open.en, 'This time, you’ll speak with Frau Kaya using your own name. Take your time.');
   assert.equal(open.de, 'Diesmal sprechen Sie mit Frau Kaya unter Ihrem eigenen Namen. Nehmen Sie sich Zeit.');
-  assert.equal(passed.en, 'You’ve used all four skills in this conversation. That’s something to be proud of.');
-  assert.equal(passed.de, 'Sie haben in diesem Gespräch alle vier Fähigkeiten gezeigt. Darauf können Sie stolz sein.');
+  // Loop round 4 (Codex, 2026-11-26): the line no longer claims „all four skills“; it names what the learner did.
+  assert.equal(passed.en, 'You’ve had a conversation in German and written down a spelled-out name. Well done!');
+  assert.equal(passed.de, 'Sie haben ein Gespräch auf Deutsch geführt und einen buchstabierten Namen aufgeschrieben. Gut gemacht!');
 });
 
 test('the closing line names what really comes next on the course path, so Lektion 12 never points to a Lektion 13', () => {
@@ -481,6 +482,8 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
         if (NONE[t.none || t.slot]) { personal += 1; for (const none of NONE[t.none || t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
         // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
         assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
+        // …and the hint says to read the task again: no word of it is wrong (Claude score of fd8f8dba, MINOR 9).
+        assert.equal(faultHintKey(t, frame(t).replaceAll('…', 'nichts')), 'check.fault.task', `${where}: hint`);
         // A name is open: „Ich bin arbeitslos“ cannot be told from „Ich bin Carlos“ typed small, so name turns are left out.
         if (t.slot !== 'name') for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(refused(t, none), RESULT.WRONG, `${where}: ${none}`);
       });
@@ -572,7 +575,11 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
           if ((a.slot ?? t.slot) !== 'activity' || !frame.includes('…')) continue;
           activityGaps += 1;
           for (const verb of ['einkaufe', 'aufstehe', 'fernsehe']) assert.equal(refused({ ...t, accepted: [a] }, frame.replace('…', verb)), RESULT.WRONG, `${l.id}: ${frame.replace('…', verb)}`);
-          assert.notEqual(typedResult({ ...t, accepted: [a] }, frame.replace('…', 'kaufe ein')), RESULT.WRONG, `${l.id}: ${frame.replace('…', 'kaufe ein')}`);
+          // A prefix at its place is never refused; one in front of what follows it is the order to check (round 4).
+          const prefixLast = frame.replace('…', 'kaufe').replace(/([.!?]?)$/, ' ein$1');
+          assert.notEqual(typedResult({ ...t, accepted: [a] }, prefixLast), RESULT.WRONG, `${l.id}: ${prefixLast}`);
+          const inFront = frame.replace('…', 'kaufe ein');
+          if (typedResult({ ...t, accepted: [a] }, inFront) === RESULT.WRONG) assert.equal(wrongReason({ ...t, accepted: [a] }, inFront), 'order', `${l.id}: ${inFront}`);
         }
       }
     }
@@ -1222,4 +1229,17 @@ test('the spoken path (section D): every model and fixed answer of every spoken 
   }
   assert.ok(tried >= 1000, `${tried} spoken forms`);
   assert.deepEqual(missed, []);
+});
+
+test('„ein Uhr“ after a time word is one o\'clock; a hint of „nichts/alles/beides“ never turns an unsure answer wrong (round 4)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  assert.equal(typedResult(at(11)[3], 'Ich stehe um ein Uhr auf.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8)[1], 'Wie spät ist es? Ist es ein Uhr?'), RESULT.CORRECT);
+  // „ein Uhr“ as a thing is still the wrong article („eine Uhr“).
+  assert.equal(typedResult(at(8)[1], 'Hast du ein Uhr? Wie spät ist es?'), RESULT.WRONG);
+  // The off-task answer reads the task again; its article is not at fault.
+  assert.equal(faultHintKey(at(11)[0], 'Ich stehe um ein Uhr auf.'), 'check.fault.task');
+  // Natural answers with „alles“ or „beides“ stay unjudged rather than told to read the task.
+  assert.equal(typedResult(at(9)[0], 'Ja, beides!'), BEYOND);
+  assert.equal(typedResult(at(1)[4], 'Ist bei Ihnen alles gut?'), BEYOND);
 });

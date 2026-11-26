@@ -40,6 +40,7 @@ import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, track
 import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
+import { rememberCheck } from '../../lib/course/checkShown.js';
 import SessionBreak from '../../components/lesson/SessionBreak.jsx';
 import OtterSays from '../../components/illustrations/OtterSays.jsx';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
@@ -657,7 +658,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       break;
     case 'check':
       body = <Suspense fallback={<PlayerLoading />}><CheckStage stage={stage} lektion={lektion} onBack={back} resume={checkRun} onProgress={setCheckRun}
-        onDone={(shown) => { setCheckShown(shown); advance(); }} /></Suspense>;
+        onDone={(shown) => { setCheckShown(shown); rememberCheck(lektion.id, shown); advance(); }} /></Suspense>;
       break;
     case 'recap':
       // No Back: the run is finished, saved and cleared. Back used to start the final check again at

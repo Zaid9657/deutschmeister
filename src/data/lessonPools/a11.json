@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 581,
+ "count": 584,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -4822,7 +4822,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 102,
-   "questionDe": "Ergänzen Sie mit einem Wort: Das ist Herr Brandt. ___ ist Lehrer. (er, sie oder es?)",
+   "questionDe": "Ergänzen Sie mit einem Wort: Das ist Herr Krüger. ___ ist Lehrer. (er, sie oder es?)",
    "questionEn": "Fill the gap with er, sie or es.",
    "options": null,
    "answer": "Er",
@@ -4872,7 +4872,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 105,
-   "questionDe": "Frau Brandt, buchstabieren ___ bitte!",
+   "questionDe": "Frau Krüger, buchstabieren ___ bitte!",
    "questionEn": "Fill the gap with one word.",
    "options": null,
    "answer": "Sie",
@@ -5699,8 +5699,8 @@
    "accepted": [
     "Sie kommt aus Marokko.",
     "Sie kommt aus Marokko",
-    "Aus Marokko kommt Sie.",
-    "Aus Marokko kommt Sie"
+    "Aus Marokko kommt sie.",
+    "Aus Marokko kommt sie"
    ],
    "explanationDe": "die Mutter: sie. Das Verb steht auf Platz zwei: Sie kommt aus Marokko.",
    "hint": null,
@@ -8494,7 +8494,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "Es ist ___. (14:30, offiziell)",
+   "questionDe": "Es ist ___. (14:30, offiziell; Schreiben Sie die Uhrzeit in Worten)",
    "questionEn": "It is 2:30 pm. (official, 24-hour: write the time in words)",
    "options": null,
    "answer": "vierzehn Uhr dreißig",
@@ -8513,8 +8513,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "Es ist ___. (2:30, umgangssprachlich)",
-   "questionEn": "It is 2:30. (colloquial, everyday German)",
+   "questionDe": "Es ist ___. (2:30, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:30. (everyday German: write the time in words)",
    "options": null,
    "answer": "halb drei",
    "accepted": [
@@ -8532,8 +8532,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 3,
-   "questionDe": "Es ist ___. (2:15, umgangssprachlich)",
-   "questionEn": "It is 2:15. (colloquial)",
+   "questionDe": "Es ist ___. (2:15, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:15. (everyday German: write the time in words)",
    "options": null,
    "answer": "Viertel nach zwei",
    "accepted": [
@@ -8551,8 +8551,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Es ist ___. (2:45, umgangssprachlich)",
-   "questionEn": "It is 2:45. (colloquial)",
+   "questionDe": "Es ist ___. (2:45, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:45. (everyday German: write the time in words)",
    "options": null,
    "answer": "Viertel vor drei",
    "accepted": [
@@ -8570,8 +8570,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Es ist ___. (8:00, offiziell)",
-   "questionEn": "It is 8:00. (official: include the word Uhr)",
+   "questionDe": "Es ist ___. (8:00, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 8:00. (official, 24-hour: write the time in words)",
    "options": null,
    "answer": "acht Uhr",
    "accepted": [
@@ -9083,7 +9083,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Es ist ___. (20:45, offiziell)",
+   "questionDe": "Es ist ___. (20:45, offiziell; Schreiben Sie die Uhrzeit in Worten)",
    "questionEn": "It is 8:45 pm. (official, 24-hour: write the time in words)",
    "options": null,
    "answer": "zwanzig Uhr fünfundvierzig",
@@ -9102,8 +9102,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 11,
-   "questionDe": "Es ist ___. (0:00, offiziell)",
-   "questionEn": "It is midnight (0:00). (official, 24-hour)",
+   "questionDe": "Es ist ___. (0:00, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is midnight (0:00). (official, 24-hour: write the time in words)",
    "options": null,
    "answer": "null Uhr",
    "accepted": [
@@ -9268,6 +9268,63 @@
     "source": "chapter"
    },
    "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-19",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 165,
+   "questionDe": "Es ist ___ zehn. (9.30)",
+   "questionEn": "It is half past nine.",
+   "options": null,
+   "answer": "halb",
+   "accepted": [
+    "halb"
+   ],
+   "explanationDe": "halb zehn ist 9.30, eine halbe Stunde vor zehn.",
+   "hint": null,
+   "minLektion": 8,
+   "explanationEn": "**halb zehn** is 9.30: half an hour before ten."
+  },
+  {
+   "id": "extra-a11-l08-20",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 166,
+   "questionDe": "Es ist ___ sieben. (6.30)",
+   "questionEn": "It is half past six.",
+   "options": null,
+   "answer": "halb",
+   "accepted": [
+    "halb"
+   ],
+   "explanationDe": "halb sieben ist 6.30, eine halbe Stunde vor sieben.",
+   "hint": null,
+   "minLektion": 8,
+   "explanationEn": "**halb sieben** is 6.30: half an hour before seven."
+  },
+  {
+   "id": "extra-a11-l08-21",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 167,
+   "questionDe": "Es ist ___. (18:15, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 6:15 pm. (official, 24-hour: write the time in words)",
+   "options": null,
+   "answer": "achtzehn Uhr fünfzehn",
+   "accepted": [
+    "achtzehn Uhr fünfzehn"
+   ],
+   "explanationDe": "Offiziell: erst die Stunde, dann „Uhr“, dann die Minuten: 18:15 = achtzehn Uhr fünfzehn.",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "Official time: first the hour, then **Uhr**, then the minutes: 18:15 = **achtzehn Uhr fünfzehn**."
   },
   {
    "id": "68be03d3-c547-41dc-9dc0-772fa974f74f",
@@ -9727,7 +9784,7 @@
    "explanationDe": "Singular-sie (she) steht mit hat, wie er und es.",
    "explanationEn": "Sie meaning she (singular) takes **hat**, the same form as er and es: **Sie hat Zeit.** Haben would be for sie meaning they.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 7
   },
   {
    "id": "e8388d41-3d49-59c8-ac5b-020c596c2649",
@@ -9747,7 +9804,7 @@
    "explanationDe": "In einer Frage steht die haben-Form vor dem formellen Sie.",
    "explanationEn": "The formal you (Sie) takes **haben**, and in a yes/no question the verb comes first: **Haben Sie Zeit?**",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 7
   },
   {
    "id": "7b8f0fd0-cce3-51e8-8430-4a4ecb5c47c3",

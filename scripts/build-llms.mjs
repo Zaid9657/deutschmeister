@@ -234,7 +234,7 @@ ${accessLines(onSale).join('\n')}
 
 ### ${FREE_LEVEL_LABEL} Course (${FREE_LEKTION_LABEL} free)
 - ${lektionen} situational lessons built on Goethe-Institut can-do statements; ${FREE_LEKTION_LABEL} needs no account
-- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with a free account, a form checklist without one
+- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with an account that has the lesson open (${FREE_LEKTION_LABEL} with a free account), a form checklist without one
 - Checkpoints and spaced review
 - URL: ${SITE}/course/a1.1
 

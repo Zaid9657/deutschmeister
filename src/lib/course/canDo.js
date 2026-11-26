@@ -37,13 +37,18 @@ export function shownLines(lektion, lang = 'en') {
   return canDoLines(lektion, lang).map((line, i) => shown[i]?.[lang === 'de' ? 'de' : 'en'] || line);
 }
 
-/** Every can-do of the level in course order, with its state; `done` is the set of finished path node ids. */
-export function canDoList(curriculum, done = new Set()) {
+/**
+ * Every can-do of the level in course order, with its state; `done` is the set of finished path node ids. `checked` is what the
+ * Lektionen's final checks showed on this device (`checkShown.js`): a can-do the check did not show is `practise`, never ticked
+ * (Claude score of fd8f8dba, MAJOR); until the chapter checkpoint is passed, that is.
+ */
+export function canDoList(curriculum, done = new Set(), checked = {}) {
   return curriculum.lektionen.flatMap((l) => {
     const cp = checkpointFor(curriculum, l.nr);
     const state = !done.has(l.id) ? 'open' : cp && done.has(cp.id) ? 'again' : 'shown';
     // A finished Lektion claims what its check showed (`shownLines`), an open one the can-do it works towards.
     const [de, en] = state === 'open' ? [l.canDo || [], canDoLines(l, 'en')] : [shownLines(l, 'de'), shownLines(l, 'en')];
-    return de.map((line, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de: line, en: en[i], state }));
+    const seen = checked?.[l.id];
+    return de.map((line, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de: line, en: en[i], state: state === 'shown' && Array.isArray(seen) && seen[i] === false ? 'practise' : state }));
   });
 }

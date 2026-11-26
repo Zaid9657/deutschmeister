@@ -1136,8 +1136,11 @@ export function frontableOrders(item) {
       const at = verbAt + 1 + i;
       return at < from || at >= to;
     });
+    // „Sie kommt aus Marokko.“ (the mother) fronts as „Aus Marokko kommt sie.“: a „sie“ of the word bag, or one a verb in the
+    // third person singular agrees with, is no polite „Sie“ (Claude score of fd8f8dba, extra-a11-l03-44).
+    const sheOrThey = subject.length === 1 && subject[0] === 'Sie' && (chunks.includes('sie') || /(?:t|ist|hat)$/u.test(bare(verb)));
     return [capitalise(angabe[0]), ...angabe.slice(1), verb,
-      lowerSubject(subject[0]), ...subject.slice(1), ...rest].join(' ');
+      sheOrThey ? 'sie' : lowerSubject(subject[0]), ...subject.slice(1), ...rest].join(' ');
   };
 
   const orders = spans.map(front);

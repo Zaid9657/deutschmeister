@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Supervisor decision 2026-10-25: only declared learner strategies are gated.
+import { castNames } from './lib/castNames.mjs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { LESEN_A11 } from '../src/data/curricula/a11.lesen.js';
@@ -176,8 +177,8 @@ export function checkLesenA11(bank = LESEN_A11) {
   const ids = new Set(); const texts = new Set();
   // A cast name names only the cast (the independent score, 2026-11-20: „Lena ist schon zehn.“ made Lena a child):
   // the bank's people are others, so no unit may use a name a dialogue of either course gives its cast.
-  const cast = new Set(['a1.1', 'a1.2'].flatMap((lv) => (levelSpec(lv)?.curriculum?.lektionen || [])
-    .flatMap((l) => (l.dialog?.lines || []).flatMap((x) => String(x.speaker).split(/\s+/)))).filter((t) => t && !['Herr', 'Frau'].includes(t)));
+  // (Their surnames too: „Lena Brandt“, Claude score of fd8f8dba.)
+  const cast = castNames();
   const flag = (id, why) => findings.push(`${id}: ${why}`);
   for (const cp of spec.curriculum.checkpoints) {
     const papers = bank[cp.id]?.papers;

@@ -11,7 +11,9 @@ import { useLessonLang } from '../../lib/lesson/strings.js';
 export default function KannIch({ items, checkpointsPassed, checkpointsTotal, streak = 0 }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
-  const shown = items.filter((c) => c.state !== 'open');
+  const shown = items.filter((c) => c.state !== 'open' && c.state !== 'practise');
+  // What a final check did not show stays to practise, and the home says how many (`canDo.js`).
+  const practise = items.filter((c) => c.state === 'practise').length;
   const latest = shown.slice(-3);
   return (
     <section aria-labelledby="kann-ich-title" className="rounded-clay border border-rule bg-white p-4">
@@ -21,6 +23,7 @@ export default function KannIch({ items, checkpointsPassed, checkpointsTotal, st
       <p className="mt-1 text-[0.875rem] text-graphite">
         <span className="font-display text-[1.5rem] font-semibold leading-none text-ink">{shown.length}</span>{' '}
         {de ? `von ${items.length} Zielen, aus Ihren abgeschlossenen Lektionen` : `of ${items.length} can-dos, from your finished Lektionen`}
+        {practise > 0 && <span className="block">{de ? `${practise} ${practise === 1 ? 'Ziel' : 'Ziele'} noch zu üben` : `${practise} still to practise`}</span>}
       </p>
       <ul className="mt-3 space-y-1.5">
         {latest.map((c) => <Line key={c.id} item={c} de={de} />)}

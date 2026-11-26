@@ -88,7 +88,7 @@ const PAPERS = [
     [
       gap(1, 'Wie ___ man Novak? (buchstabieren)', 'buchstabiert', 'buchstabieren'),
       gap(2, 'Mia und ich ___ ledig. (sein)', 'sind', 'sein'),
-      gap(3, 'Das ist Herr Brandt. ___ ist Lehrer. (er, sie oder es?)', 'Er', 'wer'),
+      gap(3, 'Das ist Herr Krüger. ___ ist Lehrer. (er, sie oder es?)', 'Er', 'wer'),
       gap(2, 'Hier wohnen ___ Familien. (7)', 'sieben', 'zahl'),
       gap(3, 'Du ___ gut Deutsch. (sprechen)', 'sprichst', 'sprechen'),
       gap(1, 'Hallo Ben, wie geht es ___? (du)', 'dir', 'anrede'),
@@ -134,7 +134,7 @@ const PAPERS = [
       gap(6, 'Ich brauche ___ Bleistift. (unbestimmter Artikel)', 'einen', 'einen'),
       gap(4, 'Die Uhr ist alt. ___ kostet nur vier Euro. (er, sie oder es?)', 'Sie', 'ding'),
       gap(2, 'Ihr ___ Kollegen. (sein)', 'seid', 'sein'),
-      gap(3, 'Frau Brandt, buchstabieren ___ bitte!', 'Sie', 'hoeflich'),
+      gap(3, 'Frau Krüger, buchstabieren ___ bitte!', 'Sie', 'hoeflich'),
       build(4, 'was / kosten / das Telefon', 'Was kostet das Telefon?', 'Was', 'kosten'),
       build(6, 'die Chefin / brauchen / eine Uhr', 'Die Chefin braucht eine Uhr.', 'Die Chefin', 'brauchen'),
     ],

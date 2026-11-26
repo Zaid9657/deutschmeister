@@ -147,7 +147,7 @@ export const DIALOG_NAMES = [
   'Marokko',
   // The people of the checkpoint reading bank (a11.lesen.js), who are not the cast of either course: a cast name
   // names only the cast (the independent score, 2026-11-20; scripts/a11-lesen-check.mjs guards it).
-  'Mia', 'Jonas', 'Sara', 'Ben', 'Novak', 'Becker', 'Meyer', 'Krause', 'Lorenz', 'Seidel', 'Vogt',
+  'Mia', 'Jonas', 'Sara', 'Ben', 'Novak', 'Becker', 'Meyer', 'Krause', 'Lorenz', 'Seidel', 'Vogt', 'Krüger',
 ];
 
 // The taught words that answer a final check's own-answer gap (finalCheck.js `slotWords`, 2026-11-19):
@@ -278,8 +278,9 @@ export const CURRICULUM_A11 = {
             de: 'Diesmal sprechen Sie mit Frau Kaya unter Ihrem eigenen Namen. Nehmen Sie sich Zeit.',
           },
           passed: {
-            en: 'You’ve used all four skills in this conversation. That’s something to be proud of.',
-            de: 'Sie haben in diesem Gespräch alle vier Fähigkeiten gezeigt. Darauf können Sie stolz sein.',
+            // Written by Codex (round 4 of the loop, 2026-11-26): „all four skills“ read as reading, writing, listening and speaking.
+            en: 'You’ve had a conversation in German and written down a spelled-out name. Well done!',
+            de: 'Sie haben ein Gespräch auf Deutsch geführt und einen buchstabierten Namen aufgeschrieben. Gut gemacht!',
           },
           turns: [
             { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
@@ -961,7 +962,7 @@ export const CURRICULUM_A11 = {
         // Vater/Bruder — or the family noun itself (`nounFor`). Reviewed by a read-only Codex DaF pass and
         // proven against a blind corpus of learner answers (rollout README).
         check: {
-          shown: [null, null, null, { de: 'Ich kann sagen, woher meine Mutter oder meine Schwester kommt.', en: 'I can say where my mother or sister comes from.' }],
+          shown: [null, null, null, { de: 'Ich kann sagen, woher jemand aus meiner Familie kommt.', en: 'I can say where someone in my family comes from.' }],
           partner: 'Lena',
           // Codex's lines (2026-11-19), from the founder's words.
           open: {
@@ -1836,7 +1837,7 @@ export const CURRICULUM_A11 = {
       wortfeld: [
         { de: 'das Büro', word: 'Büro', article: 'das', plural: 'Büros', en: 'office', wordId: '8fbe2c10-b65b-4c50-b60a-14d92b931783' },
         { de: 'die Firma', exampleDe: 'Das ist eine Firma. Das Büro ist hier.', word: 'Firma', article: 'die', plural: 'Firmen', en: 'company', wordId: '241df305-fc58-4232-bb0a-df8ce4cc9d01' },
-        { de: 'der Chef', exampleDe: 'Herr Weber ist der Chef.', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
+        { de: 'der Chef', exampleDe: 'Der Chef kommt um zehn.', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
         { de: 'die Chefin', exampleDe: 'Frau Berg ist die Chefin.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
         { de: 'der Kollege', word: 'Kollege', article: 'der', plural: 'Kollegen', en: 'colleague (m)', wordId: '81abf8c3-ae9f-4e61-9fa9-b4a10e0b0ae8' },
         { de: 'die Kollegin', exampleDe: 'Die Kollegin heißt Lena.', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
@@ -2139,10 +2140,10 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Lena spricht Deutsch.'],
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Ja/Nein-Frage: Verb vorn: Tanzt du gern? Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
-        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** A yes/no question begins with the verb: **Tanzt du gern?** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some change their vowel: er **spricht**.',
+        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Ja/Nein-Frage: Tanzt du gern? Zeit vorn, Verb auf Platz 2: **Am Wochenende arbeite ich** nicht. Stamm auf **-t**: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: er **spricht**.',
+        bodyEn: 'A regular verb is stem + ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** goes after the verb: **Ich höre gern Musik.** A yes/no question begins with the verb: **Tanzt du gern?** Time first: verb second, then ich: **Am Wochenende arbeite ich** nicht. A stem in **-t** adds an **e**: du arbeit**e**st. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some change their vowel: er **spricht**.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
-        bodyAr: 'يتكوّن الفعل المنتظم من جذر ونهاية: spielen → ich spiele، du spielst، er/sie/es spielt، wir spielen، ihr spielt، sie/Sie spielen. لتقول إنك تحبّ القيام بشيء، ضع gern بعد الفعل: «Ich höre gern Musik». يبدأ سؤال نعم/لا بالفعل: «Tanzt du gern?». إذا انتهى الجذر بـ -t، أضف e: du arbeitest، er arbeitet. إذا انتهى الجذر بـ s/ß/x/z، تُضاف -t فقط في صيغة du: du tanzt. يتغيّر حرف العلة في جذر بعض الأفعال: sprechen → er spricht.',
+        bodyAr: 'يتكوّن الفعل المنتظم من جذر ونهاية: spielen → ich spiele، du spielst، er/sie/es spielt، wir spielen، ihr spielt، sie/Sie spielen. لتقول إنك تحبّ القيام بشيء، ضع gern بعد الفعل: «Ich höre gern Musik». يبدأ سؤال نعم/لا بالفعل: «Tanzt du gern?». إذا جاء شيء آخر في البداية، يبقى الفعل في الموضع الثاني، ثم يأتي الضمير «ich»: «Am Wochenende arbeite ich nicht». إذا انتهى الجذر بـ -t، أضف e: du arbeitest. إذا انتهى الجذر بـ s/ß/x/z، تُضاف -t فقط في صيغة du: du tanzt. يتغيّر حرف العلة في جذر بعض الأفعال: sprechen → er spricht.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -2422,7 +2423,7 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Der Termin ist um Viertel nach acht.', 'Es ist acht Uhr dreißig.'],
         title: 'um, am – die Uhrzeit sagen',
-        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Aber: Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**, vierzehn Uhr dreißig. **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
+        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Frage: **Wie spät ist es?** – Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**. **Hast du Zeit?**: feste Wendung (haben: Lektion 9).',
         bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lesson 9.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
         bodyAr: 'لقول متى يحدث شيء، نستخدم um مع الساعة: um acht Uhr. أمّا لقول كم الساعة، فلا نستخدم um: «Es ist acht Uhr». مع يوم من أيام الأسبوع، نستخدم am: am Montag. في الكلام اليومي: Viertel nach acht (8.15)، Viertel vor neun (8.45)، halb neun (8.30)، وليس 9.30! تستخدم جداول المواعيد والإذاعة نظام 24 ساعة، الساعة + Uhr + الدقائق: acht Uhr dreißig، vierzehn Uhr dreißig (14.30). للسؤال: «Wie spät ist es?». نتعلّم «Hast du Zeit?» في هذه المرحلة كعبارة ثابتة؛ ويأتي haben في Lektion 9.',
@@ -2466,7 +2467,8 @@ export const CURRICULUM_A11 = {
       practiceRule: {
         topics: ['time-and-dates'],
         typedMin: 4,
-        mustCover: ['halb', 'vierzehn Uhr dreißig'],
+        // A seat may be one of several answers (round 4 of the loop): the one official-time item came back in every draw.
+        mustCover: ['halb', ['vierzehn Uhr dreißig', 'zwanzig Uhr fünfundvierzig', 'achtzehn Uhr fünfzehn']],
       },
     },
     {
@@ -2571,7 +2573,7 @@ export const CURRICULUM_A11 = {
         // is their own and takes the article „möchten" asks for (`thing`, with a measure: „ein Glas Wasser");
         // „haben" is the rule of this Lektion; what is asked for and what is offered change on a retake.
         check: {
-          shown: [null, { de: 'Ich kann sagen, dass ich Hunger habe.', en: 'I can say that I am hungry.' }],
+          shown: [null, { de: 'Ich kann sagen, dass ich Hunger oder Durst habe.', en: 'I can say that I am hungry or thirsty.' }],
           partner: 'Paul',
           open: {
             en: 'You’ll be a guest at the café, ordering from Paul and responding to his offers. If an answer needs another try, there’s time for that.',
@@ -2963,7 +2965,7 @@ export const CURRICULUM_A11 = {
         examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte hundert Euro?'],
         ruleSlug: 'yes-no-questions',
       },
-      phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', focusEn: 'In a yes/no question the melody rises', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Kommst du MIT?↗'] },
+      phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', focusEn: 'In a yes/no question the melody rises', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Ist das GLEIS vier?↗'] },
       hoeren: { kind: 'dictation', lines: [1, 9] },
       sprechen: {
         readAloud: [0, 2],

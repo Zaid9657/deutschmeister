@@ -1,7 +1,7 @@
 {
  "status": "reviewed",
  "reviewedOn": "2026-11-25",
- "method": "Independent blind review (Codex as DaF/SD1 examiner, read-only, effort high, 2026-11-25): every unit was worked out from what is printed here, without keys, places of the answers, evidence or reasons, and judged for one supported answer, refutation (not silence), natural German and a believable purpose. Round 1 reviewed all 304 units of the new checkpoint banks (36 to fix), round 2 the 38 changed ones (1 to fix), round 3 that one. `solved` and `evidence` are the reviewer’s; `round` says which review covers the current text.",
+ "method": "Independent blind review (Codex as DaF/SD1 examiner, read-only, effort high, 2026-11-25): every unit was worked out from what is printed here, without keys, places of the answers, evidence or reasons, and judged for one supported answer, refutation (not silence), natural German and a believable purpose. Round 1 reviewed all 304 units of the new checkpoint banks (36 to fix), round 2 the 38 changed ones (1 to fix), round 3 that one. Round 4 of the loop (2026-11-25/26) reviewed the 22 units changed after the scores of fd8f8dba (numbers above ten before Lektion 4, one phone number per person, the checkpoint 3 dictation, the bank's „Brandt“ renamed „Krüger“, Lena's surname being Brandt); rounds 5 and 6 the four and then two of them it sent back for a refutation. `solved` and `evidence` are the reviewer’s; `round` says which review covers the current text.",
  "units": [
   {
    "id": "a11-cp1-p1-h1",
@@ -14,11 +14,11 @@
   },
   {
    "id": "a11-cp1-p1-h2",
-   "solved": "18",
+   "solved": "6",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Sara, hier ist Mia. Ben ist zwanzig, und ich bin achtzehn. Und du? Wie alt bist du?",
+   "round": 4,
+   "text": "Hallo Sara, hier ist Mia. Ben ist schon sieben, und ich bin sechs. Und du? Wie alt bist du?",
    "question": "Wie alt ist Mia?"
   },
   {
@@ -26,9 +26,9 @@
    "solved": "Arabisch.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Das ist Frau Brandt. Sie ist Lehrerin und spricht Deutsch und Englisch. Der Mann von Frau Brandt spricht nur Arabisch.",
-   "question": "Welche Sprache spricht der Mann von Frau Brandt?"
+   "round": 4,
+   "text": "Das ist Frau Krüger. Sie ist Lehrerin und spricht Deutsch und Englisch. Der Mann von Frau Krüger spricht nur Arabisch.",
+   "question": "Welche Sprache spricht der Mann von Frau Krüger?"
   },
   {
    "id": "a11-cp1-p2-h1",
@@ -68,11 +68,11 @@
   },
   {
    "id": "a11-cp1-p3-h2",
-   "solved": "16",
+   "solved": "5",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Das ist die Familie Novak. Der Sohn heißt Jonas und ist dreizehn. Die Tochter heißt Mia und ist sechzehn.",
+   "round": 4,
+   "text": "Das ist die Familie Novak. Der Sohn heißt Jonas und ist schon neun. Die Tochter heißt Mia und ist fünf.",
    "question": "Wie alt ist die Tochter?"
   },
   {
@@ -314,8 +314,8 @@
    "solved": "Um 9:00 Uhr.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Frau Meyer, es ist schon Viertel vor neun! Um neun Uhr haben Sie einen Termin mit Frau Brandt, und um Viertel nach neun ist Pause.",
+   "round": 4,
+   "text": "Frau Meyer, es ist schon Viertel vor neun! Um neun Uhr haben Sie einen Termin mit Frau Krüger, und um Viertel nach neun ist Pause.",
    "question": "Wann ist der Termin?"
   },
   {
@@ -691,8 +691,8 @@
    "id": "a11-cp3-p2-s1",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hast du am Mittwoch nachmittags Zeit?"
+   "round": 4,
+   "text": "Am Mittwoch habe ich nachmittags keinen Termin."
   },
   {
    "id": "a11-cp3-p2-s2",
@@ -904,8 +904,8 @@
    "solved": "Er",
    "verdict": "ok",
    "note": "",
-   "round": 2,
-   "text": "Ergänzen Sie mit einem Wort: Das ist Herr Brandt. ___ ist Lehrer. (er, sie oder es?)"
+   "round": 4,
+   "text": "Ergänzen Sie mit einem Wort: Das ist Herr Krüger. ___ ist Lehrer. (er, sie oder es?)"
   },
   {
    "id": "extra-a11-l02-assessment-1-1-4",
@@ -1184,8 +1184,8 @@
    "solved": "Sie",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Frau Brandt, buchstabieren ___ bitte!"
+   "round": 4,
+   "text": "Frau Krüger, buchstabieren ___ bitte!"
   },
   {
    "id": "extra-a11-l04-assessment-2-1-7",

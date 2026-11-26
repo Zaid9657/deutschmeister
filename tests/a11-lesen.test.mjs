@@ -183,3 +183,21 @@ test('A1.1 each authored unit passes independent blind semantic review', {
   assert.deepEqual(problems, []);
   assert.equal(byId.size, 64);
 });
+
+// One number, one person (Claude score of c6918f2d, round 4 of the loop): paper 3 of checkpoint 1 gave Frau Novak and Frau Becker
+// the same 0176 3582604. A number printed in two texts of the bank belongs to the same person in both.
+test('a phone number of the reading bank belongs to one person', () => {
+  const owners = new Map();
+  for (const u of papers.flat()) {
+    for (const [number] of String(u.text).matchAll(/0\d{2,4}[ /]\d{5,8}/g)) {
+      const names = new Set([...String(u.text).matchAll(/(?:Frau|Herr|Familie)\s+(\p{Lu}\p{L}+)/gu)].map((m) => m[1]));
+      if (!owners.has(number)) owners.set(number, []);
+      owners.get(number).push({ id: u.id, names });
+    }
+  }
+  for (const [number, uses] of owners) {
+    if (uses.length < 2) continue;
+    const shared = [...uses[0].names].filter((n) => uses.every((x) => x.names.has(n)));
+    assert.ok(shared.length > 0, `${number}: ${uses.map((x) => `${x.id} (${[...x.names].join(', ')})`).join(' / ')}`);
+  }
+});

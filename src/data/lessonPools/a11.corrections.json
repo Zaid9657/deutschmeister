@@ -16,7 +16,8 @@
   "f9df3cd7-3f05-53c4-abd0-4853ce942dc5": {
    "explanationDe": "In der offiziellen Zeit kommt zuerst die Stunde, dann „Uhr“, und dann kommen die Minuten: 20:45 = zwanzig Uhr fünfundvierzig.",
    "explanationEn": "Official time: first the hour, then **Uhr**, then the minutes: 20:45 = **zwanzig Uhr fünfundvierzig**.",
-   "reason": "„Uhr + Stunde + Minuten“ is the wrong order (Loop round 2, 2026-11-25; the item was drawn for the first time)."
+   "questionDe": "Es ist ___. (20:45, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "reason": "„Uhr + Stunde + Minuten“ is the wrong order (Loop round 2, 2026-11-25; the item was drawn for the first time). The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
   },
   "ffec1d33-2826-5332-93e5-2b8efe7ece89": {
    "options": [
@@ -40,13 +41,16 @@
   "2e4e344c-3116-5304-9f6e-afbed5d037e9": {
    "explanationDe": "In der offiziellen Zeit kommt zuerst die Stunde, dann „Uhr“, und dann kommen die Minuten: 14:30 = vierzehn Uhr dreißig.",
    "explanationEn": "Official (24-hour) time is hour + **Uhr** + minutes: 14:30 = **vierzehn Uhr dreißig**.",
-   "reason": "Official time is hour + Uhr + minutes; the bank said „Uhr + Stunde + Minuten“ (finding 5C)."
+   "questionDe": "Es ist ___. (14:30, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "reason": "Official time is hour + Uhr + minutes; the bank said „Uhr + Stunde + Minuten“ (finding 5C). The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
   },
   "2d34c5aa-a512-50b5-a1c5-57dd04acb619": {
    "accepted": [
     "acht Uhr"
    ],
-   "reason": "The task asks for official time „with Uhr“ and accepted „acht“ alone."
+   "questionDe": "Es ist ___. (8:00, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 8:00. (official, 24-hour: write the time in words)",
+   "reason": "The task asks for official time „with Uhr“ and accepted „acht“ alone. The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
   },
   "8970aaea-186c-58b0-bcf2-fdc7bbc3a632": {
    "explanationDe": "Vor einer Tageszeit steht „am“: am Morgen, am Abend (aber: in der Nacht).",
@@ -280,6 +284,26 @@
   "a3ddac97-a8fb-5ddc-8a2d-3c7763e89667": {
    "questionEn": "Do you like cooking? (verb: kochen, person: du)",
    "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "36f2bd1a-d22a-5c9e-9f7e-a197b992f696": {
+   "questionDe": "Es ist ___. (2:30, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:30. (everyday German: write the time in words)",
+   "reason": "The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
+  },
+  "69162961-90a8-5f76-9cad-865fb2c8b9fb": {
+   "questionDe": "Es ist ___. (2:15, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:15. (everyday German: write the time in words)",
+   "reason": "The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
+  },
+  "f12532bf-6089-544f-83ef-8bfcc2940f6b": {
+   "questionDe": "Es ist ___. (2:45, umgangssprachlich; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is 2:45. (everyday German: write the time in words)",
+   "reason": "The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
+  },
+  "ffb96fdf-5140-582a-bc5a-b3d17e131ea3": {
+   "questionDe": "Es ist ___. (0:00, offiziell; Schreiben Sie die Uhrzeit in Worten)",
+   "questionEn": "It is midnight (0:00). (official, 24-hour: write the time in words)",
+   "reason": "The German prompt says “in words” as the English does: „8 Uhr“ was refused without a word about it (Codex score of fd8f8dba, 2026-11-25)."
   }
  }
 }

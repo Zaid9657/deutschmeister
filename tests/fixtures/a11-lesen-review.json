@@ -1,7 +1,7 @@
 {
  "status": "reviewed",
  "reviewedOn": "2026-11-25",
- "method": "Independent blind review (Codex as DaF/SD1 examiner, read-only, effort high, 2026-11-25): every unit was worked out from what is printed here, without keys, places of the answers, evidence or reasons, and judged for one supported answer, refutation (not silence), natural German and a believable purpose. Round 1 reviewed all 304 units of the new checkpoint banks (36 to fix), round 2 the 38 changed ones (1 to fix), round 3 that one. `solved` and `evidence` are the reviewer’s; `round` says which review covers the current text.",
+ "method": "Independent blind review (Codex as DaF/SD1 examiner, read-only, effort high, 2026-11-25): every unit was worked out from what is printed here, without keys, places of the answers, evidence or reasons, and judged for one supported answer, refutation (not silence), natural German and a believable purpose. Round 1 reviewed all 304 units of the new checkpoint banks (36 to fix), round 2 the 38 changed ones (1 to fix), round 3 that one. Round 4 of the loop (2026-11-25/26) reviewed the 22 units changed after the scores of fd8f8dba (numbers above ten before Lektion 4, one phone number per person, the checkpoint 3 dictation, the bank's „Brandt“ renamed „Krüger“, Lena's surname being Brandt); rounds 5 and 6 the four and then two of them it sent back for a refutation. `solved` and `evidence` are the reviewer’s; `round` says which review covers the current text.",
  "units": [
   {
    "id": "a11-cp1-p1-u1",
@@ -35,12 +35,12 @@
   },
   {
    "id": "a11-cp1-p1-u4",
-   "solved": "Zehn.",
-   "evidence": "Mia ist zehn.",
+   "solved": "Neun.",
+   "evidence": "Mia ist neun.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Guten Abend, Frau Becker! Ali ist acht, Mia ist zehn. Die Kinder sprechen Deutsch und Englisch. Die Tochter von Frau Novak ist schon zwölf. Grüße, Sara",
+   "round": 4,
+   "text": "Guten Abend, Frau Becker! Ali ist drei, Mia ist neun. Die Kinder sprechen Deutsch und Englisch. Die Tochter von Frau Novak ist schon zehn. Grüße, Sara",
    "question": "Wie alt ist Mia?"
   },
   {
@@ -56,12 +56,12 @@
   {
    "id": "a11-cp1-p2-u2",
    "solved": "Sara.",
-   "evidence": "ich bin Sara, die Schwester von Jonas. Jonas ist zwanzig, ich bin achtzehn.",
+   "evidence": "ich bin Sara, die Schwester von Jonas. Jonas wohnt in Köln, ich wohne noch in Berlin. Die Frau von Jonas heißt Mia und wohnt auch in Köln.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Ben, ich bin Sara, die Schwester von Jonas. Jonas ist zwanzig, ich bin achtzehn. Die Frau von Jonas heißt Mia und ist Lehrerin. Bist du Student? Grüße, Sara",
-   "question": "Wer ist achtzehn?"
+   "round": 4,
+   "text": "Hallo Ben, ich bin Sara, die Schwester von Jonas. Jonas wohnt in Köln, ich wohne noch in Berlin. Die Frau von Jonas heißt Mia und wohnt auch in Köln. Bist du Student? Grüße, Sara",
+   "question": "Wer wohnt in Berlin?"
   },
   {
    "id": "a11-cp1-p2-u3",
@@ -109,8 +109,8 @@
    "evidence": "Frau Becker ist Lehrerin aus Österreich.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Deutsch mit Frau Becker! Frau Becker ist Lehrerin aus Österreich. Sie spricht auch Arabisch. Sie wohnen in Köln? Frau Becker wohnt auch hier! Telefonnummer: 0176 3582604.",
+   "round": 4,
+   "text": "Deutsch mit Frau Becker! Frau Becker ist Lehrerin aus Österreich. Sie spricht auch Arabisch. Sie wohnen in Köln? Frau Becker wohnt auch hier! Telefonnummer: 0173 5824061.",
    "question": "Richtig oder falsch? „Frau Becker kommt aus Deutschland.“"
   },
   {
@@ -119,19 +119,19 @@
    "evidence": "die Mutter heißt Sara Novak.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Frau Brandt, das Kind heißt Jonas Seidel und ist acht. Der Vater heißt Thomas Seidel, die Mutter heißt Sara Novak. Bitte das Formular für Jonas ausfüllen! Danke, Mia",
+   "round": 4,
+   "text": "Frau Krüger, das Kind heißt Jonas Seidel und ist acht. Der Vater heißt Thomas Seidel, die Mutter heißt Sara Novak. Bitte das Formular für Jonas ausfüllen! Danke, Mia",
    "question": "Wie heißt die Mutter von Jonas?"
   },
   {
    "id": "a11-cp1-p4-u1",
    "solved": "Englisch.",
-   "evidence": "Frau Brandt kommt aus Italien und spricht Arabisch und Englisch. Ich spreche nicht Arabisch, aber Deutsch und Englisch.",
+   "evidence": "spricht Arabisch und Englisch, aber noch nicht Deutsch. Ich spreche nicht Arabisch, aber Deutsch und Englisch.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Sara, Herr Brandt kommt aus Spanien und spricht Deutsch. Frau Brandt kommt aus Italien und spricht Arabisch und Englisch. Ich spreche nicht Arabisch, aber Deutsch und Englisch. Grüße, Ben",
-   "question": "Welche Sprache spricht Ben mit Frau Brandt?"
+   "round": 5,
+   "text": "Hallo Sara, Herr Krüger kommt aus Spanien und spricht Deutsch. Frau Krüger kommt aus Italien und spricht Arabisch und Englisch, aber noch nicht Deutsch. Ich spreche nicht Arabisch, aber Deutsch und Englisch. Grüße, Ben",
+   "question": "Welche Sprache spricht Ben mit Frau Krüger?"
   },
   {
    "id": "a11-cp1-p4-u2",
@@ -156,12 +156,12 @@
   {
    "id": "a11-cp1-p4-u4",
    "solved": "Richtig",
-   "evidence": "Ben wohnt mit Frau Brandt in Berlin.",
+   "evidence": "Ben wohnt mit Frau Krüger in Berlin.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Frau Lorenz, Ben wohnt mit Frau Brandt in Berlin. Herr Brandt wohnt in Österreich, nicht in Berlin. Er kommt morgen. Grüße, Mia",
-   "question": "Richtig oder falsch? „Frau Brandt wohnt in Berlin.“"
+   "round": 4,
+   "text": "Frau Lorenz, Ben wohnt mit Frau Krüger in Berlin. Herr Krüger wohnt in Österreich, nicht in Berlin. Er kommt morgen. Grüße, Mia",
+   "question": "Richtig oder falsch? „Frau Krüger wohnt in Berlin.“"
   },
   {
    "id": "a11-cp2-p1-u1",
@@ -196,11 +196,11 @@
   {
    "id": "a11-cp2-p1-u4",
    "solved": "Im Büro.",
-   "evidence": "Ihr Wörterbuch ist im Büro.",
+   "evidence": "Ihr Wörterbuch ist im Büro. Das Heft ist bei Frau Novak, der Schlüssel ist bei Jonas.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Guten Tag, Frau Brandt, Ihr Wörterbuch ist im Büro. Das Heft ist bei Frau Novak, der Schlüssel ist bei Jonas. Brauchen Sie auch Papier? Grüße, Mia",
+   "round": 4,
+   "text": "Guten Tag, Frau Krüger, Ihr Wörterbuch ist im Büro. Das Heft ist bei Frau Novak, der Schlüssel ist bei Jonas. Brauchen Sie auch Papier? Grüße, Mia",
    "question": "Wo ist das Wörterbuch?"
   },
   {
@@ -219,8 +219,8 @@
    "evidence": "Das Regal ist braun",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Die Lampe ist weiß und kostet neun Euro. Das Regal ist braun und kostet dreißig Euro. Ich verkaufe auch zwei Bilder, sie sind blau. Frau Brandt, Telefonnummer 0174 5236802.",
+   "round": 4,
+   "text": "Die Lampe ist weiß und kostet neun Euro. Das Regal ist braun und kostet dreißig Euro. Ich verkaufe auch zwei Bilder, sie sind blau. Frau Seidel, Telefonnummer 0176 4725083.",
    "question": "Welche Farbe hat das Regal?"
   },
   {
@@ -286,12 +286,12 @@
   {
    "id": "a11-cp2-p4-u1",
    "solved": "Frau Lorenz.",
-   "evidence": "Ihre Nummer ist nicht hier, Frau Lorenz hat sie.",
+   "evidence": "Herr Krause und Herr Seidel haben sie nicht, Frau Lorenz hat sie.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Mia, Herr Krause ist Ingenieur, er ist nicht der Chef. Die Chefin heißt Frau Brandt. Ihre Nummer ist nicht hier, Frau Lorenz hat sie. Grüße, Jonas",
-   "question": "Wer hat die Nummer?"
+   "round": 6,
+   "text": "Hallo Mia, Herr Krause ist Ingenieur, er ist nicht der Chef. Die Chefin heißt Frau Krüger. Ihre Nummer ist nicht hier. Herr Krause und Herr Seidel haben sie nicht, Frau Lorenz hat sie. Grüße, Jonas",
+   "question": "Wer hat die Nummer von Frau Krüger?"
   },
   {
    "id": "a11-cp2-p4-u2",
@@ -319,8 +319,8 @@
    "evidence": "Ein Buch kostet acht Euro, ein Wörterbuch zwölf Euro.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Firma Krause verkauft Bücher! Ein Buch kostet acht Euro, ein Wörterbuch zwölf Euro. Drei Hefte kosten zusammen vier Euro. Alle Bücher sind neu. Telefonnummer 0421 5826349",
+   "round": 4,
+   "text": "Firma Krause verkauft Bücher! Ein Buch kostet acht Euro, ein Wörterbuch zwölf Euro. Drei Hefte kosten zusammen vier Euro. Alle Bücher sind neu. Telefonnummer 0421 3647285",
    "question": "Sie kaufen ein Buch und ein Wörterbuch. Was macht das zusammen?"
   },
   {
@@ -359,8 +359,8 @@
    "evidence": "Die Kollegin hat am Dienstag frei.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Guten Morgen, Herr Seidel! Ich arbeite am Montag. Die Pause ist um zwölf Uhr, nicht um zehn Uhr. Die Kollegin hat am Dienstag frei. Grüße, Frau Brandt",
+   "round": 4,
+   "text": "Guten Morgen, Herr Seidel! Ich arbeite am Montag. Die Pause ist um zwölf Uhr, nicht um zehn Uhr. Die Kollegin hat am Dienstag frei. Grüße, Frau Krüger",
    "question": "Richtig oder falsch? „Die Kollegin arbeitet am Dienstag.“"
   },
   {
@@ -436,11 +436,11 @@
   {
    "id": "a11-cp3-p3-u4",
    "solved": "Ali.",
-   "evidence": "Ali hat nur Durst, er möchte ein Glas Wasser.",
+   "evidence": "Ich habe Hunger und möchte Suppe. Thomas möchte Salat. Ali hat nur Durst, er möchte ein Glas Wasser. Grüße, Sara",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Guten Tag, Frau Brandt! Ich habe Hunger und möchte Suppe. Thomas möchte Salat. Ali hat nur Durst, er möchte ein Glas Wasser. Grüße, Sara",
+   "round": 4,
+   "text": "Guten Tag, Frau Krüger! Ich habe Hunger und möchte Suppe. Thomas möchte Salat. Ali hat nur Durst, er möchte ein Glas Wasser. Grüße, Sara",
    "question": "Wer möchte nur trinken?"
   },
   {
@@ -476,11 +476,11 @@
   {
    "id": "a11-cp3-p4-u4",
    "solved": "Er kocht.",
-   "evidence": "Herr Vogt kocht",
+   "evidence": "Herr Vogt spricht nicht Deutsch und tanzt nicht, er kocht.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Ein Abend für alle: Frau Brandt spricht Deutsch mit Ihnen, Herr Vogt kocht, Mia tanzt. Am Freitag um sechs Uhr im Café Krause. Ein Glas Wein kostet drei Euro.",
+   "round": 6,
+   "text": "Ein Abend für alle: Frau Krüger spricht Deutsch mit Ihnen. Herr Vogt spricht nicht Deutsch und tanzt nicht, er kocht. Mia tanzt. Am Freitag um sechs Uhr im Café Krause.",
    "question": "Was macht Herr Vogt?"
   },
   {
@@ -566,11 +566,11 @@
   {
    "id": "a11-cp4-p3-u1",
    "solved": "Herr Seidel.",
-   "evidence": "Herr Seidel ist von zehn bis zwölf Uhr im Büro.",
+   "evidence": "Frau Krüger ist heute krank und nicht im Büro. Herr Seidel ist von zehn bis zwölf Uhr im Büro. Frau Lorenz arbeitet heute zu Hause.",
    "verdict": "ok",
    "note": "",
-   "round": 2,
-   "text": "Frau Brandt ist heute krank. Herr Seidel ist von zehn bis zwölf Uhr im Büro. Frau Lorenz arbeitet heute zu Hause. Bitte rufen Sie Frau Lorenz an: 0176 3582604",
+   "round": 5,
+   "text": "Frau Krüger ist heute krank und nicht im Büro. Herr Seidel ist von zehn bis zwölf Uhr im Büro. Frau Lorenz arbeitet heute zu Hause. Bitte rufen Sie Frau Lorenz an: 0174 5236802",
    "question": "Wer ist um elf Uhr im Büro?"
   },
   {
@@ -619,8 +619,8 @@
    "evidence": "die Karte ist von Ben. Buch und Karte sind für dich zum Geburtstag.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Ali, das Buch ist von Frau Brandt, die Karte ist von Ben. Buch und Karte sind für dich zum Geburtstag. Wir kommen am Sonntag! Grüße, Sara",
+   "round": 4,
+   "text": "Hallo Ali, das Buch ist von Frau Krüger, die Karte ist von Ben. Buch und Karte sind für dich zum Geburtstag. Wir kommen am Sonntag! Grüße, Sara",
    "question": "Richtig oder falsch? „Die Karte zum Geburtstag ist von Ben.“"
   },
   {

@@ -50,7 +50,10 @@ test('natural answers the scores saw refused or sent beyond are verified', () =>
 
 test('a thing is no first name, a word said twice is no name, and a made-up activity is not praised', () => {
   for (const [nr, t, answer] of [[1, 2, 'Ich heiße Banane.'], [1, 2, 'Mein Name ist Mango.'], [6, 4, 'Banane Banane.'], [6, 4, 'Omar Omar'], [7, 1, 'Mein Hobby ist Fußballen.'], [7, 2, 'Ich gehe gern Fußballen.']]) {
-    assert.equal(typedResult(at(nr, t), answer), BEYOND, `${nr}.${t} ${answer}`);
+    // („Fußballen“ is a form of „Fußball“ the course can name since round 4: never praised, and named where it is sure.)
+    const r = typedResult(at(nr, t), answer);
+    if (/Fußballen/.test(answer)) assert.ok(r === BEYOND || (r === RESULT.WRONG && wrongReason(at(nr, t), answer) === 'ending'), `${nr}.${t} ${answer}: ${r}`);
+    else assert.equal(r, BEYOND, `${nr}.${t} ${answer}`);
   }
   // A surname may be a thing („Anna Vogel"), and so may the name after Frau or Herr.
   for (const [nr, t, answer] of [[1, 2, 'Ich heiße Omar.'], [1, 2, 'Ich heiße Anna Vogel.'], [1, 2, 'Ich bin Omar Haddad.'], [6, 4, 'Haddad'], [6, 4, 'Hier ist Omar Haddad.'], [7, 1, 'Mein Hobby ist Wandern.'], [7, 1, 'Mein Hobby ist Fußball.']]) {
@@ -131,7 +134,9 @@ test('the hint before the second try gives a direction in both languages and nev
   }
   const stage = read('src/components/lesson/CheckStage.jsx');
   assert.match(stage, /\{outcome \? modelAnswer\(turn\) : start\.text\}/);
-  assert.match(stage, /setHint\(result === RESULT\.TYPO \? null : faultHintKey\(turn, value\)\)/);
+  // A typo names no fault, only a slip of capitals (round 4 of the loop: „was ist das?“ typed on a phone).
+  assert.match(stage, /setHint\(result === RESULT\.TYPO \? \(capitalsOnly\(turn, value\) \? 'feedback\.typo\.case' : null\) : faultHintKey\(turn, value\)\)/);
+  assert.match(stage, /autoCapitalize="sentences" spellCheck=\{false\} maxLength=\{120\}/);
   // Without sound a heard turn can be passed over.
   assert.match(stage, /onFallback=\{outcome \? undefined : \(\) => onOutcome\('unverified', ''\)\}/);
   // The note under an own word claims no more than was checked.

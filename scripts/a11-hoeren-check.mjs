@@ -11,6 +11,7 @@ import { levelSpec, taughtUpTo, untaughtTokens, constructionHorizonIndex, loadPo
 import { chapterLektionen, dictationCeiling } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { shownGerman } from './a11-lesen-check.mjs';
 import { tokens } from '../tests/helpers/lesenGate.mjs';
+import { castNames } from './lib/castNames.mjs';
 
 const norm = (s) => tokens(s).join(' ');
 const sentences = (s) => String(s).split(/(?<=[.!?])\s+/).filter(Boolean);
@@ -53,8 +54,8 @@ export function checkHoerenA11(bank = HOEREN_A11) {
     ...loadPoolItems('a1.1').filter((it) => !it.assessment).flatMap((it) => [it.questionDe, it.answer]),
   ].filter(Boolean).map(norm).filter((p) => p.split(' ').length >= 3));
   const readTexts = new Set(Object.values(LESEN_A11).flatMap((b) => b.papers.flat()).flatMap((u) => sentences(u.text).map(norm)));
-  const cast = new Set(['a1.1', 'a1.2'].flatMap((lv) => (levelSpec(lv)?.curriculum?.lektionen || [])
-    .flatMap((l) => (l.dialog?.lines || []).flatMap((x) => String(x.speaker).split(/\s+/)))).filter((t) => t && !['Herr', 'Frau'].includes(t)));
+  // The cast's names, their surnames too („Lena Brandt“).
+  const cast = castNames();
   const seen = new Set();
   const all = [];
 

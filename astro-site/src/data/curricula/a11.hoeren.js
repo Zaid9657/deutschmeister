@@ -20,8 +20,8 @@ const papers = [
       say: [['Wir kommen aus Italien und wohnen in Berlin.', 'We come from Italy and live in Berlin.'], ['Wie alt ist der Bruder von Frau Krause?', 'How old is Frau Krause’s brother?']],
       hear: [
         hear('m', 'Hallo, hier ist Thomas Vogt. Ich komme aus Österreich und wohne in Bremen. Frau Vogt ist noch in Berlin. Auf Wiedersehen!', 'Wo wohnt Thomas Vogt?', 'Where does Thomas Vogt live?', ['In Österreich.', 'In Bremen.', 'In Berlin.'], 1, 'Ich komme aus Österreich und wohne in Bremen.', 'He lives in Bremen; he comes from Austria, and Frau Vogt is in Berlin.'),
-        hear('f', 'Hallo Sara, hier ist Mia. Ben ist zwanzig, und ich bin achtzehn. Und du? Wie alt bist du?', 'Wie alt ist Mia?', 'How old is Mia?', ['18', '80', '20'], 0, 'ich bin achtzehn', 'Achtzehn is 18. Achtzig is 80.'),
-        hear('m', 'Das ist Frau Brandt. Sie ist Lehrerin und spricht Deutsch und Englisch. Der Mann von Frau Brandt spricht nur Arabisch.', 'Welche Sprache spricht der Mann von Frau Brandt?', 'Which language does Frau Brandt’s husband speak?', ['Deutsch.', 'Englisch.', 'Arabisch.'], 2, 'Der Mann von Frau Brandt spricht nur Arabisch.', 'Her husband speaks only Arabic; she speaks German and English.'),
+        hear('f', 'Hallo Sara, hier ist Mia. Ben ist schon sieben, und ich bin sechs. Und du? Wie alt bist du?', 'Wie alt ist Mia?', 'How old is Mia?', ['6', '7', '9'], 0, 'ich bin sechs', 'Mia says “ich bin sechs”: she is 6. Ben is 7.'),
+        hear('m', 'Das ist Frau Krüger. Sie ist Lehrerin und spricht Deutsch und Englisch. Der Mann von Frau Krüger spricht nur Arabisch.', 'Welche Sprache spricht der Mann von Frau Krüger?', 'Which language does Frau Krüger’s husband speak?', ['Deutsch.', 'Englisch.', 'Arabisch.'], 2, 'Der Mann von Frau Krüger spricht nur Arabisch.', 'Her husband speaks only Arabic; she speaks German and English.'),
       ],
       read: [['Sind Sie ledig oder verheiratet, Frau Lorenz?', 'Are you single or married, Ms Lorenz?'], ['Die Eltern von Ben sprechen auch Englisch.', 'Ben’s parents speak English too.']],
     },
@@ -38,7 +38,7 @@ const papers = [
       say: [['Guten Tag, ich bin die Mutter von Ali.', 'Good day, I am Ali’s mother.'], ['Woher kommen die Eltern von Jonas?', 'Where do Jonas’s parents come from?']],
       hear: [
         hear('f', 'Guten Morgen! Ich bin Frau Meyer. Ich spreche Englisch und Deutsch. Der Sohn spricht Deutsch und Arabisch, die Tochter spricht nur Deutsch.', 'Wer spricht Englisch?', 'Who speaks English?', ['Die Tochter.', 'Frau Meyer.', 'Der Sohn.'], 1, 'Ich spreche Englisch und Deutsch.', 'Frau Meyer speaks English and German; the son and the daughter do not speak English.'),
-        hear('m', 'Das ist die Familie Novak. Der Sohn heißt Jonas und ist dreizehn. Die Tochter heißt Mia und ist sechzehn.', 'Wie alt ist die Tochter?', 'How old is the daughter?', ['60', '13', '16'], 2, 'Die Tochter heißt Mia und ist sechzehn.', 'Sechzehn is 16. Sechzig is 60, and the son is 13.'),
+        hear('m', 'Das ist die Familie Novak. Der Sohn heißt Jonas und ist schon neun. Die Tochter heißt Mia und ist fünf.', 'Wie alt ist die Tochter?', 'How old is the daughter?', ['4', '9', '5'], 2, 'Die Tochter heißt Mia und ist fünf.', 'The daughter is 5; the son is 9.'),
         hear('m', 'Hallo, hier ist Ben. Ich bin in Köln, Sara ist in Berlin. Morgen kommen wir nach Bremen. Tschüss!', 'Wo ist Ben?', 'Where is Ben?', ['In Köln.', 'In Bremen.', 'In Berlin.'], 0, 'Ich bin in Köln, Sara ist in Berlin.', 'Ben is in Cologne; he comes to Bremen tomorrow.'),
       ],
       read: [['Und wie geht es Frau Krause?', 'And how is Ms Krause?'], ['Die Geschwister sprechen zusammen Arabisch.', 'The brothers and sisters speak Arabic together.']],
@@ -104,7 +104,7 @@ const papers = [
       read: [['Ich trinke morgens immer Tee.', 'I always drink tea in the morning.'], ['Spielt ihr am Wochenende Fußball?', 'Do you play football at the weekend?']],
     },
     {
-      say: [['Hast du am Mittwoch nachmittags Zeit?', 'Do you have time on Wednesday afternoon?'], ['Die Kellnerin hat heute viel Arbeit.', 'The waitress has a lot of work today.']],
+      say: [['Am Mittwoch habe ich nachmittags keinen Termin.', 'On Wednesday I have no appointment in the afternoon.'], ['Die Kellnerin hat heute viel Arbeit.', 'The waitress has a lot of work today.']],
       hear: [
         hear('m', 'Hier ist das Büro von Frau Lorenz. Montag bis Donnerstag arbeiten wir bis vier Uhr. Am Freitag haben wir frei.', 'Wann haben alle frei?', 'When is everybody off?', ['Am Donnerstag.', 'Am Montag.', 'Am Freitag.'], 2, 'Am Freitag haben wir frei.', 'They are off on Friday; Monday to Thursday they work.'),
         hear('f', 'Jonas, hier ist Sara. Ich lese gern. Ich tanze nicht gern, und ich schwimme nicht gern. Hast du ein Buch für mich?', 'Was macht Sara gern?', 'What does Sara like doing?', ['Lesen.', 'Tanzen.', 'Schwimmen.'], 0, 'Ich lese gern.', 'Sara likes reading; she does not like dancing or swimming.'),
@@ -125,7 +125,7 @@ const papers = [
       say: [['Die Suppe ist gut, der Tee ist auch gut.', 'The soup is good, the tea is good too.'], ['Wann hast du am Donnerstag Pause?', 'When is your break on Thursday?']],
       hear: [
         hear('f', 'Morgens trinke ich immer Kaffee, nachmittags trinke ich Tee, und abends trinke ich nur Wasser.', 'Was trinkt die Frau nachmittags?', 'What does the woman drink in the afternoon?', ['Wasser.', 'Tee.', 'Kaffee.'], 1, 'nachmittags trinke ich Tee', 'Coffee in the morning, tea in the afternoon, water in the evening.'),
-        hear('m', 'Frau Meyer, es ist schon Viertel vor neun! Um neun Uhr haben Sie einen Termin mit Frau Brandt, und um Viertel nach neun ist Pause.', 'Wann ist der Termin?', 'When is the appointment?', ['Um 9:00 Uhr.', 'Um 8:45 Uhr.', 'Um 9:15 Uhr.'], 0, 'Um neun Uhr haben Sie einen Termin mit Frau Brandt', 'The appointment is at nine; it is a quarter to nine now.'),
+        hear('m', 'Frau Meyer, es ist schon Viertel vor neun! Um neun Uhr haben Sie einen Termin mit Frau Krüger, und um Viertel nach neun ist Pause.', 'Wann ist der Termin?', 'When is the appointment?', ['Um 9:00 Uhr.', 'Um 8:45 Uhr.', 'Um 9:15 Uhr.'], 0, 'Um neun Uhr haben Sie einen Termin mit Frau Krüger', 'The appointment is at nine; it is a quarter to nine now.'),
         hear('f', 'Thomas arbeitet am Wochenende nicht. Am Samstag spielt er Fußball, am Sonntag hört er Musik und kocht.', 'Was macht Thomas am Sonntag?', 'What does Thomas do on Sunday?', ['Er arbeitet.', 'Er spielt Fußball.', 'Er kocht.'], 2, 'am Sonntag hört er Musik und kocht', 'On Sunday he listens to music and cooks.'),
       ],
       read: [['Arbeitet ihr am Wochenende oder habt ihr frei?', 'Do you work at the weekend or are you free?'], ['Eine Tasse Tee und Brot, bitte.', 'A cup of tea and bread, please.']],

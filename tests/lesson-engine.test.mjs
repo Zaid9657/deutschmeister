@@ -1191,7 +1191,11 @@ test('L8 makes the learner produce „halb" and the official time — in every a
   // and over twelve Lektionen à seven plus four checkpoints the learner produced
   // NEITHER. A ceiling on repetition cannot reserve a seat — `mustCover` does.
   const l8 = LEKTIONEN.find((l) => l.nr === 8);
-  assert.deepEqual(l8.practiceRule.mustCover, ['halb', 'vierzehn Uhr dreißig'], 'L8 lost its mustCover keys');
+  assert.deepEqual(l8.practiceRule.mustCover, ['halb', ['vierzehn Uhr dreißig', 'zwanzig Uhr fünfundvierzig', 'achtzehn Uhr fünfzehn']], 'L8 lost its mustCover keys');
+  // A seat of several answers rotates: no item of the two seats stands in every draw (round 4 of the loop).
+  const drawn = ATTEMPTS.map((attempt) => new Set(planPractice(CURRICULUM_A11, POOL, attempt).get(8).map((it) => it.id)));
+  const everywhere = [...drawn[0]].filter((id) => drawn.every((d) => d.has(id)));
+  assert.deepEqual(everywhere, [], `L8 serves the same item in every draw: ${everywhere.join(', ')}`);
   for (const attempt of ATTEMPTS) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(8);
     const answers = items.map((it) => String(it.answer || '').toLowerCase());

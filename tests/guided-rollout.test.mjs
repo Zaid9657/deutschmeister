@@ -387,7 +387,7 @@ test('L2–12 scenes use complete illustrations, drawn or inline, and L12’s cr
 test('a stress mark never costs a German noun its capital letter, and unmarked words keep their spelling', () => {
   const nouns = nounsOf(c.lektionen);
   const shown = (nr) => buildSoundItems(c.lektionen[nr - 1], nouns);
-  assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Kommst du mit?']);
+  assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Ist das Gleis vier?']);
   assert.deepEqual(shown(3).map((i) => i.text), ['der Bruder', 'die Brüder', 'die Mütter']);
   assert.equal(shown(8)[2].text, 'Wie viel Uhr ist es?');
   assert.equal(shown(8)[2].answer, 'Wie viel UHR ist es?');

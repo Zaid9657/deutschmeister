@@ -28,8 +28,8 @@ import { certainFault, nearestFrame, pronounSwap } from './certainFault.js';
 import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.js';
 import { COUNTRY_STEMS } from './countries.js';
 import { reader } from './clause.js';
-import { asked, meaning, senseless } from './taskMeaning.js';
-import { inOrder } from './clauseOrder.js';
+import { asked, meaning, senseless, valencyFault } from './taskMeaning.js';
+import { certainlyNot, inOrder } from './clauseOrder.js';
 import { ADVERBS as GERMAN_ADVERBS, adjectiveForm, determinerOf, verbReadings } from './germanForms.js';
 import { repairs, smallWordsKnown } from './oneRepair.js';
 import { asCostQuestion, asHaveQuestion, asTimeQuestion, withoutAndYou, asWell, nounForPronoun, withoutAttribute, withoutDegree, withoutOccasion, withoutParty } from './answerRewrites.js';
@@ -119,7 +119,8 @@ const bareNounFault = (lexicon) => (prep, noun) => {
 /** A determiner that does not fit its noun anywhere in a typed answer, an own noun's included. */
 export const articleFaultIn = (lexicon, typed) => {
   // („Was für ein Gegenstand ist das?“: „für“ asks for no case here.)
-  const text = String(typed).replace(/(?<!\p{L})(was)\s+für\s+(?=ein)/giu, '$1 ');
+  // („um ein Uhr“ is one o'clock: no article.)
+  const text = String(typed).replace(/(?<!\p{L})(was)\s+für\s+(?=ein)/giu, '$1 ').replace(/(?<=(?<!\p{L})(?:um|ist(?:\s+es)?|ab|bis|gegen|vor|nach)\s+)ein(?=\s+Uhr(?!\p{L}))/giu, '1');
   const opts = { readings: (n) => readingsIn(lexicon, n), bareFault: bareNounFault(lexicon) };
   return nounPhraseFault(text, opts) || subjectNumberFault(text, opts)
     || phraseFault(text, { readings: opts.readings, isVerbNoun: (n) => Boolean(lexicon?.verbs?.has?.(fold(n))), isLanguage: (n) => OWN_KIND.language.has(fold(n)),
@@ -223,6 +224,9 @@ function buildLexicon(curriculum) {
   known.names = new Set();
   known.verbs = new Set();
   known.genders = new Map();
+  // A taught noun's plural („Rucksack“ → „Rucksäcke“): what „zwei Rucksacks“ is checked against.
+  known.plurals = new Map();
+  known.pluralForms = new Set();
   known.exact = new Set(); // the taught words as written, capitals included
   // What the course gives the learner to hear, read or answer — dialogue, reading, check cues, accepted answers,
   // example sentences — is taught too: BEYOND needs a word outside all of it („Wohin fährt der Zug?“ is taught
@@ -258,7 +262,7 @@ function buildLexicon(curriculum) {
         // A die-word whose plural is itself is a plural only („die Eltern", „die Geschwister"): never „meine Eltern kommt".
         const pluralOnly = w.article === 'die' && w.plural === w.word;
         if (!pluralOnly) gender(fold(w.word), w.article);
-        if (w.plural && !/^[—-]$/.test(w.plural)) gender(fold(w.plural), 'pl');
+        if (w.plural && !/^[—-]$/.test(w.plural)) { gender(fold(w.plural), 'pl'); known.plurals.set(fold(w.word), fold(w.plural)); known.pluralForms.add(fold(w.plural)); }
       }
       const verb = !w.article && /^[a-zäöü]+e?n$/.test(w.word || '') ? w.word.replace(/e?n$/, '') : null;
       if (verb) for (const ending of ['e', 'st', 't', 'en', 'et']) { known.add(fold(verb + ending)); known.verbs.add(fold(verb + ending)); }
@@ -1935,6 +1939,8 @@ export function formFault(text, lexicon) {
         if (j === i + 1 && !time && !MASS.has(noun) && !readings.includes('pl') && !lexicon?.bareAfter?.has?.(`${d} ${noun}`) && /^\p{Lu}/u.test(raw[j])) return 'article';
         continue;
       }
+      // „um ein Uhr“, „Ist es ein Uhr?“: one o'clock, no article.
+      if (d === 'ein' && noun === 'uhr' && j === i + 1 && /^(?:um|ist|es|ab|bis|gegen|vor|nach)$/.test(f[i - 1] || '')) continue;
       if (!readings.some((g) => detFits(d, g))) return 'article';
       const prep = f[i - 1] || '';
       const forms = DATIVE_ONLY.has(prep) ? [DATIVE_OF] : ACCUSATIVE_ONLY.has(prep) ? [ACCUSATIVE_OF] : TWO_WAY.has(prep) ? [DATIVE_OF, ACCUSATIVE_OF] : null;
@@ -2022,6 +2028,8 @@ export function formFault(text, lexicon) {
     for (let i = 0; i + 1 < f.length; i += 1) {
       // („Meine Heimat ist der Libanon.“: a country that may have its article, in the case its place asks for.)
       if (COUNTRY_MAY_HAVE[f[i + 1]] && DET_WORD.test(f[i]) && !BARE_PREP.has(f[i - 1] || '')) { if (f[i] === COUNTRY_MAY_HAVE[f[i + 1]]) continue; }
+      // („aus dem Irak“, „im Iran“, „in den Libanon“)
+      if (COUNTRY_MAY_HAVE[f[i + 1]] && ((f[i] === 'dem' && ['aus', 'von', 'in', 'bei', 'mit', 'zu'].includes(f[i - 1] || '')) || (f[i] === 'den' && ['in', 'für', 'durch'].includes(f[i - 1] || '')))) continue;
       if (DET_WORD.test(f[i]) && OWN_KIND.place.has(f[i + 1]) && !COUNTRY_ARTICLE[f[i + 1]] && /^\p{Lu}/u.test(raw[i + 1]) && !lexicon?.genders?.has?.(f[i + 1])) return 'article';
     }
     // The verb second: never at the end after its subject when something else stands first („Nach Berlin ich fahre“).
@@ -2596,6 +2604,8 @@ function reasonOf(turn, value) {
  * müde“, „Ich bin Student“), and an opening one word away („Ich heißen Omar“, „Ich Omar“). Any other way to say a name is
  * German the check does not know: BEYOND.
  */
+/** „Guten Tag, hier ist Herr Weber.“: the partner's name is not the learner's (fresh corpora of round 4). */
+const partnerNamed = (turn, value) => { const name = String(turn.partner || '').match(/^(?:Herr|Frau)\s+(\p{L}+)$/u)?.[1]; return Boolean(name) && new RegExp(`(?<!\\p{L})(?:Herr|Frau)\\s+${name}(?!\\p{L})`, 'u').test(String(value)) && !new RegExp(`(?:ich|Sie)\\s+(?:heiße|heißen)|danke|guten tag,? (?:herr|frau) ${name}[,!.]`, 'iu').test(String(value)) && /(?:hier ist|hier spricht|ich bin|mein name ist)\s+(?:Herr|Frau)\s+/iu.test(String(value)); };
 function nameFault(turn, value, text) {
   if (!/\p{L}/u.test(text)) return 'missing';
   if (wordsOf(String(value).replace(/[.,!?;:]/g, ' ')).some((w) => NO_NAME.has(fold(w)) && !turn.lexicon?.genders?.has?.(fold(w)))) return null;
@@ -2871,6 +2881,10 @@ function malformedNoun(text, lexicon) {
   const noun = (f) => lexicon.genders.has(f) || OWN_NOUNS.has(f) || (f.length >= 8 && Boolean(readingsOfOwn(f)));
   return words.some((w, i) => {
     const f = fold(w);
+    // „deines Buch“, „meines Vater“: a genitive masculine or neuter noun has its -s (fresh corpora of round 4).
+    if (i > 0 && /^(?:des|eines|meines|deines|seines|ihres|unseres|keines)$/u.test(fold(words[i - 1])) && /^\p{Lu}/u.test(w) && (lexicon.genders.get(f) || []).some((g) => g === 'der' || g === 'das') && !/(?:s|ns|es)$/u.test(f)) return true;
+    // „um eins Uhr“: before „Uhr“ it is „ein“.
+    if (f === 'uhr' && i > 0 && fold(words[i - 1]) === 'eins') return true;
     // „ein Glas Wassers“
     if (i > 0 && f.length > 5 && f.endsWith('s') && MASS.has(f.slice(0, -1)) && !['des', 'eines', 'meines'].includes(fold(words[i - 1]))) return true;
     if (i === 0 || !/^\p{Lu}/u.test(w) || noun(f) || knownWord(w, lexicon) || lexicon.names?.has?.(f)) return false;
@@ -2884,6 +2898,65 @@ function malformedNoun(text, lexicon) {
   });
 }
 const DATIVE = new Set(['mit', 'von', 'bei', 'zu', 'aus', 'nach', 'seit', 'in', 'an', 'auf', 'vor', 'neben', 'hinter', 'unter', 'zwischen']);
+/**
+ * „zwei Rucksacks“, „meine Freunds“, „drei Stifts“, „zwei Computern“, „Zwei Freund kommen“: a taught noun in a plural the course does not
+ * teach is no word of the learner's own (Claude score of fd8f8dba, MAJOR). Its plural is the Wortfeld's; a dative plural keeps its -n
+ * („mit meinen Kindern“), a genitive its -s („meines Hefts“). Only nouns whose plural the course teaches are checked.
+ */
+const PLURAL_WORD = /^(?:zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele|mehrere|einige)$/u;
+const CLOCK_BEFORE = /^(?:um|halb|viertel|nach|vor|bis|ab|gegen|am|seit|von|zwischen|und)$/u;
+const COUNTED_BARE = new Set(['euro', 'cent', 'uhr', 'zeit', 'mal', 'kilo', 'gramm', 'liter', 'prozent', 'stück', 'glas', 'tasse', 'flasche', 'kaffee', 'tee', 'bier', 'wasser', 'cola', 'saft', 'wein', 'meter']);
+const umlautsOff = (w) => w.replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
+function wrongPlural(text, lexicon) {
+  if (!lexicon?.plurals?.size) return false;
+  const words = wordsOf(String(text || '').replace(/[.,!?;:„“"()]/g, ' '));
+  const dativeBefore = (i) => words.slice(Math.max(0, i - 3), i).some((w) => DATIVE.has(fold(w)) || /^(?:den|meinen|deinen|seinen|ihren|unseren|keinen|zwei|drei|vier)$/u.test(fold(w)) && i > 1 && DATIVE.has(fold(words[i - 2] || '')));
+  const genitiveBefore = (i) => /^(?:des|eines|meines|deines|seines|ihres|unseres|keines|dieses|jenes|jedes)$/u.test(fold(words[i - 1] || ''));
+  return words.some((w, i) => {
+    if (!/^\p{Lu}/u.test(w) || lexicon.names?.has?.(fold(w))) return false;
+    const f = fold(w);
+    // („Zwei Freund kommen.“: after a number of two or more the plural.)
+    if (i > 0 && PLURAL_WORD.test(fold(words[i - 1])) && !CLOCK_BEFORE.test(fold(words[i - 2] || '')) && lexicon.plurals.has(f) && lexicon.plurals.get(f) !== f && !COUNTED_BARE.has(f) && !lexicon.genders.get(f)?.includes('pl')) return true;
+    // („Kochen“, „Lesen“: a verb as a noun; „Sonntags“, „Abends“: when.)
+    if (verbReadings(f).some((v) => v.mood === 'inf') || GERMAN_ADVERBS.has(f) || /^(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|morgen|abend|mittag|nachmittag|vormittag)s$/u.test(f)) return false;
+    if (lexicon.genders.has(f) || OWN_NOUNS.has(f) || OWN_ALL.has(f)) {
+      // A taught plural with an -n it has only in the dative („zwei Stühlen“, „zwei Computern“).
+      const base = f.replace(/n$/u, '');
+      return f !== base && lexicon.pluralForms.has(base) && !lexicon.genders.has(f) && !dativeBefore(i);
+    }
+    for (const [end, add] of [['ies', 'y'], ['es', ''], ['s', ''], ['en', ''], ['n', ''], ['e', ''], ['s', 'e']]) {
+      if (!f.endsWith(end) || f.length - end.length < 3) continue;
+      const base = f.slice(0, -end.length) + add;
+      for (const stem of new Set([base, umlautsOff(base)])) {
+        if (lexicon.pluralForms.has(stem) && stem !== f && end !== 'n') return true;
+        const plural = lexicon.plurals.get(stem);
+        if (!plural || plural === f) continue;
+        if ((f === `${plural}n` || f === `${plural}en`) && dativeBefore(i)) return false;
+        if ((end === 's' || end === 'es') && add === '' && genitiveBefore(i)) return false;
+        return true;
+      }
+    }
+    // „Computern“, „Stühlen“ without a dative before them.
+    const base = f.replace(/n$/u, '');
+    return f !== base && lexicon.pluralForms.has(base) && !dativeBefore(i);
+  });
+}
+/**
+ * „Ich blable gern.“, „Ich hupse gern Fußball.“: a word written small where the verb stands that is no verb the reader knows is not
+ * praised as the learner's own word (HANDOVER-loop-3, round 4, item 3): the answer is not checked.
+ */
+function unknownVerb(turn, value) {
+  const lexicon = turn?.lexicon;
+  if (!lexicon || turn.ownName || turn.parts) return false;
+  const words = wordsOf(spelledOut(westernDigits(String(value || '')), lexicon).replace(/[.,!?;:„“"()]/g, ' '));
+  return words.some((w, i) => {
+    const f = fold(w);
+    if (!/^\p{Ll}/u.test(w) || f.length < 3 || i === 0) return false;
+    if (knownWord(w, lexicon) || lexicon.has(f) || verbReadings(f).length || adjectiveForm(f).length || GERMAN_ADVERBS.has(f) || CLOSED.has(f) || determinerOf(f) || isNumberWord(f) || OWN_ALL.has(f) || OWN_NOUNS.has(f) || lexicon.names?.has?.(f)) return false;
+    // In the verb's place: behind the subject of the clause, or first in a question.
+    return /^(?:ich|du|er|sie|wir|es|ihr)$/u.test(fold(words[i - 1] || '')) || (i === 1 && /^(?:gern|gerne|am|heute|morgens|abends)$/u.test(fold(words[0])));
+  });
+}
 /** „Sie spricht gut Arabische.“: a language keeps its form; „arabische Musik“ is no language. */
 const languageForm = (turn, text) => asked(turn)?.kind === 'language' && wordsOf(text).some((w, i, all) => { const stem = fold(w).replace(/[.,!?]+$/u, '').replace(/(?:en|e)$/u, ''); return /^\p{Lu}/u.test(w) && stem !== fold(w).replace(/[.,!?]+$/u, '') && OWN_KIND.language.has(stem) && !/^\p{Lu}/u.test(all[i + 1] || ''); });
 
@@ -2891,7 +2964,9 @@ const languageForm = (turn, text) => asked(turn)?.kind === 'language' && wordsOf
 // Only the two shapes a learner uses to name the thing first: „Und die Fahrkarte?“ and a sentence of subject, verb and the thing
 // („Ich mag den Tisch.“, „Die Lampe ist toll!“); never a word bag („der Und Stuhl?“, final-check.test Rule 4).
 const LEAD_SHAPE = /^(?:(?:Und\s+)?(?:der|die|das|den|ein|eine|einen|mein|meine|meinen)\s+\p{Lu}\p{L}+\?|(?:Ich|Wir)\s+\p{Ll}+\s+(?:den|die|das|einen|eine|ein|meinen|meine|mein)\s+\p{Lu}\p{L}+[.!]|(?:Der|Die|Das|Mein|Meine)\s+\p{Lu}\p{L}+\s+(?:ist|sind)\s+\p{Ll}+[.!])$/u;
-const cleanLead = (text, lexicon) => { const [first, second] = String(text).trim().split(/(?<=[.!?])\s+/); return Boolean(second) && LEAD_SHAPE.test(first) && !articleFaultIn(lexicon, first) && !formFault(first, lexicon); };
+// („Ich sucht meinen Stift. Wo ist er?“: the verb of the first sentence agrees with its „ich“ or „wir“; mutation probe of round 4.)
+const leadAgrees = (first) => { const m = String(first).match(/^(Ich|Wir)\s+(\p{Ll}+)/u); return !m || verbReadings(fold(m[2])).some((r) => r.mood === 'fin' && r.persons.includes(fold(m[1]))); };
+const cleanLead = (text, lexicon) => { const [first, second] = String(text).trim().split(/(?<=[.!?])\s+/); return Boolean(second) && LEAD_SHAPE.test(first) && leadAgrees(first) && !articleFaultIn(lexicon, first) && !formFault(first, lexicon); };
 /** „Es kommt meine Freunde.“: after „es“ the verb agrees with the subject that follows. */
 function expletiveAgreement(text, lexicon) {
   const m = String(text).trim().match(/^Es\s+(kommt|kommen)\s+(?:\p{Ll}+\s+)?(?:der|die|das|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere|ein|eine|viele|zwei|drei|vier)\s+(\p{Lu}\p{L}+)/u);
@@ -3011,6 +3086,11 @@ const surnameAlone = (turn, text) => {
   const said = wordsOf(text.replace(/[.,!?;:]/g, ' '));
   return Boolean(name) && said.some((w, k) => fold(w) === fold(name) && !['herr', 'herrn', 'frau'].includes(fold(said[k - 1] || '')));
 };
+/** „Bad Homburg“, „Frankfurt (Oder)“, „Neustadt an der Weinstraße“: a town's name of several words is one name. */
+export const townNames = (text) => String(text)
+  .replace(/(?<!\p{L})(?:Bad|Sankt|St\.)\s+(\p{Lu}\p{L}+)/gu, '$1')
+  .replace(/(?<=\p{Lu}\p{L}+)\s*\((?:Oder|Main|Saale|Elbe|Rhein|Westfalen|Holstein|Weinstraße)\)/gu, '')
+  .replace(/(?<=\p{Lu}\p{L}+)\s+(?:am|an\s+der)\s+(?:Main|Oder|Rhein|Weinstraße|Saale|Elbe|Ruhr)(?!\p{L})/gu, '');
 export const readSentences = (turn, value) => readAnswer(turn, spelledOut(westernDigits(value), turn.lexicon).trim());
 /** Is the answer read as German in order, and does the reader know each of its words? */
 export function readable(turn, value) {
@@ -3025,11 +3105,12 @@ export function readOnce(turn, value) {
   if (!turn.lexicon || turn.spell || turn.listen) return none;
   const text = spelledOut(westernDigits(value), turn.lexicon).trim();
   if (text.length > 160 || !/\p{L}/u.test(text) || /(?<!\p{L})(\p{L}{2,})\s+\1(?!\p{L})/iu.test(text) || CUT_OFF.some((re) => re.test(text)) || surnameAlone(turn, text)) return none;
-  if (malformedNoun(text, turn.lexicon) || languageForm(turn, text)) return { ...none, say: 'ending' };
+  if (malformedNoun(text, turn.lexicon) || languageForm(turn, text) || wrongPlural(text, turn.lexicon)) return { ...none, say: 'ending' };
+  if ((turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, text)) return { ...none, say: 'task' };
   const sentences = readAnswer(turn, text);
   if (!sentences) return none;
   if (!ownWordFits(sentences, Boolean(turn.ownName || turn.parts || turn.slot === 'name'))) return { ...none, sentences };
-  if (!inOrder(sentences, (h) => ['food', 'drink'].includes(taughtKind(h) || ownKind(h)))) return { ...none, sentences };
+  if (!inOrder(sentences, (h) => ['food', 'drink'].includes(taughtKind(h) || ownKind(h)))) return { ...none, say: certainlyNot(sentences), sentences };
   const lexicon = turn.lexicon;
   const clauses = sentences.flatMap((x) => x.clauses);
   const nouns = (c) => [c.subj, c.acc, c.pred, c.dat, ...(c.elems || []).flatMap((e) => (e.np ? [e.np] : e.combos ? [e] : []))].filter(Boolean);
@@ -3050,6 +3131,9 @@ export function readOnce(turn, value) {
     anyThing: (c) => [...new Set([c.subj, c.acc, c.pred, ...(c.elems || []).map((e) => e.np)].filter(Boolean).flatMap((n) => n.heads || [n.head]))],
     nearMiss: (c) => { const p = fold(wordsOf(text.replace(/[.,!?;:]/g, ' ')).find((w) => participleOf(w)) || ''); return Boolean(p) && Boolean(c.perfect) && !lexicon.said?.has?.(p) && [...(lexicon.perfect || []), 'gespielt', 'gekocht', 'gehört'].some((x) => x !== p && levenshtein(x, p) === 1) && !lexicon.verbs?.has?.(p); },
   };
+  // The verb's own preposition, prefix or object is checked wherever the sentence reads (`valencyFault`).
+  const valency = valencyFault(turn, sentences, env);
+  if (valency) return { say: valency, valency, unknown, sentences, env };
   const m = meaning(turn, sentences, env);
   // A noun no list knows is welcome where the answer names something of the learner's own; elsewhere it is not praised.
   if (m.say === 'yes' && unknown.length && !OWN_NOUN_KINDS.has(asked(turn)?.kind)) return { say: null, unknown, sentences };
@@ -3114,12 +3198,31 @@ function insideSlip(a, b) {
   return d.length === 2 && d[1] === d[0] + 1 && a[d[0]] === b[d[1]] && a[d[1]] === b[d[0]];
 }
 
+/**
+ * A typo of capitals only („was ist das?“, „sie ist jung“ typed on a phone): the same answer with the first letter of each sentence, the
+ * names and the nouns written large is right (Claude score of c6918f2d, MINOR 10). The screen then says what the slip is.
+ */
+export function capitalsOnly(turn, value) {
+  const text = String(value ?? '');
+  if (!turn?.lexicon || turn.spell || turn.listen || typedResult(turn, value) !== RESULT.TYPO) return false;
+  const lexicon = turn.lexicon;
+  const large = text.replace(/\p{L}+/gu, (w, at) => ((at === 0 || /[.!?]\s*$/.test(text.slice(0, at))) || lexicon.names?.has?.(fold(w)) || lexicon.genders.has(fold(w)) || OWN_NOUNS.has(fold(w)) || OWN_KIND.place.has(fold(w)) || OWN_KIND.language.has(fold(w)) ? w.charAt(0).toLocaleUpperCase('de') + w.slice(1) : w));
+  return large !== text && fold(large) === fold(text) && gradeTyped(turn, large) === RESULT.CORRECT;
+}
 export function typedResult(turn, value) {
   const result = gradeTyped(turn, value);
   if (result === RESULT.TYPO) return result;
   return slipFixed(turn, value) ? RESULT.TYPO : result;
 }
 function gradeTyped(turn, value) {
+  if (['live', 'origin', 'travel'].includes(asked(turn)?.kind) && townNames(value) !== String(value)) return gradeTyped(turn, townNames(value));
+  // („Ich wohne in Hof.“: a town may be called as a thing is; where one lives it is a town.)
+  const town = ['live', 'origin', 'travel'].includes(asked(turn)?.kind) && String(value).match(/(?<!\p{L})(?:in|aus|nach)\s+(\p{Lu}\p{L}{2,})(?=\s*(?:[.,!?]|$|\s+und\s))/u);
+  // A noun with a town's ending („Neustadt“, „Ludwigshafen“) is read as the town.
+  const townish = (w) => /(?:stadt|dorf|burg|berg|feld|hausen|heim|ingen|hof|bach|furt|brück|hagen|rode|wald|walde|see|münster|kirchen|hafen)$/u.test(w) && w.length > 5;
+  if (town && !/(?:straße|strasse|weg|platz|allee|gasse|ring|damm)$/u.test(fold(town[1])) && !turn.lexicon?.genders?.has?.(fold(town[1])) && !OWN_KIND.place.has(fold(town[1])) && !COUNTRY_ARTICLE[fold(town[1])]) {
+    if (readingsOfOwn(fold(town[1])) && townish(fold(town[1]))) return gradeTyped(turn, String(value).replace(town[0], town[0].replace(town[1], 'Bremen')));
+  }
   const result = typedCore(turn, value);
   if (verifiedResult(result)) return !doubted(turn, value, result) ? result : READ_FAULT[secondReading(turn, value).say] || (notRead(turn, value) && SURE.has(readFault(turn, value))) ? RESULT.WRONG : BEYOND;
   const reason = reasonFor(turn, value, result);
@@ -3137,10 +3240,10 @@ const notRead = (turn, value) => READ_TOO.has(asked(turn)?.kind) && (asked(turn)
 const ARTICLE_AND_NAME = [/(?<!\p{L})(?:ein|eine|einen|das)\s+(\p{Lu}\p{L}+isch|Deutsch)(?!\p{L}|\s+\p{Lu})/u, /(?<!\p{L})in\s+\p{Lu}\p{L}*(?:straße|strasse|weg|allee|gasse|platz)(?!\p{L})/u];
 const articleOfName = (turn, value) => (asked(turn)?.kind === 'language' && ARTICLE_AND_NAME[0].test(String(value))) || ARTICLE_AND_NAME[1].test(String(value));
 /** Of an answer a frame verifies, only these repairs are sure enough to call it wrong. */
-const SURE = new Set(['order', 'ending']);
-const doubted = (turn, value, result) => madeUpWord(turn, value) || malformedNoun(value, turn.lexicon) || foreignWord(turn, value) || otherWordTyped(turn, value, result) || articleOfName(turn, value) || notRead(turn, value) || (() => { const r = secondReading(turn, value); return Boolean(r.sentences && r.env) && senseless(turn, r.sentences, r.env); })();
+const SURE = new Set(['order', 'ending', 'extra', 'article', 'verb']);
+const doubted = (turn, value, result) => (turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, value) ? true : madeUpWord(turn, value) || malformedNoun(value, turn.lexicon) || wrongPlural(value, turn.lexicon) || unknownVerb(turn, value) || Boolean(secondReading(turn, value).valency) || foreignWord(turn, value) || otherWordTyped(turn, value, result) || articleOfName(turn, value) || notRead(turn, value) || (() => { const r = secondReading(turn, value); return Boolean(r.sentences && r.env) && senseless(turn, r.sentences, r.env); })();
 // The faults the second reader is sure of: another task, another thing, a pronoun of another gender, the other form of address.
-const READ_FAULT = { task: 'task', word: 'word', pronoun: 'word', address: 'address', sentence: 'sentence', missing: 'missing', case: 'case', ending: 'ending' };
+const READ_FAULT = { task: 'task', word: 'word', pronoun: 'word', address: 'address', sentence: 'sentence', missing: 'missing', case: 'case', ending: 'ending', order: 'order', verb: 'verb', article: 'article' };
 function readResult(turn, value) {
   const r = secondReading(turn, value);
   if (r.say === 'yes') {
@@ -3156,16 +3259,17 @@ function readFault(turn, value) {
   if (READ_FAULT[r.say]) return READ_FAULT[r.say];
   // (A reading of fragments alone is none: „Mein Heft grün.“, „Geben es hier Suppe?“)
   const fragments = r.sentences && r.sentences.every((x) => x.clauses.every((c) => c.around || c.frag)) && r.sentences.some((x) => x.clauses.some((c) => c.frag));
-  if ((r.sentences && !fragments) || !turn.lexicon || turn.spell || turn.listen) return null;
+  if (!turn.lexicon || turn.spell || turn.listen) return null;
   if (repaired.turn === turn && repaired.value === value) return repaired.fault;
-  const fault = oneRepair(turn, spelledOut(westernDigits(value), turn.lexicon).trim(), fragments);
+  const fault = oneRepair(turn, spelledOut(westernDigits(value), turn.lexicon).trim(), fragments, Boolean(r.sentences) && !fragments);
   Object.assign(repaired, { turn, value, fault });
   return fault;
 }
 const repaired = { turn: null, value: null, fault: null };
-function oneRepair(turn, text, fragments) {
+function oneRepair(turn, text, fragments, sureOnly = false) {
   if (text.length > 110 || !smallWordsKnown(text, (w) => knownWord(w, turn.lexicon))) return null;
-  for (const { text: t, fault } of repairs(text, { fragments, isPlace: (w) => OWN_KIND.place.has(fold(w)) })) {
+  for (const { text: t, fault, sure } of repairs(text, { fragments, isPlace: (w) => OWN_KIND.place.has(fold(w)), isThing: (w) => ['furniture', 'food', 'drink'].includes(taughtKind(fold(w))) })) {
+    if (sureOnly && !sure) continue;
     const r = readOnce(turn, t);
     if (r.say === 'yes' && !articleFaultIn(turn.lexicon, t) && !placeFault(t)) return fault;
   }
@@ -3179,13 +3283,19 @@ const finiteVerb = (w, lexicon) => [w, w.replace(/ae/g, 'ä').replace(/oe/g, 'ö
 // A named fault stands only where the check is sure of it (`certainFault`): elsewhere the answer is BEYOND.
 function reasonFor(turn, value, core) {
   if (englishIn(turn, value)) return 'english';
+  if ((turn.ownName || asked(turn)?.kind === 'name') && partnerNamed(turn, value)) return 'task';
   if (!turn.listen && !turn.spell && addressFault(String(value), turn)) return 'address';
   if (!turn.listen && !turn.spell && !turn.ownName && articleFaultIn(turn.lexicon, spelledOut(westernDigits(value), turn.lexicon))) return 'article';
   // What the last look of `coreRule` found wrong wherever it stands („Ich gehe gern im Kino.“, „Gern ich komme mit.“).
   const [vetoed, veto] = core === RESULT.WRONG && !turn.spell && !turn.listen ? coreRule(turn, value) : [];
   if (vetoed === RESULT.WRONG && VETOES.has(veto)) return veto;
   const reason = namedFault(turn, value, core);
-  return reason && (turn.ownName || certainFault(turn, spelledOut(westernDigits(value), turn.lexicon), reason, (w) => knownWord(fold(w), turn.lexicon), (w) => finiteVerb(w, turn.lexicon))) ? reason : null;
+  // („Ich kaufe nichts, danke.“ is German and honest: it shows nothing, and it is no mistake.)
+  const named = reason && (turn.ownName || certainFault(turn, spelledOut(westernDigits(value), turn.lexicon), reason, (w) => knownWord(fold(w), turn.lexicon), (w) => finiteVerb(w, turn.lexicon))) ? reason : null;
+  // „nichts“ in the learner's gap names nothing the turn asks for: a fault the check is sure of is told as the task read again
+  // (`check.fault.task`), since no word is wrong; an unsure one stays BEYOND („Ja, beides!“, „Ist bei Ihnen alles gut?“).
+  if (named && !['english', 'address'].includes(named) && /(?<!\p{L})(?:nichts|alles|beides)(?!\p{L})/iu.test(String(value))) return 'task';
+  return named;
 }
 const VETOES = new Set(['order', 'word', 'agreement', 'tense', 'missing', 'article']);
 export function namedFault(turn, value, core) {

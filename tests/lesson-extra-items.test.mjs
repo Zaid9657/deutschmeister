@@ -923,9 +923,11 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // RE-MEASURED, not relaxed.
     // 2026-11-23: `extra-a11-l07-05` is now „Wir tanzen hier zusammen.“ (a word bag needs four words), so
     // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
+    // Loop round 4 (2026-11-26): three new L8 clock items (halb, the official time) reseat the generated papers;
+    // checkpoint 4's Bausteine seat 1 now holds a gap with no Angabe. The live papers (the reserved bank) are pinned above.
+    // RE-MEASURED, not relaxed.
     'a1.1-cp1-schreiben-2',
     'a1.1-cp3-bausteine-1',
-    'a1.1-cp4-bausteine-1',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

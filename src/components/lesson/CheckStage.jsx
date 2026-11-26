@@ -9,7 +9,7 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { beyondStart, BEYOND, canDoShown, checkTurns, chosenWord, faultHintKey, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
+import { beyondStart, BEYOND, canDoShown, capitalsOnly, checkTurns, chosenWord, faultHintKey, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { shownLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -44,7 +44,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
     if (result === BEYOND) { onBeyond(value); return; }
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
     if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
-    else if (tries === 0) { setRetry(result === RESULT.TYPO ? 'typo' : 'retry'); setHint(result === RESULT.TYPO ? null : faultHintKey(turn, value)); }
+    else if (tries === 0) { setRetry(result === RESULT.TYPO ? 'typo' : 'retry'); setHint(result === RESULT.TYPO ? (capitalsOnly(turn, value) ? 'feedback.typo.case' : null) : faultHintKey(turn, value)); }
     else setOutcome('missed');
     setTries(tries + 1);
   };
@@ -115,7 +115,8 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
             />
           ) : (
             <input
-              id={`check-${n}`} lang="de" autoComplete="off" autoCapitalize="off" spellCheck={false} maxLength={120} value={value}
+              // (A sentence begins with a capital: the phone writes it, as German does.)
+              id={`check-${n}`} lang="de" autoComplete="off" autoCapitalize="sentences" spellCheck={false} maxLength={120} value={value}
               onChange={(e) => { setValue(e.target.value); setRetry(null); }}
               onKeyDown={(e) => { if (e.key === 'Enter' && value.trim()) submit(); }}
               className="mt-2 min-h-11 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel"

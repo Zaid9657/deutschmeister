@@ -31,6 +31,9 @@ const FALSE_CLAIMS = [
   /\ball Lektionen unlocked\b/i,
   /\bevery Lektion is open, so\b/i,
   /\bkostenlosen Kurs\b/i,
+  // „Beginnen Sie dann mit dem kostenlosen A1.1-Kurs …“ (telc B1 page; Claude score of fd8f8dba, BLOCKER).
+  new RegExp(String.raw`\bkostenlose[nmrs]? ${LEVEL}[- ]?Kurs`, 'i'),
+  /\bAI-graded with a free account\b/i,
   /\bin Reihenfolge, kostenlos\b/i,
 ];
 

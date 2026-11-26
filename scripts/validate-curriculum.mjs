@@ -848,11 +848,8 @@ export const FUNCTION_WORDS_FREE = [
   'ja', 'nein', 'bitte', 'danke', 'doch', 'und', 'oder', 'aber', 'auch', 'nicht', 'noch',
   'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern',
   'wer', 'was', 'wo', 'wann', 'warum', 'wie', 'wohin', 'woher', 'welche', 'welcher', 'welches',
-  // 1 — die Zahlen 0–100
-  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
-  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
-  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
-  'neunzig', 'hundert',
+  // (1 — die Zahlen 0–100 stood here until 2026-11-25: they are taught by their series, 0–10 in L2 and 11–100 in L4,
+  // `seriesWords`, and by the line that says one: checkpoint 1 asked for „achtzehn“ before any Lektion showed it.)
 ];
 
 const FUNCTION_FREE_SET = lowerSet(FUNCTION_WORDS_FREE);

@@ -20,6 +20,7 @@ import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import KannIch from '../components/course/KannIch.jsx';
 import { canDoLines, canDoList } from '../lib/course/canDo.js';
+import { checksShown } from '../lib/course/checkShown.js';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import SEO from '../components/SEO';
@@ -278,7 +279,7 @@ export default function CurriculumHomePage({ curriculum }) {
             {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
               <Reveal delay={140} className="mt-5">
                 <KannIch
-                  items={canDoList(curriculum, done)}
+                  items={canDoList(curriculum, done, checksShown())}
                   checkpointsPassed={curriculum.checkpoints.filter((cp) => done.has(cp.id)).length}
                   checkpointsTotal={curriculum.checkpoints.length}
                   streak={streak}

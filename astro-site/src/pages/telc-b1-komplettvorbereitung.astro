@@ -12,7 +12,7 @@ import { ORGANIZATION } from '../lib/siteMeta.js';
 import { telcPilotVariant } from '../lib/courseVariants.js';
 import { onsiteHref } from '../lib/onsiteLinks.js';
 import { COURSES, CURRENCY, PLANS, num, deEur } from '../data/pricing.js';
-import { TRIAL_DAYS, TRIAL_WRITING_EVALUATIONS, TRIAL_SPEAKING_SESSIONS, PRO_INCLUDED_SESSION_MINUTES } from '../data/marketing.js';
+import { TRIAL_DAYS, TRIAL_WRITING_EVALUATIONS, TRIAL_SPEAKING_SESSIONS, PRO_INCLUDED_SESSION_MINUTES, FREE_LEKTION_LABEL } from '../data/marketing.js';
 import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
 import { PROGRAM, allDays, SHORT_TEST_MINUTES } from '../../../src/data/programs/telcB1Komplett.js';
 
@@ -29,7 +29,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((font) => font.inc
 const FAQS = [
   {
     q: 'Für wen ist der Plan gedacht?',
-    a: 'Für Lernende mit Deutschkenntnissen ab A2, die gezielt für telc B1 üben möchten. Unter A2 ist der Plan zu früh. Beginnen Sie dann mit dem kostenlosen A1.1-Kurs oder nutzen Sie den Einstufungstest.',
+    a: `Für Lernende mit Deutschkenntnissen ab A2, die gezielt für telc B1 üben möchten. Unter A2 ist der Plan zu früh. Beginnen Sie dann mit dem A1.1-Kurs (${FREE_LEKTION_LABEL} ist kostenlos) oder nutzen Sie den Einstufungstest.`,
   },
   {
     q: 'Was ist der Unterschied zwischen AI Practice und dem Kurs?',

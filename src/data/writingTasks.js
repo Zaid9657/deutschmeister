@@ -584,16 +584,16 @@ export const WRITING_TASKS = [
     course: 'a1.1',
     checkpoint: 1,
     taskKey: 'a11-cp1',
-    title: 'Checkpoint 1: Ein Formular für Tim',
+    title: 'Checkpoint 1: Ein Formular für Thomas Vogt',
     register: 'formular',
     minWords: 5,
     maxWords: 40,
     task:
-      'Tim Berger ist verheiratet. Er kommt aus Österreich und spricht Englisch und Deutsch. Füllen Sie das Formular für Tim aus.',
+      'Thomas Vogt ist verheiratet. Er kommt aus Österreich und spricht Englisch und Deutsch. Füllen Sie das Formular für Thomas Vogt aus.',
     taskEn:
-      'Tim Berger is married. He comes from Austria and speaks English and German. Fill in the form for Tim (first name, surname, marital status, languages, country).',
+      'Thomas Vogt is married. He comes from Austria and speaks English and German. Fill in the form for Thomas Vogt (first name, surname, marital status, languages, country).',
     leitpunkte: ['Vorname', 'Familienname', 'Familienstand', 'Sprachen', 'Land'],
-    sample: 'Vorname: Tim / Familienname: Berger / Familienstand: verheiratet / Sprachen: Englisch, Deutsch / Land: Österreich',
+    sample: 'Vorname: Thomas / Familienname: Vogt / Familienstand: verheiratet / Sprachen: Englisch, Deutsch / Land: Österreich',
   },
   {
     examKey: 'goethe_a1',

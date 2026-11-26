@@ -227,6 +227,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../lib/course/localProgress.js'] = { localDoneIds: () => new Set(complete ? curriculumPath(curriculum).map((n) => n.id) : []) };
     stubs['../lib/lesson/runState.js'] = { latestRun: () => null };
     stubs['../lib/course/canDo.js'] = { canDoList: () => [] };
+    stubs['../lib/course/checkShown.js'] = { checksShown: () => ({}) };
     stubs['../data/courseTests/index.js'] = { courseTestDescription };
     const { default: Home } = await loadJsxModule(path, stubs);
     const tree = state.render(Home, { curriculum });

@@ -84,12 +84,16 @@ test('no reading item is answered by finding its digits, its day or its words in
 
 test('both marks stay one point above a constant answer', () => {
   assert.equal(sectionGuessCeiling(lesen), 4);
-  // Hören's keys load from the database: one answer throughout takes 4 of its 8 in the snapshot (Claude score, 2026-11-25).
-  const keys = hoeren.parts[0].questionNumbers.map((n) => bank.find((q) => q.question_number === n).correct_answer);
-  const most = Math.max(...[...new Set(keys)].map((k) => keys.filter((x) => x === k).length));
-  assert.equal(hoeren.passMark, most + 1);
-  assert.deepEqual(sectionPassMarks(mock).map((m) => [m.key, m.need, m.max]), [['hoeren', 5, 8], ['lesen', 5, 8]]);
-  assert.match(mock.intro, /mindestens 5 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen/);
+  // Hören's keys load from the database: one answer throughout takes 4 of its 8 in the snapshot (Claude score, 2026-11-25), and
+  // one place throughout takes 5, because the runner shows the options in stored order (Claude score of fd8f8dba): the mark is
+  // one more than the better of the two.
+  const asked = hoeren.parts[0].questionNumbers.map((n) => bank.find((q) => q.question_number === n));
+  const keys = asked.map((q) => q.correct_answer);
+  const places = asked.map((q) => (q.options || []).map((o) => (String(o).match(/^([a-d])\)/) || [])[1] || o).indexOf(q.correct_answer));
+  const most = (list) => Math.max(...[...new Set(list)].map((k) => list.filter((x) => x === k).length));
+  assert.equal(hoeren.passMark, Math.max(most(keys), most(places)) + 1);
+  assert.deepEqual(sectionPassMarks(mock).map((m) => [m.key, m.need, m.max]), [['hoeren', 6, 8], ['lesen', 5, 8]]);
+  assert.match(mock.intro, /mindestens 6 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen/);
   const all = Object.fromEntries(lesen.parts.flatMap((p) => p.items.map((i) => [i.id, i.answer])));
   assert.equal(scoreObjectiveSections(mock, all).score, 8);
 });

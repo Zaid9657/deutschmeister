@@ -26,7 +26,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
 ### A1.1 Course (Lektion 1 free)
 - 12 situational lessons built on Goethe-Institut can-do statements; Lektion 1 needs no account
-- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with a free account, a form checklist without one
+- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with an account that has the lesson open (Lektion 1 with a free account), a form checklist without one
 - Checkpoints and spaced review
 - URL: https://deutsch-meister.de/course/a1.1
 

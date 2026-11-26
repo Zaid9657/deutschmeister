@@ -211,6 +211,8 @@ export const STRINGS = {
 
     'feedback.correct': 'Correct!',
     'feedback.typo': 'Almost — just a typo',
+    // Written by Codex (round 4 of the loop): a typo of capitals only says what it is.
+    'feedback.typo.case': 'In German, sentences and all nouns start with a capital letter.',
     'feedback.corrected': 'Done — after a second try',
     'feedback.wrong': 'Not yet',
     'feedback.revealed': 'Here is the answer',
@@ -419,6 +421,7 @@ export const STRINGS = {
     'checkpoint.drillsOnly': 'Schreiben counted only the two sentence exercises — your text was not graded.',
     'checkpoint.readInstead': 'Shown as text — this item does not count toward your score.',
     'checkpoint.saveFailed': 'Not saved to your account yet. Your result is shown here; the course page also completes a saved pass.',
+    'checkpoint.intro.heard': "20 tasks from {sections} — an adapted course assessment, not an exam simulation. Listening uses dictation and short texts you hear with a question; reading uses short texts; language tasks practise grammar; writing includes sentence drills and a separate writing task; speaking is read-aloud. The course pass rules shown here are not official exam scoring. The test draws on this chapter's lessons and revisits grammar from earlier chapters.",
     'checkpoint.intro': "20 tasks from {sections} — an adapted course assessment, not an exam simulation. Listening uses dictation and word recognition; reading uses short texts; language tasks practise grammar; writing includes sentence drills and a separate writing task; speaking is read-aloud. The course pass rules shown here are not official exam scoring. The test draws on this chapter's lessons and revisits grammar from earlier chapters.",
     'checkpoint.passRule': 'Pass from {overall} % overall and at least {section} % in every scored part — more than answering the same option everywhere would get. A graded writing task must pass by itself.',
     'checkpoint.blocked': 'No attempts left in this window. Open again from {time}.',
@@ -715,6 +718,7 @@ export const STRINGS = {
 
     'feedback.correct': 'Richtig',
     'feedback.typo': 'Fast — nur ein Tippfehler',
+    'feedback.typo.case': 'Im Deutschen werden Satzanfänge und alle Nomen großgeschrieben.',
     'feedback.corrected': 'Geschafft — im zweiten Anlauf',
     'feedback.wrong': 'Noch nicht',
     'feedback.revealed': 'Hier ist die Antwort',
@@ -921,6 +925,7 @@ export const STRINGS = {
     'checkpoint.drillsOnly': 'Beim Schreiben zählten nur die zwei Satzübungen – Ihr Text wurde nicht bewertet.',
     'checkpoint.readInstead': 'Als Text gezeigt — diese Aufgabe zählt nicht zu Ihrem Ergebnis.',
     'checkpoint.saveFailed': 'Noch nicht in Ihrem Konto gespeichert. Ihr Ergebnis steht hier; die Kursseite schließt einen gespeicherten Erfolg auch nachträglich ab.',
+    'checkpoint.intro.heard': '20 Aufgaben aus {sections} — ein adaptierter Kurstest, keine Prüfungssimulation. Hören prüft Diktate und kurze Hörtexte mit einer Frage, Lesen kurze Texte, Sprachbausteine Grammatik. Schreiben enthält Satzübungen und eine eigene Schreibaufgabe; Sprechen ist Vorlesen. Es gelten die hier gezeigten Kurs-Bestehensregeln, keine offizielle Prüfungsbewertung. Der Test zieht aus den Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.',
     'checkpoint.intro': '20 Aufgaben aus {sections} — ein adaptierter Kurstest, keine Prüfungssimulation. Hören prüft Diktate und Worterkennung, Lesen kurze Texte, Sprachbausteine Grammatik. Schreiben enthält Satzübungen und eine eigene Schreibaufgabe; Sprechen ist Vorlesen. Es gelten die hier gezeigten Kurs-Bestehensregeln, keine offizielle Prüfungsbewertung. Der Test zieht aus den Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.',
     'checkpoint.passRule': 'Bestanden ab {overall} % insgesamt und mindestens {section} % in jedem bewerteten Teil – mehr, als immer dieselbe Antwort ergäbe. Eine bewertete Schreibaufgabe muss selbst bestanden sein.',
     'checkpoint.blocked': 'Keine Versuche mehr in diesem Zeitfenster. Wieder frei ab dem {time} Uhr.',

@@ -42,7 +42,7 @@ const INTERJECTIONS = `guten tag|guten morgen|guten abend|gute nacht|grüss gott
 auf wiedersehen|auf wiederhören|tschüss|tschüs|ciao|bis bald|bis dann|bis später|bis gleich|bis morgen|alles klar|alles gute|kein problem|keine sorge|freut mich|freut mich sehr|sehr erfreut|na klar|na gut|na ja|aber ja|oh ja|oh nein|oh|ach|ah|hm|ach so|ja klar|ja gern|ja gerne|ja|nein|nee|doch
 okay|ok|klar|genau|stimmt|super|prima|toll|schön|perfekt|wunderbar|klasse|sehr gern|sehr gerne|sehr gut|gern|gerne|aber gern|aber gerne|gut|natürlich|sicher|auf jeden fall|einverstanden|abgemacht|bitte sehr|bitte schön|bitte|also|moment|moment mal|moment bitte|einen moment|einen moment bitte|warte mal
 sag mal|schau mal|guck mal|hör mal|entschuldigung|entschuldigen sie|entschuldigen sie bitte|entschuldige|entschuldige bitte|verzeihung|sorry|mach es gut|machen sie es gut|pass auf dich auf|liebe grüsse|viele grüsse|mit freundlichen grüssen|freundliche grüsse|schönen tag|schönen tag noch|einen schönen tag|schön sie kennenzulernen|schön dich kennenzulernen
-einen schönen tag noch|viel spass|viel glück|eine frage|ich glaube|ich denke|glaube ich|denke ich|finde ich|das ist nett|das ist lieb|sehr nett|wie schön|wie nett|herzlich willkommen|leider nein|leider nicht|tut mir leid|es tut mir leid|das tut mir leid|wow|mal sehen|bis zum nächsten mal|halt|vielleicht später|vielleicht ein anderes mal|ein anderes mal|ein andermal|schönen abend|schönen abend noch|einen schönen abend noch|komm gut nach hause|kommen sie gut nach hause`.split(/[|\n]/).map((p) => p.trim().split(' ')).sort((a, b) => b.length - a.length);
+einen schönen tag noch|viel spass|viel glück|eine frage|ich glaube|ich denke|glaube ich|denke ich|finde ich|das ist nett|das ist lieb|sehr nett|wie schön|wie nett|herzlich willkommen|leider nein|leider nicht|tut mir leid|es tut mir leid|das tut mir leid|wow|mal sehen|bis zum nächsten mal|halt|sagen sie mal|nett sie kennenzulernen|viel spass noch|vielleicht später|vielleicht ein anderes mal|ein anderes mal|ein andermal|schönen abend|schönen abend noch|einen schönen abend noch|komm gut nach hause|kommen sie gut nach hause`.split(/[|\n]/).map((p) => p.trim().split(' ')).sort((a, b) => b.length - a.length);
 
 const NO_COMMA = new Set('guten tag|guten morgen|guten abend|hallo|hi|hey|moin|servus|danke|vielen dank|ja|nein|bitte|entschuldigung|okay|ok|oh|ach|also|moment|entschuldigen sie|entschuldigen sie bitte|entschuldige|sag mal|ja klar|danke schön|tschüss|tschüs|na|doch'.split('|'));
 const GREETS = new Set(['hallo', 'hi', 'hey', 'moin', 'servus', 'tschüss', 'tschüs', 'ciao', 'danke', 'nein', 'ja', 'bitte', 'okay', 'entschuldigung', 'verzeihung', 'sorry']);
@@ -52,7 +52,9 @@ const isNumber = (f) => NUMBER_WORDS.includes(f) || NUMBER.test(f) || f === 'ein
 /** The words of a text with their marks: { raw, f, cap, kind: 'w' | 'n' | 'clock' | 'date' | 'ord' | 'phone' | 'p' }. */
 export function tokenize(text) {
   const s = String(text || '').normalize('NFC').replace(/[„“”"«»()]/g, ' ').replace(/[’‘`´]/g, "'")
-    .replace(/(\p{L}{2,})'s(?!\p{L})/gu, '$1 es').replace(/\s[–-]\s/g, ' , ');
+    .replace(/(\p{L}{2,})'s(?!\p{L})/gu, '$1 es').replace(/\s[–-]\s/g, ' , ')
+    // („Schön, Sie kennenzulernen!“ is one phrase.)
+    .replace(/(?<!\p{L})(schön|nett),\s+(Sie|dich)\s+kennenzulernen/giu, '$1 $2 kennenzulernen');
   const re = /\d{1,2}\.\s?\d{1,2}\.(?:\s?\d{2,4})?|\d{1,2}[.:]\d{2}(?!\d)|\d{1,2}\.(?=\s+(?:\p{Lu}|[a-zäöü]))|\+?\d[\d/]*(?:[ /-]?\d+)+|\d+|[\p{L}][\p{L}'-]*\.?(?=[^\p{L}]|$)|[.,!?;:…&]/gu;
   const out = [];
   for (const m of s.matchAll(re)) {
@@ -155,11 +157,15 @@ export function reader(text, ctx) {
     if (['der', 'den', 'dem'].includes(t.f)) for (const d of date(i + 1)) out.push({ end: d.end, combos: [{ g: 'der', c: { der: 'n', den: 'a', dem: 'd' }[t.f] }], agr: 'er', head: d.month || 'datum', kind: 'date', month: d.month, year: d.year, said: d.said });
     // Amounts: „etwas zu essen“, „ein paar Freunde“, „ein bisschen Obst“, „viel Obst“, „etwas Kaltes“.
     const pushBare = (k, extra = {}) => bareNoun(k, extra).forEach((n) => out.push(n));
+    const someLanguage = (k) => { if (T[k]?.kind === 'w' && T[k].cap && ctx.isLanguage(T[k].raw)) out.push({ end: k + 1, combos: ['n', 'a'].map((c) => ({ c })), agr: 'er', head: T[k].f, kind: 'language', bare: true, bareOk: true, stuff: true }); };
     if (t.f === 'ein' && f(i + 1) === 'paar') {
       const n = nounAt(i + 2);
       if (n && (!n.readings || n.readings.includes('pl'))) out.push({ end: i + 3, combos: [{ g: 'pl', c: 'n' }, { g: 'pl', c: 'a' }, { g: 'pl', c: 'd' }], agr: 'sie', head: n.f, kind: 'np', det: 'paar', unknown: n.unknown ? [T[i + 2].raw] : [], small: n.small });
     }
-    if (t.f === 'ein' && (f(i + 1) === 'bisschen' || f(i + 1) === 'wenig')) pushBare(i + 2, { mass: true });
+    if (t.f === 'ein' && (f(i + 1) === 'bisschen' || f(i + 1) === 'wenig')) { pushBare(i + 2, { mass: true }); someLanguage(i + 2); }
+    if (['etwas', 'wenig'].includes(t.f)) someLanguage(i + 1);
+    // „alle meine Freunde“
+    if (t.f === 'alle' && ['poss', 'def', 'dies'].includes(determinerOf(f(i + 1) || '')?.kind)) for (const n of simpleNp(i + 1)) if (n.det && n.combos.some((c) => c.g === 'pl')) out.push({ ...n, combos: n.combos.filter((c) => c.g === 'pl'), agr: 'sie' });
     if (['etwas', 'viel', 'wenig', 'mehr', 'genug'].includes(t.f)) {
       pushBare(i + 1, { mass: true, amount: true });
       const x = T[i + 1];
@@ -308,7 +314,7 @@ export function reader(text, ctx) {
           const conj = f(j) === 'und' || f(j) === 'oder' || f(j) === 'sowie';
           if (!comma && !conj) continue;
           let k = j + 1;
-          if (conj && ['auch', 'dann', 'natürlich', 'vielleicht', 'noch', 'ausserdem', 'sogar', 'dazu', 'danach'].includes(f(k))) k += 1;
+          if (['auch', 'dann', 'natürlich', 'vielleicht', 'noch', 'ausserdem', 'sogar', 'dazu', 'danach'].includes(f(k)) && (conj || f(k) === 'noch')) k += 1;
           for (const b of simpleNp(k)) {
             if (b.kind === 'pron' && !['ich', 'du', 'er', 'sie', 'wir'].includes(b.head)) continue;
             const items = [...st.items, b];
@@ -316,7 +322,7 @@ export function reader(text, ctx) {
             if (!cases.length) continue;
             const heads2 = items.map((x) => x.head);
             const agr = f(j) === 'oder' ? b.agr : heads2.includes('ich') || heads2.includes('wir') ? 'wir' : 'sie';
-            const joined = { or: f(j) === 'oder', end: b.end, combos: cases.map((c) => ({ g: 'pl', c })), agr, head: a.head, heads: heads2, kind: items.every((x) => x.kind === 'pron') ? 'pron' : 'np', items, list: true, unknown: items.flatMap((x) => x.unknown || []), bare: items.every((x) => x.bare), bareOk: items.every((x) => !x.bare || x.bareOk || x.kind === 'name' || x.kind === 'place' || x.kind === 'own' || x.kind === 'language'), small: items.some((x) => x.small), neg: items.some((x) => x.neg), stuff: items.every((x) => x.stuff || !x.bare), job: items.every((x) => x.job) };
+            const joined = { or: f(j) === 'oder', end: b.end, combos: cases.map((c) => ({ g: 'pl', c })), agr, head: a.head, heads: heads2, kind: items.every((x) => x.kind === 'pron') ? 'pron' : items.every((x) => x.kind === 'language') ? 'language' : 'np', items, list: true, unknown: items.flatMap((x) => x.unknown || []), bare: items.every((x) => x.bare), bareOk: items.every((x) => !x.bare || x.bareOk || x.kind === 'name' || x.kind === 'place' || x.kind === 'own' || x.kind === 'language'), small: items.some((x) => x.small), neg: items.some((x) => x.neg), stuff: items.every((x) => x.stuff || !x.bare), job: items.every((x) => x.job) };
             next.push({ items, end: b.end, open: comma });
             if (conj) out.push(joined);
           }
@@ -503,7 +509,13 @@ export function reader(text, ctx) {
       if (DAY_PARTS.includes(f(i + 1)) || f(i + 1) === 'früh') push({ end: i + 2, rel: w, part: f(i + 1), small: small(i + 1) && f(i + 1) !== 'früh' });
     }
     if (/^(?:morgens|vormittags|mittags|nachmittags|abends|nachts)$/u.test(w || '')) push({ end: i + 1, part: w.replace(/s$/u, '') });
-    if (/^(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)s$/u.test(w || '')) push({ end: i + 1, day: w.replace(/s$/u, '') });
+    const dayly = (k) => (/^(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)s$/u.test(f(k) || '') ? f(k).replace(/s$/u, '') : null);
+    if (dayly(i)) {
+      push({ end: i + 1, day: dayly(i) });
+      // „montags bis freitags“, „montags und mittwochs“
+      if (['bis', 'und', 'oder'].includes(f(i + 1)) && dayly(i + 2)) push({ end: i + 3, day: dayly(i), range: true });
+    }
+    if (w === 'von' && dayly(i + 1) && f(i + 2) === 'bis' && dayly(i + 3)) push({ end: i + 4, day: dayly(i + 1), range: true });
     const d0 = dayName(w);
     if (d0) push({ end: i + 1, ...d0, noPrep: true, small: small(i) });
     if (['jede', 'diese', 'nächste', 'letzte', 'kommende'].includes(w) && ['woche', 'nacht'].includes(f(i + 1))) push({ end: i + 2, part: f(i + 1), rel: w });
@@ -534,6 +546,8 @@ export function reader(text, ctx) {
     }
     // „Freitag, 10 Uhr“
     for (const a of [...out]) if (T[a.end]?.f === ',' ) for (const c of clock(a.end + 1)) out.push({ ...a, h: c.h, m: c.m, clock: true, end: c.end });
+    // „am Montag und am Dienstag“: two days, one time.
+    for (const a of [...out]) if (a.day && !a.h && f(a.end) === 'und') for (const b of time(a.end + 1)) if (b.day && b.day !== a.day && !b.h) out.push({ ...a, end: b.end, days: [a.day, b.day], range: true });
     return uniq(out, (x) => `${x.end}|${x.day || ''}|${x.part || ''}|${x.h ?? ''}|${x.month || ''}|${x.rel || ''}`);
   }
 

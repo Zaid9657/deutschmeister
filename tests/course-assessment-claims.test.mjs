@@ -101,6 +101,9 @@ test('detailed surfaces use the shared description, including generic A1.2 and l
   assert.match(t('checkpoint.intro', 'de'), /adaptierter Kurstest, keine Prüfungssimulation/);
   assert.match(t('checkpoint.intro', 'en'), /adapted course assessment, not an exam simulation/);
   for (const lang of ['de', 'en']) assert.doesNotMatch(t('checkpoint.intro', lang), oldClaims);
+  // A1.1's checkpoints hear texts with questions (a11.hoeren.js): their intro says so (Claude score of fd8f8dba, MINOR 15).
+  for (const lang of ['de', 'en']) { assert.doesNotMatch(t('checkpoint.intro.heard', lang), oldClaims); assert.match(t('checkpoint.intro.heard', lang), /Hörtexte mit einer Frage|texts you hear with a question/); }
+  assert.match(read('src/pages/lesson/CheckpointPage.jsx'), /checkpoint\.hoeren \? 'checkpoint\.intro\.heard' : 'checkpoint\.intro'/);
   assert.match(t('writing.assessmentNote', 'de'), /Kurs-Übungsraster/);
   assert.match(t('writing.assessmentNote', 'en'), /course practice rubric/);
   for (const lang of ['de', 'en']) {

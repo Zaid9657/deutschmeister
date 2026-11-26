@@ -182,7 +182,13 @@ test('progress shows ability, not activity: the home leads with the can-dos, the
   const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
   const home = read('src/pages/CurriculumHomePage.jsx');
   assert.doesNotMatch(home, /label="XP"|\bconst xp\b/, 'no XP on the course home');
-  assert.match(home, /<KannIch\s+items=\{canDoList\(curriculum, done\)\}/);
+  assert.match(home, /<KannIch\s+items=\{canDoList\(curriculum, done, checksShown\(\)\)\}/);
+  // A can-do the final check did not show is never ticked (Claude score of fd8f8dba, MAJOR 5).
+  const checked = canDoList(CURRICULUM_A11, new Set(['a1.1-l01']), { 'a1.1-l01': [true, false, true, true] });
+  assert.deepEqual(checked.filter((c) => c.nr === 1).map((c) => c.state), ['shown', 'practise', 'shown', 'shown']);
+  assert.ok(canDoList(CURRICULUM_A11, done, { 'a1.1-l01': [false, false, false, false] }).filter((c) => c.nr === 1).every((c) => c.state === 'again'), 'a passed checkpoint checks the chapter');
+  assert.match(read('src/pages/lesson/LessonPlayerPage.jsx'), /rememberCheck\(lektion\.id, shown\)/);
+  assert.match(read('src/components/course/KannIch.jsx'), /c\.state !== 'open' && c\.state !== 'practise'/);
   assert.match(home, /loaded && curriculum\.lektionen\.some\(\(l\) => done\.has\(l\.id\)\) && \(/, 'only once a Lektion is finished: a newcomer sees Start, not a row of zeros');
   const recap = read('src/components/lesson/RecapStage.jsx');
   const canDoAt = recap.indexOf("t('recap.canDo.title', lang)");

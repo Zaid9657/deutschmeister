@@ -266,6 +266,25 @@ export function seriesWords(lektion) {
 }
 
 /**
+ * THE NUMBERS ARE TAUGHT WHERE THEIR SERIES STANDS, never from Lektion 1 (Codex score of fd8f8dba, MAJOR): they are in the closed list
+ * a dialogue may use, so checkpoint 1 asked for „achtzehn“ and „sechzehn“ before Lektion 4 shows the numbers from 11. A number a
+ * dialogue, a notice or an example says is met there („zwanzig“ in Lektion 3).
+ */
+export const SERIES_NUMBERS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn',
+  'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', ...TENS, 'hundert'];
+/** The numbers a learner has met by the end of Lektion `lastNr`: its series, and what a dialogue, a notice or an example says. */
+export function numbersMet(curriculum, lastNr) {
+  const met = new Set();
+  for (const l of curriculum?.lektionen || []) {
+    if (!(l.nr <= lastNr)) continue;
+    for (const w of seriesWords(l)) met.add(w);
+    const said = [...(l.dialog?.lines || []).map((x) => x.de), l.notice?.bodyDe, ...(l.notice?.examples || []), ...(l.wortfeld || []).map((w) => w.exampleDe)];
+    for (const t of said.flatMap((s) => tokenise(s || ''))) if (SERIES_NUMBERS.includes(t.toLowerCase())) met.add(t.toLowerCase());
+  }
+  return met;
+}
+
+/**
  * Every word form a learner has met by the END of Lektion `lastNr` — the
  * knownUpTo loop of itemLexis(), stopped at one Lektion instead of kept per
  * Lektion. Returns null when the level has no lexis tables (see LEXIS_LEVELS).
@@ -287,6 +306,8 @@ export function knownUpTo(curriculum, lastNr, priorCurriculum = null) {
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     for (const w of seriesWords(l)) known.add(w);
   }
+  // (A level that follows another has every number of the level before it.)
+  if (!spec.seedFrom) { const met = numbersMet(curriculum, lastNr); for (const w of SERIES_NUMBERS) if (!met.has(w)) known.delete(w); }
   return known;
 }
 
