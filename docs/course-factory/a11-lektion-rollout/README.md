@@ -726,7 +726,8 @@ Claude **7.3, "no"** (6.6). Raw reports in the loop notes (`codex-score-8-on-f08
 what the commit after f0847faa did with it (those fixes are not scored yet):
 
 - **Codex BLOCKER, fixed:** „Ich esse gern Musik.“ was praised. What one eats is food, what one drinks a drink; one reads or hears neither
-  (`SENSE` in `valencyFault`, by the kind of a taught noun; the learner's own nouns stay unjudged; `final-check.test.mjs` runs the class).
+  (`SENSE` in `valencyFault`: a noun the Wortfeld teaches outside the food and drink Lektion is neither; a noun only an answer says, „Alkohol“,
+  stays the learner's own; `final-check.test.mjs` runs the class).
 - **Codex MAJOR, fixed:** „Ich bin Rentner.“ was wrong where L11 asks „Wann arbeitest du?“. Saying one has no paid work is an answer
   (`notWorking`: retired, pupil or student, at home, out of work, „zur Schule gehen“, „studieren“, „keine Arbeit“).
 - **Claude MAJOR, open (round 5, first):** the order after the verb is not checked. 12 of 17 probes were accepted: „Ich gehe ins Kino gern.“,
