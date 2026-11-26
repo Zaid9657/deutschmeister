@@ -110,6 +110,18 @@ const headsOf = (n) => (n ? n.heads || [n.head] : []);
 const adjs = (c) => (c.adj || []).flatMap((a) => a.words);
 const negated = (c) => (c.elems || []).some((e, i) => e.neg || (e.kind === 'adv' && !(e.word === 'nicht' && c.elems[i + 1]?.word === 'nur') && ['nicht', 'nie', 'niemals', 'noch nicht', 'nicht mehr', 'gar nicht'].includes(e.word)) || e.head === 'nichts' || e.head === 'niemand' || (e.kind === 'adj' && e.degree?.includes('nicht')));
 const I = (c) => c.subj?.head === 'ich' || headsOf(c.subj).includes('ich') || c.subj?.head === 'wir';
+// Saying one has no paid work: retired, a pupil or student, at home, out of work. A meaning, not a list of answers:
+// each status is a reading of the clause (sein + status, „in Rente“, „zur Schule gehen“, „studieren“, „arbeiten“ negated, „keine Arbeit“).
+const STATUS_NOUNS = /^(?:rentner(?:in)?|pensionär(?:in)?|student(?:in)?|schüler(?:in)?|hausmann|hausfrau)$/u;
+const STATUS_ADJS = ['arbeitslos', 'pensioniert'];
+function notWorking(c) {
+  if (!I(c) || c.question || c.modal || c.perfect) return false;
+  if (c.lemma === 'sein' && !negated(c) && ((c.pred && headsOf(c.pred).some((h) => STATUS_NOUNS.test(h))) || STATUS_ADJS.some((a) => adjs(c).includes(a)) || pps(c, 'in').some((p) => p.np.head === 'rente'))) return true;
+  if (c.lemma === 'gehen' && !negated(c) && [...pps(c, 'zu'), ...pps(c, 'zur')].some((p) => ['schule', 'uni', 'universität'].includes(p.np.head))) return true;
+  if (c.lemma === 'studieren' && !negated(c)) return true;
+  if (c.lemma === 'arbeiten' && negated(c) && !pps(c).length) return true;
+  return c.lemma === 'haben' && c.acc?.det === 'kein' && ['arbeit', 'job'].includes(c.acc.head);
+}
 const you = (c) => c.subj?.head === 'du' || (c.subj?.head === 'sie' && c.subj.formal) || c.subj?.head === 'ihr' || (c.subj?.head === 'sie' && c.question);
 const wh = (c) => c.wh?.word || null;
 const whNoun = (c) => (c.wh?.np && c.wh.np.kind === 'np' ? c.wh.np.head : null);
@@ -385,7 +397,8 @@ const SAYING = {
   },
   getUp: (c, q) => I(c) && c.lemma === 'aufstehen' && !c.perfect && !negated(c) && ((!q.byClock && adv(c, 'früh', 'spät')) || [c, ...(c.all || []).filter((x) => x.frag)].some((x) => timesOf(x).some((t) => t.h !== undefined))),
   freeTime: (c) => I(c) && !negated(c) && !(headsOf(c.acc).includes('zeit') && ['ein', 'der'].includes(c.acc.det)) && timesOf(c).length > 0 && ((c.lemma === 'haben' && (!c.acc || headsOf(c.acc).every((h) => ['zeit', 'tag', 'nachmittag', 'vormittag', 'abend', 'morgen', 'stunde', 'stunden', 'wochenende', 'urlaub', 'pause', 'freizeit'].includes(h))) && (headsOf(c.acc).includes('zeit') || adv(c, 'frei') || adjs(c).includes('frei'))) || (c.lemma === 'sein' && (adjs(c).includes('frei') || adv(c, 'frei')))),
-  workWhen: (c) => I(c) && c.lemma === 'arbeiten' && timesOf(c).length > 0,
+  // „Wann arbeitest du?“ asks about a job: one who has none says so („Ich bin Rentner.“, „Ich gehe noch zur Schule.“; Codex score of f0847faa).
+  workWhen: (c) => I(c) && ((c.lemma === 'arbeiten' && timesOf(c).length > 0) || notWorking(c)),
   agree: (c, q) => {
     if (negated(c) || c.question) return false;
     if (whenFits([c], q.when) === 'other') return false;
@@ -516,11 +529,25 @@ const QUESTION_KINDS = Object.keys(ASKING);
  */
 const PLACE_PREPS = ['in', 'an', 'auf', 'vor', 'hinter', 'neben', 'bei', 'unter', 'zwischen', 'im', 'am'];
 const OBJECT_OF = { hören: /^(?:musik|radio|lied|lieder|podcast|nachrichten|konzert)$/u, trinken: /^(?:kaffee|tee|wasser|saft|milch|bier|wein|cola|orangensaft|mineralwasser|limonade)$/u, essen: /^(?:brot|suppe|salat|kuchen|obst|fleisch|fisch|reis|käse)$/u, schauen: /^(?:filme?|serien?|fernsehen|nachrichten|fussball)$/u, sehen: /^(?:filme?|serien?|nachrichten|fussball)$/u, lesen: /^(?:bücher|buch|zeitung|zeitungen)$/u, spielen: /^(?:fussball|tennis|gitarre|klavier|karten|schach|basketball|volleyball)$/u };
+// The object a verb cannot take: true where it does not fit. One eats, drinks and cooks no noun the course teaches outside
+// its food and drink (`env.notConsumed`); one reads and hears no food or drink.
+const consumed = (h, env) => ['food', 'drink'].includes(env.kindOf(h));
+const SENSE = {
+  essen: (h, env) => env.notConsumed(h),
+  trinken: (h, env) => env.notConsumed(h),
+  kochen: (h, env) => env.notConsumed(h),
+  lesen: consumed,
+  hören: consumed,
+};
 export function valencyFault(turn, sentences, env) {
   for (const c of sentences.flatMap((s) => s.clauses.map((x) => ({ ...x, stop: s.stop })))) {
     if (c.around || c.frag || !c.lemma) continue;
     // „Ich habe einen Hunger.“: one has hunger and thirst without an article, unless an adjective says how much (fresh corpora of round 4).
     if (c.lemma === 'haben' && [c.acc, ...(c.acc?.items || [])].some((n) => n && ['hunger', 'durst'].includes(n.head) && n.det === 'ein' && !(n.adjs || []).length)) return 'article';
+    // What one eats is food, what one drinks a drink; one reads or hears neither („Ich esse gern Musik.“, „Ich lese gern Kaffee.“:
+    // Codex score of f0847faa). Only a taught noun of a known kind counts (`env.kindOf`); the learner's own word stays unjudged.
+    const sense = SENSE[c.lemma];
+    if (sense && env && c.acc && [c.acc, ...(c.acc.items || [])].some((n) => n?.kind === 'np' && !n.unknown?.length && headsOf(n).some((h) => sense(h, env)))) return 'word';
     // „Meine Nachbarin und seine Kinder“, „Mein Bruder und ihre Frau“: the owner beside a person is that person.
     const people = [c.subj, c.acc].filter((n) => n?.items?.length === 2);
     for (const n of people) {

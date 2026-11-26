@@ -673,3 +673,77 @@ home ("everything here is open" to a placed learner without access), the courses
 the exam hubs, `offers.js`, `marketing.js` and `llms.txt` / `llms-full.txt`. The label comes from `FREE_LEKTION_LABEL` (`src/data/marketing.js`);
 `tests/free-claims.test.mjs` reads every page and fails on the old lines. "Start A1.1 free" and the free library stay: they are true.
 Not touched: the A1.2 copy on the A1.1 sales page, mails, legal pages.
+
+## Loop round 4 (2026-11-25/26): what the scores of fd8f8dba found, and a hint for the wrong answers the check could not name
+
+**The independent scores of fd8f8dba** (the state after round 3's fixes, the free claims corrected; same brief, two reviewers, no contact): Codex
+**7.4, "no"** (round 3: 7.1), Claude **6.6, "no"** (round 3: 6.9). Raw reports in the notes folder of the loop (`codex-score-7-on-fd8f8dba.md`,
+`claude-score-on-fd8f8dba.md`). Every finding that is not the owner's has a rule now:
+
+- **Numbers are taught where their series stands** (Codex MAJOR): checkpoint 1 asked for „achtzehn“ and „sechzehn“ because the closed list a dialogue
+  may use counted them taught from Lektion 1. `numbersMet` (`src/lib/checkpoint/lexis.js`) binds 0–10 to Lektion 2, 11–100 to Lektion 4 and any number
+  to the line that says it; the validator's free list no longer holds numbers. The four texts of checkpoint 1 that used them were rewritten.
+- **Wrong forms in the Lektion's own structure** (Claude MAJOR 2): `valencyFault` (`taskMeaning.js`) checks the verb's own prefix, preposition and
+  object wherever a sentence reads — „Ich stehe um sechs und dusche.“ (aufstehen), „Ich rufe meine Mutter.“, „Ich höre zu Musik.“, „Ich lade dich für
+  mein Fest ein.“, „Kommst du mit meiner Party?“, „Ich habe gestern gemacht.“, „Mein Hobby ist der Stuhl.“; „Ich spiele gern Kino.“ is no game.
+- **Wrong plurals** (Claude MAJOR 4): `wrongPlural` reads a taught noun's plural from its Wortfeld row — „zwei Rucksacks“, „meine Freunds“, „zwei Computern“
+  (a dative plural keeps its -n, a genitive its -s), „Zwei Freund kommen“.
+- **„Aus dem Irak.“ and towns** (Claude MAJOR 3): a country that may have its article takes it in its case („aus dem Irak“); „Bad Homburg“,
+  „Frankfurt (Oder)“, „Neustadt an der Weinstraße“ are one name. An answer without a verb where the task asks for a sentence is told so
+  (`check.fault.sentence`), never „not checked“.
+- **The course home ticks only what the check showed** (Claude MAJOR 5): `checkShown.js` keeps each Lektion's check on the device, `canDoList`
+  gives a missed can-do the state `practise`, and KannIch counts it as still to practise. (The account has no column for it: owner migration.)
+- **The final test's listening mark** (Claude MAJOR 6): one place throughout (the second option) took 5 of 8 = the mark; the mark is one above the
+  better of one key and one place, 6 of 8, and the intro says so.
+- **The free claim the round missed** (Claude BLOCKER 1, the class the owner approved on 2026-11-25): the telc B1 page said „Beginnen Sie dann mit dem
+  kostenlosen A1.1-Kurs“, `llms-full.txt` „AI-graded with a free account“; both say Lektion 1 now, and `free-claims.test.mjs` catches both shapes.
+- **Smaller**: the shown can-do line fits every retake variant (`check-shown-variants.test.mjs`); a fronted „Sie“ that is „she“ stays small
+  („Aus Marokko kommt sie.“); the German time items say „in Worten“ as the English does; „Sie spricht arabisch“, „montags bis freitags“, „am Montag und
+  am Dienstag“ are read; „Ich kaufe nichts“ is told to read the task, never „one word does not fit“; the checkpoint intro says A1.1 hears texts;
+  the bank's strangers are no longer called Brandt (Lena's surname; the gates now know the cast's surnames, `scripts/lib/castNames.mjs`); one phone
+  number, one person (`a11-lesen.test.mjs`); checkpoint 3 no longer dictates „am Mittwoch nachmittags“; „Herr Weber ist der Chef“ is gone; the
+  checkpoint 1 form is about Thomas Vogt, not Tim; verb second after a time is in the L7 notice („Am Wochenende arbeite ich nicht.“, a line of the Lektion; Arabic by Codex), „Wie spät ist es?“ in the German
+  L8 notice; L1's passed line no longer says „all four skills“ (Codex); a typo of capitals only says so (`feedback.typo.case`, Codex) and the check's
+  input starts a sentence with a capital; L8's official time is a seat of three answers, so no item stands in all three draws.
+
+**The wrong answers the check could not name** (HANDOVER-loop-3, item 2). `oneRepair.js` names the textbook mistakes: a verb too many („Ich bin komme
+aus Syrien“), sein before an infinitive („Ich bin um sechs Uhr aufstehen“), a subject said twice („Meine Mutter sie kommt“), no verb („Ich aus Syrien“),
+two prepositions, an article where none belongs („eine Zeit“, „um die sechs Uhr“), a prefix in front of what follows it („Ich kaufe ein gern“). A sentence
+that reads but is certainly wrong says why (`certainlyNot`, `clauseOrder.js`): another person's pronoun („Er ist meine Mutter“), „nicht Kuchen“,
+„Ich bin kein Hunger“; a question with the wrong question word („Wo kommen deine Eltern?“), the answer said of someone else („Du duschst“), the wrong
+verb („Ich möchte Hunger“, „Ich habe einen Kaffee, bitte“). An unknown small word in the verb's place is no longer praised („Ich blable gern“).
+
+| Measured (fd8f8dba → now) | right confirmed | right called wrong | wrong praised | wrong „not checked“ |
+|---|---|---|---|---|
+| The Claude reviewer's four sets of round 3 (1,203 right, 1,803 wrong) | 94.2 % → 95.7 % | 4 → 14 (10 are fragments now told to answer in a sentence, `check.fault.sentence`) | 5 → 5 | 21.4 % → 13.0 % |
+| Corpora of rounds 1–3 (in sample, 8,048 right, 4,432 wrong) | 98.3 % → 98.6 % | 7 → 5 | 20 → 17 | 6.7 % → 5.7 % |
+| **Fresh corpora of round 4, first measurement** (unseen; Codex 912 right, 608 wrong / Claude the same) | 95.6 → 95.9 % / 97.9 → 98.1 % | 2 → 3 / 2 → 2 | 16 → 15 / 10 → 10 | 10.2 → 9.7 % / 7.6 → 7.2 % |
+| The same corpora after their fixes (in sample now) | 96.1 % / 98.2 % | 2 / 1 | 12 / 5 | 9.7 % / 7.2 % |
+| Generated probes (`gen.mjs`) newly accepted against round 3 | swap 1 („nicht Heute, danke.“, a capital slip), fill 0, tail 0, drop 0, double 0 |||
+
+**The independent scores of f0847faa** (this round's fixes; same brief, two new reviewers, no contact): Codex **7.7, "no"** (round 4 start: 7.4),
+Claude **7.3, "no"** (6.6). Raw reports in the loop notes (`codex-score-8-on-f0847faa.md`, `claude-score-on-f0847faa.md`). What they found, and
+what the commit after f0847faa did with it (those fixes are not scored yet):
+
+- **Codex BLOCKER, fixed:** „Ich esse gern Musik.“ was praised. What one eats is food, what one drinks a drink; one reads or hears neither
+  (`SENSE` in `valencyFault`, by the kind of a taught noun; the learner's own nouns stay unjudged; `final-check.test.mjs` runs the class).
+- **Codex MAJOR, fixed:** „Ich bin Rentner.“ was wrong where L11 asks „Wann arbeitest du?“. Saying one has no paid work is an answer
+  (`notWorking`: retired, pupil or student, at home, out of work, „zur Schule gehen“, „studieren“, „keine Arbeit“).
+- **Claude MAJOR, open (round 5, first):** the order after the verb is not checked. 12 of 17 probes were accepted: „Ich gehe ins Kino gern.“,
+  „Ich fahre nach Berlin morgen.“, „Wann fährt nach Berlin der Zug?“, and „Der Zug fährt nach Berlin?“ where the task asks for a yes/no question.
+  Three pool keys accept the same orders (extra-a11-l10-07, -08, -12). Its last example, „Ich bin ein Lehrer.“, stays accepted:
+  it is German, and an earlier round pinned „Ich bin eine Studentin.“ as right. But practice item extra-a11-l02-08 treats that article as an
+  error, so one of the two must change (round 5).
+- **Claude MINOR, fixed:** „Ich heiße Frau Kaya.“ was accepted as one's own name.
+- **Open MINORs** (round 5): the L2 message checks only its two frames; „halb sieben Uhr“ and „Viertel nach sieben Uhr“ are graded unevenly;
+  L8 T6 refuses „Freitag um Viertel nach vier“ for a heard 16:15; „Habt ihr Tee?“ passes a polite request; the final test's listening is
+  a public exercise and its reading paper never changes (owner: access); the „Prüfungsteile“ labels; untaught words in task lines
+  (Angebot, ablehnen, Ziel, dorthin, Reise, erfinden, Monat, Jahr); corrections that do not say "whole sentence"; L6's setting.
+
+**Gates of f0847faa:** whole suite on the LF copy: only the 16 path-separator failures of the baseline. Lint 0, byte-identical copies,
+validators a1.1 and a1.2 0. CI-style build of a frozen copy (SPA, offline Astro, merge, prerender): 151 pages, 0 failures. Walks of all 12
+Lektionen on that build, English and German at 390 px: 1,495 and 1,496 screens, 0 page errors, 0 failed requests.
+
+**Still open** (for round 5, after the order after the verb): retake variants of the 41 turns without one; the checkpoint writing task is the same on every retake; the checkpoint
+sentence-building items take one order („Frau Krause hört Musik gern.“ refused); the L2 dialogue gives only „null eins sieben sechs“ and L6's office
+number has no real area code; „Ich wohne in Hof.“ (a town that is a noun) is still refused; the stilted lines of HANDOVER-loop-3 item 10.

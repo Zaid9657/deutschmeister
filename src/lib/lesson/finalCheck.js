@@ -227,6 +227,10 @@ function buildLexicon(curriculum) {
   // A taught noun's plural („Rucksack“ → „Rucksäcke“): what „zwei Rucksacks“ is checked against.
   known.plurals = new Map();
   known.pluralForms = new Set();
+  // Each Wortfeld noun's Lektion, and the Lektionen whose Wortfeld has food or drink: a noun taught outside those is
+  // neither („Ich esse gern Musik.“); a noun only an answer says („Alkohol“) is the learner's own (Codex score of f0847faa).
+  known.wortfeld = new Map();
+  known.foodLektionen = new Set();
   known.exact = new Set(); // the taught words as written, capitals included
   // What the course gives the learner to hear, read or answer — dialogue, reading, check cues, accepted answers,
   // example sentences — is taught too: BEYOND needs a word outside all of it („Wohin fährt der Zug?“ is taught
@@ -262,6 +266,8 @@ function buildLexicon(curriculum) {
         // A die-word whose plural is itself is a plural only („die Eltern", „die Geschwister"): never „meine Eltern kommt".
         const pluralOnly = w.article === 'die' && w.plural === w.word;
         if (!pluralOnly) gender(fold(w.word), w.article);
+        for (const form of [w.word, w.plural]) if (form && !/^[—-]$/.test(form)) known.wortfeld.set(fold(form), l.nr);
+        if (['food', 'drink'].includes(TAUGHT_KIND.get(fold(w.word)))) known.foodLektionen.add(l.nr);
         if (w.plural && !/^[—-]$/.test(w.plural)) { gender(fold(w.plural), 'pl'); known.plurals.set(fold(w.word), fold(w.plural)); known.pluralForms.add(fold(w.plural)); }
       }
       const verb = !w.article && /^[a-zäöü]+e?n$/.test(w.word || '') ? w.word.replace(/e?n$/, '') : null;
@@ -2605,7 +2611,8 @@ function reasonOf(turn, value) {
  * German the check does not know: BEYOND.
  */
 /** „Guten Tag, hier ist Herr Weber.“: the partner's name is not the learner's (fresh corpora of round 4). */
-const partnerNamed = (turn, value) => { const name = String(turn.partner || '').match(/^(?:Herr|Frau)\s+(\p{L}+)$/u)?.[1]; return Boolean(name) && new RegExp(`(?<!\\p{L})(?:Herr|Frau)\\s+${name}(?!\\p{L})`, 'u').test(String(value)) && !new RegExp(`(?:ich|Sie)\\s+(?:heiße|heißen)|danke|guten tag,? (?:herr|frau) ${name}[,!.]`, 'iu').test(String(value)) && /(?:hier ist|hier spricht|ich bin|mein name ist)\s+(?:Herr|Frau)\s+/iu.test(String(value)); };
+// The partner's name said as one's own, right after the words that name the speaker („Ich heiße Frau Kaya.“: Claude score of f0847faa).
+const partnerNamed = (turn, value) => { const name = String(turn.partner || '').match(/^(?:Herr|Frau)\s+(\p{L}+)$/u)?.[1]; return Boolean(name) && new RegExp(`(?<!\\p{L})(?:hier ist|hier spricht|ich bin|ich heiße|ich heisse|mein name ist)\\s+(?:Herr|Frau)\\s+${name}(?!\\p{L})`, 'iu').test(String(value)); };
 function nameFault(turn, value, text) {
   if (!/\p{L}/u.test(text)) return 'missing';
   if (wordsOf(String(value).replace(/[.,!?;:]/g, ' ')).some((w) => NO_NAME.has(fold(w)) && !turn.lexicon?.genders?.has?.(fold(w)))) return null;
@@ -3120,6 +3127,7 @@ export function readOnce(turn, value) {
     gendersOf: (things) => [...new Set(things.flatMap((t) => readingsIn(lexicon, t.charAt(0).toLocaleUpperCase('de') + t.slice(1)) || []))],
     kindOf: (h) => { const k = taughtKind(h) || ownKind(h); return k === 'drink' || k === 'food' ? k : k || (lexicon.genders?.has?.(h) ? 'thing' : null); },
     known: (h) => Boolean(readingsIn(lexicon, h)),
+    notConsumed: (h) => lexicon.wortfeld?.has(h) && !lexicon.foodLektionen?.has(lexicon.wortfeld.get(h)) && !['food', 'drink'].includes(taughtKind(h)),
     cast: (h) => Boolean(lexicon.names?.has?.(h)) && !OWN_KIND.place.has(h),
     jobLike: (h) => OWN_KIND.job.has(h) || taughtKind(h) === 'job' || (!taughtKind(h) && JOB_SHAPE_FOLDED.test(h)),
     person: (h, n) => n?.kind === 'name' || n?.kind === 'own' || n?.title || TAUGHT_KIND.get(h) === 'family' || OWN_KIND.job.has(h) || /^(?:freunde?|freundin(?:nen)?|nachbar(?:n|in|innen)?|kolleg(?:e|en|in|innen)|leute|gäste|verwandte|bekannte|oma|opa|onkel|tante|cousins?|cousine|neffe|nichte|partner(?:in)?|chef(?:in)?|lehrer(?:in|innen)?|mitbewohner(?:in)?|mitschüler|klasse|team|alle|viele|niemand|jemand|wir|sie|er|personen|menschen|jungs|mädchen|schwager|schwägerin|enkel|großeltern|grosseltern|kommilitonen|beide|familienmitglieder|deutschkurs|kurs|nachbarsfamilie|freundinnen|mama|papa|baby|hund|band)$/u.test(h),

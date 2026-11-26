@@ -1243,3 +1243,47 @@ test('„ein Uhr“ after a time word is one o\'clock; a hint of „nichts/alles
   assert.equal(typedResult(at(9)[0], 'Ja, beides!'), BEYOND);
   assert.equal(typedResult(at(1)[4], 'Ist bei Ihnen alles gut?'), BEYOND);
 });
+
+test('what one eats is food and what one drinks a drink; one reads and hears neither (Codex score of f0847faa, BLOCKER)', () => {
+  const weekend = sitting(CURRICULUM_A11.lektionen[6])[1];
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  const drinks = ['Kaffee', 'Tee', 'Wasser', 'Milch', 'Orangensaft'];
+  const foods = ['Kuchen', 'Suppe', 'Salat', 'Brot'];
+  const things = ['Musik', 'Fußball', 'Tisch', 'Lampe'];
+  for (const d of drinks) assert.ok(verified(typedResult(weekend, `Ich trinke gern ${d}.`)), `trinken ${d}`);
+  for (const f of foods) assert.ok(verified(typedResult(weekend, `Ich esse gern ${f}.`)), `essen ${f}`);
+  for (const f of [...foods, ...drinks]) assert.ok(verified(typedResult(weekend, `Ich koche gern ${f}.`)) || typedResult(weekend, `Ich koche gern ${f}.`) === BEYOND, `kochen ${f}`);
+  // A noun the course teaches outside its food and drink is neither; within that Lektion's words the check does not judge.
+  for (const w of things) assert.ok(!verified(typedResult(weekend, `Ich esse gern ${w}.`)), `essen ${w}`);
+  for (const w of things) assert.ok(!verified(typedResult(weekend, `Ich trinke gern ${w}.`)), `trinken ${w}`);
+  for (const w of [...foods, ...drinks]) {
+    assert.ok(!verified(typedResult(weekend, `Ich lese gern ${w}.`)), `lesen ${w}`);
+    assert.ok(!verified(typedResult(weekend, `Ich höre gern ${w}.`)), `hören ${w}`);
+  }
+  assert.equal(typedResult(weekend, 'Ich esse gern Musik.'), RESULT.WRONG);
+  assert.equal(faultHintKey(weekend, 'Ich esse gern Musik.'), 'check.fault.word');
+  // The learner's own food is no fault, and the taught pairs stay right.
+  for (const right of ['Ich esse gern Pizza.', 'Ich höre gern Musik.', 'Ich lese gern Bücher.']) assert.ok(verified(typedResult(weekend, right)), right);
+  // A noun only an answer says is the learner's own („Alkohol“, „Schokolade“ are no Wortfeld words).
+  const decline = sitting(CURRICULUM_A11.lektionen[8], 2)[5];
+  assert.ok(verified(typedResult(decline, 'Nein, danke, ich trinke keinen Alkohol.')));
+});
+
+test('„Wann arbeitest du?“: one without paid work says so, and it is an answer (Codex score of f0847faa, MAJOR)', () => {
+  const when = sitting(CURRICULUM_A11.lektionen[10])[4];
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  assert.match(when.taskEn, /when you work/i);
+  for (const right of ['Ich bin Rentner.', 'Ich bin Rentnerin.', 'Ich bin pensioniert.', 'Ich bin in Rente.', 'Ich bin Student.', 'Ich bin Schülerin.',
+    'Ich gehe noch zur Schule.', 'Ich studiere und arbeite nicht.', 'Ich bin arbeitslos.', 'Ich habe keine Arbeit.', 'Ich arbeite nicht.']) {
+    assert.ok(verified(typedResult(when, right)), right);
+  }
+  // A job is no time, and the status of someone else is not the learner's.
+  for (const wrong of ['Ich bin Lehrer.', 'Du bist Rentner.']) assert.ok(!verified(typedResult(when, wrong)), wrong);
+});
+
+test('the partner\'s name is not one\'s own (Claude score of f0847faa)', () => {
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  const name = sitting(CURRICULUM_A11.lektionen[0])[1];
+  for (const wrong of ['Ich heiße Frau Kaya.', 'Ich bin Frau Kaya.']) assert.equal(faultHintKey(name, wrong), 'check.fault.task', wrong);
+  for (const right of ['Ich heiße Ana.', 'Guten Tag, Frau Kaya! Ich heiße Ana.']) assert.ok(verified(typedResult(name, right)), right);
+});
