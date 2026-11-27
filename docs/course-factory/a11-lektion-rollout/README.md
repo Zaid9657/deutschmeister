@@ -751,6 +751,9 @@ number has no real area code; „Ich wohne in Hof.“ (a town that is a noun) is
 
 ## Codex takeover, Phase 2 (2026-11-26)
 
+Phase 2d: factual denials never earn can-dos; listening evidence requires successful item playback; time proposals and short agreements are checked by meaning.
+Phase 2d: closed Arabic help reaches every stage, unavailable writing assessment offers edit/retry, and generated instructions add only missing directions; each rule has regression coverage.
+
 Phase 2c: writing/checkpoint forms fold Arabic and Persian digits; personal nothing answers follow explicit naming tasks; taught feeling formulas get named repairs.
 Phase 2c: closed Arabic help covers every writing instruction/content point; generated sentence corrections explicitly request the whole sentence, with class regression tests.
 

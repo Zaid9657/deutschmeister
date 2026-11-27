@@ -4,6 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import PlayButton from './PlayButton.jsx';
+import { FeedbackArabicHelp } from './ArabicHelp.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
 import { canRetryReadAloud, canSelfConfirmReadAloud } from '../../lib/lesson/readAloudControls.js';
 import { keepTake } from '../../lib/lesson/voiceKeep.js';
@@ -263,6 +264,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
         )}
       </div>
 
+      <FeedbackArabicHelp keys={['speaking.model', 'speaking.record', 'speaking.stop', 'speaking.retry', 'speaking.iSaidIt', ...(reason ? [`speaking.fallback.${reason}`] : [])]} />
       {phase === 'recording' && (
         <p className="mt-2 text-xs text-graphite">{t('speaking.recording', lang, { s: MAX_RECORD_MS / 1000 })}</p>
       )}

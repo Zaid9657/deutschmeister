@@ -1789,3 +1789,21 @@ test('every whole-sentence correction explicitly asks for the whole sentence in 
   }
   assert.ok(count > 20);
 });
+
+test('adding task directions is idempotent, including whole sentences and required openings', () => {
+  for (const questionEn of ['Begin with “Ich”.', 'Build the sentence, beginning with “Ich”.', 'Build a question, beginning with “Ich”.']) {
+    assert.deepEqual(taskConstraintsEn({ questionDe: '(Beginnen Sie mit „Ich“)', questionEn }), [], questionEn);
+  }
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) for (const item of pool.items) {
+    const once = taskConstraintsEn(item);
+    const expanded = { ...item, questionEn: [item.questionEn, ...once].join(' ') };
+    assert.deepEqual(taskConstraintsEn(expanded), [], level + ': ' + item.id);
+    const normalized = text => text.toLowerCase().replace(/[“”„"']/g, '').trim().replace(/^build (?:the|a) (?:sentence|question),? beginning with /, 'begin with ');
+    const directions = text => String(text || '').split(/[.;!?]+/).map(normalized).filter(x => /^write the whole sentence$|^begin with /.test(x));
+    const duplicates = text => { const list = directions(text); return list.length - new Set(list).size; };
+    // A1.2's unchanged prebuilt pool carries old repeats. Adding directions must
+    // create none; the regenerated A1.1 pool also has none left to start with.
+    assert.equal(duplicates(expanded.questionEn), duplicates(item.questionEn), level + ': ' + item.id);
+    if (level === 'a1.1') assert.equal(duplicates(expanded.questionEn), 0, item.id);
+  }
+});

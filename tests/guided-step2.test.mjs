@@ -47,6 +47,7 @@ function hooks() {
 async function mount(name, props, extra = {}) {
   const state = hooks();
   const stubs = {
+    './CommandHelp.jsx': { default: 'CommandHelp' }, './ArabicHelp.jsx': { FeedbackArabicHelp: 'FeedbackArabicHelp' },
     react: state.react, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     './StageShell.jsx': { default: 'StageShell' }, './PlayButton.jsx': { default: 'PlayButton' },

@@ -6,6 +6,8 @@ import { GlossLine } from './DialogStage.jsx';
 import PlayButton from './PlayButton.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import LangToggle from './LangToggle.jsx';
+import CommandHelp from './CommandHelp.jsx';
+import { FeedbackArabicHelp } from './ArabicHelp.jsx';
 import { buildLexicon, parseLektionId } from '../../lib/lesson/gloss.js';
 import CheckedChoice from './CheckedChoice.jsx';
 import { SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
@@ -43,6 +45,8 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
     <section className="text-nacht-text">
       <SituationScene lektionId={lektionId} className="w-full rounded-3xl border border-rule object-cover" />
       <div className="my-3 flex items-center justify-between gap-3"><p className="font-data text-xs text-nacht-muted">{t('scene.chunk', lang, { n: index + 1, total: stage.chunks.length })}</p><LangToggle /></div>
+      <CommandHelp />
+      <FeedbackArabicHelp keys={['scene.hear', 'scene.meaning', 'scene.say', 'scene.name', 'scene.surname', 'scene.enterName']} />
       {phase === 'hear' && <h1 className="mb-3 font-display text-2xl font-semibold text-siegel">{t('scene.hear', lang)}</h1>}
       {shown.length > 0 && <ol className="space-y-3">
         {shown.map((line) => <li key={line.index}>

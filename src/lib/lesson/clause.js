@@ -585,11 +585,13 @@ export function reader(text, ctx) {
         let j = e.end;
         if (T[j]?.f === ',' && f(j + 1) && ['aber', 'und', 'sondern'].includes(f(j + 1))) j += 1;
         if (!['und', 'aber', 'oder', 'sondern'].includes(f(j)) && T[e.end]?.f !== ',') break;
+        const contrast = f(j) === 'sondern';
         j += 1;
-        while (f(j) && DEGREE.has(f(j))) j += 1;
+        let deniedNext = false;
+        while (f(j) && DEGREE.has(f(j))) { if (f(j) === 'nicht') deniedNext = true; j += 1; }
         const b = f(j) ? adjectiveForm(f(j)).find((x) => x.ending === '') : null;
         if (!b) break;
-        e = { ...e, end: j + 1, words: [...e.words, b.stem] };
+        e = { ...e, end: j + 1, words: [...e.words, b.stem], ...(contrast && !deniedNext ? { affirmed: true } : {}) };
         out.push(e);
       }
     }

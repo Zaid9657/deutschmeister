@@ -138,7 +138,7 @@ test('the hint before the second try gives a direction in both languages and nev
   assert.match(stage, /setHint\(result === RESULT\.TYPO \? \(capitalsOnly\(turn, value\) \? 'feedback\.typo\.case' : null\) : faultHintKey\(turn, value\)\)/);
   assert.match(stage, /autoCapitalize="sentences" spellCheck=\{false\} maxLength=\{120\}/);
   // Without sound a heard turn can be passed over.
-  assert.match(stage, /onFallback=\{outcome \? undefined : \(\) => onOutcome\('unverified', ''\)\}/);
+  assert.match(stage, /onFallback=\{outcome \? undefined : \(\) => onOutcome\(\{ outcome: 'unverified', revealed: false, listened: false \}, ''\)\}/);
   // The note under an own word claims no more than was checked.
   for (const lang of ['en', 'de']) assert.doesNotMatch(STRINGS[lang]['check.unchecked'], /Your sentence is right|Ihr Satz ist richtig/);
   assert.deepEqual(uncheckedWords(at(6, 1), 'Ich brauche einen Drucker.'), []);

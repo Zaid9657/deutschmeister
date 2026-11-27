@@ -1383,7 +1383,18 @@ export function taskConstraintsEn(item) {
     else if (/^Verb auf Position 2$/i.test(repair)) constraints.push('Put the verb in position 2.');
     else if (/^Infinitiv am Satzende$/i.test(repair)) constraints.push('Put the infinitive at the end of the sentence.');
   }
-  return [...new Set(constraints)];
+  // Compare directions by their clauses, independent of punctuation and quote style.
+  // A prompt may already contain just one half of a generated instruction.
+  const normalize = text => text.toLowerCase().replace(/[“”„"']/g, '').replace(/[.!?]+$/g, '').replace(/\s+/g, ' ').trim()
+    .replace(/^build (?:the|a) (?:sentence|question),? beginning with /, 'begin with ');
+  const saidClauses = new Set(said.split(/[.;!?]+/).map(normalize));
+  const added = new Set();
+  return constraints.map(line => line.split(/;\s*/).filter(part => {
+    const key = normalize(part);
+    if (saidClauses.has(key) || added.has(key)) return false;
+    added.add(key);
+    return true;
+  }).join('; ')).filter(Boolean).map(line => line.charAt(0).toUpperCase() + line.slice(1));
 }
 
 /**

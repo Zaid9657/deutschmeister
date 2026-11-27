@@ -397,3 +397,53 @@ test('Phase 2b: Arabic task help sits under typed, read-aloud and writing checkp
     assert.equal(help[0].props.taskEn, kind === 'gradedWriting' ? item.task.taskEn : item.promptEn);
   }
 });
+
+test('checkpoint listening requires successful playback of the current item before answering', async () => {
+  const { PracticeItem, state } = await practiceItem();
+  const item = { ...typedItem, id: 'heard:first', section: 'hoeren', audioText: 'Ich bin Ana.', lektionId: 'a11-l01', lineKey: 'line-0' };
+  const excluded = [], answers = [];
+  const props = { item, graded: true, onReadInstead: id => excluded.push(id), onAnswer: (...args) => answers.push(args) };
+  for (const mode of ['silent', 'played', 'read', 'previous']) {
+    const current = { ...item, id: 'heard:' + mode };
+    const p = { ...props, item: current };
+    let tree = state.render(PracticeItem, p);
+    tree = state.render(PracticeItem, p); // the item-change effect has reset playback
+    const play = elements(tree, el => el.type === 'PlayButton')[0];
+    if (mode === 'played' || mode === 'read') play.props.onPlayed();
+    if (mode === 'read') play.props.onFallback();
+    tree = state.render(PracticeItem, p);
+    elements(tree, el => el.type === 'input')[0].props.onChange({ target: { value: 'bin' } });
+    tree = state.render(PracticeItem, p);
+    elements(tree, el => el.type === 'form')[0].props.onSubmit({ preventDefault() {} });
+    tree = state.render(PracticeItem, p);
+    assert.equal(excluded.includes(current.id), mode !== 'played', mode);
+    assert.equal(elements(tree, el => el.type === 'PlayButton')[0].props.onPlayed, undefined, 'late playback cannot upgrade the submitted answer');
+  }
+});
+
+test('a silent replay of every checkpoint paper reports listening as unassessed practice', async () => {
+  const { buildCheckpoint, paperSeed, scoreCheckpoint, assessedParts } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const pool = JSON.parse(read('src/data/lessonPools/a11.json'));
+  for (const checkpoint of CURRICULUM_A11.checkpoints) {
+    const paper = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: paperSeed(checkpoint, 0) });
+    const notHeard = new Set();
+    const { PracticeItem, state } = await practiceItem();
+    for (const item of paper.filter(i => i.section === 'hoeren')) {
+      const props = { item, graded: true, onReadInstead: id => notHeard.add(id), onAnswer() {} };
+      state.render(PracticeItem, props);
+      let tree = state.render(PracticeItem, props);
+      if (item.mode === 'options') {
+        elements(tree, el => el.type === 'Chip' && words(el).trim() === item.answer)[0].props.onClick();
+      } else {
+        elements(tree, el => el.type === 'input')[0].props.onChange({ target: { value: item.answer } });
+        tree = state.render(PracticeItem, props);
+        elements(tree, el => el.type === 'form')[0].props.onSubmit({ preventDefault() {} });
+      }
+    }
+    assert.equal(notHeard.size, paper.filter(i => i.section === 'hoeren').length);
+    const answers = Object.fromEntries(paper.map(i => [i.id, i.answer]));
+    const result = scoreCheckpoint(paper.filter(i => !notHeard.has(i.id)), answers);
+    assert.equal(result.sections.hoeren?.total ?? 0, 0);
+    assert.ok(assessedParts(paper, result).notAssessed.includes('hoeren'));
+  }
+});

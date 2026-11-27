@@ -260,3 +260,18 @@ test('signing in resumes the NEWER of the account and guest snapshots (2026-10-2
     assert.equal(latestRun('a1.1', ['a1.1-l05'], NOW, 'user-a').runId, 'guest');
   });
 });
+
+test('listening evidence survives save and reload; absent or non-boolean claims do not count', async () => {
+  const { packRun, unpackRun } = await import('../src/lib/lesson/runState.js');
+  const { canDoShown } = await import('../src/lib/lesson/finalCheck.js');
+  const now = Date.now();
+  for (const listened of [true, false, undefined, 'true']) {
+    const evidence = { outcome: 'shown', revealed: false, ...(listened === undefined ? {} : { listened }) };
+    const saved = packRun({ flow: 'guided', stageKey: 'check', check: { retake: 0, outcomes: [evidence] } }, now);
+    const restored = unpackRun(JSON.parse(JSON.stringify(saved)), now + 100, 'guided');
+    const outcome = restored.check.outcomes[0];
+    assert.equal(canDoShown([{ canDo: 0, listen: true }], [outcome], 1)[0], listened === true);
+    assert.equal(outcome.listened, typeof listened === 'boolean' ? listened : undefined);
+    assert.equal(canDoShown([{ canDo: 0 }], [outcome], 1)[0], true, 'ordinary answer evidence is preserved');
+  }
+});

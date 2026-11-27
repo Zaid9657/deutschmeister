@@ -3,7 +3,7 @@
 // an origin told with „aus“, a date given after „Geburtstag“. What the turn asks is read off its own accepted answers, so a new Lektion
 // needs no entry. The result: 'yes' the answer says it; 'task' it is read in full and says something else the course teaches; 'word'
 // the thing named is another one; 'pronoun', 'address' a fault between its sentences or of its form of address; null undecided.
-import { COLOURS, DAYS, determinerOf, fold } from './germanForms.js';
+import { COLOURS, DAYS, determinerOf, fold, verbReadings } from './germanForms.js';
 
 const set = (s) => new Set(s.trim().split(/\s+/).map(fold));
 const FAMILY = set('mutter vater mama papa mutti vati eltern bruder schwester sohn tochter kind kinder mann frau oma opa großmutter großvater onkel tante cousin cousine neffe nichte baby geschwister');
@@ -112,7 +112,7 @@ const own = (c, ...p) => pps(c, ...p).filter((e) => !e.attr);
 const timesOf = (c) => el(c, 'time');
 const headsOf = (n) => (n ? n.heads || [n.head] : []);
 const adjs = (c) => (c.adj || []).flatMap((a) => a.words);
-const negated = (c) => (c.elems || []).some((e, i) => e.neg || (e.kind === 'adv' && !(e.word === 'nicht' && c.elems[i + 1]?.word === 'nur') && ['nicht', 'nie', 'niemals', 'noch nicht', 'nicht mehr', 'gar nicht'].includes(e.word)) || e.head === 'nichts' || e.head === 'niemand' || (e.kind === 'adj' && e.degree?.includes('nicht')));
+const negated = (c) => (c.elems || []).some((e, i) => e.neg || (e.kind === 'adv' && !(e.word === 'nicht' && c.elems[i + 1]?.word === 'nur') && ['nicht', 'nie', 'niemals', 'keineswegs', 'keinesfalls', 'noch nicht', 'nicht mehr', 'gar nicht'].includes(e.word)) || e.head === 'nichts' || e.head === 'niemand' || (e.kind === 'adj' && e.degree?.includes('nicht')));
 const I = (c) => c.subj?.head === 'ich' || headsOf(c.subj).includes('ich') || c.subj?.head === 'wir';
 // Saying one has no paid work: retired, a pupil or student, at home, out of work. A meaning, not a list of answers:
 // each status is a reading of the clause (sein + status, „in Rente“, „zur Schule gehen“, „studieren“, „arbeiten“ negated, „keine Arbeit“).
@@ -262,7 +262,7 @@ const ASKING = {
     if (c.subj?.head === 'du' && !c.wh && ((c.lemma === 'haben' && ((headsOf(c.acc).includes('zeit') && c.acc.det !== 'ein') || adjs(c).includes('frei') || adv(c, 'frei'))) || (c.lemma === 'sein' && (adjs(c).some((x) => ['frei', 'verfügbar'].includes(x)) || adv(c, 'frei'))) || (['kommen', 'treffen'].includes(c.lemma) && c.modal) || (c.lemma === 'können'))) return true;
     if (c.subj?.head === 'wir' && c.lemma === 'treffen') return true;
     if (c.dat?.head === 'dir' && c.lemma === 'passen' && !(c.subj?.kind === 'np' && c.subj.head === 'zeit')) return true;
-    if (c.lemma === 'sein' && !c.wh && c.subj?.kind === 'when' && adjs(c).some((x) => ['möglich', 'okay', 'ok', 'gut', 'recht'].includes(x))) return true;
+    if (c.lemma === 'sein' && !c.wh && c.subj?.kind === 'when' && (adjs(c).some((x) => ['möglich', 'okay', 'ok', 'gut', 'recht'].includes(x)) || adv(c, 'okay', 'ok', 'gut', 'recht'))) return true;
     return Boolean((c.lemma === 'aussehen' && wh(c) === 'wie') || (c.lemma === 'gehen' && ['es', 'das', 'zeit'].includes(c.subj?.head)) || (c.lemma === 'passen' && (c.subj?.kind === 'when' || ['es', 'das', 'termin', 'zeit'].includes(c.subj?.head)) && c.subj?.head !== 'zeit'));
   },
   askHave: (c, q) => {
@@ -297,6 +297,18 @@ const ASKING = {
 };
 const HERE = ['hier', 'da', 'dort', 'da drüben', 'dort drüben', 'hier drüben', 'da vorn', 'da oben', 'da unten', 'da hinten'];
 const YES = /^(?:ja|ja klar|ja gern|ja gerne|klar|na klar|gern|gerne|sehr gern|sehr gerne|aber gern|aber gerne|okay|ok|gut|sehr gut|super|prima|toll|schön|perfekt|wunderbar|alles klar|abgemacht|einverstanden|kein problem|natürlich|sicher|auf jeden fall|oh ja|aber ja|genau|klasse|bitte|danke|vielen dank|sehr nett|das ist nett|wie nett|stimmt)$/u;
+/** An agreeing reply can leave its understood subject unsaid, even in a transcript without commas. */
+export function agreementEllipsis(text) {
+  if (String(text).trim().endsWith('?')) return null;
+  for (const word of String(text).matchAll(/\p{L}+/gu)) {
+    const prefix = fold(text.slice(0, word.index).replace(/[.,!?;:]+/gu, ' ').trim()).replace(/\s+/gu, ' ');
+    if (prefix && !YES.test(prefix)) continue;
+    if (!verbReadings(fold(word[0])).some(r => r.mood === 'fin' && r.persons?.includes('er') && !r.modal)) continue;
+    const predicate = text.slice(word.index);
+    return 'Das ' + predicate.charAt(0).toLocaleLowerCase('de') + predicate.slice(1);
+  }
+  return null;
+}
 const NO = /^(?:nein|nee|leider nein|leider nicht|oh nein)$/u;
 const birth = (c) => ((c.lemma === 'kommen' && (c.perfect || c.past) && pps(c, 'zu').some((p) => p.np.head === 'welt')) || c.lemma === 'geboren' || (c.lemma === 'werden' && c.passive === 'geboren') || c.state === 'geboren');
 /** What a guest declines is eaten or drunk, or the wish for it. */
@@ -653,7 +665,34 @@ export function meaning(turn, sentences, env) {
   // naming requirement it misses the task, including kein + noun (not only nichts).
   if (!q.allowNothing && ['buy', 'need', 'wish'].includes(q.kind) && clauses.length
     && clauses.every((c) => !c.question && (c.acc?.head === 'nichts' || negated(c)) && test(c, { ...q, allowNothing: true }, e2))) return { say: 'task' };
-  const matches = clauses.filter((c) => !(states && c.question && !c.wh && I(c)) && test(c, q, e2));
+  // A denial of a requested fact supplies no value for it. Negative replies still
+  // answer questions about mood, appetite, availability, refusals and having no work.
+  const permitsNegative = c => (q.kind === 'colour' && c.adj?.some(a => a.affirmed)) || ['mood', 'hungry', 'decline', 'accept', 'join', 'agree', 'did'].includes(q.kind)
+    || (q.kind === 'hobby' && I(c) && c.lemma === 'haben' && c.acc?.neg && headsOf(c.acc).some(h => ['hobby', 'hobbys'].includes(h)))
+    || (['buy', 'need', 'wish'].includes(q.kind) && q.allowNothing)
+    || (['job', 'workWhen'].includes(q.kind) && notWorking(c) && !timesOf(c).length)
+    || (q.kind === 'age' && !c.elems.some(e => e.kind === 'num' || (e.kind === 'time' && e.span) || (e.kind === 'np' && /^jahre?$/u.test(e.head))));
+  // Negation belongs to the value being requested. An absent employer does not
+  // cancel a positive profession ("als Lehrer bei keiner Schule").
+  const deniedComplement = c => {
+    const preps = { origin: c.lemma === 'geboren' ? ['in'] : ['aus'], live: ['in', 'bei', 'auf', 'an', 'zu'], job: ['als', 'bei', 'in', 'auf'], travel: ['nach', 'zu', 'in', 'an', 'auf'] }[q.kind];
+    if (!preps || (q.kind === 'job' && c.pred?.job && !c.pred.neg)) return false;
+    const values = own(c, ...preps);
+    return values.length > 0 && values.every(p => p.neg || p.np?.neg);
+  };
+  const denies = c => !asks && (negated(c) || deniedComplement(c) || el(c, 'adv').some(e => e.degree === 'nicht' && ((q.kind === 'hobby' && ['gern', 'gerne', 'lieber'].includes(e.word)) || (q.kind === 'here' && HERE.includes(e.word)) || (q.kind === 'freeTime' && e.word === 'frei')))) && !permitsNegative(c);
+  const candidates = clauses.filter((c) => !(states && c.question && !c.wh && I(c)) && test(c, q, e2));
+  const matches = candidates.filter(c => !denies(c));
+  // A contrast supplies the missing value using the same predicate: not X, but Y.
+  const contrast = candidates.some(c => denies(c) && frags.some(f => f.joined === 'sondern' && (() => {
+    const category = e => ['own', 'name', 'np', 'place', 'language', 'num'].includes(e.kind) ? 'noun' : e.kind;
+    const elems = c.elems.filter(e => !e.neg && !(e.kind === 'adv' && ['nicht', 'nie', 'niemals'].includes(e.word)) && !f.elems.some(x => category(x) === category(e) && e !== c.subj)).concat(f.elems);
+    const replace = n => n && !elems.includes(n) ? f.elems.find(e => e.combos) : n;
+    const positive = { ...c, elems, pred: replace(c.pred), acc: replace(c.acc), adj: elems.filter(e => e.kind === 'adj') };
+    return !negated(positive) && test(positive, q, e2);
+  })()));
+  if (!matches.length && clauses.some(c => denies(c) && test({ ...c, elems: c.elems.filter(e => !e.neg && !(e.kind === 'adv' && ['nicht', 'nie', 'niemals'].includes(e.word))), adj: (c.adj || []).map(a => ({ ...a, neg: false, degree: (a.degree || []).filter(d => d !== 'nicht') })) }, q, e2)) && !contrast) return { say: 'task', denied: true };
+  if (contrast) matches.push(...candidates.filter(denies));
   const verbFirst = c => c.question && !c.wh && !c.before && !c.sub;
   const performsForm = c => verbFirst(c) || (c.sub === 'ob' && sentences.some(s => {
     const at = s.clauses.findIndex(x => x.start === c.start && x.end === c.end);

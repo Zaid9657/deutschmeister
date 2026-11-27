@@ -660,7 +660,7 @@ test('a check speaks and models only German the learner has met (RULE 35), and t
 
 test('a can-do is shown only when every one of its turns was shown', () => {
   const turns = checkTurns(l1.guided.check, 0);
-  const all = turns.map(() => 'shown');
+  const all = turns.map(turn => ({ outcome: 'shown', revealed: false, listened: Boolean(turn.listen || turn.spell) }));
   assert.deepEqual(canDoShown(turns, all, 4), [true, true, true, true]);
   const farewellMissed = [...all.slice(0, -1), 'missed'];
   assert.deepEqual(canDoShown(turns, farewellMissed, 4), [false, true, true, true]);
@@ -679,7 +679,7 @@ test('three outcomes: verified is CORRECT, a named fault of course words is WRON
   // BEYOND is not shown: not by voice, not as a can-do.
   assert.equal(spokenShown({ pct: 100, transcript: 'Ich spiele Fußball als Hobby.' }, at(7)[0]), false);
   const turns = checkTurns(l1.guided.check, 0);
-  assert.deepEqual(canDoShown(turns, [...turns.map(() => 'shown').slice(0, -1), 'unverified'], 4), [false, true, true, true]);
+  assert.deepEqual(canDoShown(turns, [...turns.map(turn => ({ outcome: 'shown', revealed: false, listened: Boolean(turn.listen || turn.spell) })).slice(0, -1), 'unverified'], 4), [false, true, true, true]);
   // The blind corpora: a teacher's wrong answer reaches CORRECT or BEYOND no more often than measured (ratchets: only down).
   const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
   const count = { correct: 0, beyond: 0 };
@@ -1384,7 +1384,7 @@ test('fronted participles keep their correct case classification when a frame no
 test('Phase 2b: individual evidence excludes a reveal, also after saving and resuming', async () => {
   const { packRun, unpackRun } = await import('../src/lib/lesson/runState.js');
   const turns = checkTurns({ ...CURRICULUM_A11.lektionen[0].guided.check, lexicon: courseLexicon(CURRICULUM_A11) }, 0);
-  const outcomes = turns.map(() => ({ outcome: 'shown', revealed: false }));
+  const outcomes = turns.map(turn => ({ outcome: 'shown', revealed: false, listened: Boolean(turn.listen || turn.spell) }));
   const spelling = turns.findIndex((turn) => turn.spell);
   assert.ok(spelling >= 0);
   assert.equal(typedResult(turns[spelling], turns[spelling].accepted[0]), RESULT.CORRECT);
@@ -1394,7 +1394,7 @@ test('Phase 2b: individual evidence excludes a reveal, also after saving and res
   assert.deepEqual(resumed.check.outcomes[spelling], { outcome: 'practised', revealed: true });
   assert.equal(JSON.stringify(saved).includes('never retain this'), false);
   assert.equal(canDoShown(turns, resumed.check.outcomes, 4)[turns[spelling].canDo], false);
-  outcomes[spelling] = { outcome: 'shown', revealed: false };
+  outcomes[spelling] = { outcome: 'shown', revealed: false, listened: true };
   assert.ok(canDoShown(turns, outcomes, 4).every(Boolean));
   assert.deepEqual(canDoShown([], [], 1), [false], 'no turn is no evidence');
 });

@@ -135,12 +135,14 @@ test('Batch 1: every binding opening and its extra restrictions survive the Engl
     for (const item of items) {
       for (const constraint of taskConstraintsEn(item)) assert.ok(item.questionEn.includes(constraint), `${item.id}: ${constraint}`);
       const cue = opening.exec(item.questionDe);
-      if (cue) assert.ok(item.questionEn.includes(`Begin with “${cue[1]}”.`), item.id);
+      if (cue) assert.equal(item.questionEn.match(/\b(?:begin|beginning) with [“"]([^”"]+)[”"]/i)?.[1], cue[1], `${item.id}: Begin with “${cue[1]}”.`);
     }
   };
   assertHints(servable);
   const corner = servable.find((it) => it.id === 'extra-a12-l01-02');
   assert.ok(corner.questionEn.includes('Begin with “Dann”.'));
+  assertHints([{ ...corner, questionEn: corner.questionEn.replace('Begin with “Dann”.', 'Build the sentence, beginning with “Dann”.') }]);
+  assert.throws(() => assertHints([{ ...corner, questionEn: corner.questionEn.replace('Begin with “Dann”.', 'Build the sentence, beginning with “Heute”.') }]), /Begin with/);
   assert.throws(() => assertHints([{ ...corner, questionEn: 'Build the sentence about the corner.' }]), /Begin with/);
   assert.deepEqual(taskConstraintsEn({ questionDe: 'Bilden Sie den Satz (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“; nach „denn“ mit „mein Kopf“): [...] (Präsens)', type: 'sentence_building' }), [
     'Begin with “Ich”.', 'Put “nicht” before “ohne”.', 'After “denn”, begin with “mein Kopf”.', 'Use the present tense.',

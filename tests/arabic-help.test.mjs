@@ -111,7 +111,7 @@ test('Phase 2b: every visible final-check correction and recovery key has Arabic
   const { LESSON_LANGS } = await import('../src/lib/lesson/lessonLang.js');
   const { readFileSync } = await import('node:fs');
   const keys = [...Object.keys(STRINGS.en).filter((k) => /^check\.(fault\.|beyond|unchecked)/.test(k)),
-    'feedback.typo', 'feedback.typo.case', 'otter.retry', 'otter.check.missed', 'feedback.correctIs', 'check.example', 'check.letters', 'check.practised'];
+    'feedback.typo', 'feedback.typo.case', 'otter.retry', 'otter.check.missed', 'feedback.correctIs', 'check.example', 'check.letters', 'check.practised', 'check.notHeard'];
   for (const key of keys) assert.match(FEEDBACK_AR[key] || '', /[\u0600-\u06ff]/, key);
   assert.ok(feedbackArabic('check.unchecked', { word: 'Ticket' }).includes('Ticket'));
   assert.deepEqual(LESSON_LANGS, ['en', 'de']);
@@ -121,4 +121,9 @@ test('Phase 2b: every visible final-check correction and recovery key has Arabic
   assert.match(source, /isolateLatin\(text\)/);
   const stage = readFileSync(new URL('../src/components/lesson/CheckStage.jsx', import.meta.url), 'utf8');
   for (const key of keys.filter((key) => !key.startsWith('check.fault.'))) assert.ok(stage.includes(key), key + ' is wired into the final-check help');
+});
+
+test('scene, name entry, self-confirmation and writing recovery instructions have Arabic lines', async () => {
+  const { feedbackArabic } = await import('../src/lib/lesson/arabicHelp.js');
+  for (const key of ['scene.hear', 'scene.meaning', 'scene.say', 'scene.name', 'scene.surname', 'scene.enterName', 'speaking.model', 'speaking.record', 'speaking.stop', 'speaking.retry', 'speaking.iSaidIt', 'writing.editRetry']) assert.match(feedbackArabic(key) || '', /[\u0600-\u06ff]/, key);
 });

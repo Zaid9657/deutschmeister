@@ -29,7 +29,7 @@ import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.j
 import { COUNTRY_STEMS } from './countries.js';
 import { reader } from './clause.js';
 import { clockMinutes, relativeClock, invalidClock } from './clockTime.js';
-import { requiresVerbFirst, asked, meaning, senseless, valencyFault } from './taskMeaning.js';
+import { requiresVerbFirst, asked, meaning, senseless, valencyFault, agreementEllipsis } from './taskMeaning.js';
 import { certainlyNot, inOrder } from './clauseOrder.js';
 import { ADVERBS as GERMAN_ADVERBS, adjectiveForm, determinerOf, verbReadings } from './germanForms.js';
 import { repairs, smallWordsKnown } from './oneRepair.js';
@@ -2609,6 +2609,7 @@ function taskFault(turn, text) {
  */
 export function wrongReason(turn, value) {
   if (turn.parts) return typedResult(turn, value) === RESULT.WRONG ? 'message' : null;
+  if (secondReading(turn, value).denied) return 'task';
   if (slipFixed(turn, value)) return null;
   const core = typedCore(turn, value);
   if (verifiedResult(core)) return doubted(turn, value, core) ? READ_FAULT[secondReading(turn, value).say] || (notRead(turn, value) && SURE.has(readFault(turn, value)) ? readFault(turn, value) : null) : null;
@@ -3101,6 +3102,12 @@ function readingContext(lexicon) {
 /** The answer as read: its sentences, or null where a word or its place cannot be read. */
 function readAnswer(turn, text) {
   if (!turn.lexicon) return null;
+  // In a spoken agreement the subject can be left understood ("Passt!").
+  // Restore only that grammatical ellipsis; the meaning reader still checks the verb.
+  if (asked(turn)?.kind === 'agree') {
+    const plain = [text, ...withoutCourtesy(text, turn)].map(agreementEllipsis).find(Boolean);
+    if (plain) text = plain;
+  }
   // („aus der Stadt Aleppo“ names the place with its kind.)
   return reader(text.replace(/(?<!\p{L})(aus|in)\s+der\s+(?:Stadt|Hauptstadt)\s+(?=\p{Lu})/gu, '$1 '), { ...readingContext(turn.lexicon), partner: turn.partner }).read();
 }
@@ -3190,7 +3197,7 @@ export function readOnce(turn, value) {
   const m = meaning(turn, sentences, env);
   // A noun no list knows is welcome where the answer names something of the learner's own; elsewhere it is not praised.
   if (m.say === 'yes' && unknown.length && !OWN_NOUN_KINDS.has(asked(turn)?.kind)) return { say: null, unknown, sentences };
-  return { say: m.say, unknown, sentences, env, small: clauses.some((c) => nouns(c).some((n) => n.small) || (c.elems || []).some((e) => e.small) || (c.lemma === 'sprechen' && (c.adj || []).some((a) => a.words.some((w) => OWN_KIND.language.has(w))))) };
+  return { say: m.say, denied: m.denied, unknown, sentences, env, small: clauses.some((c) => nouns(c).some((n) => n.small) || (c.elems || []).some((e) => e.small) || (c.lemma === 'sprechen' && (c.adj || []).some((a) => a.words.some((w) => OWN_KIND.language.has(w))))) };
 }
 /** CORRECT, TYPO, WRONG or BEYOND (the third outcome) for one typed answer: a WRONG names its fault (`wrongReason`). */
 /**
@@ -3278,6 +3285,7 @@ function gradeTyped(turn, value) {
   if (town && !/(?:straße|strasse|weg|platz|allee|gasse|ring|damm)$/u.test(fold(town[1])) && !turn.lexicon?.genders?.has?.(fold(town[1])) && !OWN_KIND.place.has(fold(town[1])) && !COUNTRY_ARTICLE[fold(town[1])]) {
     if (readingsOfOwn(fold(town[1])) && townish(fold(town[1]))) return gradeTyped(turn, String(value).replace(town[0], town[0].replace(town[1], 'Bremen')));
   }
+  if (/(?<!\p{L})(?:nicht|nie|niemals|kein\p{L}*|nichts|niemand)(?!\p{L})/iu.test(String(value)) && secondReading(turn, value).denied) return RESULT.WRONG;
   const result = typedCore(turn, value);
   if (verifiedResult(result)) return !doubted(turn, value, result) ? result : READ_FAULT[secondReading(turn, value).say] || (notRead(turn, value) && SURE.has(readFault(turn, value))) ? RESULT.WRONG : BEYOND;
   const reason = reasonFor(turn, value, result);
@@ -4184,8 +4192,8 @@ export const modelAnswer = (turn) => turn.example || (turn.ownName ? `${turn.acc
 /** Per can-do (by index): true when every turn of it was shown. */
 export function canDoShown(turns, outcomes, count) {
   return Array.from({ length: count }, (_, i) => turns.some((turn) => turn.canDo === i)
-    && turns.every((turn, j) => turn.canDo !== i || (outcomes[j] === 'shown'
-      || (outcomes[j]?.outcome === 'shown' && outcomes[j].revealed === false))));
+    && turns.every((turn, j) => turn.canDo !== i || ((!(turn.listen || turn.spell) || outcomes[j]?.listened === true)
+      && (outcomes[j] === 'shown' || (outcomes[j]?.outcome === 'shown' && outcomes[j].revealed === false)))));
 }
 
 /** The parts to repeat for the can-dos not shown, each named once (a can-do may name more than one part). */

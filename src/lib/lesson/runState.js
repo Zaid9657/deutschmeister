@@ -80,7 +80,7 @@ function asCheck(v) {
   const outcomes = asList(v.outcomes).map((o) => {
     if (CHECK_OUTCOMES.has(o)) return o; // older snapshots
     return o && CHECK_OUTCOMES.has(o.outcome) && typeof o.revealed === 'boolean'
-      ? { outcome: o.outcome, revealed: o.revealed } : null;
+      ? { outcome: o.outcome, revealed: o.revealed, ...(typeof o.listened === 'boolean' ? { listened: o.listened } : {}) } : null;
   }).filter(Boolean).slice(0, 40);
   if (!outcomes.length && !asIndex(v.retake)) return null;
   return { retake: asIndex(v.retake), outcomes, chosen: typeof v.chosen === 'string' && v.chosen ? v.chosen.slice(0, 40) : null };

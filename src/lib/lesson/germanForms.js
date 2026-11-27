@@ -204,7 +204,7 @@ export function adjectiveForm(w) {
 
 // ——— Small words ———
 // Adverbs and particles that may stand free in the middle field. What only opens a clause („deshalb“) is here too.
-export const ADVERBS = wordSet(`auch noch schon nur jetzt heute morgen gestern übermorgen vorgestern bald gleich später dann danach zuerst zuletzt immer oft manchmal nie niemals meist meistens normalerweise gewöhnlich
+export const ADVERBS = wordSet(`auch noch schon nur jetzt heute morgen gestern übermorgen vorgestern bald gleich später dann danach zuerst zuletzt immer oft manchmal nie niemals keineswegs keinesfalls meist meistens normalerweise gewöhnlich
 selten häufig regelmäßig täglich wöchentlich morgens vormittags mittags nachmittags abends nachts montags dienstags mittwochs donnerstags freitags samstags sonntags wochentags hier da dort dahin dorthin hin her
 draußen drinnen oben unten links rechts geradeaus hinten vorn vorne zuhause daheim überall irgendwo nirgends eigentlich leider natürlich vielleicht wahrscheinlich bestimmt sicher wirklich echt gern gerne lieber
 sehr ganz ziemlich so etwas bisschen viel wenig mehr genug fast ungefähr circa etwa knapp genau endlich wieder mal einmal zweimal dreimal nochmal denn doch ja eben halt gerade nämlich übrigens zusammen allein

@@ -63,6 +63,7 @@ export const STRINGS = {
 
     'scene.part': 'Lesson {nr} · Part {part} of {total}',
     'scene.chunk': 'Scene {n} of {total}',
+    'writing.editRetry': 'Edit and try again',
     'scene.hear': 'Hear and read',
     'scene.meaning': 'Check the meaning',
     'scene.say': 'Now you say it',
@@ -527,6 +528,7 @@ export const STRINGS = {
     'check.title': 'What you showed',
     'check.typeInstead': 'Type instead',
     'check.letters': 'Show the letters as words',
+    'check.notHeard': 'Correct — practised without successful audio playback; not counted as listening evidence.',
     'check.practised': 'Correct — practised with the letters shown; not counted as independent evidence.',
     'check.again': 'Try the check again',
     'check.goOn': 'Go on',
@@ -583,6 +585,7 @@ export const STRINGS = {
 
     'scene.part': 'Lektion {nr} · Teil {part} von {total}',
     'scene.chunk': 'Szene {n} von {total}',
+    'writing.editRetry': 'Bearbeiten und erneut versuchen',
     'scene.hear': 'Hören und lesen Sie',
     'scene.meaning': 'Prüfen Sie die Bedeutung',
     'scene.say': 'Jetzt sprechen Sie',
@@ -1033,6 +1036,7 @@ export const STRINGS = {
     'check.title': 'Das haben Sie gezeigt',
     'check.typeInstead': 'Lieber tippen',
     'check.letters': 'Buchstaben als Wörter zeigen',
+    'check.notHeard': 'Richtig — ohne erfolgreiche Audiowiedergabe geübt; nicht als Hörnachweis gezählt.',
     'check.practised': 'Richtig — mit eingeblendeten Buchstaben geübt; nicht als selbstständig gezeigt gezählt.',
     'check.again': 'Check noch einmal',
     'check.goOn': 'Weitermachen',
@@ -1100,6 +1104,8 @@ export const lessonDateFormat = (lang, options) =>
 // Optional help for recurring instructions; Arabic is isolated from German
 // content in CommandHelp. Owner's native reader reviews these short lines.
 export const TASK_COMMANDS_AR = [
+  ['Weiter', 'انتقل إلى الخطوة التالية بعد الانتهاء.'],
+  ['Zurück', 'ارجع إلى الخطوة السابقة.'],
   ['Lesen', 'اقرأ النص بهدوء.'],
   ['Hören', 'استمع أولًا، ثم أجب.'],
   ['Ergänzen', 'اكتب الكلمة المناسبة في الفراغ.'],

@@ -1,3 +1,4 @@
+import CommandHelp from './CommandHelp.jsx';
 import GuidedMatchItem from './GuidedMatchItem.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Check, X } from 'lucide-react';
@@ -127,6 +128,7 @@ function LegacyMatchItem({ item, index, total, onResult, onNext, eyebrowKey = 's
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
+      <CommandHelp />
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
         {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>

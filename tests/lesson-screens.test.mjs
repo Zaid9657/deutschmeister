@@ -253,7 +253,7 @@ test('I4: the final check reads every can-do state aloud, and a graded answer st
     for (const outcome of ['shown', 'missed']) {
       fresh();
       const props = { stage, lektion: l, onBack: noop, onDone: noop };
-      for (let i = 0; i < turns.length; i += 1) { hooks.cursor = 0; CheckStage(props).props.onOutcome(outcome, ''); }
+      for (let i = 0; i < turns.length; i += 1) { hooks.cursor = 0; CheckStage(props).props.onOutcome({ outcome, revealed: false, listened: Boolean(turns[i].listen || turns[i].spell) }, ''); }
       const items = elements(render(CheckStage, props), (el) => el.type === 'li');
       assert.equal(items.length, shownLines(l, lng).length, `${lng}: one row per can-do`);
       for (const li of items) {
@@ -337,6 +337,8 @@ test('Phase 2b: revealing spelling is persisted as assisted practice and cannot 
       let result;
       const props = { stage, lektion: lesson, onBack: noop, onDone: noop, resume: { retake: 0, outcomes: Array(index).fill('shown') } };
       let tree = render(CheckStage, props);
+      elements(tree, (el) => el.type === 'PlayButton' && el.props.onPlayed)[0].props.onPlayed();
+      tree = render(CheckStage, props);
       if (revealed) {
         elements(tree, (el) => el.type === 'button' && text(el) === t('check.letters', lng))[0].props.onClick();
         tree = render(CheckStage, props);
@@ -351,7 +353,7 @@ test('Phase 2b: revealing spelling is persisted as assisted practice and cannot 
       elements(tree, (el) => el.type === 'StageShell')[0].props.onPrimary();
       hooks.cursor = 0;
       result = CheckStage(props).props;
-      assert.deepEqual(JSON.parse(JSON.stringify(hooks.slots[2][index])), { outcome: revealed ? 'practised' : 'shown', revealed });
+      assert.deepEqual(JSON.parse(JSON.stringify(hooks.slots[2][index])), { outcome: revealed ? 'practised' : 'shown', revealed, listened: !revealed });
       assert.ok(result);
     }
   }
@@ -377,4 +379,87 @@ test('Phase 2b: the actual Arabic help renders closed, RTL, with German examples
     assert.equal(run.props.lang, 'de');
     assert.doesNotMatch(text(run), /[\u0600-\u06ff]/);
   }
+});
+
+test('listening final-check evidence needs playback of that turn, including after resume', async () => {
+  const CheckStage = await component('CheckStage');
+  const { canDoShown } = await import('../src/lib/lesson/finalCheck.js');
+  for (const lesson of c.lektionen) {
+    const built = buildLesson({ curriculum: c, lektion: lesson, pool }).stages.find(s => s.kind === 'check');
+    for (const turn of checkTurns(built.check, 0).filter(t => t.listen || t.spell)) {
+      for (const played of [false, true]) {
+        fresh();
+        const stage = { ...built, check: { ...built.check, turns: [turn] } };
+        const props = { stage, lektion: lesson, onBack: noop, onDone: noop };
+        let tree = render(CheckStage, props);
+        if (played) {
+          elements(tree, el => el.type === 'PlayButton' && el.props.onPlayed)[0].props.onPlayed();
+          tree = render(CheckStage, props);
+        }
+        elements(tree, el => el.type === 'input')[0].props.onChange({ target: { value: turn.accepted[0] } });
+        tree = render(CheckStage, props);
+        elements(tree, el => el.type === 'Button' && text(el) === t('action.check', lang))[0].props.onClick();
+        tree = render(CheckStage, props);
+        assert.ok(text(tree).includes(t(played ? 'feedback.correct' : 'check.notHeard', lang)));
+        elements(tree, el => el.type === 'StageShell')[0].props.onPrimary();
+        const outcome = hooks.slots[2][0];
+        assert.equal(outcome.listened, played);
+        assert.equal(outcome.outcome, played ? 'shown' : 'practised');
+        assert.equal(canDoShown([{ ...turn, canDo: 0 }], [outcome], 1)[0], played);
+        assert.equal(canDoShown([{ ...turn, canDo: 0 }], ['shown'], 1)[0], false, 'old result without playback cannot invent evidence');
+      }
+    }
+  }
+});
+
+test('writing fallback offers editing and another submission in place for every task kind', async () => {
+  const GradedWriting = await component('GradedWriting');
+  for (const lesson of c.lektionen) {
+    fresh();
+    const props = { task: { examKey: 'goethe_a1', ...lesson.schreiben }, lektionId: lesson.id, onResult: noop };
+    let tree = render(GradedWriting, props);
+    for (const input of elements(tree, el => el.type === 'input' || el.type === 'textarea')) input.props.onChange({ target: { value: 'Ana hat am Freitag Zeit.' } });
+    tree = render(GradedWriting, props);
+    await elements(tree, el => el.type === 'Button' && text(el) === t('action.submit', lang))[0].props.onClick();
+    tree = render(GradedWriting, props);
+    const retry = elements(tree, el => el.type === 'Button' && text(el) === t('writing.editRetry', lang))[0];
+    assert.ok(retry, lesson.id);
+    retry.props.onClick();
+    tree = render(GradedWriting, props);
+    const input = elements(tree, el => el.type === 'input' || el.type === 'textarea')[0];
+    assert.equal(input.props.disabled, false);
+    input.props.onChange({ target: { value: 'Meine neue Fassung.' } });
+    tree = render(GradedWriting, props);
+    assert.equal(elements(tree, el => el.type === 'input' || el.type === 'textarea')[0].props.value, 'Meine neue Fassung.');
+    assert.ok(elements(tree, el => el.type === 'Button' && text(el) === t('action.submit', lang)).length);
+  }
+});
+
+test('every built stage of all twelve lessons mounts closed Arabic command help', async () => {
+  const command = await component('CommandHelp');
+  const help = render(command, {});
+  assert.equal(help.type, 'details');
+  assert.equal(help.props.open, undefined);
+  const arabic = elements(help, el => el.props?.lang === 'ar' && el.props?.dir === 'rtl');
+  assert.ok(arabic.length && /[\u0600-\u06ff]/.test(text(arabic)));
+  const covered = new Set();
+  for (const lesson of c.lektionen) {
+    const stages = buildLesson({ curriculum: c, lektion: lesson, pool, dueCards: [{ cardKey: 'due' }] }).stages;
+    for (const stage of stages) {
+      const list = stage.kind === 'scene'
+        ? ['hear', 'meaning', 'say'].map((_, itemIndex) => ['SceneStage', { stage, lektionId: lesson.id, itemIndex, results: {}, onSayResult: noop, onItemChange: noop, names: {} }])
+        : stage.kind === 'warmup' ? [['StageShell', {}]] : screens(stage, lesson, stages);
+      assert.ok(list, stage.kind);
+      for (const [name, props] of list) {
+        fresh();
+        const tree = render(name === 'StageShell' ? StageShell : await component(name), props);
+        const shells = elements(tree, el => el.type === 'StageShell');
+        const commands = elements(tree, el => el.type === 'CommandHelp');
+        for (const shell of shells) commands.push(...elements(render(StageShell, shell.props), el => el.type === 'CommandHelp'));
+        assert.ok(commands.length, lesson.id + ': ' + stage.kind + ' (' + name + ')');
+      }
+      covered.add(stage.kind);
+    }
+  }
+  assert.ok(covered.size >= 16);
 });

@@ -22,7 +22,7 @@ function submitFor(item, feedback = null) {
   const body = PAGE.match(/const submit = \(answer\) => \{[\s\S]*?\n {2}\};/);
   assert.ok(body, 'CheckpointPage defines submit(answer)');
   const set = [];
-  const context = vm.createContext({ item, feedback, graded: true, checkpointFeedback, setFeedback: (f) => set.push(f) });
+  const context = vm.createContext({ item, feedback, graded: true, heard: false, shownText: false, setShownText() {}, onReadInstead() {}, checkpointFeedback, setFeedback: (f) => set.push(f) });
   vm.runInContext(`${body[0]}\nthis.submit = submit;`, context);
   return { submit: context.submit, set };
 }

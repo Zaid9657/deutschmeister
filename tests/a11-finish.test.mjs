@@ -53,6 +53,7 @@ const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key, partE
 async function exercise(name, lang = 'de') {
   const state = hooks(); const results = []; let continued = 0;
   const stubs = {
+    './CommandHelp.jsx': { default: 'CommandHelp' },
     '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'),
     react: state.react, 'lucide-react': icons,
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },

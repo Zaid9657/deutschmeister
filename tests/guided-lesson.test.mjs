@@ -178,6 +178,7 @@ async function sceneHarness() {
   const { loadJsxModule } = await import('./helpers/renderJsx.mjs');
   const hooks = sceneHooks();
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {
+    './CommandHelp.jsx': { default: 'CommandHelp' }, './ArabicHelp.jsx': { FeedbackArabicHelp: 'FeedbackArabicHelp' },
     react: hooks.react,
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },

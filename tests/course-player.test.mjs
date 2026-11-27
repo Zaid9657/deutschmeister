@@ -799,7 +799,7 @@ test('second Codex review, accessibility: names match what is shown, focus lands
 
 test('optional Arabic command help is shared by lesson stages and isolates reading direction', async () => {
   const { TASK_COMMANDS_AR, t } = await import('../src/lib/lesson/strings.js');
-  assert.deepEqual(TASK_COMMANDS_AR.map(x => x[0]), ['Lesen', 'Hören', 'Ergänzen', 'Satz bilden', 'Fragen', 'Sprechen', 'Schreiben', 'Prüfen']);
+  assert.deepEqual(TASK_COMMANDS_AR.map(x => x[0]), ['Weiter', 'Zurück', 'Lesen', 'Hören', 'Ergänzen', 'Satz bilden', 'Fragen', 'Sprechen', 'Schreiben', 'Prüfen']);
   for (const [, text] of TASK_COMMANDS_AR) assert.match(text, /\p{Script=Arabic}/u);
   for (const lang of ['en', 'de']) assert.notEqual(t('help.commandsArabic', lang), 'help.commandsArabic');
   assert.match(read('src/components/lesson/StageShell.jsx'), /<CommandHelp \/>/u);

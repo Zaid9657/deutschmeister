@@ -290,6 +290,7 @@ test('say cues come from the immediately preceding original dialogue line across
     }
   }
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {
+    './CommandHelp.jsx': { default: 'CommandHelp' }, './ArabicHelp.jsx': { FeedbackArabicHelp: 'FeedbackArabicHelp' },
     react: { useState: (v) => [v, () => {}], useMemo: (fn) => fn(), useEffect() {} },
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },

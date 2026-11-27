@@ -131,6 +131,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
   // learner's own confirm when the machine was unavailable.
   const [pending, setPending] = useState(null);
   const [shownText, setShownText] = useState(false);
+  const [heard, setHeard] = useState(false);
   const inputRef = useRef(null);
   // The verdict takes focus once an answer is checked: a screen reader reads it, and a held Enter
   // cannot skip past it the way a focused Next button could (Codex score review, 2026-10-08).
@@ -144,6 +145,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
     setFeedback(null);
     setPending(null);
     setShownText(false);
+    setHeard(false);
     if (item.mode === 'typed' && onAnswer) inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- a new item, never a new callback, moves the focus
   }, [item.id, item.mode]);
@@ -153,6 +155,10 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
   const canSubmit = String(value || '').trim().length > 0;
   const submit = (answer) => {
     if (feedback || (item.mode === 'typed' && !String(answer ?? '').trim())) return;
+    if (item.audioText && (!heard || shownText)) {
+      setShownText(true);
+      onReadInstead(item.id);
+    }
     setFeedback(checkpointFeedback(item, answer, { graded }));
   };
 
@@ -246,7 +252,7 @@ export function PracticeItem({ item, onAnswer = null, onReadInstead = () => {}, 
 
       {isAudio && (
         <div className="mt-4">
-          <PlayButton lektionId={item.lektionId} audioKey={item.lineKey} text={item.audioText} rate={0.9} onFallback={feedback ? undefined : () => { setShownText(true); onReadInstead(item.id); }} />
+          <PlayButton lektionId={item.lektionId} audioKey={item.lineKey} text={item.audioText} rate={0.9} onPlayed={feedback ? undefined : () => setHeard(true)} onFallback={feedback ? undefined : () => { setShownText(true); onReadInstead(item.id); }} />
           {shownText && (
             <>
               <Card tone="sunk" className="mt-3 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.audioText}</Card>

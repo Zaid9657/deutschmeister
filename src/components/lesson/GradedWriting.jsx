@@ -5,7 +5,7 @@ import { getAuthHeaders } from '../../utils/supabase';
 import { MAX_WRITING_POINTS } from '../../data/writingTasks';
 import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing.js';
 import { westernDigits } from '../../lib/lesson/digits.js';
-import { WritingArabicHelp } from './ArabicHelp.jsx';
+import { WritingArabicHelp, FeedbackArabicHelp } from './ArabicHelp.jsx';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -523,6 +523,10 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
             {note || t('writing.fallbackPlain', lang)} {t(isFormular ? 'writing.fallbackNote.formular' : 'writing.fallbackNote', lang)}
           </p>
+          <Button className="mt-4" variant="secondary" onClick={() => { safeRemove(assessedKeyOf(key)); setOutcome(null); setNote(null); }}>
+            {t('writing.editRetry', lang)}
+          </Button>
+          <FeedbackArabicHelp keys={['writing.editRetry']} />
         </Card>
       )}
 

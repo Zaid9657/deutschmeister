@@ -1,3 +1,4 @@
+import CommandHelp from './CommandHelp.jsx';
 import { useState } from 'react';
 import CheckedChoice from './CheckedChoice.jsx';
 import { matchOutcome } from '../../lib/lesson/check.js';
@@ -21,6 +22,7 @@ export default function GuidedMatchItem({ item, index, total, part = null, onRes
     explanationEn: `The word pair is: ${pair.de} – ${pair.en}.`,
   };
   return <div>
+    <CommandHelp />
     <h2 className="mb-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{partEyebrow(part, t('stage.derived.eyebrow', lang, { n: index + 1, total }), lang)}</h2>
     <CheckedChoice key={question.id} item={question} lang={lang} hintFirst
       onResult={(_, outcome) => { if (!outcome.correct) setConfused((prev) => [...prev, pair]); }}

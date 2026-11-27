@@ -1008,7 +1008,7 @@
    "difficulty": 2,
    "order": 144,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Morgen, Frau Kaya!“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the greeting. Write the whole sentence. Write the whole sentence; change only the word “Gute”.",
+   "questionEn": "Correct the greeting. Write the whole sentence. Change only the word “Gute”.",
    "options": null,
    "answer": "Guten Morgen, Frau Kaya!",
    "accepted": [
@@ -1028,7 +1028,7 @@
    "difficulty": 2,
    "order": 145,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Abend, Frau Kaya!“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the greeting. Write the whole sentence. Write the whole sentence; change only the word “Gute”.",
+   "questionEn": "Correct the greeting. Write the whole sentence. Change only the word “Gute”.",
    "options": null,
    "answer": "Guten Abend, Frau Kaya!",
    "accepted": [
@@ -1168,7 +1168,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Tag, Frau Kaya!“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the greeting. Write the whole sentence. Write the whole sentence; change only the word “Gute”.",
+   "questionEn": "Fix the greeting. Write the whole sentence. Change only the word “Gute”.",
    "options": null,
    "answer": "Guten Tag, Frau Kaya!",
    "accepted": [
@@ -1898,7 +1898,7 @@
    "difficulty": 2,
    "order": 59,
    "questionDe": "Korrigieren Sie den Artikel: „Ein Schere ist hier.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Die Schere ist hier.",
    "accepted": [
@@ -1938,7 +1938,7 @@
    "difficulty": 2,
    "order": 62,
    "questionDe": "Korrigieren Sie den Artikel: „Das Wohnung ist hier.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Die Wohnung ist hier.",
    "accepted": [
@@ -2066,7 +2066,7 @@
    "difficulty": 2,
    "order": 202,
    "questionDe": "Korrigieren Sie den Artikel: „Das Tür ist weiß.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Die Tür ist weiß.",
    "accepted": [
@@ -2125,7 +2125,7 @@
    "difficulty": 2,
    "order": 205,
    "questionDe": "Korrigieren Sie den Artikel: „Die Schlüssel ist gelb.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Der Schlüssel ist gelb.",
    "accepted": [
@@ -2552,7 +2552,7 @@
    "difficulty": 2,
    "order": 174,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Pause.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Ich brauche eine Pause.",
    "accepted": [
@@ -2572,7 +2572,7 @@
    "difficulty": 2,
    "order": 175,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Telefon.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Ich brauche ein Telefon.",
    "accepted": [
@@ -2592,7 +2592,7 @@
    "difficulty": 2,
    "order": 176,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche eine Computer.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Ich brauche einen Computer.",
    "accepted": [
@@ -2612,7 +2612,7 @@
    "difficulty": 2,
    "order": 181,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Handynummer.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Ich brauche eine Handynummer.",
    "accepted": [
@@ -2632,7 +2632,7 @@
    "difficulty": 2,
    "order": 183,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Chefin.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Das ist eine Chefin.",
    "accepted": [
@@ -2652,7 +2652,7 @@
    "difficulty": 2,
    "order": 184,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Verkäuferin.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Das ist eine Verkäuferin.",
    "accepted": [
@@ -2672,7 +2672,7 @@
    "difficulty": 2,
    "order": 189,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Firma in Berlin.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Das ist eine Firma in Berlin.",
    "accepted": [
@@ -2884,7 +2884,7 @@
    "difficulty": 2,
    "order": 71,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Kollegin im Büro.“ (mit unbestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the indefinite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Das ist eine Kollegin im Büro.",
    "accepted": [
@@ -3904,7 +3904,7 @@
    "difficulty": 2,
    "order": 185,
    "questionDe": "Korrigieren Sie den Artikel: „Der Tasche ist teuer.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Change only the article.",
    "options": null,
    "answer": "Die Tasche ist teuer.",
    "accepted": [
@@ -3924,7 +3924,7 @@
    "difficulty": 2,
    "order": 186,
    "questionDe": "Korrigieren Sie den Artikel: „Die Rucksack ist gut.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Change only the article.",
    "options": null,
    "answer": "Der Rucksack ist gut.",
    "accepted": [
@@ -3944,7 +3944,7 @@
    "difficulty": 2,
    "order": 190,
    "questionDe": "Korrigieren Sie den Artikel: „Das Stuhl ist alt.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Change only the article.",
    "options": null,
    "answer": "Der Stuhl ist alt.",
    "accepted": [
@@ -3964,7 +3964,7 @@
    "difficulty": 2,
    "order": 191,
    "questionDe": "Korrigieren Sie den Artikel: „Die Tisch ist alt.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Change only the article.",
    "options": null,
    "answer": "Der Tisch ist alt.",
    "accepted": [
@@ -3984,7 +3984,7 @@
    "difficulty": 2,
    "order": 192,
    "questionDe": "Korrigieren Sie den Artikel: „Der Uhr ist alt.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the article. Write the whole sentence. Use a definite article. Change only the article.",
    "options": null,
    "answer": "Die Uhr ist alt.",
    "accepted": [
@@ -4122,7 +4122,7 @@
    "difficulty": 2,
    "order": 50,
    "questionDe": "Korrigieren Sie den Artikel: „Das Lampe kostet acht Euro.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Die Lampe kostet acht Euro.",
    "accepted": [
@@ -4181,7 +4181,7 @@
    "difficulty": 2,
    "order": 57,
    "questionDe": "Korrigieren Sie den Artikel: „Der Lampe ist teuer.“ (mit bestimmtem Artikel) Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Die Lampe ist teuer.",
    "accepted": [
@@ -6562,7 +6562,7 @@
    "difficulty": 2,
    "order": 135,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Das ist mein Party.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the possessive. Write the whole sentence. Write the whole sentence; change only the possessive determiner.",
+   "questionEn": "Fix the possessive. Write the whole sentence. Change only the possessive determiner.",
    "options": null,
    "answer": "Das ist meine Party.",
    "accepted": [
@@ -6582,7 +6582,7 @@
    "difficulty": 2,
    "order": 136,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Ihre Papa kommt auch, Frau Ramos.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the possessive. Write the whole sentence. Write the whole sentence; change only the possessive determiner.",
+   "questionEn": "Fix the possessive. Write the whole sentence. Change only the possessive determiner.",
    "options": null,
    "answer": "Ihr Papa kommt auch, Frau Ramos.",
    "accepted": [
@@ -7225,7 +7225,7 @@
    "difficulty": 1,
    "order": 320,
    "questionDe": "Korrigieren Sie das Verb: „Mein Freund kochen gern.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the verb. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Fix the verb. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Mein Freund kocht gern.",
    "accepted": [
@@ -7516,7 +7516,7 @@
    "difficulty": 2,
    "order": 78,
    "questionDe": "Korrigieren Sie das Verb: „Lena spielen am Wochenende Fußball.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the verb form. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Fix the verb form. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Lena spielt am Wochenende Fußball.",
    "accepted": [
@@ -9020,7 +9020,7 @@
    "difficulty": 2,
    "order": 163,
    "questionDe": "Korrigieren Sie das Wort um: „Ich bin um Freitag beim Arzt.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the preposition. Write the whole sentence. Write the whole sentence; change only the word “um”.",
+   "questionEn": "Correct the preposition. Write the whole sentence. Change only the word “um”.",
    "options": null,
    "answer": "Ich bin am Freitag beim Arzt.",
    "accepted": [
@@ -9040,7 +9040,7 @@
    "difficulty": 2,
    "order": 164,
    "questionDe": "Korrigieren Sie das Wort um: „Der Termin ist um Dienstag.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the preposition. Write the whole sentence. Write the whole sentence; change only the word “um”.",
+   "questionEn": "Correct the preposition. Write the whole sentence. Change only the word “um”.",
    "options": null,
    "answer": "Der Termin ist am Dienstag.",
    "accepted": [
@@ -9155,7 +9155,7 @@
    "difficulty": 2,
    "order": 87,
    "questionDe": "Korrigieren Sie das Wort um: „Der Termin ist um Montag.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the preposition. Write the whole sentence. Write the whole sentence; change only the word “um”.",
+   "questionEn": "Fix the preposition. Write the whole sentence. Change only the word “um”.",
    "options": null,
    "answer": "Der Termin ist am Montag.",
    "accepted": [
@@ -9706,7 +9706,7 @@
    "difficulty": 1,
    "order": 326,
    "questionDe": "Korrigieren Sie das Verb: „Die Kellnerin haben keine Zeit.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the verb. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Fix the verb. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Die Kellnerin hat keine Zeit.",
    "accepted": [
@@ -9843,7 +9843,7 @@
    "difficulty": 2,
    "order": 97,
    "questionDe": "Korrigieren Sie den Artikel: „Ich habe ein Kaffee.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the article. Write the whole sentence. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article. Write the whole sentence. Change only the article.",
    "options": null,
    "answer": "Ich habe einen Kaffee.",
    "accepted": [
@@ -10036,7 +10036,7 @@
    "difficulty": 2,
    "order": 196,
    "questionDe": "Korrigieren Sie das Verb: „Du habt Durst.“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Correct the verb form. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Correct the verb form. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Du hast Durst.",
    "accepted": [
@@ -11018,7 +11018,7 @@
    "difficulty": 2,
    "order": 28,
    "questionDe": "Bilden Sie den Satz ohne Artikel (Beginnen Sie mit „Ich“): [ich / sein / von Beruf / Studentin]",
-   "questionEn": "Practise the usual form without an article. Build the sentence, beginning with “Ich”. Begin with “Ich”.",
+   "questionEn": "Practise the usual form without an article. Build the sentence, beginning with “Ich”.",
    "options": null,
    "answer": "Ich bin von Beruf Studentin.",
    "accepted": [
@@ -11957,7 +11957,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Korrigieren Sie das Verb: „Sind die Abfahrt um neun Uhr?“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the verb form in the question. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Fix the verb form in the question. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Ist die Abfahrt um neun Uhr?",
    "accepted": [
@@ -11977,7 +11977,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Korrigieren Sie das Verb: „Haben der Fahrer Verspätung?“ Schreiben Sie den ganzen Satz.",
-   "questionEn": "Fix the verb form in the question. Write the whole sentence. Write the whole sentence; change only the verb.",
+   "questionEn": "Fix the verb form in the question. Write the whole sentence. Change only the verb.",
    "options": null,
    "answer": "Hat der Fahrer Verspätung?",
    "accepted": [
