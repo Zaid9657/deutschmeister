@@ -9,6 +9,9 @@ import {
   LAUNCH_ENDS_AT, OFFER_PRODUCTS, LEVEL_COURSES, isProductOnSale, courseForProduct,
 } from '../src/data/pricing.js';
 import { courseAccessReason, fullCourseReason } from '../src/lib/levelEntitlement.js';
+import { levelLockSignupHref } from '../src/lib/lockDoor.js';
+import { curriculumFor } from '../src/data/curricula/index.js';
+import { stationFor } from '../src/data/offers.js';
 
 const end = Date.parse(LAUNCH_ENDS_AT);
 const cutoff = '2026-12-01T12:00:00Z';
@@ -17,6 +20,156 @@ const now = Date.parse('2026-12-02T12:00:00Z');
 const purchase = (key, created_at = cutoff) => ({ product_key: key, created_at, status: 'active', access_until: '2027-03-01T12:00:00Z' });
 const account = (purchases = [], extra = {}) => ({ profile: { created_at: cutoff }, purchases, ...extra });
 const full = (acc, level = 'a1.1') => fullCourseReason(acc, level, now, gate, cutoff);
+
+const readScreen = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const screenSources = () => {
+  const files = ['src/data/offers.js', 'astro-site/src/data/offers.js'];
+  for (const root of ['src/components', 'src/pages', 'astro-site/src/components', 'astro-site/src/pages']) {
+    for (const entry of readdirSync(new URL(`../${root}/`, import.meta.url), { recursive: true })) {
+      const file = String(entry).replaceAll('\\', '/');
+      if (/\.(?:jsx|js|astro)$/.test(file)) files.push(`${root}/${file}`);
+    }
+  }
+  return files;
+};
+const withoutComments = (source) => source.replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/<!--[\s\S]*?-->/g, '').replace(/^\s*\/\/.*$/gm, '').replace(/\s\/\/ .*$/gm, '');
+
+// Match the claim, not file names or line numbers. Management/cancellation copy does not
+// promise access, so needs no exemption. Only an explicitly EXISTING subscriber's access
+// sentence is exempt; a generic "your subscription opens ..." remains a regression.
+const obsoleteAccessClaim = (source) => {
+  const text = withoutComments(source)
+    .replace(/\b(?:Existing subscribers|Existing subscriptions|Bestehende Abonnements)\b[^.!?\n]*[.!?]/gi, '')
+    .replace(/\s+/g, ' ');
+  const plan = '(?:subscription|Abonnement|Abo|AI Practice|Pro)';
+  const course = '(?:course|Kurs|Lektion(?:en)?|lessons?|levels?|Stufen?|jede verlinkte Übung)';
+  const lessons = '(?:course|Kurs|Lektion(?:en)?|lessons?)';
+  const clause = '[^.;!?"\'`<>]{0,120}';
+  const claimText = text.replace(/\b([AB][12])\.([12])\b/gi, '$1$2');
+  return claimText.match(new RegExp([
+    `\\b${lessons}\\b${clause}\\b(?:needs?|requires?|brauchen|benötigen)\\b${clause}\\b${plan}\\b`,
+    `\\b${course}\\b${clause}\\b(?:open|opens|opened|unlocked|available|zugänglich|offen)\\b${clause}\\b(?:with|by|through|mit|durch) (?:a |an |ein )?${plan}\\b`,
+    `\\b${plan}\\b${clause}(?:\\bopens?|\\bunlocks?|öffnet|\\bschaltet)\\b${clause}\\b${course}\\b`,
+    '\\b(?:subscribe|abonnieren|Abo (?:ansehen|abschließen)|See the subscription|Upgrade for full access)\\b',
+    '\\bAI Practice-Zugang[^;!?"\'`<>]{0,120}\\bdeckt jede verlinkte Übung ab',
+    '\\b(?:every|all) levels? (?:is|are) open\\b',
+  ].join('|'), 'i'));
+};
+
+test('no screen sells subscriptions or claims they open a course', () => {
+  const found = screenSources().flatMap((file) => {
+    const hit = obsoleteAccessClaim(readScreen(file));
+    return hit ? [`${file}: ${hit[0]}`] : [];
+  });
+  assert.deepEqual(found, []);
+});
+
+test('course access copy guard rejects both languages and preserves explicit subscriber management', () => {
+  for (const text of [
+    'From Lektion 2 on you need a subscription.', 'Ab Lektion 2 brauchen Sie ein Abo.',
+    'The later Lektionen open with AI Practice.', 'Pro unlocks every level.',
+    'AI Practice opens the full A1.1 course.', 'Ein Abo öffnet den Kurs.',
+    'AI speaking, writing feedback and every level are open until tomorrow.',
+    'Dein AI Practice-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab;',
+    'See the subscription', 'Abo ansehen', 'Subscribe to open the course', 'Subscribe',
+  ]) assert.ok(obsoleteAccessClaim(text), text);
+  for (const text of [
+    'Existing subscribers keep their current course access.',
+    'Manage or cancel your subscription', 'Your last subscription payment failed.',
+    'One payment. No subscription.', 'Each course includes 90 days of AI tools.',
+  ]) assert.equal(obsoleteAccessClaim(text), null, text);
+});
+
+test('signup pending purchase uses the current course price and launch label through the deadline', () => {
+  const source = readScreen('src/pages/SignupPage.jsx');
+  const helper = source.match(/const pendingPurchase = [\s\S]*?\n};/)[0];
+  for (const key of ['course_a1_1', 'course_a1_2', 'a1_exam_pack']) {
+    const pending = vm.runInNewContext(`${helper}\npendingPurchase;`, { ...pricing, peekBuyIntent: () => key, Date });
+    for (const at of [end - 1000, end, end + 999, end + 1000]) {
+      const result = pending(at);
+      const level = LEVEL_COURSES[key]?.levels[0];
+      assert.equal(result.price, level ? currentPrice(level, at) : OFFER_PRODUCTS[key].price, `${key} at ${at}`);
+      assert.equal(result.priceLine, level ? coursePriceLine(level, at) : pricing.eur(OFFER_PRODUCTS[key].price));
+      assert.equal(result.once, true);
+    }
+  }
+  assert.match(source, /Then your checkout for[\s\S]*?\{purchase\.priceLine\}/);
+  assert.match(source, /pendingPurchase\(priceNow\)/, 'an open signup page follows the same deadline clock as CoursePrice');
+});
+
+test('the course-home purchase button preserves this course for guests and signed-in learners', () => {
+  const source = readScreen('src/pages/CurriculumHomePage.jsx');
+  const props = source.match(/\{\.\.\.(\(user \? [\s\S]*?\))\}/)[1];
+  for (const level of ['a1.1', 'a1.2']) {
+    const course = LEVEL_COURSES[pricing.productKeyForLevel(level)];
+    for (const user of [null, { id: 'buyer' }]) {
+      const stored = {};
+      const nextLesson = `/course/${level}/l/2`;
+      const button = vm.runInNewContext(props, {
+        user, course, level, nextLesson, levelLockSignupHref,
+        setBuyIntent: (key) => { stored.dm_buy_intent = key; },
+        setReturnPath: (path) => { stored.returnPath = path; },
+      });
+      if (user) {
+        assert.equal(button.to, `/subscription?buy=${course.key}`);
+        assert.equal(button.state.from.pathname, nextLesson);
+      } else {
+        assert.equal(button.href, levelLockSignupHref(level));
+        button.onClick();
+        assert.equal(stored.dm_buy_intent, course.key);
+        assert.equal(stored.returnPath, nextLesson);
+      }
+    }
+  }
+  assert.match(source, /<CoursePrice level=\{level\} language=\{lang\}/);
+  assert.match(source, /\{buyable && \(/, 'the button is available to guests whenever the course is on sale');
+});
+
+test('purchase features describe the selected course; recurring subscribers retain their reference grid', () => {
+  const source = readScreen('src/pages/SubscriptionPage.jsx');
+  const expression = source.match(/\{\((recurringBilling \? \[[\s\S]*?)\)\.map\(\(item, i\)/)[1];
+  const selection = source.match(/const selectedCourse = [\s\S]*?;/)[0];
+  for (const key of ['course_a1_1', 'course_a1_2']) {
+    const levelCourses = Object.values(LEVEL_COURSES);
+    const selectedCourse = vm.runInNewContext(`${selection}\nselectedCourse;`, {
+      leadCourse: null, levelCourses, pendingProduct: null, searchParams: new URLSearchParams({ buy: key }),
+    });
+    assert.equal(selectedCourse.key, key);
+    for (const isGerman of [false, true]) {
+      const selectedCurriculum = curriculumFor(selectedCourse.levels[0]);
+      const features = (recurringBilling) => vm.runInNewContext(expression, {
+        recurringBilling, isGerman, selectedCourse, selectedCurriculum, LEVEL_COUNT: 8, READING_LESSON_COUNT: 66,
+      });
+      const text = JSON.stringify(features(false));
+      assert.ok(text.includes(selectedCourse.code));
+      assert.ok(text.includes(`${selectedCurriculum.lektionen.length} Lektionen`));
+      assert.match(text, /[Cc]heckpoints/);
+      assert.match(text, isGerman ? /Abschlusstest und Zertifikat/ : /Final test and certificate/);
+      assert.ok(text.includes(String(selectedCourse.proDays)));
+      assert.doesNotMatch(text, /8 Levels|8 Stufen|B2\.2/);
+      assert.match(JSON.stringify(features(true)), /B2\.2/);
+    }
+  }
+});
+
+test('shared station price getters refresh rather than retaining a regular-price snapshot', () => {
+  for (const level of ALL_LEVELS) {
+    const station = stationFor(level);
+    for (const [property, expected] of [['price', currentPrice], ['priceLabel', coursePriceLine]]) {
+      const getter = Object.getOwnPropertyDescriptor(station, property).get;
+      assert.equal(typeof getter, 'function');
+      for (const at of [end, end + 1000]) {
+        // Run the actual getter with a fixed helper clock: no mutation of global Date.
+        const evaluated = vm.runInNewContext(`({ ${getter.toString()} }).${property}`, {
+          course: LEVEL_COURSES[pricing.productKeyForLevel(level)], level,
+          currentPrice: (l) => currentPrice(l, at), coursePriceLine: (l) => coursePriceLine(l, at),
+        });
+        assert.equal(evaluated, expected(level, at));
+      }
+    }
+  }
+});
 
 test('every course has its approved regular and launch price, percentage and own level', () => {
   const regular = [100, 100, 110, 120, 130, 140, 150, 160];
@@ -108,13 +261,13 @@ test('static prices use a durable no-JS fallback and date-aware enhancement, wit
 // called A1.1 "the free first course". Only Lektion 1 is free. The rule covers every screen, not
 // the three lines: no rendered text may call a course free.
 test('no screen calls a course free: only Lektion 1 of A1.1 is', () => {
-  const FREE_COURSE = /free (?:first |A1\.1 |German )?course|whole course without|course (?:is|stays|remains) free|kostenlose[nr]? (?:ersten? )?Kurs|A1\.1 (?:is |stays |remains |completely |komplett )?(?:free|kostenlos)|free A1\.1/i;
+  const FREE_COURSE = /free (?:first |A1\.1 |German |\$\{[^}]+\} )?course|whole course without|course (?:is|stays|remains) free|kostenlose[nr]? (?:ersten? )?Kurs|A1\.1 (?:is |stays |remains |completely |komplett )?(?:free|kostenlos)|free A1\.1/i;
   const strip = (source) => source
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/^\s*\/\/.*$/gm, '')
     .replace(/\s\/\/ .*$/gm, '')
-    .replace(/Lektion 1 of (?:the )?(?:A1\.1|\$\{[^}]+\})(?: course)? is free/gi, '');
+    .replace(/Lektion 1 of (?:the )?(?:A1\.1|\$\{[^}]+\})(?: course)? (?:is|stays|remains) free/gi, '');
   const found = [];
   for (const root of ['src/components', 'src/pages', 'astro-site/src/components', 'astro-site/src/pages', 'astro-site/src/layouts']) {
     for (const entry of readdirSync(new URL(`../${root}/`, import.meta.url), { recursive: true })) {

@@ -18,7 +18,7 @@
 // whose id is unset renders without a Buy button — never a dead checkout.
 import {
   ALL_LEVELS, COMING_SOON_LEVELS, COURSE_PRO_MONTHS, LEVEL_COURSES, MONTHLY_PRICE_EUR, PLANS,
-  COURSES as EXAM_COURSES, eur, productKeyForLevel,
+  COURSES as EXAM_COURSES, eur, productKeyForLevel, currentPrice, coursePriceLine,
 } from './pricing.js';
 import {
   LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
@@ -54,8 +54,8 @@ export const STATIONS = ALL_LEVELS.map((level, index) => {
     outcome: LEVEL_OUTCOME_EN[level],
     status,
     productKey: course ? course.key : null,
-    price: course ? course.price : null,
-    priceLabel: course ? eur(course.price) : null,
+    get price() { return course ? currentPrice(level) : null; },
+    get priceLabel() { return course ? coursePriceLine(level) : null; },
     plan: GUIDED_PLANS[level] || null,
     contents: COURSE_CONTENTS[level],
     coursePage: `/courses/${levelToSlug(level)}/`,
@@ -137,7 +137,7 @@ export const PRO_OFFER = {
 };
 
 /** A one-line, derived comparison the ticket may carry: AI Practice alone, per month. */
-export const proAloneLine = () => `For comparison: AI Practice on its own is ${eur(MONTHLY_PRICE_EUR)} a month.`;
+export const proAloneLine = () => 'New AI Practice subscriptions are off sale. Each course includes its own AI tools window.';
 
 /** The separate telc B1 exam course (its own page). */
 export const EXAM_COURSE = EXAM_COURSES.telc_b1_komplett;

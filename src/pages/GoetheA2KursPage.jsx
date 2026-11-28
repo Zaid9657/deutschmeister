@@ -157,9 +157,9 @@ const GoetheA2KursPage = () => {
 
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
-            Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            Dein AI Practice-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
-            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
+            Arbeiten Sie in Ihrem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
+            Jeder Kurs ist ein separater Einmalkauf mit enthaltenen KI-Werkzeugen. Ihren Zugang sehen Sie auf{' '}
+            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Ihrer Kursübersicht</Link>.
           </p>
         </footer>
       </div>
