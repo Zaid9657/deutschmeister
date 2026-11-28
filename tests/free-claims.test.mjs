@@ -25,7 +25,8 @@ const FALSE_CLAIMS = [
   new RegExp(String.raw`\bwhole ${LEVEL} course, free\b`, 'i'),
   new RegExp(String.raw`(?:—|\bwhole|\ball of) the ${LEVEL} course is free\b`, 'i'),
   new RegExp(String.raw`${LEVEL} (?:komplett|ganz) kostenlos`, 'i'),
-  new RegExp(String.raw`${LEVEL} (?:bleibt|stays) (?:es|free|kostenlos)`, 'i'),
+  // (Said of the free Lektion it is true: „Lektion 1 of A1.1 stays free after the trial.“)
+  new RegExp(String.raw`(?<!Lektion \d+ (?:of|von) )${LEVEL} (?:bleibt|stays) (?:es|free|kostenlos)`, 'i'),
   /\bfree first course\b/i,
   /\bTry the whole course\b/i,
   /\ball Lektionen unlocked\b/i,
@@ -69,13 +70,13 @@ test('the lines that were wrong are caught, the true ones are not', () => {
   for (const t of [
     '{FREE_LEVEL_LABEL} · the free first course', 'Try the whole course without an account.', 'Start with the free {FREE_LEVEL_LABEL} course — short',
     'Start the free {FREE_LEVEL_LABEL} course', '- Free guided ${FREE_LEVEL_LABEL} course: 12 lessons', 'a free guided A1.1 course, AI speaking',
-    'start without signing up — the A1.1 course is free.', '### Free A1.1 Course', 'A1.1 bleibt es für immer', 'all Lektionen unlocked for you',
+    'start without signing up — the A1.1 course is free.', '### Free A1.1 Course', 'A1.1 bleibt es für immer', 'A1.1 stays free after the trial.', 'all Lektionen unlocked for you',
     'every Lektion is open, so begin', 'Beginnen Sie mit dem kostenlosen Kurs.', 'in Reihenfolge, kostenlos.', 'Lektion 1 of the free ${FREE_COURSE_LEVEL.toUpperCase()} course starts',
     '${FREE_LEVEL_LABEL} komplett kostenlos, ohne Konto', 'The whole ${STATIONS[0].code} course, free and with no account',
   ]) assert.ok(caught(t), t);
   for (const t of [
     'Start A1.1 free — no account', 'Start {FREE_LEVEL_LABEL} free', 'Lektion 1 of the A1.1 course is free', 'A1.1 podcasts are free', 'all A1.1 grammar topics free',
-    'A1.1 course (Lektion 1 free)', 'Lektion 1 of A1.1 is free; AI Practice or any course purchase opens the rest.', 'Alle Lektionen',
+    'A1.1 course (Lektion 1 free)', 'Lektion 1 of A1.1 is free; AI Practice or any course purchase opens the rest.', 'Alle Lektionen', 'Lektion 1 of A1.1 stays free after the trial.',
   ]) assert.ok(!caught(t), t);
 });
 
