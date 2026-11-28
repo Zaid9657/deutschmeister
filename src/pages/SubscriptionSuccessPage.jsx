@@ -46,8 +46,8 @@ export const renewingPlan = (subscription, now = Date.now()) => Boolean(
 export const proLineFor = ({ proUntil, renewing, recurringBilling }) => {
   if (renewing) return 'Your AI Practice subscription already covers the AI tools and keeps renewing as before.';
   const open = proUntil
-    ? `AI speaking, writing feedback and every level are open until ${proUntil}.`
-    : 'AI speaking, writing feedback and every level are open for the included AI Practice months.';
+    ? `AI speaking, writing feedback and Sentence X-Ray are open until ${proUntil}.`
+    : 'AI speaking, writing feedback and Sentence X-Ray are available during the included AI tools window. Each course is a separate one-time purchase.';
   return recurringBilling
     ? `${open} The course itself never renews.`
     : `${open} After that the AI tools return to the free allowance — you are never charged again.`;

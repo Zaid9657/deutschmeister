@@ -18,6 +18,7 @@ import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { num, productKeyForLevel, isProductOnSale, currentPrice, isLaunchActive, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
+import { curriculumFor } from '../data/curricula/index.js';
 import CoursePrice, { usePriceNow } from '../components/CoursePrice.jsx';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
@@ -154,6 +155,11 @@ const SubscriptionPage = () => {
   // At the paid rest of a course, explain which first Lektion stays free
   // and that buying this specific course opens the remaining path.
   const gateFree = blockedLevel ? freeLektionen(blockedLevel) : 0;
+  const selectedCourse = leadCourse
+    || levelCourses.find((c) => c.key === (pendingProduct || searchParams.get('buy')) && !c.comingSoon)
+    || levelCourses.find((c) => c.variantId && !c.comingSoon)
+    || levelCourses[0];
+  const selectedCurriculum = curriculumFor(selectedCourse.levels[0]);
 
   const startPurchase = (productKey, variantId, price) => {
     if (!variantId || !isProductOnSale(productKey) || subLoading || verifying || !billingVerified || ownsCheckoutProduct(productKey, purchases)) return;
@@ -552,7 +558,7 @@ const SubscriptionPage = () => {
             {isGerman ? 'Was Sie bekommen' : 'What You Get'}
           </Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
-            {[
+            {(recurringBilling ? [
               {
                 icon: '📚',
                 title: isGerman ? `${LEVEL_COUNT} Stufen` : `${LEVEL_COUNT} Levels`,
@@ -569,7 +575,25 @@ const SubscriptionPage = () => {
                 title: isGerman ? 'KI-Sprechen' : 'AI Speaking',
                 desc: isGerman ? 'Konversation üben' : 'Practice conversation',
               },
-            ].map((item, i) => (
+            ] : [
+              {
+                icon: '📚',
+                title: isGerman ? `Ihr ${selectedCourse.code}-Kurs` : `Your ${selectedCourse.code} course`,
+                desc: selectedCurriculum
+                  ? `${selectedCurriculum.lektionen.length} Lektionen · ${selectedCurriculum.checkpoints.length} ${isGerman ? 'Checkpoints' : 'checkpoints'}`
+                  : (isGerman ? 'Geführte Lektionen in diesem Kurs' : 'Guided lessons in this course'),
+              },
+              {
+                icon: '📖',
+                title: isGerman ? 'Abschlusstest und Zertifikat' : 'Final test and certificate',
+                desc: isGerman ? 'Schließen Sie diesen Kurs ab und erhalten Sie Ihr Kurszertifikat.' : 'Complete this course and earn its course certificate.',
+              },
+              {
+                icon: '🗣️',
+                title: isGerman ? `${selectedCourse.proDays} Tage KI-Werkzeuge` : `${selectedCourse.proDays} days of AI tools`,
+                desc: isGerman ? 'KI-Sprechen, Schreibkorrektur und Satz-Röntgen inklusive' : 'AI speaking, writing feedback and Sentence X-Ray included',
+              },
+            ]).map((item, i) => (
               <Reveal key={i} delay={90 * i}>
                 <Card className="p-4 h-full">
                   <div className="text-2xl mb-2" aria-hidden="true">{item.icon}</div>

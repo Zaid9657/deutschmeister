@@ -90,7 +90,7 @@ const UeberUnsPage = () => {
         <dl className="grid gap-px overflow-hidden rounded-xl border border-rule bg-rule sm:grid-cols-3" aria-label="Inspect the product">
           <div className="bg-white p-5"><dt className="font-data text-2xl">{GRAMMAR_TOPIC_COUNT}</dt><dd className="mt-2 text-sm text-graphite">Public grammar topics to inspect</dd></div>
           <div className="bg-white p-5"><dt className="font-data text-2xl">{LEVEL_COUNT}</dt><dd className="mt-2 text-sm text-graphite">Practice levels, with guided courses built in order</dd></div>
-          <div className="bg-white p-5"><dt className="font-data text-2xl">{FREE_LEVEL_LABEL}</dt><dd className="mt-2 text-sm text-graphite">The free first course · no account needed</dd></div>
+          <div className="bg-white p-5"><dt className="font-data text-2xl">{FREE_LEVEL_LABEL}</dt><dd className="mt-2 text-sm text-graphite">Lektion 1 is free · no account needed</dd></div>
         </dl>
       </div>
 

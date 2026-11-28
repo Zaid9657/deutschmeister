@@ -182,7 +182,7 @@ const A11PhasePage = () => {
           <p>
             Arbeiten Sie in Ihrem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
             Lektion 1 ist kostenlos; was Ihr Konto öffnet, sehen Sie auf{' '}
-            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Ihrer Abo-Seite</Link>.
+            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Ihrer Kursübersicht</Link>.
           </p>
         </footer>
       </div>
