@@ -12,11 +12,12 @@ import { examCounts, examDays } from '../astro-site/src/data/examPack.js';
 import { sitemapFilter } from '../astro-site/src/lib/sitemapFilter.js';
 import { buyButton, door, FakeElement, runCourseCheckout, loadLevelAccess } from './helpers/courseCheckoutHarness.mjs';
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
+const saleProducts = [OFFER_PRODUCTS.a1_exam_pack];
 const active = (product_key) => ({ product_key, status: 'active', access_until: '2026-01-01T00:00:00Z' });
 const now = Date.parse('2027-01-01T00:00:00Z');
 const snapshot = (purchases) => ({ signedIn: true, verified: true, userId: 'learner', purchases, profile: {}, subscription: null });
 
-test('the three approved prices/windows resolve throughout checkout and server course ownership', () => {
+test('the exam pack and retired products keep their recorded prices, windows and ownership', () => {
   for (const [key, price, days, months, levels] of [
     ['a1_exam_pack', 59, 60, 2, []], ['a1_complete', 89, 180, 6, ['a1.2']], ['all_access', 199, 365, 12, ALL_LEVELS],
   ]) {
@@ -83,7 +84,7 @@ test('bundle ownership requires the exam pack too, and a legacy all-level purcha
 });
 
 test('static product doors protect owners before load and at click time, and signed-out buyers retain intent', async () => {
-  for (const p of Object.values(OFFER_PRODUCTS)) {
+  for (const p of saleProducts) {
     const buy = buyButton(p.key);
     const wrapper = door(p.key, [buy], { 'data-course-product': p.key });
     const body = new FakeElement('body', {}, [wrapper]);
@@ -104,7 +105,7 @@ test('static product doors protect owners before load and at click time, and sig
 
 test('new offer checkout ids fail closed; public routes enter the manifest and sitemap filter', () => {
   const astro = read('astro-site/src/lib/courseVariants.js'); const spa = read('src/config/lemonsqueezy.js');
-  for (const p of Object.values(OFFER_PRODUCTS)) {
+  for (const p of saleProducts) {
     const envKey = p.key.toUpperCase();
     assert.ok(astro.includes(`import.meta.env.PUBLIC_LEMONSQUEEZY_${envKey}_VARIANT_ID || ''`));
     assert.ok(spa.includes(`import.meta.env.VITE_LEMONSQUEEZY_${envKey}_VARIANT_ID || ''`));
@@ -116,7 +117,7 @@ test('new offer checkout ids fail closed; public routes enter the manifest and s
   assert.match(doorSource, /product.variantId \? <button/); assert.match(doorSource, /Not on sale yet/);
   // The sitemap filter lives in its own module since 2026-11-15; the config uses it.
   assert.match(read('astro-site/src/lib/sitemapFilter.js'), /page.includes\('\/courses\/'\)/);
-  for (const p of Object.values(OFFER_PRODUCTS)) assert.ok(sitemapFilter(`https://deutsch-meister.de/courses/${p.slug}/`), `/courses/${p.slug}/ is listed in the sitemap`);
+  for (const p of saleProducts) assert.ok(sitemapFilter(`https://deutsch-meister.de/courses/${p.slug}/`), `/courses/${p.slug}/ is listed in the sitemap`);
 });
 
 test('published counts derive from scheduled programme items and all offer copy labels future releases and short tests', () => {
@@ -124,13 +125,13 @@ test('published counts derive from scheduled programme items and all offer copy 
   assert.equal(examDays.length, days.length);
   for (const [type, count] of Object.entries(examCounts)) assert.equal(count, items.filter((i) => i.type === type).length);
   const page = read('astro-site/src/components/concept/OfferPage.astro');
-  assert.match(page, /as released/); assert.match(page, /Coming next, included when released/);
+  assert.doesNotMatch(page, /A1 Complete|All-Access Pass/);
   assert.match(page, /A1 practice test \(short version\)/);
   assert.doesNotMatch(page, /full exam|most popular|\d+ (learners|customers)|guarantee/i);
   assert.match(page, /examCounts\.lesson/); assert.match(page, /examCounts\.speaking/);
-  assert.match(read('astro-site/src/pages/pricing.astro'), /let cycle = 'yearly'/);
+  assert.doesNotMatch(read('astro-site/src/pages/pricing.astro'), /pro-btn|proVariants/);
   const offers = read('astro-site/src/components/concept/Offers.astro');
-  assert.ok(offers.indexOf('PLANS.yearly.price') < offers.indexOf('PLANS.monthly.price'));
+  assert.match(offers, /<Ladder/); assert.doesNotMatch(offers, /PLANS|Add AI Practice/);
   assert.match(read('src/pages/SubscriptionSuccessPage.jsx'), /courseBought\?\.proMonths \|\| COURSE_PRO_MONTHS/);
 });
 

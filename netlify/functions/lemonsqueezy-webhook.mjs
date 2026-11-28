@@ -1,6 +1,7 @@
 import { sendRetryableMail } from './_shared/retryableMail.mjs';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { COURSE_PRO_DAYS, OFFER_PRODUCTS } from './_shared/pricing.mjs';
 import { BILLING_PORTAL_URL, SIGNED_URL_MAX_AGE_MS, pickUpdatePaymentUrl } from './_shared/dunningLink.mjs';
 import { courseAccessUntil, profileIdForEmail, reconcileSubscriptionEvent, reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
 
@@ -322,6 +323,7 @@ const COURSE_VARIANT_ENV = {
   // One product per paid sub-level (2026-09-08). B1/B2 vars stay unset while
   // those courses are "coming soon" — an unset var is simply no route.
   LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID: 'course_a1_2',
+  LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID: 'course_a1_1',
   LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID: 'course_a2_1',
   LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID: 'course_a2_2',
   LEMONSQUEEZY_COURSE_B1_1_VARIANT_ID: 'course_b1_1',
@@ -341,7 +343,7 @@ function courseForVariant(variantId) {
   const map = {};
   for (const [envName, productKey] of Object.entries(COURSE_VARIANT_ENV)) {
     const id = process.env[envName];
-    if (id) map[String(id)] = { productKey, proDays: 90, ...({ a1_exam_pack: { proDays: 60 }, a1_complete: { proDays: 180 }, all_access: { proDays: 365 } })[productKey] };
+    if (id) map[String(id)] = { productKey, proDays: OFFER_PRODUCTS[productKey]?.proDays || COURSE_PRO_DAYS };
   }
   return variantId ? map[String(variantId)] || null : null;
 }

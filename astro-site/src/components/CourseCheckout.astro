@@ -16,6 +16,7 @@
 ---
 <script>
   import { track } from '../lib/track.js';
+  import { LEVEL_COURSES, currentPrice, launchDiscountCode, isProductOnSale } from '../data/pricing.js';
 
   function currentUser() {
     try {
@@ -31,8 +32,11 @@
     return null;
   }
 
-  function checkoutUrl(variant, email, id) {
+  function checkoutUrl(variant, email, id, intentKey) {
     const params = new URLSearchParams({ 'checkout[email]': email || '', 'checkout[custom][user_id]': id || '' });
+    const level = LEVEL_COURSES[intentKey]?.levels[0];
+    const code = level ? launchDiscountCode(level) : null;
+    if (code) params.set('checkout[discount_code]', code);
     return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
   }
 
@@ -58,7 +62,10 @@
   }
 
   async function open(variant, intentKey, amount, surface) {
+    const level = LEVEL_COURSES[intentKey]?.levels[0];
+    if (level) amount = currentPrice(level);
     const u = currentUser();
+    if (!isProductOnSale(intentKey) && !u) return;
     track('checkout_intent', { product: intentKey, surface, signed_in: Boolean(u) });
     if (!u) {
       try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
@@ -84,12 +91,13 @@
       window.location.href = home;
       return;
     }
+    if (!isProductOnSale(intentKey)) return;
     // The SPA's checkout_completed observer (src/lib/funnelTracking.js) consumes
     // this same sessionStorage flag on /subscription/success, so a checkout that
     // starts on a static page is still seen finishing in the app.
     try { sessionStorage.setItem('dm_checkout_pending', JSON.stringify({ plan: intentKey, amount: amount || null })); } catch (e) { /* private mode */ }
     track('checkout_opened', { product: intentKey, surface, amount: amount || undefined });
-    const url = checkoutUrl(variant, u.email, u.id);
+    const url = checkoutUrl(variant, u.email, u.id, intentKey);
     if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
       window.LemonSqueezy.Url.Open(url);
     } else {
@@ -162,8 +170,8 @@
     waiting.forEach((btn) => { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); });
     readEntitlements()
       .then((loaded) => {
-        const viewer = currentUser();
-        if (!loaded || !loaded.snapshot || !loaded.snapshot.signedIn || !viewer || loaded.snapshot.userId !== viewer.id) return;
+        const billing = loaded && loaded.snapshot;
+        if (!(billing && currentUser() && billing.userId === currentUser().id) || !billing.signedIn) return;
         doors.forEach((d) => {
           const productKey = d.getAttribute('data-course-product');
           if (productKey) {

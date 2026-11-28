@@ -171,10 +171,10 @@ const authAttrs = (item) =>
         </div>
         <details class="c4-mobile-menu"><summary aria-label="Menu"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg></summary><div class="c4-mobile-panel">
           <a href="/courses/" class="c4-menu-heading">Courses</a>
-          <ol class="c4-mobile-levels" aria-label="Courses by level">{STATIONS.map((st) => <li><a href={st.coursePage}><strong>{st.code}</strong><span>{st.status === 'free' ? 'Free' : st.status === 'building' ? 'Coming next' : st.priceLabel}</span></a></li>)}</ol>
+          <ol class="c4-mobile-levels" aria-label="Courses by level">{STATIONS.map((st) => <li><a href={st.coursePage}><strong>{st.code}</strong><span>{st.status === 'building' ? 'Coming next' : st.level === 'a1.1' ? 'Lektion 1 free' : 'Course'}</span></a></li>)}</ol>
           {promoted.map((item) => <a href={item.href} {...authAttrs(item)}>{item.labelEn}</a>)}
           <details><summary>More ways to learn</summary>{navItems.filter((item) => !PROMOTED.includes(item.key) && item.key !== 'courses').map((item) => <a href={item.href} {...authAttrs(item)}>{item.labelEn}</a>)}</details>
-          <a href={FREE_COURSE_HREF} data-anon-only class="c4-button c4-button-coral">Start A1.1 free →</a><a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class="c4-button">Continue learning →</a>
+          <a href={FREE_COURSE_HREF} data-anon-only class="c4-button c4-button-coral">Try A1.1 Lektion 1 free →</a><a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class="c4-button">Continue learning →</a>
           <a href={navSignupHref} data-anon-only>Create a free account</a><a href="/pricing/" data-upgrade style="display:none">Upgrade</a><a href="/login" data-anon-only data-login-next>Log in</a><a href={SUPPORT_LINK.href}>{SUPPORT_LINK.labelEn}</a>
         </div></details>
       </div>
@@ -372,7 +372,7 @@ const authAttrs = (item) =>
         const { data: { user } = {} } = await supabase.auth.getUser();
         if (!user) return;
         const [profile, subscription, purchases] = await Promise.all([
-          supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
+          supabase.from('profiles').select('created_at, current_level, is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
           supabase.from('subscriptions').select('status, plan_type, subscription_start, created_at, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
           // created_at: courseHomeFor resumes the NEWEST course, as the SPA does
           // (getPurchases selects the same column); without it the two front

@@ -9,7 +9,7 @@ import { STATIONS, TICKET_STATIONS, stationFor, stationStatusLine, planLine } fr
 import { curriculumFor } from '../astro-site/src/data/curricula/index.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const source = readFileSync(join(root, 'astro-site/src/pages/grammar/[level]/[slug].astro'), 'utf8');
+const source = readFileSync(join(root, 'astro-site/src/pages/grammar/[level]/[slug].astro'), 'utf8').replace(/\r\n/g, '\n');
 
 // The course a paid-level topic belongs to (2026-10-25): the topic pages of
 // the levels sold as a one-time ticket never linked their course. The page's

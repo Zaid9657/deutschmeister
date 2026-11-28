@@ -53,8 +53,7 @@ import { socialFooterLine } from './_shared/socialLinks.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
-import { productInfo } from './_shared/pricing.mjs';
-import { subscriptionHasPaidAccess, latestCourseWindow } from './_shared/subscriptionEntitlement.mjs';
+import { courseAccessReason, fullCourseReason } from './_shared/lib/levelEntitlement.js';
 import { FREE_LEVELS, FREE_LEKTIONEN, LEKTION_GATE_FROM } from './_shared/supportCatalog.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -270,14 +269,9 @@ export function nextStep(level, rows = [], { floorNr = 1, finalTestPassed = fals
  * included course window (a purchase with access_until ahead); or an active
  * purchase whose course covers the level, which is lifetime.
  */
-export function canOpenLevel(level, { profile = null, subscription = null, purchases = [] } = {}, now = Date.now(), freeLevels = FREE_LEVELS) {
-  const lvl = lower(level);
-  if (freeLevels.includes(lvl)) return true;
-  const t = Number(now);
-  if (profile?.trial_started_at && profile?.trial_ends_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > t) return true;
-  const active = (purchases || []).filter((p) => p.status === 'active');
-  if (subscriptionHasPaidAccess(subscription, t) || latestCourseWindow(active, t)) return true;
-  return active.some((p) => (productInfo(p.product_key)?.levels || []).includes(lvl));
+export function canOpenLevel(level, account = {}, now = Date.now(), freeLevels = FREE_LEVELS) {
+  const reason = courseAccessReason(account, level, Number(now));
+  return reason === 'free' ? freeLevels.includes(lower(level)) : Boolean(reason);
 }
 
 // ─── copy ────────────────────────────────────────────────────────────────────
@@ -593,9 +587,7 @@ const gatedFree = (level, gateFrom = LEKTION_GATE_FROM) => (gateFrom && FREE_LEK
 export function canOpenStep(level, step, account, now = Date.now(), gateFrom = LEKTION_GATE_FROM) {
   const free = gatedFree(level, gateFrom);
   if (!free || (step?.kind === 'lektion' && step.nr <= free)) return canOpenLevel(level, account, now);
-  if (Date.parse(account?.profile?.created_at) < Date.parse(gateFrom)) return true;
-  // profile: null drops the trial, which does not open the gated rest (owner decision 2026-11-18).
-  return canOpenLevel(level, { ...account, profile: null }, now, []) || (account?.purchases || []).some((p) => p.status === 'active' && p.product_key !== 'pro_days');
+  return Boolean(fullCourseReason(account || {}, level, Number(now), gateFrom));
 }
 
 /** The rows canOpenLevel reads, for the learners in a paid level. */
@@ -603,8 +595,8 @@ async function readAccess(client, ids) {
   if (ids.length === 0) return new Map();
   const [profiles, subscriptions, purchases] = await Promise.all([
     readForIds(ids, (chunk) => client.from('profiles').select('id, created_at, trial_started_at, trial_ends_at, is_subscribed').in('id', chunk).order('id'), 'profile'),
-    readForIds(ids, (chunk) => client.from('subscriptions').select('user_id, status, subscription_end').in('user_id', chunk).order('user_id'), 'subscription'),
-    readForIds(ids, (chunk) => client.from('purchases').select('user_id, product_key, status, access_until').in('user_id', chunk).eq('status', 'active').order('user_id'), 'purchase'),
+    readForIds(ids, (chunk) => client.from('subscriptions').select('user_id, status, plan_type, subscription_start, created_at, subscription_end').in('user_id', chunk).order('user_id'), 'subscription'),
+    readForIds(ids, (chunk) => client.from('purchases').select('user_id, product_key, status, access_until, created_at').in('user_id', chunk).eq('status', 'active').order('user_id'), 'purchase'),
   ]);
   const subsBy = groupBy(subscriptions, 'user_id');
   const purchasesBy = groupBy(purchases, 'user_id');

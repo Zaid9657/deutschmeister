@@ -56,14 +56,13 @@
 // they make our own price look less favourable, so leaving them costs us
 // nothing but accuracy owed to the reader. Re-check from a network that can
 // reach the vendors, then update figures and stamps together.
-import { PLANS, deEur } from './pricing.js';
 import {
   PRO_DAILY_LIMIT,
   TRIAL_DAYS,
   PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 
-const PRO_MONTHLY = `${deEur(PLANS.monthly.price)}/Monat`;
+const PRO_MONTHLY = 'Im Kurskauf enthalten';
 // AI Practice's speaking allowance, always with the length of the sessions it includes.
 const PRO_SPEAKING = 'KI-Sprechtraining';
 // What every conversation ends with — an evaluation after the session, never during it.
@@ -96,7 +95,7 @@ const competitorComparisons = {
       { feature: 'Offline-Modus', us: '✗ Browser-basiert, Internet erforderlich', them: '✓ Lektionen offline in der App verfügbar' },
       { feature: 'Einstufungstest', us: `✓ Kostenloser CEFR-Einstufungstest in etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Einstufungstest beim Kursstart' },
       { feature: 'Kostenlose Inhalte', us: `✓ Erste Lektion kostenlos, ohne Konto + ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '○ Erste Lektion kostenlos, danach Abo nötig' },
-      { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (AI Practice)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
+      { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `Einmalkauf pro Kurs; ${PRO_MONTHLY}`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
       { feature: 'Wer dahintersteht', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
       { feature: 'Werbung in der kostenlosen Version', us: '✓ Keine Werbung — auch nicht in der Gratisversion', them: '✓ Keine Werbung (reines Abo-Modell)' },
@@ -128,8 +127,8 @@ const competitorComparisons = {
         a: 'Ja, das machen einige Lerner. Babbel für Vokabeln und Wiederholung, DeutschMeister für Grammatik-Verständnis, Sprechtraining und Satzanalyse. Die Kombination kann sinnvoll sein.',
       },
       {
-        q: 'Ist DeutschMeister günstiger als Babbel?',
-        a: `Ja, nach den Babbel-Preisen in diesem Vergleich. DeutschMeister AI Practice kostet ${PRO_MONTHLY} oder ${deEur(PLANS.yearly.asMonthly)}/Monat im Jahresabo. Und bei DeutschMeister ist die erste Lektion kostenlos, ohne Konto.`,
+        q: 'Wie unterscheiden sich die Kostenmodelle?',
+        a: `DeutschMeister verkauft Kurse einzeln. KI-Werkzeuge sind im Kurskauf enthalten. Die aktuellen Kurspreise finden Sie auf der Preisseite; die Babbel-Abo-Preise stehen im Vergleich oben.`,
       },
       {
         q: 'Hat Babbel auch KI-Sprechtraining?',
@@ -159,7 +158,7 @@ const competitorComparisons = {
       { feature: 'Kostenlose Version', us: `✓ Erste Lektion kostenlos, ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
       { feature: 'Werbung', us: '✓ Keine Werbung — auch nicht in der Gratisversion', them: 'Werbung in der Gratisversion (entfällt mit Super-Abo)' },
       { feature: 'Gamification (Streaks, XP, Liga)', us: '○ Tages-Streak und Meilensteine, aber keine XP, Ligen oder Punkte', them: '✓ Stark gamifiziert: Streaks, XP, Ligen, Achievements' },
-      { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (AI Practice)`, them: 'Kostenlos / Super: ab 6,99 €/Monat (im Jahresabo)' },
+      { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `Einmalkauf pro Kurs; ${PRO_MONTHLY}`, them: 'Kostenlos / Super: ab 6,99 €/Monat (im Jahresabo)' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert', them: '✓ Lektionen offline verfügbar (mit Super)' },
       { feature: 'Einstufungstest', us: `✓ CEFR-Einstufungstest, etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Placement Test beim Start' },
     ],
@@ -223,7 +222,7 @@ const competitorComparisons = {
       { feature: 'Gruppenunterricht', us: '✗ Einzellernen mit KI', them: '✓ Kleine Gruppen (3–5 Teilnehmer) oder Einzelstunden' },
       { feature: 'Abschlussbescheinigung', us: '✓ Teilnahmebescheinigung nach Kursabschluss (kein Goethe-/telc-Ergebnis)', them: '✓ Lingoda-Zertifikat nach Kursabschluss' },
       { feature: 'Wartezeit bis zur nächsten Übung', us: '✓ Keine — sofort loslegen, auch nachts', them: '○ Nächster freier Slot oft Stunden oder Tage entfernt' },
-      { feature: 'Preis pro Monat (Stand: Mai 2026)', us: `${PRO_MONTHLY} (AI Practice) — KI-Übungen, Kurse separat`, them: 'Sprint: €310 / 2 Monate (15 Std./Monat), 50% Cashback bei voller Teilnahme' },
+      { feature: 'Preis pro Monat (Stand: Mai 2026)', us: `Einmalkauf pro Kurs; ${PRO_MONTHLY}`, them: 'Sprint: €310 / 2 Monate (15 Std./Monat), 50% Cashback bei voller Teilnahme' },
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Ausführlich, jederzeit nachschlagbar', them: '○ Abhängig vom Lehrer und der Unterrichtssprache' },
       { feature: 'Prüfungsvorbereitung', us: '✓ Gezielt auf Goethe/telc/DTZ abgestimmt', them: '○ Allgemeine Sprachkurse, Sprint-Programme' },
       { feature: 'Stornierung / Flexibilität', us: '✓ Jederzeit kündbar, keine Vertragsbindung', them: '○ Sprint: 50% Cashback bei voller Teilnahme (Super Sprint: 100%), sonst keine Erstattung' },
@@ -242,13 +241,13 @@ const competitorComparisons = {
       {
         icon: 'Wallet',
         title: `KI-Übungen als optionales Zusatzangebot`,
-        body: `DeutschMeister AI Practice kostet ${PRO_MONTHLY} — mit KI-Schreibfeedback, Satz-Röntgen und ${PRO_SPEAKING}; Kurse sind separat erhältlich. Den Lingoda-Preis findest du im Vergleich oben.`,
+        body: `Bei DeutschMeister sind die KI-Werkzeuge im Kurskauf enthalten — mit KI-Schreibfeedback, Satz-Röntgen und ${PRO_SPEAKING}; Kurse sind separat erhältlich. Den Lingoda-Preis findest du im Vergleich oben.`,
       },
     ],
     faq: [
       {
         q: 'Kann DeutschMeister einen echten Lehrer ersetzen?',
-        a: 'Nicht komplett. Echte Lehrer können auf individuelle Fragen eingehen und Fehler im Kontext erklären. Aber für tägliches Üben, Grammatik-Verständnis und Sprechtraining ist DeutschMeister deutlich günstiger und flexibler.',
+        a: 'Nicht komplett. Echte Lehrer können auf individuelle Fragen eingehen und Fehler im Kontext erklären. Die DeutschMeister-Kurse verbinden selbstständiges Lernen mit KI-Werkzeugen innerhalb der enthaltenen Nutzungsgrenzen.',
       },
       {
         q: 'Ist Lingoda besser für Fortgeschrittene?',
@@ -263,8 +262,8 @@ const competitorComparisons = {
         a: 'Ja: nach jedem abgeschlossenen Kurs eine druckbare Teilnahmebescheinigung. Sie ist kein offizielles Prüfungsergebnis — für Behörden zählen nur die Zeugnisse der Prüfungsanbieter.',
       },
       {
-        q: 'Warum ist DeutschMeister so viel günstiger als Lingoda?',
-        a: 'Lingoda bezahlt echte Lehrer für Live-Unterricht — das ist teuer. DeutschMeister nutzt KI für Sprechtraining und skalierbare Inhalte.',
+        q: 'Wie unterscheiden sich Kurse und Live-Unterricht?',
+        a: 'Lingoda bietet Live-Unterricht mit Lehrern. DeutschMeister verkauft einzelne Kurse mit KI-Schreibfeedback, KI-Sprechtraining und Satz-Röntgen innerhalb der enthaltenen Nutzungsgrenzen.',
       },
     ],
     ctaHeadline: 'Flexibel lernen, ohne auf einen Termin zu warten.',

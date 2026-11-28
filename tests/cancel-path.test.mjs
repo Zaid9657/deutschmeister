@@ -72,24 +72,13 @@ test('the /pricing/ portal address is the one the dunning mail and the support a
   assert.match(BILLING_PORTAL_URL, /^https:\/\/[a-z0-9-]+\.lemonsqueezy\.com\/billing$/);
 });
 
-test('the /pricing/ cancel answer sends people to the portal, derived and not typed', () => {
+test('the /pricing/ existing-subscriber door links directly to the canonical billing portal', () => {
   const pricing = read('astro-site/src/pages/pricing.astro');
   assert.match(pricing, /from '\.\.\/lib\/billingPortal\.js'/);
-
-  const page = rendered(pricing);
-  const entry = page.match(/q: 'Can I cancel AI Practice anytime\?'[\s\S]*?link: \{[^}]+\} \},/);
-  assert.ok(entry, 'the cancel question is still on /pricing/');
-  assert.match(entry[0], /\$\{BILLING_PORTAL_LABEL\}/, 'the answer names the portal address');
-  assert.match(entry[0], /href: BILLING_PORTAL_URL/, 'the answer links the portal');
-  assert.doesNotMatch(entry[0], CANCEL_VIA_ACCOUNT);
-
-  // The address is typed once, in lib/billingPortal.js, never on the page.
-  assert.doesNotMatch(page, /lemonsqueezy\.com\/billing/);
-  // The FAQ list renders the link, so the answer is one click from the portal.
-  assert.match(page, /\{f\.link &&/);
-  assert.match(page, /href=\{f\.link\.href\}/);
+  assert.match(pricing, /href=\{BILLING_PORTAL_URL\}/);
+  assert.match(pricing, /Manage or cancel your subscription/);
+  assert.doesNotMatch(rendered(pricing), /lemonsqueezy\.com\/billing/);
 });
-
 test('the /faq/ cancel answer names the portal, derived and not typed', () => {
   const FAQ = 'src/data/faqContent.js';
   const QUESTION = 'Can I cancel at any time?';

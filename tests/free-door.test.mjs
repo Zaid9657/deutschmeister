@@ -151,11 +151,11 @@ test('every SPA link that offers the free level for free opens the course', () =
 test('the scan is not vacuous: the known free doors are found', () => {
   const doors = freeLevelDoors();
   const count = (file) => doors.filter((d) => d.file === file).length;
-  assert.equal(count('src/components/LockedContentOverlay.jsx'), 1, 'the level lock\'s free link');
+  assert.equal(count('src/components/LockedContentOverlay.jsx'), 0, 'the course lock offers only its own course');
   assert.equal(count('src/components/Navbar.jsx'), 2, 'desktop + mobile free key');
   assert.ok(count('src/pages/SentenceXRay.jsx') >= 1, 'the X-Ray offer\'s course link');
   assert.equal(count('src/pages/SignupPage.jsx'), 1, 'the signup page\'s "look around first" link');
   assert.match(read('src/pages/SignupPage.jsx'), /<Link to=\{FREE_COURSE_HREF\}/, 'named, not retyped');
   // The lock names the door, it does not retype it.
-  assert.match(read('src/components/LockedContentOverlay.jsx'), /to=\{FREE_COURSE_HREF\}/);
+  assert.match(read('src/components/LockedContentOverlay.jsx'), /setBuyIntent\(course.key\)/);
 });

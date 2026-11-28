@@ -63,7 +63,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
             <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
               <tr>
                 <td style="border-radius:10px;background:#0F766E;">
-                  <a href="${ctaHref}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${ctaLabel}</a>
+                  ${ctaHref ? `<a href="${ctaHref}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${ctaLabel}</a>` : `<span>${ctaLabel}</span>`}
                 </td>
               </tr>
             </table>
@@ -106,7 +106,7 @@ const TEMPLATES = {
   },
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
-    ctaHref: `${BASE_URL}/pricing/`,
+    ctaHref: null, // Retired subscription buy link; owner retains wording below.
     ctaLabel: `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`,
     body:
       P('Quick heads-up: your free trial ends tomorrow.') +
@@ -143,7 +143,7 @@ export function renderHtml(kind, userId, { nextPath = FIRST_STEP_PATH, now = Dat
       : tpl.body,
     ctaHref: tpl.nextStep
       ? continueUrl(userId, nextPath, { ...tags, content: 'cta' }, { now })
-      : tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+      : tpl.ctaHref ? tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }) : null,
     ctaLabel: tpl.ctaLabel,
     footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
     unsubUrl: unsubscribeUrl(userId),

@@ -58,7 +58,7 @@ const { verifyContinue } = await import('../netlify/functions/continue.mjs');
 // continue link, and the page it opens is the link's signed destination.
 const EXPECTED = {
   trial_day3: { render: trial.renderHtml, campaign: 'trial-day3', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
-  trial_day6: { render: trial.renderHtml, campaign: 'trial-day6', links: { cta: '/pricing/', footer: '/' } },
+  trial_day6: { render: trial.renderHtml, campaign: 'trial-day6', links: { footer: '/' } },
   trial_ended: { render: trial.renderHtml, campaign: 'trial-ended', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
   activation_d1: { render: activation.renderHtml, campaign: 'activation-d1', links: { cta: '/course/a1.1/l/1', 'level-test': '/level-test/', footer: '/' } },
   activation_d4: { render: activation.renderHtml, campaign: 'activation-d4', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
@@ -127,7 +127,8 @@ test('every link opens its page: prerendered routes with their slash, the course
 });
 
 test('the next-step buttons are signed continue links to the learner’s own step; the others are not', () => {
-  for (const [kind, { render, next }] of Object.entries(EXPECTED)) {
+  for (const [kind, { render, next, links }] of Object.entries(EXPECTED)) {
+    if (!links.cta) { assert.equal(kind, 'trial_day6'); continue; }
     const cta = new URL(hrefs(render(kind, USER_ID, { nextPath: '/course/a1.2/checkpoint/2', now: NOW })).find((h) => new URL(h).searchParams.get('utm_content') === 'cta'));
     if (!next) {
       assert.notEqual(cta.pathname, CONTINUE, `${kind}: its button was not part of the change`);
@@ -184,12 +185,12 @@ test('labels follow the naming rule and are fixed strings, so a mail renders the
 test('the classifier reads the tags back without losing a label', () => {
   const { parse } = attribution();
   for (const [kind, { render, campaign, links }] of Object.entries(EXPECTED)) {
-    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && opens(new URL(h)) === links.cta);
+    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && opens(new URL(h)) === (links.cta || links.footer));
     const url = new URL(href);
     const touch = parse(url.search, '', url.pathname, Date.UTC(2026, 9, 4));
     assert.equal(touch.source, 'email', kind);
     assert.equal(touch.medium, 'lifecycle', kind);
     assert.equal(touch.campaign, campaign, kind);
-    assert.equal(touch.content, 'cta', kind);
+    assert.equal(touch.content, links.cta ? 'cta' : 'footer', kind);
   }
 });

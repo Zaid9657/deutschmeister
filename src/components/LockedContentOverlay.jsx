@@ -1,111 +1,38 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Lock, Sparkles } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
+import { courseForLevel, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
 import { trackPaywallShown } from '../lib/funnelTracking';
-import Button from './ui/Button';
-import Card from './ui/Card.jsx';
-import Chip from './ui/Chip.jsx';
-import Aurora from './ui/Aurora.jsx';
-import { TRIAL_DAYS } from '../data/marketing.js';
-import { FREE_COURSE_HREF } from '../data/offers.js';
+import { setBuyIntent } from '../lib/buyIntent.js';
 import { levelLockSignupHref } from '../lib/lockDoor.js';
 import { setReturnPath } from '../lib/returnPath.js';
-import { freeLektionen } from '../config/freeTier.js';
+import CoursePrice from './CoursePrice.jsx';
+import Button from './ui/Button';
+import Card from './ui/Card.jsx';
 
-const LockedContentOverlay = ({ level }) => {
+export default function LockedContentOverlay({ level }) {
   const { i18n } = useTranslation();
-  // The page this lock stands in front of. "Log In" hands it to /login the way
-  // every guard's redirect does (state.from, read by LoginPage), so a returning
-  // learner lands back on this level, or, without access, on the offer the
-  // guard shows there, instead of on /dashboard. tests/lock-login-return.test.mjs.
+  const { user } = useAuth();
   const location = useLocation();
-
-  useEffect(() => { trackPaywallShown(level || 'unknown'); }, [level]);
   const isGerman = i18n.language === 'de';
-  // A free level reaches this lock only at the paid rest of its course (Lektion gate, src/config/freeTier.js).
-  const gateFree = freeLektionen(level);
-
-  return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
-      <Aurora variant="close" />
-      <Card raised className="relative p-8 max-w-md w-full text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-clay bg-siegel shadow-raise-siegel flex items-center justify-center">
-          <Lock className="w-8 h-8 text-white" aria-hidden="true" />
-        </div>
-
-        {level && (
-          <Chip tone="label" className="mb-4">
-            Level {level.toUpperCase()}
-          </Chip>
-        )}
-
-        <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-2">
-          {/* On a gated course step an account alone opens nothing, so the heading must not promise it. */}
-          {gateFree
-            ? (isGerman ? 'Weiter mit einem Abo' : 'Continue with a subscription')
-            : (isGerman ? 'Kostenlos registrieren' : 'Sign Up to Unlock')}
-        </h2>
-
-        {/* Signup opens every level for TRIAL_DAYS, then only the free level
-            (src/config/freeTier.js). tests/claims.test.mjs holds both lines:
-            no free-account-opens-every-level claim without its time bound, and
-            no trial length typed by hand. */}
-        <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-2">
-          {gateFree
-            ? (isGerman
-              ? `Lektion ${gateFree} ist kostenlos. Ab Lektion ${gateFree + 1} brauchen Sie ein Abo. Mit einem kostenlosen Konto sehen Sie die Angebote.`
-              : `Lektion ${gateFree} is free. From Lektion ${gateFree + 1} on you need a subscription. A free account shows you the plans.`)
-            : (isGerman
-              ? `Erstellen Sie ein kostenloses Konto und testen Sie alle Stufen ${TRIAL_DAYS} Tage lang.`
-              : `Create a free account and try every level for ${TRIAL_DAYS} days.`)}
-        </p>
-
-        <p className="text-sm text-graphite mb-6">
-          {/* The trial does not open a gated step (owner decision 2026-11-18), so its line names no trial. */}
-          {gateFree
-            ? (isGerman
-              ? 'Das Konto ist kostenlos · keine Kreditkarte nötig'
-              : 'The account is free · no credit card needed')
-            : (isGerman
-              ? 'Keine Kreditkarte nötig · keine automatische Abbuchung, wenn die Testphase endet'
-              : 'No credit card required · no automatic charge when the trial ends')}
-        </p>
-
-        <div className="flex flex-col gap-3">
-          {/* An on-site door (ref=level-lock): a plain href, because
-              public/attribution.js records the tag only on a page load, so a
-              signup from this lock is countable in
-              profiles.acquisition_last_source. src/lib/lockDoor.js,
-              tests/lock-signup-door.test.mjs. The click also remembers this
-              course page (returnPath.js keeps /course/ paths only, a no-op
-              elsewhere), so after the confirmation link postAuthPath brings the
-              new learner back to the level they tried to open, which their
-              trial now opens, instead of to the dashboard and Lektion 1 of A1.1. */}
-          <Button href={levelLockSignupHref(level)} onClick={() => setReturnPath(location.pathname)} shimmer size="lg" className="w-full">
-            {isGerman ? 'Kostenlos registrieren' : 'Sign Up Free'}
-          </Button>
-
-          <Button to="/login" state={{ from: location }} variant="secondary" size="lg" className="w-full">
-            {isGerman ? 'Anmelden' : 'Log In'}
-          </Button>
-
-          {/* The free first stop is the guided course, the door every other
-              "A1.1 free" link opens (offers.js FREE_COURSE_HREF). Until
-              2026-10-07 this one opened the /level/a1.1 topic library: one
-              more hop from Lektion 1, and none of the lesson player's
-              save-progress asks. tests/free-door.test.mjs. */}
-          <Link
-            to={FREE_COURSE_HREF}
-            className="inline-flex items-center justify-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep mt-2"
-          >
-            <Sparkles size={14} aria-hidden="true" />
-            {isGerman ? 'A1.1 kostenlos ausprobieren' : 'Try A1.1 for free'}
-          </Link>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-export default LockedContentOverlay;
+  const course = courseForLevel(level);
+  const variant = course && LEMONSQUEEZY_CONFIG.levelCourses[course.key]?.variantId;
+  useEffect(() => { trackPaywallShown(level || 'unknown'); }, [level]);
+  return <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
+    <Card className="p-8 max-w-md w-full text-center">
+      <h2 className="font-display text-2xl">{course?.code} {isGerman ? 'Kurs' : 'course'}</h2>
+      {course && <>
+        <p className="my-4"><CoursePrice level={level} language={i18n.language} /></p>
+        <p>{isGerman ? `Einmal zahlen. Nur dieser Kurs, mit ${course.proDays} Tagen KI-Werkzeugen inklusive.` : `Pay once for this course only, with ${course.proDays} days of AI tools included.`}</p>
+        <p className="my-3 text-sm" data-price-tax-note>{isGerman ? PRICE_TAX_NOTE_DE : PRICE_TAX_NOTE}</p>
+        {course.comingSoon ? <p>{isGerman ? 'Bald verfügbar' : 'Coming next'}</p> : variant ? user
+          ? <Button to={`/subscription?buy=${course.key}`} state={{ from: location }} className="mt-4">{isGerman ? `${course.code} kaufen` : `Buy ${course.code}`}</Button>
+          : <Button href={levelLockSignupHref(level)} onClick={() => { setBuyIntent(course.key); setReturnPath(location.pathname); }} className="mt-4">{isGerman ? `${course.code} kaufen` : `Buy ${course.code}`}</Button>
+          : null}
+      </>}
+      {!user && <Button to="/login" state={{ from: location }} variant="secondary" className="mt-3">{isGerman ? 'Anmelden' : 'Log In'}</Button>}
+    </Card>
+  </div>;
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { courseForLevel, eur, PLANS } from '../data/pricing.js';
+import { courseForLevel } from '../data/pricing.js';
 import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../data/marketing.js';
 import { levelToSlug } from '../data/courseContents.js';
 import { sameAnswer } from '../data/sameAnswer.js';
@@ -270,21 +270,18 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
       <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
         {signedIn
           ? buyable
-            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or use AI Practice for extra AI tools (it does not include this course).`
-            : `Your account does not include ${code} yet. The ${code} course is coming next and is not on sale. AI Practice does not include it.`
-          : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of AI Practice — every level, every exercise — before you decide.`}
+            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, with AI tools included.`
+            : `Your account does not include ${code} yet. The ${code} course is coming next and is not on sale.`
+          : `Lektion 1 of ${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of limited AI tools; paid courses are separate.`}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         {signedIn ? (
           <>
             {buyable && (
               <a href={coursePage} className={primary}>
-                Buy the {code} course — {eur(course.price)} once
+                See the {code} course
               </a>
             )}
-            <a href="/pricing/#pro" className={buyable ? secondary : primary}>
-              Go AI Practice — {eur(PLANS.monthly.price)}/month
-            </a>
           </>
         ) : (
           <>
@@ -300,7 +297,7 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
       {!signedIn && buyable && (
         <p className="mt-4 text-sm text-graphite">
           <a href={coursePage} className="font-bold text-siegel hover:text-siegel-deep">
-            Own {code} for {eur(course.price)}
+            See the {code} course and its price
           </a>{' '}
           — one payment, no subscription.
         </p>

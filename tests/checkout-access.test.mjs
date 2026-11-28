@@ -4,10 +4,10 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { checkoutEntitlementConfirmed, hasRecurringBilling, ownsCheckoutProduct } from '../src/lib/checkoutAccess.js';
 import { proCta } from '../astro-site/src/lib/proCta.js';
-import { deEur, eur } from '../src/data/pricing.js';
+import { deEur, eur, isProductOnSale } from '../src/data/pricing.js';
 import { providerHarness, settle, withoutImports } from './helpers/subscriptionProvider.mjs';
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 const page = read('src/pages/SubscriptionPage.jsx');
 const active = (product_key) => ({ product_key, status: 'active' });
 
@@ -23,12 +23,12 @@ const resume = (key, purchases, { billingVerified = true, cleared = [] } = {}) =
     subLoading: false, billingVerified, user: { id: 'learner' }, isSubscribed: true, recurringBilling: false,
     clearBuyIntent() { cleared.push(key); }, setSearchParams() {},
     course: { key: 'telc_b1_komplett', variantId: 'telc-checkout' },
-    LEMONSQUEEZY_CONFIG: { levelCourses: {
-      course_a2_1: { key: 'course_a2_1', levels: ['a2.1'], variantId: 'checkout-a21' },
-      course_a2_2: { key: 'course_a2_2', levels: ['a2.2'], variantId: 'checkout-a22' },
+    LEMONSQUEEZY_CONFIG: { offerProducts: {}, levelCourses: {
+      course_a1_1: { key: 'course_a1_1', levels: ['a2.1'], variantId: 'checkout-a21' },
+      course_a1_2: { key: 'course_a1_2', levels: ['a2.2'], variantId: 'checkout-a22' },
     } },
     hasProduct: (product) => purchases.some((p) => p.product_key === product),
-    ownsCheckoutProduct, purchases,
+    ownsCheckoutProduct, purchases, isProductOnSale,
     startPurchase: (...args) => calls.push(args), handleSubscribe: (...args) => calls.push(args),
   };
   vm.runInNewContext(`(() => {\n${page.slice(start, end)}\n})()`, context);
@@ -36,92 +36,55 @@ const resume = (key, purchases, { billingVerified = true, cleared = [] } = {}) =
 };
 
 test('B1 #12: resumed checkout respects retired bands, bundles and exact course ownership', () => {
-  for (const key of ['course_a2_1', 'course_a2_2']) {
-    for (const purchase of ['course_a2', 'course_alle', key]) {
+  for (const key of ['course_a1_1', 'course_a1_2']) {
+    for (const purchase of ['course_a1', 'course_alle', key]) {
       assert.equal(resume(key, [active(purchase)]).length, 0, `${purchase} already owns ${key}`);
     }
-    assert.equal(resume(key, [active('course_a1_2')]).length, 1, 'unrelated ownership must not block a course');
+    assert.equal(resume(key, [active('course_b1')]).length, 1, 'unrelated ownership must not block a course');
     assert.equal(resume(key, []).length, 1, 'Pro alone does not own a lifetime course');
   }
-  assert.equal(ownsCheckoutProduct('course_a2_1', [{ product_key: 'course_a2', status: 'refunded' }]), false);
+  assert.equal(ownsCheckoutProduct('course_a1_1', [{ product_key: 'course_a1', status: 'refunded' }]), false);
   assert.match(page, /const owned = ownsCheckoutProduct\(c\.key, purchases\)/, 'cards and resumption share the predicate');
 });
 
-test('B1 #1: existing recurring customers manage billing, including failed and paused plans', () => {
+test('B1 #1: existing recurring customers manage billing, and new buyers never see recurring checkout', () => {
   for (const status of ['active', 'on_trial', 'past_due', 'unpaid', 'paused', 'cancelled']) {
-    const subscription = {
-      plan_type: 'monthly', status, lemonsqueezy_subscription_id: 'ls-123',
-      subscription_end: '2099-01-01T00:00:00Z',
-    };
-    assert.equal(hasRecurringBilling(subscription), true, status);
-    const cta = proCta({ signedIn: true, subscription });
-    assert.equal(cta.action, 'portal', status);
-    assert.equal(cta.href, 'https://deutsch-meister.lemonsqueezy.com/billing');
+    const subscription = { plan_type: 'monthly', status, subscription_end: '2999-01-01', lemonsqueezy_subscription_id: 'old-sub' };
+    assert.equal(hasRecurringBilling(subscription), true);
+    assert.equal(proCta({ signedIn: true, subscription }).action, 'portal');
   }
-  for (const subscription of [null,
-    { plan_type: 'course', status: 'active', lemonsqueezy_subscription_id: null },
-    { plan_type: 'monthly', status: 'expired', lemonsqueezy_subscription_id: 'ended' },
-    { plan_type: 'monthly', status: 'cancelled', subscription_end: '2020-01-01', lemonsqueezy_subscription_id: 'ended' },
-  ]) assert.equal(proCta({ signedIn: true, subscription }).action, 'checkout');
-  const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.match(pricing, /billing = await loadBilling\(\);[\s\S]*checked\.action === 'portal'[\s\S]*open\(VARIANTS\[cycle\], cycle\)/);
-  assert.match(pricing, /if \(error\) throw error;/, 'a failed billing lookup cannot open a checkout');
-  const subscribe = page.slice(page.indexOf('  const handleSubscribe ='), page.indexOf('  // One-time course'));
-  assert.ok(subscribe.indexOf('if (recurringBilling)') < subscribe.indexOf('openCheckout(checkoutUrl)'));
+  assert.equal(proCta({ signedIn: true }).action, 'courses');
+  assert.doesNotMatch(page, /handleSubscribe|Subscribe Now/);
+  assert.match(page, /billingAction.href/);
 });
-
-test('R3 #2: a retained recurring provider ID on a course routes pricing to billing until reconciliation clears it', async () => {
-  const pricing = read('astro-site/src/pages/pricing.astro');
-  const start = pricing.indexOf("    $('pro-btn').addEventListener('click', async () => {");
-  const end = pricing.indexOf('\n    });', start) + '\n    });'.length;
-  assert.ok(start >= 0 && end > start);
-  const click = async (subscription) => {
-    const opened = [];
-    let onClick;
-    const button = { addEventListener: (_type, callback) => { onClick = callback; } };
-    const location = { href: '' };
-    vm.runInNewContext(pricing.slice(start, end), {
-      $: () => button, proCta, currentUser: () => ({ id: 'learner' }), cycle: 'monthly',
-      track() {}, billing: null, loadBilling: async () => ({ userId: 'learner', subscription }),
-      window: { location }, VARIANTS: { monthly: 'monthly-checkout' },
-      open: (...args) => opened.push(args), applyCycle() {},
-    });
-    await onClick();
-    return { opened, href: location.href };
-  };
+test('R3 #2: a retained recurring provider ID keeps routing to the portal until reconciliation clears it', () => {
   for (const status of ['active', 'paused', 'expired', 'cancelled']) {
-    const legacyCourse = {
-      plan_type: 'course', status, subscription_end: '2020-01-01T00:00:00Z',
-      lemonsqueezy_subscription_id: 'recoverable-recurring',
-    };
-    assert.equal(hasRecurringBilling(legacyCourse), true, status);
-    const routed = await click(legacyCourse);
-    assert.equal(routed.href, 'https://deutsch-meister.lemonsqueezy.com/billing', status);
-    assert.deepEqual(routed.opened, [], status);
+    const legacyCourse = { plan_type: 'course', status, subscription_end: '2020-01-01', lemonsqueezy_subscription_id: 'recoverable-recurring' };
+    assert.equal(hasRecurringBilling(legacyCourse), true);
+    assert.equal(proCta({ signedIn: true, subscription: legacyCourse }).action, 'portal');
     const reconciled = { ...legacyCourse, lemonsqueezy_subscription_id: null };
-    assert.equal(hasRecurringBilling(reconciled), false, status);
-    assert.deepEqual((await click(reconciled)).opened, [['monthly-checkout', 'monthly']], status);
+    assert.equal(hasRecurringBilling(reconciled), false);
+    assert.equal(proCta({ signedIn: true, subscription: reconciled }).action, 'courses');
   }
 });
-
 test('B1 #13: pre-existing Pro cannot confirm a pending course before purchases refresh', () => {
   const state = { isSubscribed: true, purchases: [active('course_a1_2')] };
-  assert.equal(checkoutEntitlementConfirmed('course_a2_1', state), false);
+  assert.equal(checkoutEntitlementConfirmed('course_a1_1', state), false);
   assert.equal(checkoutEntitlementConfirmed('telc_b1_komplett', state), false);
   assert.equal(checkoutEntitlementConfirmed('monthly', state), true);
-  assert.equal(checkoutEntitlementConfirmed('course_a2_1', { ...state, purchases: [active('course_a2_1')] }), true);
+  assert.equal(checkoutEntitlementConfirmed('course_a1_1', { ...state, purchases: [active('course_a1_1')] }), true);
   const start = page.indexOf('  useEffect(() => {');
   const end = page.indexOf('\n  }, [', start);
   const stopped = [];
   const context = {
-    useEffect: (effect) => effect(), ...state, pendingProduct: 'course_a2_1', verifying: true,
+    useEffect: (effect) => effect(), ...state, pendingProduct: 'course_a1_1', verifying: true,
     checkoutEntitlementConfirmed, pollRef: { current: 123 },
     setVerifying: (value) => stopped.push(value), setPendingProduct() {}, setVerifyMessage() {},
     clearInterval() {}, consumeCheckoutSuccess: () => stopped.push('completed'),
   };
   vm.runInNewContext(`${page.slice(start, end)}\n  });`, context);
   assert.deepEqual(stopped, [], 'pre-existing Pro must leave course polling running');
-  context.purchases = [active('course_a2_1')];
+  context.purchases = [active('course_a1_1')];
   vm.runInNewContext(`${page.slice(start, end)}\n  });`, context);
   assert.deepEqual(stopped, [false, 'completed'], 'the purchased course completes verification');
   assert.match(page, /if \(verifying && checkoutEntitlementConfirmed\(pendingProduct, \{ isSubscribed, purchases \}\)\)/);
@@ -251,8 +214,8 @@ const checkoutContext = (overrides = {}) => {
     subLoading: false, verifying: false, billingVerified: true, recurringBilling: false, billingAction: null,
     purchases: [], user: { id: 'learner', email: 'learner@example.com' }, coupon: null,
     window: { location: { href: '/subscription' } },
-    LEMONSQUEEZY_CONFIG: { plans: { monthly: { variantId: 'monthly-checkout' } }, getCheckoutUrl: (variant) => `https://checkout/${variant}` },
-    PLANS: { monthly: { price: 9.99 } }, ownsCheckoutProduct,
+    LEMONSQUEEZY_CONFIG: { levelCourses: {}, getCheckoutUrl: (variant) => `https://checkout/${variant}` },
+    isProductOnSale, currentPrice: () => 100, ownsCheckoutProduct,
     markCheckoutStarted() {}, openCheckout: (url) => opened.push(url),
     setPendingProduct() {}, setVerifying() {}, setVerifyMessage() {},
     pollRef: { current: null }, setInterval: () => 1, clearInterval() {},
@@ -262,39 +225,30 @@ const checkoutContext = (overrides = {}) => {
   return { context, opened };
 };
 
-test('ACC-02: /subscription opens no checkout while billing is unverified', () => {
+test('ACC-02: /subscription opens a course checkout only after billing is verified', () => {
   for (const billingVerified of [true, false]) {
-    const subscribe = checkoutContext({ billingVerified });
-    pageHandler('handleSubscribe', subscribe.context)('monthly');
-    assert.equal(subscribe.opened.length, billingVerified ? 1 : 0, `handleSubscribe, billingVerified=${billingVerified}`);
     const purchase = checkoutContext({ billingVerified });
-    pageHandler('startPurchase', purchase.context)('course_a2_1', 'checkout-a21', 50);
-    assert.equal(purchase.opened.length, billingVerified ? 1 : 0, `startPurchase, billingVerified=${billingVerified}`);
+    pageHandler('startPurchase', purchase.context)('course_a1_1', 'checkout-a11', 100);
+    assert.equal(purchase.opened.length, billingVerified ? 1 : 0);
   }
-  // A recurring customer goes to the portal, and only when the action exists.
-  const portal = checkoutContext({ recurringBilling: true, billingAction: { href: 'https://portal' } });
-  pageHandler('handleSubscribe', portal.context)('monthly');
-  assert.equal(portal.context.window.location.href, 'https://portal');
-  assert.equal(portal.opened.length, 0);
-  const missing = checkoutContext({ recurringBilling: true, billingAction: null });
-  pageHandler('handleSubscribe', missing.context)('monthly');
-  assert.equal(missing.context.window.location.href, '/subscription', 'no action: no navigation to "undefined"');
-  assert.equal(missing.opened.length, 0, 'and still no second recurring checkout');
+  for (const key of ['monthly', 'yearly', 'a1_complete', 'all_access', 'course_a2_1']) {
+    const purchase = checkoutContext(); pageHandler('startPurchase', purchase.context)(key, 'stale-checkout', 100);
+    assert.equal(purchase.opened.length, 0, key);
+  }
 });
-
 test('ACC-02: a resumed ?buy= waits for verified billing and keeps the intent until then', () => {
-  for (const key of ['course_a2_1', 'monthly']) {
+  for (const key of ['course_a1_1', 'monthly']) {
     const cleared = [];
     assert.equal(resume(key, [], { billingVerified: false, cleared }).length, 0, `${key}: no checkout from unread billing`);
     assert.deepEqual(cleared, [], `${key}: the intent survives until billing is read`);
   }
-  assert.equal(resume('course_a2_1', []).length, 1, 'verified billing resumes the checkout');
+  assert.equal(resume('course_a1_1', []).length, 1, 'verified billing resumes the checkout');
   assert.match(page, /\}, \[searchParams, subLoading, billingVerified, user\]\);/, 'the resume re-runs when billing becomes verified');
 });
 
 test('ACC-02: the Buy and Subscribe controls are disabled until billing is read, with a notice and a retry', () => {
-  assert.match(page, /disabled=\{subLoading \|\| verifying \|\| !billingVerified \|\| \(isSubscribed && !recurringBilling\)\}/);
-  assert.equal((page.match(/disabled=\{verifying \|\| !billingVerified\}/g) || []).length, 3, 'level-course, telc and offer-ladder Buy');
+  assert.doesNotMatch(page, /handleSubscribe|Subscribe Now/);
+  assert.equal((page.match(/disabled=\{verifying \|\| !billingVerified\}/g) || []).length, 2, 'level-course and exam-pack Buy');
   assert.match(page, /\{!subLoading && !billingVerified && \(/, 'the notice shows once loading is over');
   assert.match(page, /Ihr Abo-Status konnte gerade nicht geladen werden\. Bitte versuchen Sie es gleich noch einmal\./);
   assert.match(page, /onClick=\{reloadBilling\}/);

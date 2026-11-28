@@ -1,4 +1,4 @@
-import { courseForLevel, PLANS, deEur } from '../data/pricing.js';
+import { courseForLevel } from '../data/pricing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
 import { hasRecurringBilling } from './checkoutAccess.js';
 import { safeGet, safeSet } from '../utils/safeStorage.js';
@@ -30,9 +30,9 @@ export async function loadSavedWork(client, userId) {
 export function returnOffer(level, levelCourses = {}) {
   const course = courseForLevel(level);
   if (course && !course.comingSoon && levelCourses[course.key]?.variantId) {
-    return { label: `${course.nameDe} · ${deEur(course.price)} einmalig`, href: '/subscription#return-offers' };
+    return { label: `${course.nameDe} · einmalig kaufen`, href: '/subscription#return-offers' };
   }
-  return { label: `AI Practice · ${deEur(PLANS.monthly.price)} / ${PLANS.monthly.intervalDe}`, href: '/subscription#return-offers' };
+  return { label: 'Kurse ansehen', href: '/courses/' };
 }
 
 export const freeReturnOption = { href: FREE_COURSE_HREF, label: 'Kostenlos weiterlernen' };

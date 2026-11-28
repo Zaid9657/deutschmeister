@@ -117,7 +117,7 @@ function VocabularyLevelCard({
           <div className="text-center px-4">
             <Lock className="w-8 h-8 text-graphite mx-auto mb-2" />
             <p className="text-[0.8125rem] font-bold text-ink">
-              {user ? 'Subscribe to unlock' : 'Sign in to access'}
+              {user ? 'See courses' : 'Sign in to access'}
             </p>
           </div>
         </div>

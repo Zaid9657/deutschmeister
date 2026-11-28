@@ -612,7 +612,7 @@ ${faqSection(PODCAST_FAQS)}
   <section class="pt-24 pb-10"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
     <h1 class="${H_HERO}">Learning German should not feel like a nightmare.</h1>
     <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">${FOUNDER_LINE_EN}</p>
-    <p class="my-6 flex flex-wrap justify-center gap-3"><a href="/course/a1.1" class="${BTN_PRIMARY}">Start A1.1 free</a><a href="/courses/a1-2/" class="${BTN_PRIMARY}">Inspect the A1.2 course</a></p>
+    <p class="my-6 flex flex-wrap justify-center gap-3"><a href="/course/a1.1" class="${BTN_PRIMARY}">Try A1.1 Lektion 1 free</a><a href="/courses/a1-2/" class="${BTN_PRIMARY}">Inspect the A1.2 course</a></p>
     <ul class="flex list-none flex-wrap justify-center gap-3">
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built from experience</li>
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built for serious learners</li>

@@ -1,108 +1,21 @@
 import { useEffect } from 'react';
-import { Crown, GraduationCap, Mic } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
-import Chip from '../ui/Chip.jsx';
-import { eur, PLANS } from '../../data/pricing.js';
-import { FREE_LEVEL_LABEL, SPEAKING_LINE, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
+import { PRICE_TAX_NOTE } from '../../data/pricing.js';
+import CoursePrice from '../CoursePrice.jsx';
 import { trackPaywallShown } from '../../lib/funnelTracking';
-
-// The offer at the free-speaking limit (docs/SCORECARD.md work order #7b).
-// Which product to show is decided by src/lib/speakingOffer.js
-// (speakingLimitOffer). This file only renders it. Every price derives from
-// pricing.js and every claim from marketing.js (tests/claims.test.mjs lists
-// this file). A course card exists only when its checkout id is set, because
-// the pure function never returns one otherwise. Both buttons go to
-// /subscription?buy=<key>, the same resume path a signed-out Buy click uses, so
-// the checkout, its poll and its purchase tracking are the existing ones.
-
-const HEADLINES = {
-  sessions_used: 'Your free speaking sessions are used up',
-  trial_over: 'Your free trial has ended',
-  mission_locked: 'This mission belongs to a level course',
-};
-
-const LEADS = {
-  sessions_used: `A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions.`,
-  trial_over: 'AI speaking practice continues with AI Practice.',
-  mission_locked: 'Guided missions require access to their level course. AI Practice adds AI tools separately.',
-};
-
-const levelCode = (level) => String(level || '').toUpperCase();
-
-/** Why the offer is AI Practice, when the learner's level has no course to buy. */
-function fallbackNote(offer) {
-  const code = levelCode(offer.level);
-  switch (offer.reason) {
-    case 'coming_soon':
-      return `The ${code} course is coming next. AI Practice does not include it.`;
-    case 'free_level':
-      return `Your free lessons stay open. AI Practice adds AI speaking practice and the full ${FREE_LEVEL_LABEL} course.`;
-    case 'owned':
-      return `Your ${code} course stays yours. AI Practice adds AI speaking practice.`;
-    default:
-      return null;
-  }
-}
+import { SPEAKING_LINE } from '../../data/marketing.js';
 
 export default function SpeakingLimitOffer({ offer, moment = 'sessions_used' }) {
-  // One paywall_shown per offer the learner actually sees, with what was shown.
   const kind = offer?.kind;
   const reason = offer?.reason;
   const level = offer?.level;
-  useEffect(() => {
-    if (kind) trackPaywallShown('speaking_limit', { offer: kind, reason, level, moment });
-  }, [kind, reason, level, moment]);
-
+  useEffect(() => { if (kind) trackPaywallShown('speaking_limit', { offer: kind, reason, level, moment }); }, [kind, reason, level, moment]);
   if (!offer) return null;
-  const proPrice = `${eur(PLANS.monthly.price)}/month`;
-  const course = offer.kind === 'course' ? offer.course : null;
-  const note = course ? null : fallbackNote(offer);
-
-  return (
-    <Card raised edge="siegel" className="mb-4 p-5 sm:p-6" data-speaking-offer={offer.kind}>
-      <Chip tone="label" className="mb-3">
-        <Mic className="w-3 h-3" /> Speaking practice
-      </Chip>
-      <h2 className="font-display text-[1.25rem] font-semibold leading-snug text-ink">
-        {HEADLINES[moment] || HEADLINES.sessions_used}
-      </h2>
-      <p className="mt-1.5 text-sm leading-relaxed text-graphite">{LEADS[moment] || LEADS.sessions_used}</p>
-
-      {course ? (
-        <>
-          <Card tone="wash" className="mt-4 p-4">
-            <div className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-siegel-deep" />
-              <span className="font-bold text-ink">{course.name}</span>
-            </div>
-            <ul className="mt-2 space-y-1 text-sm text-graphite">
-              <li>One payment of {eur(course.price)}, and the course is yours to keep</li>
-              <li>{course.proMonths} months of AI Practice included, with {SPEAKING_LINE}</li>
-            </ul>
-          </Card>
-          <Button to={offer.courseHref} size="lg" shimmer className="mt-4 w-full text-center">
-            Get the {course.code} course — {eur(course.price)} once
-          </Button>
-          <Button to={offer.pro.href} variant="secondary" className="mt-3 w-full text-center">
-            <Crown className="w-4 h-4" /> Or add AI Practice — {proPrice}
-          </Button>
-        </>
-      ) : (
-        <>
-          {note && <p className="mt-3 text-sm leading-relaxed text-ink">{note}</p>}
-          <ul className="mt-3 space-y-1 text-sm text-graphite">
-            <li>{SPEAKING_LINE}</li>
-            <li>A paid subscription opens the full A1.1 course · other courses sold separately</li>
-          </ul>
-          <Button to={offer.pro.href} size="lg" shimmer className="mt-4 w-full text-center">
-            <Crown className="w-5 h-5" /> Add AI Practice — {proPrice}
-          </Button>
-          <Button to={offer.pro.plansHref} variant="secondary" className="mt-3 w-full text-center">
-            See all plans
-          </Button>
-        </>
-      )}
-    </Card>
-  );
+  const course = kind === 'course' ? offer.course : null;
+  return <Card className="mb-4 p-5" data-speaking-offer={kind}>
+    <h2 className="font-display text-xl">Continue your speaking practice</h2>
+    {course ? <><p>{course.name}: <CoursePrice level={offer.level} /></p><p data-price-tax-note>{PRICE_TAX_NOTE}</p><p>{course.proMonths} months of AI tools included, with {SPEAKING_LINE}.</p><Button to={offer.courseHref} className="mt-4">Get the {course.code} course</Button></>
+      : <><p>Your current AI allowance is used up. Your purchased courses stay open. New AI Practice subscriptions are off sale.</p><a href="/courses/">See courses</a></>}
+  </Card>;
 }

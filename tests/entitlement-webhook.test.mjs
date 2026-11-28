@@ -726,3 +726,23 @@ for (const [key, variantId, days, price] of [
     assert.equal(Boolean(profile()?.is_subscribed), false);
   });
 }
+
+for (const [key, variantId, total, discount] of [
+  ['course_a1_1', 961, 2000, 8000], ['course_a1_2', 962, 5000, 5000],
+]) {
+  process.env[`LEMONSQUEEZY_${key.toUpperCase()}_VARIANT_ID`] = String(variantId);
+  test(`${key}: discounted launch order records actual gross total and grants its AI window`, async () => {
+    const createdAt = new Date().toISOString();
+    const payload = event('order_created', `launch-${key}`, { status: 'paid', created_at: createdAt,
+      total, discount_total: discount, currency: 'EUR', first_order_item: { variant_id: variantId, product_name: key } });
+    await deliver(payload);
+    assert.equal(tables.purchases.length, 1);
+    const row = tables.purchases[0];
+    assert.equal(row.product_key, key);
+    assert.equal(row.price_paid, total / 100);
+    assert.equal(row.created_at, createdAt);
+    assert.equal(row.access_until, new Date(Date.parse(createdAt) + COURSE_PRO_DAYS * 86400000).toISOString());
+    await deliver(payload);
+    assert.equal(tables.purchases.length, 1, 'discounted retries stay idempotent');
+  });
+}

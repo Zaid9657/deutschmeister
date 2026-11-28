@@ -77,7 +77,9 @@ test('the lead names the level, derives its price, and buys through startPurchas
   const lead = page.slice(page.indexOf('{leadCourse && ('), page.indexOf('{orderedLevelCourses.map('));
   assert.ok(lead.length > 0);
   assert.match(lead, /\$\{leadCourse\.code\}/);
-  assert.match(lead, /€\$\{num\(leadCourse\.price\)\}/, 'the price comes from pricing.js');
+  assert.match(lead, /<CoursePrice level=\{leadCourse\.levels\[0\]\} language=\{i18n\.language\}/, 'current price and launch label come from pricing.js');
+  const price = readFileSync(new URL('../src/components/CoursePrice.jsx', import.meta.url), 'utf8');
+  assert.match(price, /coursePriceLine\(level, now, language\)/);
   assert.match(lead, /Sie wollten gerade/);
   assert.doesNotMatch(lead, /€\d/, 'no retyped price');
   assert.match(page, /const location = useLocation\(\);/);

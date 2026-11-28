@@ -106,7 +106,7 @@ export const COURSES = {
 /**
  * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md),
  * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there):
- * A1.1 stays free, every other sub-level is its own one-time, lifetime product
+ * Every sub-level is its own one-time, lifetime product
  * with its own price, plus the same included AI Practice window as the telc course.
  * B1 and B2 are listed but not yet buyable — they render as "Coming soon"
  * until the Course Factory has rebuilt them (Wave 7 B–D and Waves 8–10); a
@@ -119,16 +119,43 @@ export const COURSES = {
  */
 export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
-/** Gross one-time price in EUR per sub-level. A1.1 is free and has no product. */
+/** Regular gross one-time price in EUR per sub-level, VAT included. */
 export const SUBLEVEL_PRICES_EUR = {
-  'a1.2': 40,
-  'a2.1': 50,
-  'a2.2': 50,
-  'b1.1': 60,
-  'b1.2': 60,
-  'b2.1': 65,
-  'b2.2': 65,
+  'a1.1': 100,
+  'a1.2': 100,
+  'a2.1': 110,
+  'a2.2': 120,
+  'b1.1': 130,
+  'b1.2': 140,
+  'b2.1': 150,
+  'b2.2': 160,
 };
+
+/** Owner decision 2026-11-26. End is inclusive, in Europe/Berlin. */
+export const LAUNCH_ENDS_AT = '2027-01-31T22:59:59Z';
+export const LAUNCH_VALID_UNTIL = '2027-01-31';
+export const LAUNCH_CODES = Object.freeze({ a11: 'LAUNCH80', other: 'LAUNCH50' });
+const instant = (now) => now instanceof Date ? now.getTime() : typeof now === 'number' ? now : Date.parse(now);
+// The final advertised second is included; regular prices start at midnight Berlin.
+export const isLaunchActive = (now = Date.now()) => instant(now) < Date.parse(LAUNCH_ENDS_AT) + 1000;
+export const regularPrice = (level) => SUBLEVEL_PRICES_EUR[String(level).toLowerCase()];
+export const launchDiscountPercent = (level) => regularPrice(level) == null ? 0 : String(level).toLowerCase() === 'a1.1' ? 80 : 50;
+export const launchPrice = (level) => cents(regularPrice(level) * (1 - launchDiscountPercent(level) / 100));
+export const currentPrice = (level, now = Date.now()) => isLaunchActive(now) ? launchPrice(level) : regularPrice(level);
+export const launchDiscountCode = (level, now = Date.now()) => !regularPrice(level) || !isLaunchActive(now)
+  ? null : String(level).toLowerCase() === 'a1.1' ? LAUNCH_CODES.a11 : LAUNCH_CODES.other;
+export const coursePriceLine = (level, now = Date.now(), language = 'en') => {
+  const de = language === 'de';
+  const money = de ? deEur : eur;
+  if (!isLaunchActive(now)) return money(regularPrice(level));
+  return de
+    ? `${money(currentPrice(level, now))} · Einführungspreis bis 31. Januar 2027 · danach ${money(regularPrice(level))} ab 1. Februar 2027 (${launchDiscountPercent(level)} % gespart)`
+    : `${money(currentPrice(level, now))} · launch price until 31 January 2027 · then ${money(regularPrice(level))} from 1 February 2027 (save ${launchDiscountPercent(level)}%)`;
+};
+export const courseOffer = (level, now = Date.now()) => ({
+  '@type': 'Offer', price: num(currentPrice(level, now)), priceCurrency: CURRENCY,
+  ...(isLaunchActive(now) ? { priceValidUntil: LAUNCH_VALID_UNTIL } : {}),
+});
 
 /** Listed, priced, not yet buyable — rendered as "Coming soon" with no checkout. */
 export const COMING_SOON_LEVELS = ['a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
@@ -137,7 +164,8 @@ export const COMING_SOON_LEVELS = ['a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2
 export const SELLABLE_LEVELS = Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l));
 
 /** The cheapest buyable course — the "from €…" figure on the pricing page. */
-export const COURSE_FROM_PRICE_EUR = Math.min(...SELLABLE_LEVELS.map((l) => SUBLEVEL_PRICES_EUR[l]));
+export const courseFromPrice = (now = Date.now()) => Math.min(...SELLABLE_LEVELS.map((l) => currentPrice(l, now)));
+export const COURSE_FROM_PRICE_EUR = courseFromPrice();
 
 /** Product key for a sub-level: 'a1.2' → 'course_a1_2' (env vars are COURSE_A1_2). */
 export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
@@ -187,6 +215,11 @@ export const OFFER_PRODUCTS = {
   a1_complete: { key: 'a1_complete', code: 'A1 Complete', name: 'A1 Complete', price: 89, proDays: 180, proMonths: 6, levels: ['a1.2'], exams: ['start-deutsch-1'], home: '/course/a1.2', slug: 'a1-complete' },
   all_access: { key: 'all_access', code: 'All-Access Pass', name: 'All-Access Pass', price: 199, proDays: 365, proMonths: 12, levels: ALL_LEVELS, allExamPacks: true, home: '/course/a1.1', slug: 'all-access' },
 };
+
+/** Retired keys remain resolvable for existing ownership; never checkout targets. */
+export const RETIRED_PRODUCT_KEYS = ['monthly', 'yearly', 'a1_complete', 'all_access', 'telc_b1_komplett', ...Object.keys(LEGACY_LEVEL_COURSES)];
+export const isProductOnSale = (key) => key === OFFER_PRODUCTS.a1_exam_pack.key
+  || Boolean(LEVEL_COURSES[key] && !LEVEL_COURSES[key].comingSoon);
 
 /** Expand this registry when an exam programme goes on sale; the Pass follows automatically. */
 export const SELLABLE_EXAM_PROGRAMMES = ['start-deutsch-1'];
@@ -260,3 +293,21 @@ export const PLANS = {
     savingPercent: YEARLY_SAVING_PERCENT,
   },
 };
+
+/** Function consumers use the byte-identical shared copy, too. */
+export const productInfo = (key) => {
+  const product = courseForProduct(key) || COURSES[key];
+  return product ? { key, name: product.nameDe || product.name, levels: product.levels || [] } : null;
+};
+export function couponProduct(productKey, env = globalThis.process?.env || {}) {
+  if (!LEVEL_COURSES[productKey] || !isProductOnSale(productKey)) return null;
+  const product = courseForProduct(productKey);
+  const variantId = String(env[`LEMONSQUEEZY_${productKey.toUpperCase()}_VARIANT_ID`] || '').trim();
+  if (!/^[1-9]\d*$/.test(variantId)) return null;
+  return { productKey, variantId, amountMinor: Math.round(product.price * 100) };
+}
+export const CATALOGUE_EURO_AMOUNTS = Object.freeze([
+  MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR,
+  YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR),
+  ...ALL_LEVELS.map(launchPrice), ...Object.values(OFFER_PRODUCTS).map((p) => p.price),
+]);

@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { courseAccessReason } from '../../src/lib/levelEntitlement.js';
-import { levelsForProduct, ownsProduct, OFFER_PRODUCTS } from '../../astro-site/src/data/pricing.js';
+import { levelsForProduct, ownsProduct, OFFER_PRODUCTS, LEVEL_COURSES, currentPrice, launchDiscountCode, isProductOnSale } from '../../astro-site/src/data/pricing.js';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 
@@ -18,7 +18,7 @@ export function loadLevelAccess(supabase = {}) {
     .replace(/^export (const|async function|function) /gm, '$1 ');
   return vm.runInNewContext(
     `${source}\n({ GUIDED_LEVELS, levelHref, loadEntitlementSnapshot, levelOpen, ownedProductHome, getLevelAccess });`,
-    { supabase, levelsForProduct, ownsProduct, OFFER_PRODUCTS, courseAccessReason, Date, Promise },
+    { supabase, levelsForProduct, ownsProduct, OFFER_PRODUCTS, LEVEL_COURSES, currentPrice, launchDiscountCode, isProductOnSale, courseAccessReason, Date, Promise },
   );
 }
 
@@ -149,7 +149,7 @@ export function runCourseCheckout({ body, signedIn = true, user = 'learner', sna
     setItem: (k, v) => stored.set(k, v),
   };
   const context = {
-    document, localStorage,
+    document, localStorage, LEVEL_COURSES, currentPrice, launchDiscountCode, isProductOnSale,
     sessionStorage: { setItem: (k, v) => stored.set(`session:${k}`, v) },
     window: { location, LemonSqueezy: { Url: { Open: (url) => opened.push(url) } } },
     track: (event, props) => tracked.push({ event, props }),
@@ -159,7 +159,7 @@ export function runCourseCheckout({ body, signedIn = true, user = 'learner', sna
     URLSearchParams, encodeURIComponent, JSON, Number, Boolean, Promise, Error,
   };
   const source = script
-    .replace(/^\s*import \{ track \} from '\.\.\/lib\/track\.js';\s*$/m, '')
+    .replace(/^\s*import .*;\s*$/gm, '')
     .replace("import('../lib/levelAccess.js')", '__levelAccess()');
   if (source.includes('import(')) throw new Error('CourseCheckout.astro gained an import this harness does not stub');
   vm.runInNewContext(source, context);

@@ -20,7 +20,7 @@ import { SELLABLE_LEVELS, courseForLevel } from '../data/pricing.js';
 export const checkoutHref = (productKey) => `/subscription?buy=${encodeURIComponent(productKey)}`;
 
 /** AI Practice is always the alternative. Monthly is the one-click plan; the plan page lists yearly. */
-export const PRO_OFFER = Object.freeze({ key: 'monthly', href: checkoutHref('monthly'), plansHref: '/subscription' });
+export const PRO_OFFER = Object.freeze({ key: null, href: '/courses/', plansHref: '/courses/' });
 
 const SUBLEVEL = /^([ab][12])\.([12])$/;
 const BAND = /^([ab][12])$/;
@@ -88,7 +88,7 @@ export function speakingLimitMoment({ usage = null, missionLocked = false } = {}
  */
 export function speakingLimitOffer({ profileLevel, practiceLevel, checkoutIdFor, ownedLevels = [] } = {}) {
   const level = offerLevel({ profileLevel, practiceLevel });
-  const pro = (reason, course = null) => ({ kind: 'pro', level, reason, course, courseHref: null, pro: PRO_OFFER });
+  const pro = (reason, course = null) => ({ kind: 'unavailable', level, reason, course, courseHref: null, pro: PRO_OFFER });
 
   if (!level) return pro('no_level');
   const course = courseForLevel(level);

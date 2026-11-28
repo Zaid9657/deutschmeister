@@ -21,6 +21,8 @@
 //   auth  — 'any' | 'authed' | 'anon' — who sees the link.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { subscriptionManagementLabel } from '../lib/billingPortal.js';
+
 export const NAV_GROUPS = [
   {
     key: 'exams',
@@ -35,7 +37,7 @@ export const NAV_GROUPS = [
     labelEn: 'Learn',
     labelDe: 'Lernen',
     items: [
-      { key: 'ai-practice', labelEn: 'AI Practice', labelDe: 'AI Practice', href: '/pricing/', kind: 'static', auth: 'any' },
+      { key: 'ai-practice', labelEn: subscriptionManagementLabel('en'), labelDe: subscriptionManagementLabel('de'), href: '/subscription', kind: 'spa', auth: 'authed' },
       { key: 'how-it-works', labelEn: 'How It Works', labelDe: 'So funktioniert es', href: '/faq/', kind: 'spa', auth: 'any' },
       { key: 'courses', labelEn: 'Courses', labelDe: 'Kurse', href: '/courses/', kind: 'static', auth: 'any' },
       { key: 'grammar', labelEn: 'Grammar', labelDe: 'Grammatik', href: '/grammar/', kind: 'static', auth: 'any' },

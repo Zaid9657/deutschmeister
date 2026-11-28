@@ -6,12 +6,11 @@ import { LEVEL_COURSES, OFFER_PRODUCTS } from '../data/pricing.js';
 
 const OFFER_VARIANTS = {
   a1_exam_pack: import.meta.env.PUBLIC_LEMONSQUEEZY_A1_EXAM_PACK_VARIANT_ID || '',
-  a1_complete: import.meta.env.PUBLIC_LEMONSQUEEZY_A1_COMPLETE_VARIANT_ID || '',
-  all_access: import.meta.env.PUBLIC_LEMONSQUEEZY_ALL_ACCESS_VARIANT_ID || '',
 };
-export const offerProductsWithVariants = () => Object.values(OFFER_PRODUCTS).map((p) => ({ ...p, variantId: OFFER_VARIANTS[p.key] }));
+export const offerProductsWithVariants = () => [OFFER_PRODUCTS.a1_exam_pack].map((p) => ({ ...p, variantId: OFFER_VARIANTS[p.key] }));
 
 const VARIANTS = {
+  course_a1_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID || '',
   course_a1_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '',
   course_a2_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '',
   course_a2_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID || '',

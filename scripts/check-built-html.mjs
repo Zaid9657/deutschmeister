@@ -69,8 +69,6 @@ const REQUIRED = [
   'pricing/index.html',
   'courses/index.html',
   'courses/a1-exam-pack/index.html',
-  'courses/a1-complete/index.html',
-  'courses/all-access/index.html',
   'courses/a1-1/index.html',
   // Coming-soon levels are still built, as noindex pages outside the sitemap;
   // checkIndexBudget() below holds every COMING_SOON_LEVELS page to that.

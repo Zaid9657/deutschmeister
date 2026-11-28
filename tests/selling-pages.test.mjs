@@ -67,9 +67,15 @@ test('the homepage quick exercise is a real course task graded by the lesson che
 
 test('pricing presents the free entry and both paid options in matching reading and visual order', () => {
   const page = read('astro-site/src/pages/pricing.astro');
-  assert.ok(page.indexOf('class="c4-free-banner"') < page.indexOf('class="c4-offers '));
-  assert.ok(page.indexOf('<h2>A1.2 course</h2>') < page.indexOf('<h2>AI Practice</h2>'));
-  assert.doesNotMatch(page, /\b(?:order-|flex-col-reverse)/);
+  const ladder = read('astro-site/src/components/concept/Ladder.astro');
+  assert.ok(page.indexOf('class="c4-free-banner"') >= 0);
+  assert.ok(page.indexOf('class="c4-free-banner"') < page.indexOf('<Ladder illustrated />'));
+  assert.match(ladder, /SELLABLE_LEVELS\.map\(\(level\) =>/);
+  assert.match(ladder, /<h2>\{course\.code\} course<\/h2>/);
+  assert.match(ladder, /const pack = OFFER_PRODUCTS\.a1_exam_pack/);
+  assert.ok(ladder.indexOf('SELLABLE_LEVELS.map(') < ladder.indexOf('<h2>{pack.name}</h2>'));
+  assert.doesNotMatch(page + ladder, /\b(?:order-|flex-col-reverse|row-reverse)|grid-area/);
+  assert.doesNotMatch(ladder, /AI Practice<\/h2>|#pro/);
 });
 
 test('placement start is directly under its heading, before facts and test structure', () => {

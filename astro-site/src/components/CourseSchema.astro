@@ -1,0 +1,12 @@
+---
+import { courseOffer } from '../data/pricing.js';
+const { level, schema } = Astro.props;
+// Build-date Offer is valid through its stated date. The client replaces it
+// at the deadline; without JS a stale launch Offer has expired priceValidUntil.
+const built = { ...schema, offers: courseOffer(level) };
+---
+<script type="application/ld+json" data-course-schema={level} set:html={JSON.stringify(built)} />
+<script>
+  import { enhanceCoursePrices } from '../lib/coursePriceDisplay.js';
+  enhanceCoursePrices();
+</script>

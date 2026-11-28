@@ -42,12 +42,12 @@ test('free entry, course ownership, legacy purchases, included windows, premium 
   assert.equal(courseAccessReason(snapshot(fresh, { purchases: [purchase] }), 'a1.2', now), 'owned');
   assert.equal(courseAccessReason(snapshot(fresh, { purchases: [{ ...purchase, status: 'refunded' }] }), 'a1.2', now), null);
   assert.equal(courseAccessReason({ purchases: [{ product_key: 'course_alle', status: 'active' }] }, 'b2.2', now), 'owned');
-  const window = { ...purchase, access_until: '2026-12-01' };
+  const window = { ...purchase, created_at: '2026-11-01', access_until: '2026-12-01' };
   assert.equal(courseAccessReason({ purchases: [window] }, 'b2.2', now), 'pro');
   assert.equal(courseAccessReason({ subscription: row(COURSE_SUBSCRIPTION_CUTOFF, { plan_type: 'course' }) }, 'a2.1', now), 'pro');
   assert.equal(courseAccessReason({ profile: { subscription_tier: 'premium' } }, 'b2.2', now), 'pro');
   const trial = { trial_started_at: '2026-11-12', trial_ends_at: '2026-11-19', is_subscribed: false };
-  assert.equal(courseAccessReason({ profile: trial }, 'a1.2', now), 'trial');
+  assert.equal(courseAccessReason({ profile: trial }, 'a1.2', now), null);
   assert.equal(courseAccessReason({ profile: { ...trial, trial_ends_at: '2026-11-15T12:00:00Z' } }, 'a1.2', now), null);
   assert.equal(courseAccessReason({ profile: { is_subscribed: true } }, 'a1.2', now), null, 'a stale flag grants nothing');
 });

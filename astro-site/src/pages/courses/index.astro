@@ -1,14 +1,15 @@
 ---
+import CoursePrice from '../../components/CoursePrice.astro';
 import Layout from '../../layouts/Layout.astro';
 import Scene from '../../components/concept/Scene.astro';
 import RouteBand from '../../components/concept/RouteBand.astro';
 import ProofCounts from '../../components/concept/ProofCounts.astro';
 import Icon from '../../components/concept/Icon.astro';
-import { ALL_LEVELS, courseForLevel, eur } from '../../data/pricing.js';
+import { ALL_LEVELS, courseForLevel, PRICE_TAX_NOTE } from '../../data/pricing.js';
 import { levelToSlug } from '../../data/courseContents.js';
 import '../../styles/global.css';
 const title = 'German Courses from A1.1 to B2.2 | DeutschMeister';
-const description = 'One clear path from your first word to B2. Start A1.1 free, explore the A1.2 course, and see which German courses are coming next.';
+const description = 'One clear path from your first word to B2. Try A1.1 Lektion 1 free, explore the A1.2 course, and see which German courses are coming next.';
 const images = ['scene-cafe', 'scene-work', 'cando-market', 'hero', 'cando-chat', 'scene-work', 'cando-flat', 'pricing-hero'];
 const levels = ALL_LEVELS.map((level, i) => ({ level, code: level.toUpperCase(), course: courseForLevel(level), image: images[i], href: `/courses/${levelToSlug(level)}/` }));
 const jsonLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'German courses', itemListElement: levels.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: `German ${r.code} Course`, url: `https://deutsch-meister.de${r.href}` })) };
@@ -18,14 +19,15 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'G
   <section class="c4-wrap" aria-label="Choose your next course">
     <ol class="c4-course-grid">{levels.map((r) => <li><article class:list={['c4-course-card', r.course?.comingSoon && 'is-coming']} data-c4-reveal>
       <Scene name={r.image} alt={`${r.code}: German for everyday situations`} sizes="(max-width: 640px) 46vw, 300px" />
-      <div class="c4-course-card-body"><p class="c4-course-code">{r.code}{!r.course && <span>Free</span>}</p>
-        <h2>{r.course?.comingSoon ? 'Coming next' : !r.course ? 'Introduce yourself' : 'Everyday situations'}</h2>
-        {!r.course ? <><p>Say your name, talk about yourself, and start simple conversations.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></>
-          : r.course.comingSoon ? <a href={r.href} class="c4-coming" aria-label={`${r.code} — coming next`}>Coming next</a>
-          : <><p>Find your way, look for a flat, make plans, and handle typical daily life in German.</p><p class="c4-card-price"><strong>{eur(r.course.price).replace('.00', '')}</strong> once</p><a href={r.href} class="c4-button c4-button-outline">See the course →</a></>}
+      <div class="c4-course-card-body"><p class="c4-course-code">{r.code}</p>
+        <h2>{r.course?.comingSoon ? 'Coming next' : r.level === 'a1.1' ? 'Introduce yourself' : 'Everyday situations'}</h2>
+        {r.course.comingSoon ? <a href={r.href} class="c4-coming" aria-label={`${r.code} — coming next`}>Coming next</a>
+          : <><p>{r.level === 'a1.1' ? 'Say your name, talk about yourself, and start simple conversations.' : 'Find your way, look for a flat, make plans, and handle typical daily life in German.'}</p><p class="c4-card-price"><strong><CoursePrice level={r.level} /></strong> once</p><a href={r.href} class="c4-button c4-button-outline">See the course →</a>{r.level === 'a1.1' && <a href="/course/a1.1" class="c4-text-link">Try Lektion 1 free →</a>}</>}
+
       </div>
     </article></li>)}</ol>
     <section class="c4-course-benefits" aria-labelledby="every-h"><h2 id="every-h"><span class="c4-underline">What every course gives you</span></h2><div>{[{ icon: 'target', text: 'Situations from real life' }, { icon: 'layers', text: 'A checker that explains your mistakes' }, { icon: 'chat', text: 'Writing and speaking tasks' }, { icon: 'flag', text: 'Checkpoints you can pass' }].map((b) => <div><Icon name={b.icon} size={44} /><h3>{b.text}</h3></div>)}</div></section>
+    <p data-price-tax-note>{PRICE_TAX_NOTE}</p>
     <ProofCounts />
     <p class="c4-catalogue-note">A1.1 and A1.2 are ready. The rest of the guided path is coming next. <a href="/level-test/" class="c4-text-link">Not sure of your level? Take the free level test →</a></p>
   </section>

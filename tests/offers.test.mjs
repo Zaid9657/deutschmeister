@@ -29,10 +29,7 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 test('stations follow the commerce layer: free A1.1, priced tickets, Im Bau never sold', () => {
   assert.deepEqual(STATIONS.map((s) => s.level), ALL_LEVELS);
   for (const s of STATIONS) {
-    if (s.level === 'a1.1') {
-      assert.equal(s.status, 'free');
-      assert.equal(s.price, null);
-    } else if (COMING_SOON_LEVELS.includes(s.level)) {
+    if (COMING_SOON_LEVELS.includes(s.level)) {
       assert.equal(s.status, 'building', `${s.code} is coming soon`);
     } else {
       assert.equal(s.status, 'ticket');
@@ -72,7 +69,7 @@ test('every ticket line states derived figures, never typed ones', () => {
     assert.match(text, /No subscription/);
     for (const l of lines) assert.match(l.removes, /^[a-z].*\.$/, 'removes completes "No more …"');
   }
-  assert.deepEqual(ticketLines('a1.1'), [], 'the free stop is not a ticket');
+  assert.equal(ticketLines('a1.1').length, 4, 'A1.1 is a paid course with a free first Lektion');
   assert.deepEqual(ticketLines('b1.1'), [], 'an Im Bau stop is not a ticket');
 });
 
@@ -125,10 +122,11 @@ test('a Buy button renders only behind a checkout id, and never for an unbuilt c
   assert.match(variants, /c\.comingSoon \? ''/);
 });
 
-test('pricing separates course ownership from optional tools without narrowing the account trial', () => {
+test('pricing separates course ownership and included tools while preserving existing subscribers', () => {
   const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.match(pricing, /other courses sold separately/);
-  assert.match(pricing, /Every other course is a one-time purchase/);
-  assert.match(pricing, /Subscriptions started before 10 November 2026 keep access to every course while active/);
+  assert.match(pricing, /Each purchase opens that course only/);
+  assert.match(pricing, /COURSE_PRO_DAYS/);
+  assert.match(pricing, /current access and renewals continue/);
+  assert.match(pricing, /BILLING_PORTAL_URL/);
   assert.match(read('src/pages/PodcastsPage.jsx'), /isLevelFree\(level\) \|\|/);
 });
