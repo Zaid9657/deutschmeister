@@ -24,7 +24,7 @@ import vm from 'node:vm';
 
 import { hasRecurringBilling } from '../src/lib/checkoutAccess.js';
 
-const page = readFileSync(new URL('../src/pages/SubscriptionSuccessPage.jsx', import.meta.url), 'utf8');
+const page = readFileSync(new URL('../src/pages/SubscriptionSuccessPage.jsx', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 /** A module-level `export const <name> = …;` of the page, as shipped. */
 const pageExport = (name, context) => {
@@ -68,6 +68,7 @@ test('ACC-08: a live subscriber who buys a course is never told "never charged a
 test('ACC-08: a course-only buyer reads the window, the free allowance after it and "never charged again"', () => {
   const line = proLineFor({ proUntil: '20 January 2027', renewing: false, recurringBilling: false });
   assert.match(line, /open until 20 January 2027\./);
+  assert.doesNotMatch(line, /every level/);
   assert.match(line, /return to the free allowance — you are never charged again\./);
 });
 
@@ -82,7 +83,8 @@ test('ACC-08: a legacy purchase without a stored deadline invents no date', () =
   for (const recurringBilling of [false, true]) {
     const line = proLineFor({ proUntil: null, renewing: false, recurringBilling });
     assert.doesNotMatch(line, /until|null|undefined/);
-    assert.match(line, /included AI Practice months/);
+    assert.match(line, /included AI tools window/);
+    assert.doesNotMatch(line, /every level/);
   }
   assert.match(proLineFor({ proUntil: null, renewing: true, recurringBilling: true }), /already covers/);
 });

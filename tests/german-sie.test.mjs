@@ -195,7 +195,7 @@ test('the du detector: du words and du-imperatives fail, Sie and infinitives pas
   ]) assert.equal(addressesWithDu(s), true, `should fail: ${s}`);
   for (const s of [
     'Gefällt Ihnen DeutschMeister?',
-    'Abonnieren Sie, um nach Ihrer Testphase weiterzulernen.',
+    'Kaufen Sie den Kurs einmalig, um nach Ihrer Testphase weiterzulernen.',
     'Das zählt für Ihren Streak und Ihr Tagesziel.',
     'Hören Sie sich den Dialog an und beantworten Sie die Fragen unten.',
     'Wählen Sie a, b oder c',

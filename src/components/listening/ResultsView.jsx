@@ -139,7 +139,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, audioUrl,
             </div>
             <p className="text-xs text-graphite mb-3">
               {isGerman
-                ? 'Abonnieren Sie, um nach Ihrer Testphase weiterzulernen.'
+                ? 'Kaufen Sie den Kurs einmalig, um nach Ihrer Testphase weiterzulernen.'
                 : 'Buy a course to continue its guided lessons.'}
             </p>
             <Button href="/pricing/" size="sm">

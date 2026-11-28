@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import Button from './ui/Button.jsx';
 import Card from './ui/Card.jsx';
 import Chip from './ui/Chip.jsx';
+import { COURSE_PRO_DAYS } from '../data/pricing.js';
 
 // The dashboard's first-run state (work order #6): for a signed-in learner
 // with no lesson activity, this card takes the hero's place and carries the
@@ -27,7 +28,7 @@ const COPY = {
   }),
   lesson: (a) => ({
     title: 'Your first lesson: Lektion 1',
-    lead: `The free ${a.level.toUpperCase()} course starts with the first „Hallo“ — one short step at a time, right here in your browser.`,
+    lead: `Lektion 1 of the ${a.level.toUpperCase()} course is free. Start with the first „Hallo“ — one short step at a time, right here in your browser.`,
     cta: 'Start Lektion 1',
   }),
   placement: () => ({
@@ -49,7 +50,7 @@ const COPY = {
   }),
   course: () => ({
     title: 'Your course',
-    lead: 'Your placement test suggests you are past the start. Lektion 1 is free; the later Lektionen open with AI Practice.',
+    lead: `Your placement test suggests you are past the start. Lektion 1 of A1.1 stays free. Each course is a one-time purchase with ${COURSE_PRO_DAYS} days of AI tools included.`,
     cta: 'Open the course',
   }),
 };

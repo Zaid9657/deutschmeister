@@ -16,6 +16,7 @@ import { audioFor } from '../src/lib/lesson/speech.js';
 import { wortfeldInputCoverage, readingIntroductions, housingRoomCounts, imperativePronounMismatch, englishTwins, levelSpec, loadPoolItems, taughtUpTo, untaughtTokens } from '../scripts/validate-curriculum.mjs';
 import { undecidedTimePrepositionGaps } from '../scripts/lib/time-preposition-cues.mjs';
 import { loadJsxModule } from './helpers/renderJsx.mjs';
+import { courseForLevel } from '../src/data/pricing.js';
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
 const page = read('src/pages/lesson/CheckpointPage.jsx');
@@ -229,6 +230,9 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../lib/course/canDo.js'] = { canDoList: () => [] };
     stubs['../lib/course/checkShown.js'] = { checksShown: () => ({}) };
     stubs['../data/courseTests/index.js'] = { courseTestDescription };
+    // The purchase notice reads the real catalogue; no checkout id is configured here, so no Buy button renders.
+    stubs['../data/pricing.js'] = { courseForLevel };
+    stubs['../config/lemonsqueezy.js'] = { LEMONSQUEEZY_CONFIG: { levelCourses: {} } };
     const { default: Home } = await loadJsxModule(path, stubs);
     const tree = state.render(Home, { curriculum });
     if (lang === 'de') {

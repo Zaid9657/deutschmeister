@@ -44,7 +44,7 @@ export default function TrialReturnCard({ banner = false }) {
         </> : <p className="mt-3 text-sm text-graphite" role="status">
           {!loaded ? 'Ihr gespeicherter Lernstand wird geladen.' : loaded.error
             ? 'Ihr gespeicherter Lernstand konnte gerade nicht geladen werden.'
-            : 'Hier ist noch kein gespeicherter Kurs-, Grammatik- oder Schreibstand verfügbar. Beginnen Sie mit der kostenlosen Lektion 1.'}
+            : 'Hier ist noch kein gespeicherter Kurs-, Grammatik- oder Schreibstand verfügbar. Beginnen Sie mit der kostenlosen ersten Lektion.'}
         </p>}
         <div className="mt-3 flex flex-wrap gap-3">
           <Button to={freeReturnOption.href} variant="ghost">{freeReturnOption.label}</Button>

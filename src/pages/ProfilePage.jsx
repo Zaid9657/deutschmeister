@@ -18,6 +18,7 @@ import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Stat from '../components/ui/Stat.jsx';
 import { profilePlanAction } from '../lib/billingPortal.js';
+import { COURSE_PRO_DAYS } from '../data/pricing.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
@@ -245,10 +246,10 @@ const ProfilePage = () => {
                   </h3>
                   <p className="text-sm text-graphite">
                     {isSubscribed
-                      ? 'You have full access to everything.'
+                      ? 'Your AI tools are active. Course access follows your purchases or existing subscription.'
                       : inTrial
                         ? `${trialDays} days left in your free trial.`
-                        : 'Upgrade for full access to everything.'}
+                        : `Buy each course once to keep it, with AI tools included for ${COURSE_PRO_DAYS} days.`}
                   </p>
                   {plan.kind === 'support' ? (
                     <p className="mt-1 text-xs text-graphite">

@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import {
   STATIONS, TICKET_STATIONS, FIT_CHOICES, FREE_COURSE_HREF, stationFor, ticketLines, planLine, OFFER_FAQ, minutesPerDay,
 } from '../src/data/offers.js';
-import { COMING_SOON_LEVELS, COURSE_PRO_MONTHS, SUBLEVEL_PRICES_EUR, ALL_LEVELS, eur, productKeyForLevel } from '../src/data/pricing.js';
+import { COMING_SOON_LEVELS, COURSE_PRO_MONTHS, ALL_LEVELS, currentPrice, coursePriceLine, productKeyForLevel } from '../src/data/pricing.js';
 import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../src/data/marketing.js';
 import { GUIDED_PLANS, COURSE_CONTENTS, LEVEL_OUTCOME_EN } from '../src/data/courseContents.js';
 import { COURSES as GUIDED_COURSES } from '../src/data/courses/index.js';
@@ -26,15 +26,15 @@ import { COURSES as GUIDED_COURSES } from '../src/data/courses/index.js';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 
-test('stations follow the commerce layer: free A1.1, priced tickets, Im Bau never sold', () => {
+test('stations follow the commerce layer: current ticket prices, Im Bau never sold', () => {
   assert.deepEqual(STATIONS.map((s) => s.level), ALL_LEVELS);
   for (const s of STATIONS) {
     if (COMING_SOON_LEVELS.includes(s.level)) {
       assert.equal(s.status, 'building', `${s.code} is coming soon`);
     } else {
       assert.equal(s.status, 'ticket');
-      assert.equal(s.price, SUBLEVEL_PRICES_EUR[s.level]);
-      assert.equal(s.priceLabel, eur(SUBLEVEL_PRICES_EUR[s.level]));
+      assert.equal(s.price, currentPrice(s.level));
+      assert.equal(s.priceLabel, coursePriceLine(s.level));
       assert.equal(s.productKey, productKeyForLevel(s.level));
     }
     assert.match(s.coursePage, /^\/courses\/[ab][12]-[12]\/$/, 'course pages carry the trailing slash');

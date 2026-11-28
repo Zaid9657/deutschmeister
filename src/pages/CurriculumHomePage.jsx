@@ -32,6 +32,12 @@ import { useLessonLang } from '../lib/lesson/strings.js';
 import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import LangToggle from '../components/lesson/LangToggle.jsx';
 import SituationScene from '../components/illustrations/SituationScene.jsx';
+import CoursePrice from '../components/CoursePrice.jsx';
+import { courseForLevel } from '../data/pricing.js';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy.js';
+import { setBuyIntent } from '../lib/buyIntent.js';
+import { levelLockSignupHref } from '../lib/lockDoor.js';
+import { setReturnPath } from '../lib/returnPath.js';
 
 // Course home for a REBUILT level (docs/course-standard-2026-09-12.md): the
 // path is 12 Lektionen + 4 checkpoints + the level test, grouped in four
@@ -120,6 +126,9 @@ export default function CurriculumHomePage({ curriculum }) {
   // Lektion gate (src/config/freeTier.js): say where the free part ends before the learner walks into it.
   const freeNr = freeLektionen(level);
   const payNotice = freeNr > 0 && !subLoading && Boolean(hasFullCourse) && !hasFullCourse(level);
+  const course = courseForLevel(level);
+  const buyable = course && !course.comingSoon && LEMONSQUEEZY_CONFIG.levelCourses[course.key]?.variantId;
+  const nextLesson = `/course/${level}/l/${freeNr + 1}`;
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level, lang);
@@ -265,12 +274,15 @@ export default function CurriculumHomePage({ curriculum }) {
             {payNotice && (
               <Reveal delay={120} data-lektion-gate className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-clay border border-rule bg-white p-4">
                 <p className="text-[0.9375rem] font-bold text-ink">
-                  {de ? `Lektion ${freeNr} ist kostenlos. Ab Lektion ${freeNr + 1} brauchen Sie ein Abo.` : `Lektion ${freeNr} is free. From Lektion ${freeNr + 1} on you need a subscription.`}
+                  {de ? `Lektion ${freeNr} ist kostenlos. Den restlichen Kurs kaufen Sie einmalig.` : `Lektion ${freeNr} is free. The rest of this course is a one-time purchase.`}
+                  {' '}<CoursePrice level={level} language={lang} />
                 </p>
-                {/* /subscription sends a visitor to the log-in form, a dead end without an account. */}
-                {user && (
-                  <Button to="/subscription" state={{ from: { pathname: `/course/${level}/l/${freeNr + 1}` } }} variant="secondary" size="sm">
-                    {de ? 'Abo ansehen' : 'See the subscription'}
+                {buyable && (
+                  <Button
+                    {...(user ? { to: `/subscription?buy=${course.key}`, state: { from: { pathname: nextLesson } } }
+                      : { href: levelLockSignupHref(level), onClick: () => { setBuyIntent(course.key); setReturnPath(nextLesson); } })}
+                    variant="secondary" size="sm">
+                    {de ? `${course.code} kaufen` : `Buy ${course.code}`}
                   </Button>
                 )}
               </Reveal>

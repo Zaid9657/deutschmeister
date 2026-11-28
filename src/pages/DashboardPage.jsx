@@ -19,7 +19,8 @@ import { getProgramProgress } from '../services/programProgress';
 import { courseLevelFor, courseNextStep, programKeyForCourse } from '../lib/courseNext.js';
 import { levelToSlug } from '../data/courseContents.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
-import { GRAMMAR_TOPIC_COUNT, FREE_LEVEL_LABEL } from '../data/marketing.js';
+import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
+import { COURSE_PRO_DAYS } from '../data/pricing.js';
 import { listAttempts } from '../services/examService';
 import { readinessFromAttempts } from '../services/readiness';
 import { firstRunAction, STARTING_POINT_KEY } from '../lib/firstRun.js';
@@ -585,11 +586,8 @@ const DashboardPage = () => {
                   <p className="font-bold text-[0.875rem] text-accent-aprikose-ink">
                     {trialDays} day{trialDays !== 1 ? 's' : ''} left in your free trial
                   </p>
-                  {/* Derived, never retyped (src/data/marketing.js): the free level stays
-                      free after the trial, and AI Practice's speaking is metered, never "unlimited"
-                      (tests/unlimited-claims.test.mjs). */}
                   <p className="text-[0.75rem] text-accent-aprikose-ink">
-                    After the trial, your free lessons stay open. AI Practice adds writing feedback, speaking practice and Sentence X-Ray, and opens the full {FREE_LEVEL_LABEL} course.
+                    Lektion 1 of A1.1 stays free after the trial. Each course is a one-time purchase with {COURSE_PRO_DAYS} days of AI tools included: writing feedback, speaking practice and Sentence X-Ray.
                   </p>
                 </div>
               </div>
