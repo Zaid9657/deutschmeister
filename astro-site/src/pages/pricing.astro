@@ -1,208 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Scene from '../components/concept/Scene.astro';
-import RouteBand from '../components/concept/RouteBand.astro';
-import Icon from '../components/concept/Icon.astro';
 import Ladder from '../components/concept/Ladder.astro';
 import PromiseBand from '../components/concept/PromiseBand.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
-import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY, PRICE_TAX_NOTE } from '../data/pricing.js';
-import { PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../data/marketing.js';
-import { proCta } from '../lib/proCta.js';
-import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
-import { telcPilotVariant } from '../lib/courseVariants.js';
-import { onsiteHref } from '../lib/onsiteLinks.js';
-import { EXAM_ROUTE } from '../data/offers.js';
-import { COURSE_TELC_B1_PRICE_EUR } from '../data/pricing.js';
-import { PRO_OFFER } from '../data/offers.js';
+import { OFFER_FAQ, FREE_COURSE_HREF } from '../data/offers.js';
+import { COURSE_PRO_DAYS } from '../data/pricing.js';
+import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
 import '../styles/global.css';
-const course = courseForLevel('a1.2');
-const title = 'Course Pricing & Optional AI Practice | DeutschMeister';
-const description = `Lektion 1 of A1.1 is free; an AI Practice subscription opens the rest. Own A1.2 for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included. Optional AI Practice renews monthly or yearly.`;
-const telcOnSale = Boolean(telcPilotVariant());
-const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
-const FAQS = [
-  { q: 'How does the course purchase work?', a: `Buy A1.2 once and keep access to that course. ${COURSE_PRO_MONTHS} months of AI Practice are included. The course does not renew, and you keep it after the included practice window ends.` },
-  { q: 'What’s included in AI Practice?', a: `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month, AI speaking practice, and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day. A paid subscription also opens the full A1.1 course while it is active; the free trial covers the AI tools only. Every other course is a one-time purchase. Subscriptions started before 10 November 2026 keep access to every course while active.` },
-  { q: 'Can I cancel AI Practice anytime?', a: `Yes. Cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}). Access continues until the end of the period you have already paid for, and the subscription does not renew.`, link: { href: BILLING_PORTAL_URL, text: 'Open the customer portal' } },
-  ...(telcOnSale ? [{ q: 'Is there a separate telc B1 programme?', a: `The separate telc B1 programme costs ${eur(COURSE_TELC_B1_PRICE_EUR)} once. Its sales page has the full details.` }] : []),
-  { q: 'Do I need an account to start A1.1?', a: 'No. Lektion 1 is free and opens without an account. Create a free account when you want to save your progress across devices. From Lektion 2 on, the course needs AI Practice or any course purchase.' },
-];
-const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'Product', name: 'DeutschMeister AI Practice', description: 'Optional AI writing feedback, speaking practice and Sentence X-Ray. Opens the full A1.1 course; other courses are sold separately.', brand: { '@type': 'Brand', name: 'DeutschMeister' }, offers: Object.values(PLANS).map((plan) => ({ '@type': 'Offer', name: plan.name, price: num(plan.price), priceCurrency: CURRENCY, priceSpecification: { '@type': 'UnitPriceSpecification', price: num(plan.price), priceCurrency: CURRENCY, unitText: plan.interval }, url: 'https://deutsch-meister.de/pricing/' })) },
-  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
-];
+const title = 'German Course Prices | DeutschMeister';
+const description = `Buy each German course separately, with ${COURSE_PRO_DAYS} days of AI tools included. Lektion 1 of A1.1, the placement test and public library are free.`;
+const jsonLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: OFFER_FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
 ---
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
-  <section class="c4-pricing-hero c4-wrap" aria-labelledby="pricing-h">
-    <Scene name="pricing-hero" alt="A learner with a notebook and coffee beside the River Spree in Berlin" hero sizes="(max-width: 640px) 100vw, 550px" />
-    <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>Lektion 1 of A1.1 is free, and an AI Practice subscription opens the rest. Each next level is a one-time purchase you keep.</p></div>
+  <section class="c4-wrap c4-pricing-hero" aria-labelledby="pricing-h">
+    <div><h1 id="pricing-h">Pay once for<br /><span class="c4-underline">your next course.</span></h1><p>Each purchase opens that course only: lessons, checkpoints, final test, review and certificate. AI tools are included for {COURSE_PRO_DAYS} days.</p></div>
+    <Scene name="pricing-hero" alt="A learner planning her German course" hero sizes="600px" />
   </section>
   <PromiseBand />
   <div class="c4-wrap">
-    <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start Lektion 1 of A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
-    <section class="c4-offers c4-offers-illustrated c4-pricing-offers" aria-label="Your learning options" data-track-view="offer">
-      <Ladder illustrated />
-    </section>
-    <section class="c4-addon" aria-label="Optional AI Practice">
-      <article class="c4-offer" id="ai-practice" data-c4-reveal>
-        <span id="pro" class="c4-anchor" aria-hidden="true"></span>
-        <Scene name="scene-work" alt="Practising a conversation at work" sizes="350px" />
-        <h2>AI Practice</h2><p class="c4-small">A paid subscription opens the full A1.1 course · other courses sold separately</p>
-        <p class="c4-price"><strong id="pro-price">{eur(PLANS.yearly.price)}</strong><span> / <span id="pro-period">year</span></span></p>
-        <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month · {PRICE_TAX_NOTE}</p>
-        <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
-        <div class="c4-billing-toggle" aria-label="AI Practice billing period"><button type="button" id="toggle-yearly" aria-pressed="true">Yearly</button><button type="button" id="toggle-monthly" aria-pressed="false">Monthly</button></div>
-        <button type="button" id="pro-btn" class="c4-button c4-button-outline"><span id="pro-btn-label">{proCta().label}</span><span aria-hidden="true">→</span></button>
-        <p id="plan-note" class="c4-small c4-plan-note">{proCta().note}</p>
-      </article>
-    </section>
-    <section class="c4-coming-route" aria-labelledby="next-h"><h2 id="next-h">{COMING_SOON_LEVELS.map((l) => l.toUpperCase()).join(' · ')} <em>— coming next</em></h2><RouteBand comingOnly /></section>
-    <section class="c4-comparison" aria-labelledby="compare-h"><h2 id="compare-h">What you <span>pay once</span> vs what <span>renews</span></h2><div>
-      <article><Icon name="layers" /><div><h3>You pay once (course)</h3><ul class="c4-checks"><li>A complete level (e.g., A1.2)</li><li>Yours to keep</li><li>Includes {COURSE_PRO_MONTHS} months of AI Practice</li><li>No renewal, no hidden fees</li></ul></div></article>
-      <article><Icon name="repeat" /><div><h3>What renews (AI Practice)</h3><ul class="c4-checks">{PRO_OFFER.lines.map((line) => <li>{line}</li>)}</ul></div></article>
-    </div></section>
-    <section class="c4-faq" aria-labelledby="faq-h"><h2 id="faq-h">FAQ</h2><div>{FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p>{f.link && <a href={f.link.href} class="c4-text-link">{f.link.text} →</a>}</details>)}</div></section>
-    <aside class="c4-off-sale"><p><strong>{EXAM_ROUTE.title}</strong> {EXAM_ROUTE.body}</p>
-      {telcOnSale ? (
-        <div><p>{eur(COURSE_TELC_B1_PRICE_EUR)}</p><p>one-time · no subscription</p></div>
-      ) : (
-        <p>Separate telc B1 package: currently unavailable, not on sale.</p>
-      )}
-      <a href="/telc-b1-komplettvorbereitung/" class="c4-text-link">See the separate telc B1 programme →</a>
-      {!telcOnSale && (
-        <a href={telcSignupHref} class="c4-text-link">Create a free account →</a>
-      )}
-    </aside>
+    <section class="c4-free-banner" aria-label="Start free"><p>Lektion 1 of A1.1 is free, with no account needed. The placement test and public library stay free.</p><a href={FREE_COURSE_HREF} class="c4-button c4-button-coral">Try Lektion 1 free →</a></section>
+    <section aria-label="Course prices"><Ladder illustrated /></section>
+    <section class="c4-faq" aria-labelledby="pricing-faq"><h2 id="pricing-faq">Questions about your course</h2><div>{OFFER_FAQ.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div></section>
+    <p>Already subscribed? Your current access and renewals continue. <a href={BILLING_PORTAL_URL} class="c4-text-link">Manage or cancel your subscription →</a></p>
   </div>
   <CourseCheckout />
 </Layout>
-
-<script>
-  // Billing toggle + the auth-aware AI Practice checkout. Level-course buttons are
-  // handled by components/CourseCheckout.astro (intent, overlay, events).
-  //
-  // Prices derive from ../data/pricing.js — the same module the server-rendered
-  // table above reads, so the toggle cannot show a figure the static HTML
-  // contradicts. Checkout ids come from lib/proVariants.js (env, with the
-  // SPA's fallbacks).
-  import { PLANS as DATA, eur as EUR } from '../data/pricing.js';
-  import { proCta } from '../lib/proCta.js';
-  import { PRO_VARIANTS as VARIANTS } from '../lib/proVariants.js';
-  import { track } from '../lib/track.js';
-
-  let cycle = 'yearly';
-  let billing = null;
-  const $ = (id) => document.getElementById(id);
-
-  function applyCycle() {
-    const plan = DATA[cycle];
-    $('pro-price').textContent = EUR(plan.price);
-    $('pro-period').textContent = plan.interval;
-    let cta = proCta({ signedIn: Boolean(currentUser()), cycle });
-    if (billing && currentUser() && billing.userId === currentUser().id) cta = proCta({ signedIn: true, cycle, subscription: billing.subscription });
-    $('pro-btn-label').textContent = cta.label;
-    $('plan-note').textContent = cta.note;
-
-    const on = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors bg-ink text-paper';
-    const off = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors text-graphite hover:text-ink';
-    $('toggle-monthly').className = cycle === 'monthly' ? on : off;
-    $('toggle-yearly').className = cycle === 'yearly' ? on : off;
-    $('toggle-monthly').setAttribute('aria-pressed', String(cycle === 'monthly'));
-    $('toggle-yearly').setAttribute('aria-pressed', String(cycle === 'yearly'));
-  }
-
-  function currentUser() {
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && /^sb-.*-auth-token$/.test(k)) {
-          const v = JSON.parse(localStorage.getItem(k) || 'null');
-          const u = (v && (v.user || (v.currentSession && v.currentSession.user))) || null;
-          if (u && u.id) return { email: u.email || '', id: u.id };
-        }
-      }
-    } catch (e) { /* private mode — treat as signed out */ }
-    return null;
-  }
-
-  function checkoutUrl(variant, email, id) {
-    const params = new URLSearchParams({ 'checkout[email]': email || '', 'checkout[custom][user_id]': id || '' });
-    return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
-  }
-
-  async function loadBilling() {
-    const { supabase } = await import('../lib/supabase.js');
-    const { data: { user } = {}, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) throw new Error('Billing account could not be checked');
-    const { data: subscription, error } = await supabase.from('subscriptions')
-      .select('plan_type, status, subscription_end, lemonsqueezy_subscription_id')
-      .eq('user_id', user.id).maybeSingle();
-    if (error) throw error;
-    return { userId: user.id, subscription };
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    applyCycle();
-    if (currentUser()) loadBilling().then((result) => { billing = result; applyCycle(); }).catch(() => { /* checked again before checkout */ });
-    $('toggle-monthly').addEventListener('click', () => { cycle = 'monthly'; applyCycle(); });
-    $('toggle-yearly').addEventListener('click', () => { cycle = 'yearly'; applyCycle(); });
-
-    // Never a new tab: iOS Safari blocks the popup and in-app browsers
-    // swallow it, so the customer sees nothing happen. Prefer the
-    // LemonSqueezy overlay, fall back to same-tab navigation. A signed-out
-    // visitor never reaches this for AI Practice (the AI Practice button starts the trial
-    // instead, below); the intent branch stays for any caller that sells.
-    function open(variant, intentKey) {
-      const u = currentUser();
-      if (!u) {
-        try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
-        window.location.href = 'https://deutsch-meister.de/signup';
-        return;
-      }
-      // Arm the app's checkout_completed observer (src/lib/funnelTracking.js).
-      try { sessionStorage.setItem('dm_checkout_pending', JSON.stringify({ plan: intentKey, amount: DATA[intentKey] ? DATA[intentKey].price : null })); } catch (e) { /* private mode */ }
-      track('checkout_opened', { product: intentKey, surface: 'pricing_pro' });
-      const url = checkoutUrl(variant, u.email, u.id);
-      if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
-        window.LemonSqueezy.Url.Open(url);
-      } else {
-        window.location.href = url;
-      }
-    }
-
-    // The overlay script itself (lemon.js) and its 'Checkout.Success' →
-    // /subscription/success handler are set up once, for every checkout on the
-    // page, by components/CourseCheckout.astro when a session exists.
-
-    // Signed out, this button starts the account trial and nothing else: no
-    // buy intent, so signup is not followed by a paid checkout the label never
-    // mentioned. Signed in, it is the checkout it says it is.
-    $('pro-btn').addEventListener('click', async () => {
-      const cta = proCta({ signedIn: Boolean(currentUser()), cycle });
-      track('checkout_intent', { product: cycle, surface: 'pricing_pro', signed_in: cta.action !== 'signup' });
-      if (cta.action === 'signup') {
-        window.location.href = cta.href;
-        return;
-      }
-      $('pro-btn').disabled = true;
-      try {
-        // Recheck at the click, including failed/paused billing and recurring IDs
-        // retained by legacy course rows until provider reconciliation retires them.
-        billing = await loadBilling();
-        if (billing.userId !== currentUser()?.id) throw new Error('Billing account changed');
-        const checked = proCta({ signedIn: true, cycle, subscription: billing.subscription });
-        if (checked.action === 'portal') {
-          window.location.href = checked.href;
-          return;
-        }
-        open(VARIANTS[cycle], cycle);
-      } catch {
-        window.location.href = 'https://deutsch-meister.de/subscription';
-      } finally {
-        $('pro-btn').disabled = false;
-        applyCycle();
-      }
-    });
-  });
-</script>

@@ -45,7 +45,7 @@ export const minutesPerDay = (plan) => Math.round(plan.minutes / plan.days / 5) 
 export const STATIONS = ALL_LEVELS.map((level, index) => {
   const meta = LEVELS[index];
   const course = LEVEL_COURSES[productKeyForLevel(level)] || null;
-  const status = level === FREE_LEVEL ? 'free' : COMING_SOON_LEVELS.includes(level) ? 'building' : 'ticket';
+  const status = COMING_SOON_LEVELS.includes(level) ? 'building' : 'ticket';
   return {
     level,
     code: meta.code,
@@ -72,7 +72,7 @@ export const TICKET_STATIONS = STATIONS.filter((s) => s.status === 'ticket');
 export const stationStatusLine = (station) => {
   if (station.status === 'free') return 'Free · no account';
   if (station.status === 'building') return 'Coming next';
-  return `${station.priceLabel} once · yours to keep`;
+  return `Pay once · this course, yours to keep`;
 };
 
 /** What one level's guided plan is, in one honest line. */
@@ -109,7 +109,7 @@ export const ticketLines = (level) => {
     {
       key: 'terms',
       title: 'One payment. No subscription.',
-      body: `Nothing renews and nothing is charged again. When the ${COURSE_PRO_MONTHS} months end, ${s.code} stays yours and the AI tools return to the free allowance — unless you choose AI Practice.`,
+      body: `Nothing renews and nothing is charged again. When the ${COURSE_PRO_MONTHS} months end, ${s.code} stays yours and the AI tools return to the free allowance.`,
       removes: 'paying every month for a level you finish once.',
     },
     {
@@ -123,10 +123,11 @@ export const ticketLines = (level) => {
 
 /** AI Practice, framed against the ticket: optional practice alongside a course. */
 export const PRO_OFFER = {
+  onSale: false,
   monthly: PLANS.monthly,
   yearly: PLANS.yearly,
   lines: [
-    'A paid subscription opens the full A1.1 course · other courses sold separately',
+    'Existing subscribers keep their current access',
     `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month`,
     'AI speaking practice',
     `${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day`,
@@ -189,9 +190,9 @@ export const FIT_CHOICES = [
  */
 export const EXAM_ROUTE = {
   title: 'Looking ahead to B1 or B2?',
-  body: "The A2, B1 and B2 guided courses are coming next. Start A1.1 with a free first Lektion or continue with A1.2. AI Practice opens the full A1.1 course; every other course is a one-time purchase. The separate telc B1 package is not on sale.",
+  body: "The A2, B1 and B2 guided courses are coming next. Start A1.1 with a free first Lektion or continue with A1.2. Each course is a separate one-time purchase. The separate telc B1 package is not on sale.",
   links: [
-    { label: 'See AI Practice', href: '/pricing/#pro' },
+    { label: 'See courses', href: '/courses/' },
     { label: 'Exam routes · DE', href: '/pruefung/', lang: 'de' },
     { label: 'telc B1 course · DE', href: '/telc-b1-komplettvorbereitung/', lang: 'de' },
   ],
@@ -199,7 +200,7 @@ export const EXAM_ROUTE = {
 
 /** What the free first stop includes (no account). */
 export const FREE_STOP_LINES = [
-  `${FREE_LEKTION_LABEL} of the ${STATIONS[0].code} course, free and with no account`,
+  `${FREE_LEKTION_LABEL} of ${STATIONS[0].code} is free, with no account`,
   `Sentence X-Ray: ${ANON_DAILY_LIMIT} free analysis a day`,
   `The grammar explanations of all ${LEVEL_COUNT} levels, to read`,
 ];
@@ -220,11 +221,11 @@ export const OFFER_FAQ = [
   },
   {
     q: `What happens when the ${COURSE_PRO_MONTHS} months of AI Practice end?`,
-    a: `The level you bought stays open. The AI tools go back to the free allowance (Sentence X-Ray: ${FREE_DAILY_LIMIT} a day). You are never charged unless you choose AI Practice yourself.`,
+    a: `The level you bought stays open. The AI tools go back to the free allowance (Sentence X-Ray: ${FREE_DAILY_LIMIT} a day). Nothing renews automatically.`,
   },
   {
-    q: 'Should I buy a level or AI Practice?',
-    a: `Buy a level to keep the course and work through it at your pace. AI Practice is a subscription for AI writing feedback, speaking practice and Sentence X-Ray; it also opens the full A1.1 course. Every other course is a one-time purchase. A level already includes ${COURSE_PRO_MONTHS} months of AI Practice.`,
+    q: 'Does one purchase open other courses?',
+    a: `Each course purchase opens that course only, including its lessons, checkpoints, final test, review and certificate. It includes ${COURSE_PRO_MONTHS} months of AI tools. Existing subscriptions and older purchases keep their current access.`,
   },
   {
     q: 'How much AI practice do I get?',

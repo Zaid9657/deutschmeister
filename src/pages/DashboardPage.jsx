@@ -594,7 +594,7 @@ const DashboardPage = () => {
                 </div>
               </div>
               <Button href="/pricing/" variant={firstRun ? 'secondary' : 'primary'} className="whitespace-nowrap">
-                <Crown className="w-4 h-4" /> Upgrade to AI Practice
+                <Crown className="w-4 h-4" /> See courses
               </Button>
             </Card>
           </Reveal>

@@ -129,13 +129,13 @@ test('canOpenLevel mirrors SubscriptionContext.hasLevelAccess', () => {
   const past = '2026-10-01T00:00:00Z';
   assert.equal(canOpenLevel('a1.1', {}, now), true, 'A1.1 is free');
   assert.equal(canOpenLevel('a1.2', {}, now), false);
-  assert.equal(canOpenLevel('a1.2', { profile: { trial_started_at: past, trial_ends_at: future, is_subscribed: false } }, now), true, 'live trial');
+  assert.equal(canOpenLevel('a1.2', { profile: { trial_started_at: past, trial_ends_at: future, is_subscribed: false } }, now), false, 'trials do not open paid courses');
   assert.equal(canOpenLevel('a1.2', { profile: { trial_started_at: past, trial_ends_at: past } }, now), false, 'ended trial');
   assert.equal(canOpenLevel('a1.2', { profile: { trial_started_at: past, trial_ends_at: future, is_subscribed: true } }, now), false, 'checkTrialStatus: a subscribed flag is not a trial');
-  assert.equal(canOpenLevel('a1.2', { subscription: { status: 'cancelled', subscription_end: future } }, now), true, 'paid period, cancelled but running');
+  assert.equal(canOpenLevel('a1.2', { subscription: { status: 'cancelled', plan_type: 'monthly', subscription_start: past, subscription_end: future } }, now), true, 'paid period, cancelled but running');
   assert.equal(canOpenLevel('a1.2', { subscription: { status: 'expired', subscription_end: future } }, now), false);
   assert.equal(canOpenLevel('a1.2', { subscription: { status: 'active', subscription_end: past } }, now), false, 'an expired comp grant opens nothing');
-  assert.equal(canOpenLevel('b1.1', { purchases: [{ status: 'active', product_key: 'course_a2_1', access_until: future }] }, now), true, 'an included Pro window opens every level');
+  assert.equal(canOpenLevel('b1.1', { purchases: [{ status: 'active', product_key: 'course_a2_1', created_at: past, access_until: future }] }, now), true, 'an included Pro window opens every level');
   assert.equal(canOpenLevel('a1.2', { purchases: [{ status: 'active', product_key: 'course_a1_2', access_until: past }] }, now), true, 'the bought course is lifetime');
   assert.equal(canOpenLevel('a1.2', { purchases: [{ status: 'active', product_key: 'course_a1', access_until: null }] }, now), true, 'a legacy band key still unlocks its levels');
   assert.equal(canOpenLevel('a1.2', { purchases: [{ status: 'refunded', product_key: 'course_a1_2', access_until: future }] }, now), false);
@@ -210,7 +210,7 @@ test('selection names the step each learner can open, and skips the finished and
       { id: 'grantLapsedA12', trial_started_at: PAST, trial_ends_at: PAST, is_subscribed: true },
     ],
     subscriptions: [
-      { user_id: 'proA12', status: 'active', subscription_end: FUTURE },
+      { user_id: 'proA12', plan_type: 'monthly', subscription_start: PAST, status: 'active', subscription_end: FUTURE },
       { user_id: 'grantLapsedA12', status: 'active', subscription_end: PAST },
     ],
     purchases: [
@@ -227,7 +227,6 @@ test('selection names the step each learner can open, and skips the finished and
     returning: { nextNr: 4, checkpointNr: null, finalTest: false },
     boughtA12: { nextNr: 2, checkpointNr: null, finalTest: false },
     legacyA12: { nextNr: 2, checkpointNr: null, finalTest: false },
-    trialA12: { nextNr: 2, checkpointNr: null, finalTest: false },
     proA12: { nextNr: 2, checkpointNr: null, finalTest: false },
   });
   // Since the Lektion gate the A1.1 learners' access is read too.
@@ -262,7 +261,6 @@ test('after Lektion 12 and Checkpoint 4 the reminder names the Abschlusstest unt
   });
   const out = await selectRecipients({ client: db, now: NOW });
   assert.deepEqual(out.map((r) => [r.id, r.finalTest, r.nextNr, r.checkpointNr]).sort(), [
-    ['a12open', true, null, null],
     ['failed', true, null, null],
     ['open', true, null, null],
     ['otherProgram', true, null, null],

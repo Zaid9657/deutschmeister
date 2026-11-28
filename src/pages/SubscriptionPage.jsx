@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crown, Check, Clock, Shield, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Crown, Clock, Shield, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -14,11 +14,11 @@ import { courseHomeFor } from '../lib/courseEntry.js';
 import { freeLektionen } from '../config/freeTier.js';
 import TrialReturnCard from '../components/TrialReturnCard.jsx';
 import { planStatusCopy } from '../lib/planStatus.js';
-import { proPlanLines } from '../lib/proPlanLines.js';
 import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
-import { PLANS, num, productKeyForLevel, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
-import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
+import { num, productKeyForLevel, isProductOnSale, currentPrice, isLaunchActive, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
+import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
+import CoursePrice, { usePriceNow } from '../components/CoursePrice.jsx';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
@@ -26,7 +26,6 @@ import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
-import Tilt from '../components/ui/Tilt.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 
 // Where an owned level opens: its guided course when it has one, else the
@@ -63,6 +62,7 @@ const SubscriptionPage = () => {
   const [reloading, setReloading] = useState(false);
   const pollRef = useRef(null);
   const isGerman = i18n.language === 'de';
+  const priceNow = usePriceNow();
 
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
@@ -118,48 +118,7 @@ const SubscriptionPage = () => {
 
   // A validated coupon is bound to the selected product; null = none.
   const [coupon, setCoupon] = useState(null);
-  const [couponProduct, setCouponProduct] = useState('yearly');
-
-  const handleSubscribe = (planType) => {
-    // Nothing is sold from billing that failed to load: an unread row is not
-    // "no plan", and a second checkout would bill twice (ACC-02).
-    if (subLoading || verifying || !billingVerified) return;
-    if (recurringBilling) {
-      if (billingAction) window.location.href = billingAction.href;
-      return;
-    }
-    const plan = LEMONSQUEEZY_CONFIG.plans[planType];
-    const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
-      plan.variantId,
-      user?.email || '',
-      user?.id || '',
-      coupon?.productKey === planType ? coupon : null
-    );
-    markCheckoutStarted(planType, PLANS[planType]?.price);
-    openCheckout(checkoutUrl);
-
-    // Start polling: first poll Supabase, then call verify as fallback
-    setPendingProduct(planType);
-    setVerifying(true);
-    setVerifyMessage('');
-    let count = 0;
-    pollRef.current = setInterval(async () => {
-      count += 1;
-      await refreshSubscription();
-
-      // After 15s of polling Supabase, try the verify endpoint as fallback
-      if (count === 5) {
-        await verifySubscription();
-      }
-
-      // Stop after 20 attempts (60s)
-      if (count >= 20) {
-        clearInterval(pollRef.current);
-        pollRef.current = null;
-        setVerifying(false);
-      }
-    }, 3000);
-  };
+  const [couponProduct, setCouponProduct] = useState('course_a1_1');
 
   // One-time course (docs/revenue-plan-2026-08-31.md Lane 2). The card renders
   // only when the LS product exists (variantId set) or the user already owns
@@ -192,18 +151,20 @@ const SubscriptionPage = () => {
   const orderedLevelCourses = leadCourse
     ? [leadCourse, ...visibleLevelCourses.filter((c) => c.key !== leadCourse.key)]
     : visibleLevelCourses;
-  // Refused at the paid rest of a course whose first Lektion is free (Lektion
-  // gate, src/config/freeTier.js): that level has no course product; a
-  // subscription opens it, so say that instead of leading with nothing.
+  // At the paid rest of a course, explain which first Lektion stays free
+  // and that buying this specific course opens the remaining path.
   const gateFree = blockedLevel ? freeLektionen(blockedLevel) : 0;
 
   const startPurchase = (productKey, variantId, price) => {
-    if (subLoading || verifying || !billingVerified || ownsCheckoutProduct(productKey, purchases)) return;
+    if (!variantId || !isProductOnSale(productKey) || subLoading || verifying || !billingVerified || ownsCheckoutProduct(productKey, purchases)) return;
+    const level = LEMONSQUEEZY_CONFIG.levelCourses[productKey]?.levels[0];
+    if (level) price = currentPrice(level);
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       variantId,
       user?.email || '',
       user?.id || '',
-      coupon?.productKey === productKey ? coupon : null
+      coupon?.productKey === productKey ? coupon : null,
+      productKey
     );
     markCheckoutStarted(productKey, price);
     openCheckout(checkoutUrl);
@@ -222,7 +183,6 @@ const SubscriptionPage = () => {
       }
     }, 3000);
   };
-  const handleBuyCourse = () => startPurchase('telc_b1_komplett', course.variantId, course.price);
 
   // Resume a checkout that signup interrupted: /pricing/ stored the product
   // key before sending the visitor to /signup, and every post-auth redirect
@@ -236,10 +196,7 @@ const SubscriptionPage = () => {
     autoBuyRef.current = true;
     clearBuyIntent();
     setSearchParams({}, { replace: true });
-    if (key === 'monthly' || key === 'yearly') {
-      if (recurringBilling || !isSubscribed) handleSubscribe(key);
-      return;
-    }
+    if (!isProductOnSale(key)) return;
     const target = key === 'telc_b1_komplett' ? course : LEMONSQUEEZY_CONFIG.levelCourses[key] || LEMONSQUEEZY_CONFIG.offerProducts[key];
     if (target?.comingSoon || ownsCheckoutProduct(key, purchases)) return;
     if (target?.variantId && !hasProduct(key)) startPurchase(key, target.variantId, target.price);
@@ -272,31 +229,6 @@ const SubscriptionPage = () => {
     setVerifying(false);
   };
 
-  const plans = [
-    {
-      id: 'monthly',
-      name: isGerman ? PLANS.monthly.nameDe : PLANS.monthly.name,
-      price: num(PLANS.monthly.price),
-      period: isGerman ? '/Monat' : '/month',
-      // One AI Practice, two billings: both cards render the same lines, built from
-      // the marketing.js claims (lib/proPlanLines.js, tests/subscription-plan-lines.test.mjs).
-      features: proPlanLines(isGerman),
-      highlight: false,
-    },
-    {
-      id: 'yearly',
-      name: isGerman ? PLANS.yearly.nameDe : PLANS.yearly.name,
-      price: num(PLANS.yearly.price),
-      period: isGerman ? '/Jahr' : '/year',
-      savings: isGerman
-        ? `Sie sparen ${PLANS.yearly.savingPercent} %`
-        : `Save ${PLANS.yearly.savingPercent}%`,
-      monthlyEquiv: num(PLANS.yearly.asMonthly),
-      features: proPlanLines(isGerman),
-      highlight: true,
-    },
-  ].sort((a) => a.id === 'yearly' ? -1 : 1);
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4 font-body">
       <SEO title="Subscription" description="Manage your DeutschMeister subscription." path="/subscription" noindex />
@@ -317,8 +249,8 @@ const SubscriptionPage = () => {
           {gateFree > 0 && !hasFullCourse(blockedLevel) && (
             <p data-lektion-gate className="mt-4 text-[0.9375rem] font-bold text-ink">
               {isGerman
-                ? `Lektion ${gateFree} von ${blockedLevel.toUpperCase()} ist kostenlos. Mit einem Abo öffnen Sie den ganzen Kurs: alle Lektionen, die Checkpoints und den Abschlusstest.`
-                : `Lektion ${gateFree} of ${blockedLevel.toUpperCase()} is free. A subscription opens the whole course: every Lektion, the checkpoints and the final test.`}
+                ? `Lektion ${gateFree} von ${blockedLevel.toUpperCase()} ist kostenlos. Mit dem Kauf dieses Kurses öffnen Sie: alle Lektionen, die Checkpoints und den Abschlusstest.`
+                : `Lektion ${gateFree} of ${blockedLevel.toUpperCase()} is free. Buying this course opens: every Lektion, the checkpoints and the final test.`}
             </p>
           )}
         </div>
@@ -489,10 +421,10 @@ const SubscriptionPage = () => {
         <section className="mb-12" aria-label="Course and exam bundles">
           <p className="mb-3 text-[0.8125rem] text-graphite" data-price-tax-note>{isGerman ? PRICE_TAX_NOTE_DE : PRICE_TAX_NOTE}</p>
           <div className="grid gap-4 sm:grid-cols-3">
-            {Object.values(LEMONSQUEEZY_CONFIG.offerProducts).map((p) => <Card key={p.key} className="p-5" edge={p.key === 'a1_complete' ? 'siegel' : 'paper'}>
+            {Object.values(LEMONSQUEEZY_CONFIG.offerProducts).filter((p) => !blockedLevel && (p.variantId || ownsCheckoutProduct(p.key, purchases))).map((p) => <Card key={p.key} className="p-5" edge="paper">
               <h2 className="font-display text-xl">{p.name}</h2>
               <p className="my-3 text-xl">€{num(p.price)} · pay once</p>
-              <p>{p.key === 'a1_exam_pack' ? 'A1 exam plan, short practice test, writing and speaking tasks.' : p.key === 'a1_complete' ? 'A1.2 course + A1 Exam Pack, yours to keep.' : 'Every level course and exam pack as released. A1.1, A1.2 and the A1 Exam Pack are ready; everything else is coming next, included when released.'}</p>
+              <p>A1 exam plan, short practice test, writing and speaking tasks.</p>
               <p className="my-3">{p.proMonths} months of AI Practice included. Nothing renews automatically.</p>
               {ownsCheckoutProduct(p.key, purchases) ? <Button to={p.home} variant="secondary">Owned · open →</Button>
                 : p.variantId ? <Button onClick={() => startPurchase(p.key, p.variantId, p.price)} disabled={verifying || !billingVerified}>Buy {p.name}</Button>
@@ -514,8 +446,9 @@ const SubscriptionPage = () => {
             {leadCourse && (
               <p className="mt-6 text-center text-[0.9375rem] font-bold text-ink">
                 {isGerman
-                  ? `Sie wollten gerade ${leadCourse.code} öffnen. Behalten Sie die Stufe dauerhaft: €${num(leadCourse.price)} einmalig, ${leadCourse.proMonths} Monate AI Practice inklusive.`
-                  : `You were about to open ${leadCourse.code}. Keep it for good: €${num(leadCourse.price)} once, ${leadCourse.proMonths} months of AI Practice included.`}
+                  ? `Sie wollten gerade ${leadCourse.code} öffnen. Kaufen Sie genau diesen Kurs einmalig.`
+                  : `You were about to open ${leadCourse.code}. Buy this course once.`}
+                {' '}<CoursePrice level={leadCourse.levels[0]} language={i18n.language} />
               </p>
             )}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -539,7 +472,7 @@ const SubscriptionPage = () => {
                     <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
                     <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
                     {!c.comingSoon && <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-                      €{num(c.price)}
+                      <CoursePrice level={firstLevel} language={i18n.language} />
                       <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
                         {isGerman ? 'einmalig' : 'one time'}
                       </span>
@@ -573,148 +506,26 @@ const SubscriptionPage = () => {
           </Reveal>
         )}
 
-        {/* AI Practice — rent the whole line. */}
-        <SectionHeading
-          level={2}
-          align="center"
-          title={isGerman ? 'Optional dazu: AI Practice' : 'Optional: add AI Practice'}
-          lead={isGerman ? 'KI-Schreibfeedback, Sprechtraining, Satz-Röntgen und der ganze A1.1-Kurs. Weitere Kurse kaufen Sie einzeln. Jederzeit kündbar.' : 'AI writing feedback, speaking practice, Sentence X-Ray and the full A1.1 course. Other courses are sold separately. Cancel anytime.'}
-        />
-        {/* Plan Cards — the grid a learner chooses from, so they tilt. The
-            featured plan rests on a siegel edge and carries the page's one
-            gold marker (design-tokens.js rule 2). */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12 pt-3">
-          {plans.map((plan, index) => (
-            <Reveal key={plan.id} delay={90 * index} className="h-full">
-              <Tilt className="h-full">
-                <Card
-                  raised
-                  edge={plan.highlight ? 'siegel' : 'paper'}
-                  className="relative flex h-full flex-col p-6"
-                >
-                  {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2" data-atropos-offset="6">
-                      <span className="inline-flex items-center rounded-pill bg-gold px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink shadow-raise">
-                        {isGerman ? 'Bester Wert' : 'Best Value'}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="text-center mb-6">
-                    <h3 className="text-[1.125rem] font-bold text-ink mb-1">
-                      {plan.name}
-                    </h3>
-                    <div className="flex items-baseline justify-center gap-1" data-atropos-offset="4">
-                      <span className="font-display text-[2.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">€{plan.price}</span>
-                      <span className="text-graphite">{plan.period}</span>
-                    </div>
-                    {plan.savings && (
-                      <Chip tone="limette" className="mt-3">
-                        {plan.savings}
-                      </Chip>
-                    )}
-                    {plan.monthlyEquiv && (
-                      <p className="mt-2 font-data text-[0.8125rem] text-graphite">
-                        {isGerman ? `Nur €${plan.monthlyEquiv}/Monat` : `Only €${plan.monthlyEquiv}/month`}
-                      </p>
-                    )}
-                  </div>
-
-                  <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <Check className="w-5 h-5 text-siegel flex-shrink-0 mt-0.5" aria-hidden="true" />
-                        <span className="text-sm text-ink">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    onClick={() => handleSubscribe(plan.id)}
-                    disabled={subLoading || verifying || !billingVerified || (isSubscribed && !recurringBilling)}
-                    variant={plan.highlight ? 'primary' : 'secondary'}
-                    shimmer={plan.highlight && !isSubscribed}
-                    size="lg"
-                    className="mt-auto w-full"
-                  >
-                    {recurringBilling
-                      ? billingAction?.label
-                      : isSubscribed
-                      ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
-                      : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
-                  </Button>
-                </Card>
-              </Tilt>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* Trial info. The trial belongs to the ACCOUNT (granted at signup); the
-            plans carry none of their own — Lemon Squeezy charges a plan the
-            moment it is bought (12 of 12 subscription_created events were
-            'active' with no trial_ends_at, measured 2026-10-01). Until then this
-            line told every visitor, including those whose trial had ended, that
-            the plans included a free trial. So: said only during the trial, and
-            it says what is true then. tests/claims.test.mjs bans the old claim. */}
-        {inTrial && !isSubscribed && (
-          <Reveal as="p" className="text-center text-sm text-graphite mb-8">
-            {isGerman
-              ? `Ihre ${TRIAL_DAYS}-tägige Testphase gehört zu Ihrem Konto. Ein Plan wird berechnet, sobald Sie ihn abschließen, auch während der Testphase. Jederzeit kündbar.`
-              : `Your ${TRIAL_DAYS}-day trial is on your account. A plan is charged as soon as you buy it, even during the trial. Cancel anytime.`}
-          </Reveal>
-        )}
+        {recurringBilling && billingAction?.href && <p className="mb-8 text-center"><a href={billingAction.href}>{billingAction?.label}</a></p>}
 
         {/* One-time course — rendered only when the buyer owns it (link to the
             course area) or the LS product exists (variantId configured), so an
             unset env var can never open a dead checkout. */}
-        {(ownsCourse || course.variantId) && (
+        {ownsCourse && (
           <Reveal className="mb-12 max-w-2xl mx-auto">
             <Card raised className="p-6">
               <Chip tone="label" className="mb-3">
                 {isGerman ? 'Einmalkauf · kein Abo' : 'One-time purchase · not a subscription'}
               </Chip>
               <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink">{course.name}</h2>
-              {ownsCourse ? (
-                <>
-                  <p className="text-sm text-graphite mt-2">
-                    {isGerman
-                      ? 'Sie haben den Kurs. Ihr 4-Wochen-Plan wartet.'
-                      : 'You own this course. Your 4-week plan is waiting.'}
-                  </p>
-                  <Button to="/telc-b1-kurs" size="lg" className="mt-4">
-                    {isGerman ? 'Zum Kurs →' : 'Open the course →'}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <p className="text-sm text-graphite mt-2">
-                    {isGerman
-                      ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten AI Practice-Zugang inklusive.`
-                      : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of AI Practice access included.`}
-                  </p>
-                  <p className="mt-3 font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-                    €{num(course.price)}
-                    <span className="ml-1 text-sm font-normal font-body tracking-normal text-graphite">
-                      {isGerman ? 'einmalig' : 'one time'}
-                    </span>
-                  </p>
-                  <Button onClick={handleBuyCourse} disabled={verifying || !billingVerified} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
-                    {isGerman ? 'Kurs kaufen' : 'Buy the course'}
-                  </Button>
-                  <p className="mt-3 text-xs">
-                    <a href="/telc-b1-komplettvorbereitung/" className="font-bold text-siegel transition-colors hover:text-siegel-deep">
-                      {isGerman ? 'Was genau drin ist →' : 'See what exactly is inside →'}
-                    </a>
-                  </p>
-                </>
-              )}
+              <p className="mt-2">You own this course.</p><Button to="/telc-b1-kurs">Open the course →</Button>
             </Card>
           </Reveal>
         )}
 
         {/* A code is for the few who have one: behind a disclosure, below the
             offers (ACC-13). The server validates it against the selected offer. */}
-        {user ? (
+        {user && !isLaunchActive(priceNow) ? (
           <details className="mb-12 text-center">
             <summary className="cursor-pointer text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
               {isGerman ? 'Haben Sie einen Gutscheincode?' : 'Have a code?'}
@@ -723,8 +534,8 @@ const SubscriptionPage = () => {
               <label className="flex flex-col gap-1 text-sm text-graphite">
                 {isGerman ? 'Gutschein für' : 'Coupon for'}
                 <select value={couponProduct} onChange={(event) => setCouponProduct(event.target.value)} className="rounded-clay border border-rule bg-white px-3 py-2 text-ink">
-                  {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
-                  {levelCourses.filter((c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)).map((c) => (
+
+                  {orderedLevelCourses.filter((c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)).map((c) => (
                     <option key={c.key} value={c.key}>{isGerman ? c.nameDe : c.name}</option>
                   ))}
                   {course.variantId && !ownsCourse && <option value="telc_b1_komplett">{course.name}</option>}

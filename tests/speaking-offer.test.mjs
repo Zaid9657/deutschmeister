@@ -86,7 +86,7 @@ test('never a dead checkout: an unset checkout id falls back to Pro', () => {
   for (const level of SELLABLE_LEVELS) {
     for (const checkoutIdFor of [noneConfigured, undefined, null, 'not-a-function']) {
       const offer = speakingLimitOffer({ profileLevel: level, checkoutIdFor });
-      assert.equal(offer.kind, 'pro', `${level} with ${String(checkoutIdFor)}`);
+      assert.equal(offer.kind, 'unavailable', `${level} with ${String(checkoutIdFor)}`);
       assert.equal(offer.reason, 'no_checkout');
       assert.equal(offer.courseHref, null);
     }
@@ -97,15 +97,15 @@ test('coming-soon levels, the free level and owned levels fall back to Pro', () 
   assert.ok(COMING_SOON_LEVELS.length > 0);
   for (const level of COMING_SOON_LEVELS) {
     const offer = speakingLimitOffer({ profileLevel: level, checkoutIdFor: allConfigured });
-    assert.equal(offer.kind, 'pro', level);
+    assert.equal(offer.kind, 'unavailable', level);
     assert.equal(offer.reason, 'coming_soon');
     assert.equal(offer.courseHref, null, 'a coming-soon course never gets a checkout link');
   }
   const free = speakingLimitOffer({ profileLevel: 'A1.1', checkoutIdFor: allConfigured });
-  assert.deepEqual([free.kind, free.reason, free.course], ['pro', 'free_level', null]);
+  assert.equal(free.kind, 'course'); assert.equal(free.course.key, 'course_a1_1');
 
   const owned = speakingLimitOffer({ profileLevel: 'A1.2', checkoutIdFor: allConfigured, ownedLevels: ['a1.2'] });
-  assert.deepEqual([owned.kind, owned.reason], ['pro', 'owned']);
+  assert.deepEqual([owned.kind, owned.reason], ['unavailable', 'owned']);
   // A retired band purchase (course_a2) owns both halves; the caller expands it.
   const band = speakingLimitOffer({ profileLevel: 'A2.2', checkoutIdFor: allConfigured, ownedLevels: ['a2.1', 'a2.2'] });
   assert.equal(band.reason, 'coming_soon');
@@ -114,13 +114,13 @@ test('coming-soon levels, the free level and owned levels fall back to Pro', () 
   assert.equal(other.kind, 'course');
 
   const none = speakingLimitOffer({ checkoutIdFor: allConfigured });
-  assert.deepEqual([none.kind, none.reason], ['pro', 'no_level']);
+  assert.deepEqual([none.kind, none.reason], ['unavailable', 'no_level']);
 });
 
 test('every level of the ladder resolves to exactly one of the two offers', () => {
   for (const level of ALL_LEVELS) {
     const offer = speakingLimitOffer({ profileLevel: level, checkoutIdFor: allConfigured });
-    assert.ok(['course', 'pro'].includes(offer.kind), level);
+    assert.ok(['course', 'unavailable'].includes(offer.kind), level);
     assert.equal(offer.kind === 'course', SELLABLE_LEVELS.includes(level), `${level}: course iff sellable`);
   }
 });
@@ -168,14 +168,13 @@ test('both hrefs are ?buy= keys that buyIntent and SubscriptionPage honour', () 
     assert.equal(checkoutHref(key), `/subscription?buy=${key}`);
     assert.ok(valid.test(key), `buyIntent rejects ${key}`);
   }
-  assert.equal(PRO_OFFER.href, '/subscription?buy=monthly');
-  assert.ok(valid.test(PRO_OFFER.key));
+  assert.equal(PRO_OFFER.href, '/courses/'); assert.equal(PRO_OFFER.key, null);
   // The signed-out resume (pricing.astro / CourseCheckout.astro store the key,
   // postAuthPath reads it back through this pattern) must accept every product
   // key there is. It refused every sub-level key from 2026-09-08 to 2026-09-28.
   const everyKey = [...Object.keys(PLANS), ...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES), ...Object.keys(LEGACY_LEVEL_COURSES)];
   for (const key of everyKey) assert.ok(valid.test(key), `buyIntent drops the ${key} intent after signup`);
-  for (const junk of ['', 'course_', 'course_a1_', 'course_a1_2_3', 'pro', 'monthly?x=1', 'course_A1_2']) {
+  for (const junk of ['', 'course_', 'course_a1_', 'course_a1_2_3', 'unavailable', 'monthly?x=1', 'course_A1_2']) {
     assert.ok(!valid.test(junk), `buyIntent accepts ${JSON.stringify(junk)}`);
   }
   const sub = read('src/pages/SubscriptionPage.jsx');
@@ -205,8 +204,8 @@ test('the speaking page renders the offer at the cap and on a locked mission, no
 
   const card = read('src/components/speaking/SpeakingLimitOffer.jsx');
   assert.ok(card.includes("from '../ui/Button.jsx'") && card.includes("from '../ui/Card.jsx'"), 'ui primitives only');
-  assert.ok(card.includes('eur(course.price)') && card.includes('eur(PLANS.monthly.price)'), 'prices derive from pricing.js');
+  assert.ok(card.includes('<CoursePrice level={offer.level}'), 'prices derive from pricing.js');
   assert.ok(card.includes('course.proMonths'), 'the included Pro months are shown');
-  assert.ok(card.includes('to={offer.courseHref}') && card.includes('to={offer.pro.href}'));
+  assert.ok(card.includes('to={offer.courseHref}') && !card.includes('to={offer.pro.href}'));
   assert.ok(!/bg-(?:red|green|blue|amber|rose|indigo|violet|purple)-\d/.test(card), 'tokens only');
 });

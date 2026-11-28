@@ -18,7 +18,7 @@
 // or back from a checkout renders its page under the sign-in and verification
 // gates only. Those routes are derived, not typed: every route under
 // /subscription in src/App.jsx, the destination postAuthPath() resumes each
-// product's intent at, the in-app offer links (checkoutHref, PRO_OFFER), and the
+// product's intent at, the in-app offer links (checkoutHref), and the
 // success landing the shared Astro checkout redirects to. No component on such a
 // route may render the onboarding intro (IntroSlides, or a redirect to
 // /onboarding) in place of its children. The intro still runs on /dashboard,
@@ -32,8 +32,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
-import { PLANS, COURSES, LEVEL_COURSES, SELLABLE_LEVELS, productKeyForLevel } from '../src/data/pricing.js';
-import { checkoutHref, PRO_OFFER } from '../src/lib/speakingOffer.js';
+import { PLANS, COURSES, LEVEL_COURSES, SELLABLE_LEVELS, productKeyForLevel, isProductOnSale } from '../src/data/pricing.js';
+import { checkoutHref } from '../src/lib/speakingOffer.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -92,7 +92,7 @@ const sourceOf = (name) => {
   if (!m) return null;
   const base = join('src', m[1]);
   return [base, `${base}.jsx`, `${base}.js`, join(base, 'index.jsx')]
-    .find((p) => existsSync(join(ROOT, p)) && statSync(join(ROOT, p)).isFile()) || null;
+    .find((p) => existsSync(join(ROOT, p)) && statSync(join(ROOT, p)).isFile())?.replace(/\\/g, '/') || null;
 };
 
 /** A component shows the onboarding intro instead of its children: it renders IntroSlides or redirects to /onboarding. */
@@ -136,6 +136,7 @@ const loadBuyIntent = (source = read('src/lib/buyIntent.js')) => {
     .replace(/^export\s+(const|let|function|async function)\s+/gm, '$1 ');
   assert.ok(!/^\s*(import|export)\b/m.test(src), 'buyIntent.js has an import or export form this harness cannot strip');
   const storage = {
+    isProductOnSale,
     safeGet: (k) => (store.has(k) ? store.get(k) : null),
     safeSet: (k, v) => { store.set(k, String(v)); return true; },
     safeRemove: (k) => { store.delete(k); },
@@ -144,7 +145,7 @@ const loadBuyIntent = (source = read('src/lib/buyIntent.js')) => {
   return vm.runInContext(`${src}\n;({ setBuyIntent, peekBuyIntent, clearBuyIntent, postAuthPath });`, ctx);
 };
 
-const PRODUCT_KEYS = [...Object.keys(PLANS), ...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES)];
+const PRODUCT_KEYS = [...Object.keys(PLANS), ...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES)].filter(isProductOnSale);
 
 /** Every path a buyer arrives at on the way to or back from a checkout, with where it came from. */
 const purchaseArrivals = () => {
@@ -156,7 +157,7 @@ const purchaseArrivals = () => {
     buy.clearBuyIntent();
   }
   for (const level of SELLABLE_LEVELS) out.push({ from: `checkoutHref(${level})`, href: checkoutHref(productKeyForLevel(level)) });
-  out.push({ from: 'PRO_OFFER.href', href: PRO_OFFER.href });
+
   const astro = code(read('astro-site/src/components/CourseCheckout.astro'));
   for (const m of astro.matchAll(/['"`](?:https:\/\/deutsch-meister\.de)?(\/subscription[^'"`\s]*)['"`]/g)) {
     out.push({ from: 'CourseCheckout.astro', href: m[1] });
@@ -203,8 +204,8 @@ test('the harness stubs any import buyIntent.js gains, so the suite does not dep
     "import * as ns from './ns.js';",
   ].join('\n');
   const buy = loadBuyIntent(`${extra}\n${read('src/lib/buyIntent.js')}`);
-  buy.setBuyIntent('monthly');
-  assert.equal(buy.postAuthPath(), '/subscription?buy=monthly');
+  buy.setBuyIntent('course_a1_1');
+  assert.equal(buy.postAuthPath(), '/subscription?buy=course_a1_1');
   buy.clearBuyIntent();
   assert.equal(buy.postAuthPath(), '/dashboard');
 });

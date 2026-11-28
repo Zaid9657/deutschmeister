@@ -34,7 +34,7 @@ const ENDED = { is_subscribed: false, trial_ends_at: '2026-10-01T00:00:00Z' };
 const snap = (profile, purchases = []) => ({ signedIn: true, verified: true, profile, purchases, subscription: profile === PRO ? { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2999-01-01' } : null });
 
 test('levelOpen: a trial or Pro opens a level without owning it; a bought course owns it', () => {
-  assert.deepEqual({ ...lib.levelOpen(snap(TRIAL), 'a1.2', NOW) }, { signedIn: true, open: true, owned: false, reason: 'trial' });
+  assert.deepEqual({ ...lib.levelOpen(snap(TRIAL), 'a1.2', NOW) }, { signedIn: true, open: false, owned: false, reason: null });
   assert.deepEqual({ ...lib.levelOpen(snap(PRO), 'a2.1', NOW) }, { signedIn: true, open: true, owned: false, reason: 'pro' });
   assert.deepEqual({ ...lib.levelOpen(snap(ENDED, [{ product_key: 'course_a1_2' }]), 'a1.2', NOW) }, { signedIn: true, open: true, owned: true, reason: 'owned' });
   assert.deepEqual({ ...lib.levelOpen(snap(PRO, [{ product_key: 'course_a1_2' }]), 'a1.2', NOW) }, { signedIn: true, open: true, owned: true, reason: 'owned' }, 'ownership wins over Pro');
@@ -51,7 +51,7 @@ test('levelOpen: a retired band (course_a1) owns both of its sub-levels, and onl
 
 test('`open` keeps its old answer for the exercise player: owned, Pro or a live trial', () => {
   for (const [profile, purchases, open] of [
-    [TRIAL, [], true], [PRO, [], true], [ENDED, [], false], [ENDED, [{ product_key: 'course_a2' }], true], [null, [], false],
+    [TRIAL, [], false], [PRO, [], true], [ENDED, [], false], [ENDED, [{ product_key: 'course_a2' }], true], [null, [], false],
   ]) assert.equal(lib.levelOpen(snap(profile, purchases), 'a2.1', NOW).open, open, JSON.stringify({ profile, purchases }));
 });
 
@@ -81,6 +81,11 @@ for (const [name, profile] of [['trial', TRIAL], ['Pro', PRO]]) {
       assert.ok(buyIn(d), `${d.getAttribute('data-course-door')}: Buy is still there`);
       assert.equal(buyIn(d).disabled, false);
       assert.equal(d.innerHTML, null, 'the door was not rewritten');
+    }
+    if (profile === TRIAL) {
+      assert.equal(continueLink(lineA12), undefined);
+      assert.equal(continueLink(pricingA21), undefined);
+      return;
     }
     assert.equal(continueLink(lineA12).textContent, 'Continue course A1.2 →');
     assert.equal(continueLink(lineA12).href, 'https://deutsch-meister.de/course/a1.2');
@@ -114,12 +119,12 @@ test('a retired course_a1 owner gets Open for A1.1 and A1.2', async () => {
 
 test('ACC-18: one snapshot serves every door on the page', async () => {
   const { body } = page();
-  const run = runCourseCheckout({ body, snapshot: snap(TRIAL) });
+  const run = runCourseCheckout({ body, snapshot: snap(PRO) });
   await run.settle();
   assert.equal(run.snapshotCalls, 1, 'one lookup per page view, not one per level');
   // A Buy click reads ownership once more, for the account signed in at that
   // moment (tests/course-door-rule.test.mjs: another tab may have switched it).
-  await buyIn(body.children[1].children[0]).click();
+  await buyIn(body.children[0].children[0]).click();
   assert.equal(run.snapshotCalls, 2);
 });
 
@@ -143,7 +148,7 @@ test('ACC-18: the snapshot is one auth read, one profile read and one purchases 
 test('getLevelAccess keeps its shape for the exercise player', async () => {
   const trial = await loadLevelAccess(fakeSupabase({ profile: { ...TRIAL, trial_ends_at: '2999-01-01T00:00:00Z' } }).client).getLevelAccess('a2.1');
   assert.equal(trial.signedIn, true);
-  assert.equal(trial.open, true);
+  assert.equal(trial.open, false);
   assert.equal(trial.owned, false);
   const out = await loadLevelAccess(fakeSupabase({ user: null }).client).getLevelAccess('a2.1');
   assert.equal(out.signedIn, false);

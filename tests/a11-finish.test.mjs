@@ -211,7 +211,9 @@ test('completion reports actual milestones, preserves the live next course and o
   assert.match(src, /useLessonLang\(/);
   assert.match(src, /<LangToggle/);
   assert.match(src, /\/course\/\$\{level\}\/review/);
-  assert.match(src, /step\.station\.priceLabel/);
+  assert.match(src, /<CoursePrice level=\{step\.station\.level\}/, 'the next live course shows its current price even without a checkout id');
+  const price = read('src/components/CoursePrice.jsx');
+  assert.match(price, /coursePriceLine\(level, now, language\)/, 'launch wording comes from pricing.js');
   assert.match(src, /kein Goethe-\/telc-Ergebnis/);
   assert.equal(curriculumPath(curriculum).filter((n) => n.kind === 'lektion').length, 12);
   // Live-next-course and existing checkout/access branches also run in course-certificate.test.

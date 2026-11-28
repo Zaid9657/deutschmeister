@@ -177,7 +177,7 @@ test('every paywall reaches /signup only through a tagged door helper, as a plai
 test('the lock door remembers the course page it stands in front of, for after the confirmation link', async () => {
   const lock = code(read('src/components/LockedContentOverlay.jsx'));
   assert.match(lock, /import \{ setReturnPath \} from '\.\.\/lib\/returnPath\.js';/);
-  assert.match(lock, /<Button href=\{levelLockSignupHref\(level\)\} onClick=\{\(\) => setReturnPath\(location\.pathname\)\}/,
+  assert.match(lock, /<Button href=\{levelLockSignupHref\(level\)\} onClick=\{\(\) => \{ setBuyIntent\(course.key\); setReturnPath\(location\.pathname\); \}/,
     'the click on the signup door stores the page under the lock');
   assert.match(lock, /const location = useLocation\(\);/);
   // postAuthPath resumes what returnPath.js keeps (after a pending checkout).

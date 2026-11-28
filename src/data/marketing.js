@@ -221,7 +221,7 @@ export const XRAY_LINE = `${PRO_DAILY_LIMIT} Sentence X-Ray analyses per day`;
 export const XRAY_LINE_DE = `${PRO_DAILY_LIMIT} Satz-Röntgen-Analysen pro Tag`;
 
 /** The free offer, stated with what it actually includes. */
-export const FREE_OFFER_LINE = `${FREE_LEKTION_LABEL} of ${FREE_LEVEL_LABEL} free, no account needed`;
+export const FREE_OFFER_LINE = `${FREE_LEKTION_LABEL} of ${FREE_LEVEL_LABEL} is free, no account needed`;
 export const FREE_OFFER_LINE_DE = `${FREE_LEKTION_LABEL} von ${FREE_LEVEL_LABEL} kostenlos, ohne Konto`;
 
 /**

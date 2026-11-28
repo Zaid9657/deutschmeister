@@ -68,7 +68,7 @@ test('every live paid course is described, not only priced', () => {
     const block = full.split('\n### ').find((b) => b.startsWith(`${c.code} Course`));
     assert.ok(block, `llms-full.txt has no "${c.code} Course" block`);
     assert.ok(block.includes(`${c.lektionen.length} situational lessons with ${c.checkpoints.length} checkpoints and a final test`), `${c.code}: lessons and checkpoints are counted from the curriculum`);
-    assert.ok(block.includes(`${eur(course.price)} once`), `${c.code}: the price derives from pricing.js`);
+    assert.ok(block.includes(`${eur(course.price)} regular price from 1 February 2027`), `${c.code}: the price derives from pricing.js`);
     assert.ok(block.includes(`https://deutsch-meister.de/course/${c.level}`), `${c.code}: the in-app course link (SPA route, no slash)`);
     assert.ok(block.includes(`https://deutsch-meister.de/courses/${c.level.replace('.', '-')}/`), `${c.code}: the course page`);
     assert.ok(short.includes(`https://deutsch-meister.de/courses/${c.level.replace('.', '-')}/`), `${c.code}: llms.txt links the course page`);

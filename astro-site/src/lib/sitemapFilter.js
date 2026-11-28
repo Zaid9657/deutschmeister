@@ -19,7 +19,7 @@ export const courseUrls = (levels) => levels.map((level) => `${SITE}/courses/${l
 
 /** A sitemap filter for @astrojs/sitemap; `comingSoon` defaults to the live list. */
 export function makeSitemapFilter(comingSoon = COMING_SOON_LEVELS) {
-  const unlisted = new Set(courseUrls(comingSoon));
+  const unlisted = new Set([...courseUrls(comingSoon), `${SITE}/courses/a1-complete/`, `${SITE}/courses/all-access/`]);
   return (page) =>
     !unlisted.has(page) &&
     (page === `${SITE}/` ||

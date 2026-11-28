@@ -1,3 +1,15 @@
+# Retired offers: preserve inbound links without offering a checkout.
+[[redirects]]
+  from = "/courses/a1-complete/"
+  to = "/courses/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/courses/all-access/"
+  to = "/courses/"
+  status = 301
+  force = true
+
 [build]
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.

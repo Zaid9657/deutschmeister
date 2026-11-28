@@ -145,7 +145,7 @@ test('a checkout interrupted by signup resumes, and a purchase lands on our succ
   // /pricing/ stores the clicked product before the signup detour; every
   // post-auth redirect consults it; /subscription opens it once.
   const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.ok(pricing.includes("localStorage.setItem('dm_buy_intent'"), 'pricing.astro must store the buy intent before redirecting to signup');
+  assert.ok(pricing.includes("<CourseCheckout />"), 'pricing delegates buy intent to the shared checkout');
   // Since v4 the level buttons and the overlay setup live in the shared
   // checkout component the page renders (one handler per page, not two).
   assert.ok(pricing.includes('<CourseCheckout />'), 'pricing.astro renders the shared checkout');

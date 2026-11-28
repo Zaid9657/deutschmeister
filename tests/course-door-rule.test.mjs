@@ -114,7 +114,7 @@ test('an owner who clicks Buy goes to the course, never to a second checkout', a
   for (const [purchase, product, home] of [
     ['course_a1_2', 'course_a1_2', 'https://deutsch-meister.de/course/a1.2'],
     ['course_a1', 'course_a1_2', 'https://deutsch-meister.de/course/a1.2'],
-    ['course_alle', 'course_a2_1', 'https://deutsch-meister.de/course/a2.1'],
+    ['course_alle', 'course_a1_2', 'https://deutsch-meister.de/course/a1.2'],
     ['telc_b1_komplett', 'telc_b1_komplett', 'https://deutsch-meister.de/telc-b1-kurs'],
   ]) {
     const buy = buyButton(product);
@@ -128,16 +128,16 @@ test('an owner who clicks Buy goes to the course, never to a second checkout', a
 });
 
 test('a visitor who does not own the course still gets the checkout', async () => {
-  const buy = buyButton('course_a2_1');
+  const buy = buyButton('course_a1_2');
   const body = new FakeElement('body', {}, [buy]);
-  const page = runCourseCheckout({ body, snapshot: { ...NOBODY, purchases: [{ product_key: 'course_a1_2' }] } });
+  const page = runCourseCheckout({ body, snapshot: { ...NOBODY, purchases: [{ product_key: 'course_b1' }] } });
   await page.settle();
   assert.equal(buy.disabled, false, 'Buy is enabled once the lookup has landed');
   assert.equal(buy.getAttribute('aria-busy'), null);
   await buy.click();
   assert.equal(page.opened.length, 1);
-  assert.match(page.opened[0], /\/checkout\/buy\/v-course_a2_1\?/);
-  assert.match(page.stored.get('session:dm_checkout_pending'), /course_a2_1/);
+  assert.match(page.opened[0], /\/checkout\/buy\/v-course_a1_2\?/);
+  assert.match(page.stored.get('session:dm_checkout_pending'), /course_a1_2/);
 });
 
 test('an unanswerable lookup sends the click to the app\'s resume, which checks ownership first', async () => {
@@ -184,7 +184,7 @@ test('a stalled lookup cannot hold Buy: after a few seconds it returns and a cli
 });
 
 test('a lookup that answers in time clears its timer', async () => {
-  const buy = buyButton('course_a2_1');
+  const buy = buyButton('course_a1_2');
   const page = runCourseCheckout({ body: new FakeElement('body', {}, [buy]), snapshot: OWNER_A12 });
   await page.settle();
   assert.deepEqual(page.pendingTimers(), [], 'no timer left running');
@@ -199,23 +199,23 @@ test('a lookup that answers in time clears its timer', async () => {
 // checks that account again after the read.
 const SNAPSHOTS = {
   A: { signedIn: true, verified: true, userId: 'A', profile: null, purchases: [] },
-  B: { signedIn: true, verified: true, userId: 'B', profile: null, purchases: [{ product_key: 'course_a1_2' }] },
+  B: { signedIn: true, verified: true, userId: 'B', profile: null, purchases: [{ product_key: 'course_a1_1' }] },
 };
 
 test('A opens the page, B signs in elsewhere, Buy: ownership is B\'s, so no second checkout', async () => {
-  const buy = buyButton('course_a1_2');
+  const buy = buyButton('course_a1_1');
   const page = runCourseCheckout({ body: new FakeElement('body', {}, [buy]), user: 'A', snapshot: (id) => SNAPSHOTS[id] });
   await page.settle();
   assert.equal(page.snapshotCalls, 1, 'the page read A once');
-  page.signIn('B'); // another tab signs in as B, who owns A1.2
+  page.signIn('B'); // another tab signs in as B, who owns A1.1
   await buy.click();
   assert.equal(page.opened.length, 0, 'no checkout for a course B owns');
-  assert.equal(page.location.href, 'https://deutsch-meister.de/course/a1.2', 'B continues in the course');
+  assert.equal(page.location.href, 'https://deutsch-meister.de/course/a1.1', 'B continues in the course');
   assert.equal(page.snapshotCalls, 2, 'ownership was read again, for B');
 });
 
 test('B signs in elsewhere and does not own the course: the checkout opens for B, from B\'s own snapshot', async () => {
-  const buy = buyButton('course_a2_1');
+  const buy = buyButton('course_a1_2');
   const page = runCourseCheckout({ body: new FakeElement('body', {}, [buy]), user: 'A', snapshot: (id) => SNAPSHOTS[id] });
   await page.settle();
   page.signIn('B');
@@ -238,7 +238,7 @@ test('a snapshot that answers for another account than the one signed in never o
 test('an account switch while the click waits for its read sends it to the guarded resume', async () => {
   let release;
   const gate = new Promise((done) => { release = done; });
-  const buy = buyButton('course_a2_1');
+  const buy = buyButton('course_a1_2');
   const page = runCourseCheckout({ body: new FakeElement('body', {}, [buy]), user: 'A', snapshot: (id) => SNAPSHOTS[id], gate });
   buy.disabled = false; // a click that races the page's first read
   const clicked = buy.click();
@@ -246,7 +246,7 @@ test('an account switch while the click waits for its read sends it to the guard
   release();
   await clicked;
   assert.equal(page.opened.length, 0, 'A\'s answer is not used for B');
-  assert.equal(page.location.href, 'https://deutsch-meister.de/subscription?buy=course_a2_1');
+  assert.equal(page.location.href, 'https://deutsch-meister.de/subscription?buy=course_a1_2');
 });
 
 test('the doors show only the snapshot of the account still signed in', async () => {

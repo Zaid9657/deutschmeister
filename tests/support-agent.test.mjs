@@ -1,3 +1,4 @@
+import { regularPrice, deEur } from '../src/data/pricing.js';
 // Guard suite for the support agent (netlify/functions/support-agent.mjs,
 // _shared/supportAgentLib.mjs, the send path in _shared/adminSupportLib.mjs,
 // the synced catalogue in _shared/supportCatalog.mjs + _shared/pricing.mjs).
@@ -91,7 +92,7 @@ test('content requests: levels beyond B2 and exams without a track are detected;
 
 // ─── 2. the validator ────────────────────────────────────────────────────────
 
-const CLEAN_DE = composeReply('Guten Tag,\n\nden Dativ finden Sie unter https://deutsch-meister.de/grammar/a2.1/dative-case/. Der Kurs A1.2 kostet 40,00 €, Pro 9,99 € im Monat.', 'de');
+const CLEAN_DE = composeReply(`Guten Tag,\n\nden Dativ finden Sie unter https://deutsch-meister.de/grammar/a2.1/dative-case/. Der Kurs A1.2 kostet ${deEur(regularPrice('a1.2'))} ab 1. Februar 2027.`, 'de');
 const CLEAN_EN = composeReply('Hello,\n\nyour billing details are in the portal: https://deutsch-meister.lemonsqueezy.com/billing. Pro costs €9.99 a month.', 'en');
 
 test('a clean reply passes, in both languages, and ends with the disclosure under the team signature', () => {
@@ -111,12 +112,12 @@ test('every catalogue price passes; anything else is blocked', () => {
     const r = composeReply(`Hello,\n\nthe figure is €${p.toFixed(2)} as listed on the pricing page.`, 'en');
     assert.deepEqual(validateReply(r, { language: 'en' }), [], `catalogue price ${p} rejected`);
   }
-  for (const bad of ['€12.50', '19,99 €', '100 Euro', 'EUR 5']) {
+  for (const bad of ['€12.50', '19,99 €', '101 Euro', 'EUR 5']) {
     const r = composeReply(`Hello,\n\nit costs ${bad} for you.`, 'en');
     assert.deepEqual(codes(validateReply(r, { language: 'en' })), ['euro-amount'], bad);
   }
   // mutation: one cent off a real price is not a real price
-  assert.deepEqual(codes(validateReply(CLEAN_DE.replace('9,99 €', '9,98 €'), { language: 'de' })), ['euro-amount']);
+  assert.deepEqual(codes(validateReply(CLEAN_DE.replace(deEur(regularPrice('a1.2')), deEur(regularPrice('a1.2') - 0.01)), { language: 'de' })), ['euro-amount']);
 });
 
 test('a personal-name signature is blocked', () => {
@@ -770,8 +771,8 @@ test('facts come from the account and the catalogue; the prompt sees public mess
   const noAccount = buildFacts({ ticket: w.support_tickets[0], now: T0 });
   assert.deepEqual(noAccount.customer, { has_account: false });
   // a live trial or subscription opens every level
-  assert.equal(levelsOpen({ profile: { trial_ends_at: iso(60) }, now: T0 }).length, 8);
-  assert.equal(levelsOpen({ profile: {}, subscription: { subscription_end: iso(60) }, now: T0 }).length, 8);
+  assert.equal(levelsOpen({ profile: { trial_ends_at: iso(60) }, now: T0 }).length, 1);
+  assert.equal(levelsOpen({ profile: {}, subscription: { status: 'active', plan_type: 'monthly', subscription_start: '2026-01-01', subscription_end: iso(60) }, now: T0 }).length, 8);
 
   const thread = [
     ...w.support_ticket_messages,

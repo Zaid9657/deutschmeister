@@ -19,9 +19,9 @@ const now = Date.parse('2026-12-01T00:00:00.000Z');
 const fresh = { created_at: '2026-11-25T00:00:00.000Z' };
 const old = { created_at: '2026-10-01T00:00:00.000Z' };
 const account = (o = {}) => ({ profile: { ...fresh, ...o.profile }, subscription: o.subscription || null, purchases: o.purchases || [] });
-const liveSub = { status: 'active', subscription_end: '2027-01-01T00:00:00.000Z', subscription_start: '2026-11-26T00:00:00.000Z', plan_type: 'monthly' };
+const liveSub = { status: 'active', subscription_end: '2027-01-01T00:00:00.000Z', subscription_start: '2026-11-25T00:00:00.000Z', plan_type: 'monthly' };
 const liveTrial = { trial_started_at: '2026-11-25T00:00:00.000Z', trial_ends_at: '2026-12-02T00:00:00.000Z', is_subscribed: false };
-const examPack = { product_key: 'a1_exam_pack', status: 'active' };
+const examPack = { created_at: '2026-11-01', product_key: 'a1_exam_pack', status: 'active' };
 
 test('the server copy of the gate equals the client one', () => {
   assert.deepEqual({ ...server.FREE_LEKTIONEN }, { ...client.FREE_LEKTIONEN });
@@ -55,7 +55,7 @@ test('live, the whole course opens for older accounts and for anyone who pays', 
   assert.equal(full({ purchases: [{ ...examPack, status: 'refunded' }] }), null);
   assert.equal(full({ purchases: [{ product_key: 'pro_days', status: 'active', access_until: '2026-11-28T00:00:00.000Z' }] }), null, 'an expired grant window is not a purchase');
   assert.equal(full({ profile: liveTrial }), null, 'the trial opens Lektion 1 only (owner decision 2026-11-18)');
-  assert.equal(courseAccessReason(account({ profile: liveTrial }), 'a1.2', now), 'trial', 'the trial still opens the other levels');
+  assert.equal(courseAccessReason(account({ profile: liveTrial }), 'a1.2', now), null, 'the trial no longer opens paid levels');
   // The level itself, and every other level, are untouched.
   assert.equal(courseAccessReason(account(), 'a1.1', now), 'free');
   assert.equal(fullCourseReason(account(), 'a1.2', now, GATE), null);
@@ -107,10 +107,12 @@ test('the support agent is told who opens the rest of the gated course', () => {
   assert.match(read('netlify/functions/support-agent.mjs'), /from\('profiles'\)\.select\('id, created_at, /, 'the agent reads the account date the gate turns on');
 });
 
-test('the lock on a gated step promises neither an unlock nor a trial', () => {
+test('the lock sells exactly its course and never a subscription or trial unlock', () => {
   const lock = read('src/components/LockedContentOverlay.jsx');
-  assert.match(lock, /gateFree\s*\? \(isGerman \? 'Weiter mit einem Abo' : 'Continue with a subscription'\)/);
-  assert.match(lock, /gateFree\s*\? \(isGerman\s*\? 'Das Konto ist kostenlos · keine Kreditkarte nötig'\s*: 'The account is free · no credit card needed'\)/);
+  assert.match(lock, /courseForLevel\(level\)/);
+  assert.match(lock, /<CoursePrice level=\{level\}/);
+  assert.match(lock, /setBuyIntent\(course.key\)/);
+  assert.doesNotMatch(lock, /handleSubscribe|PLANS|try every level|need a subscription/);
 });
 
 // The course home's pace line said "Nothing here locks" next to a course that locks from Lektion 2.

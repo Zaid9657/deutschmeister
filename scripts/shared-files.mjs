@@ -6,6 +6,11 @@ export const SHARED_FILES = [
   // prices and limits; a drift here puts two different numbers in front of the
   // same buyer. See the header of src/data/marketing.js.
   ['src/data/pricing.js', 'astro-site/src/data/pricing.js'],
+  ['src/data/pricing.js', 'netlify/functions/_shared/pricing.mjs'],
+  ['src/data/pricing.js', 'netlify/functions/_shared/data/pricing.js'],
+  ['src/config/freeTier.js', 'netlify/functions/_shared/config/freeTier.js'],
+  ['src/lib/subscriptionStatus.js', 'netlify/functions/_shared/lib/subscriptionStatus.js'],
+  ['src/lib/levelEntitlement.js', 'netlify/functions/_shared/lib/levelEntitlement.js'],
   ['src/data/marketing.js', 'astro-site/src/data/marketing.js'],
   // The design system. Both tailwind configs import this, so a drift here puts
   // two different palettes on the two halves of the same site.

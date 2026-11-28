@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle, Crown } from 'lucide-react';
+import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getTopicsForLevel } from '../../data/grammarTopics';
 import Button from '../ui/Button.jsx';
@@ -14,6 +14,8 @@ import { placedCourseHref, FIRST_LESSON_HREF } from '../../lib/firstRun.js';
 import { focusTopics } from './placementResult.js';
 import { FREE_LEKTION_LABEL, TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
 import { stationFor, stationStatusLine, EXAM_ROUTE } from '../../data/offers.js';
+import { coursePriceLine, PRICE_TAX_NOTE } from '../../data/pricing.js';
+import { usePriceNow } from '../CoursePrice.jsx';
 
 // The earned moment (docs/design/playbook.md). Finishing the placement test IS
 // a win — one confetti burst, one `celebrate` action — and that is true at
@@ -38,6 +40,7 @@ const LevelTestResults = ({
   onRetake
 }) => {
   const { user } = useAuth();
+  const priceNow = usePriceNow();
 
   // One burst per mount — the ref guards StrictMode's double effect and every
   // later re-render, so the celebration can never repeat itself.
@@ -81,25 +84,18 @@ const LevelTestResults = ({
     ? { to: placedCourse }
     : { href: firstTopic ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}/` : '/grammar/' };
 
-  // The placed level's own course and offer, every figure from offers.js (prices
-  // from pricing.js, never retyped). A ticket station (A1.2–A2.2) gets the first
-  // card: its course, where LevelSubscriptionGuard serves the trial or signup
-  // door or the offer, and one line to its ticket page. B1/B2 have no course
-  // yet: the route offers.js names for them, AI Practice. Both links are page loads
-  // tagged as level-test doors (public/attribution.js reads a tag only on a
-  // load). The A1.1 card below stays for every result.
+  // A1.1 starts free. Higher live levels name their own course and current
+  // price; levels still being built keep grammar as their start, without checkout.
   const station = stationFor(finalSublevel);
   const doorTag = new URLSearchParams({ ref: PLACEMENT_REF, utm_medium: 'onsite', utm_content: finalSublevel.toLowerCase() });
-  const placedTicket = station?.status === 'ticket' && placedCourse ? {
+  const placedTicket = station?.level !== 'a1.1' && station?.status === 'ticket' && placedCourse ? {
     to: placedCourse,
     label: `Start the ${station.code} course`,
     detail: `Your test suggests ${station.code}. The guided course for your level starts here.`,
     ticketHref: `${station.coursePage}?${doorTag}`,
-    ticketLine: `Your stop: ${station.code} · ${stationStatusLine(station)}`,
+    ticketLine: `Your stop: ${station.code} · ${coursePriceLine(station.level, priceNow)} · ${stationStatusLine(station)}`,
   } : null;
-  const proLink = station?.status === 'building' ? EXAM_ROUTE.links.find((link) => link.href.startsWith('/pricing/')) : null;
-  const [proPath, proHash] = proLink ? proLink.href.split('#') : [];
-  const proHref = proLink ? `${proPath}?${doorTag}${proHash ? `#${proHash}` : ''}` : null;
+  const courseComingSoon = station?.status === 'building' ? `${station.code} course coming soon.` : null;
 
   // The placement hook into the free A1.1 course (Wave 1). An A1.1 result
   // opens Lektion 1 itself (FIRST_LESSON_HREF, the primary CTA's target); any
@@ -220,20 +216,11 @@ const LevelTestResults = ({
               <a href={placedTicket.ticketHref} className="mt-3 block text-sm font-bold text-siegel transition-colors hover:text-siegel-deep sm:ml-[3.75rem]">
                 {placedTicket.ticketLine} →
               </a>
+              <p className="mt-2 text-xs text-graphite">{PRICE_TAX_NOTE}</p>
             </Card>
           )}
 
-          {proHref && (
-            <Card interactive as="a" href={proHref} className="flex items-center gap-4 p-4" data-placement-pro>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
-                <Crown className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[0.9375rem] font-bold text-ink">{EXAM_ROUTE.title}</span>
-                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{EXAM_ROUTE.body}</span>
-              </span>
-            </Card>
-          )}
+          {courseComingSoon && <p className="text-sm text-graphite" data-placement-coming-soon>{courseComingSoon} {EXAM_ROUTE.body}</p>}
 
           <Card interactive as={Link} to={courseHref} className="flex items-center gap-4 p-4" data-placement-course>
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">

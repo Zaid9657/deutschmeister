@@ -8,7 +8,7 @@ import { subscriptionStatus } from '../src/lib/subscriptionStatus.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { LEVEL_COURSES, levelsForProduct } from '../src/data/pricing.js';
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 function analyticsHarness() {
   const store = new Map([['dm_cookie_consent', 'accepted']]);
@@ -200,7 +200,7 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   const now = Date.parse('2026-10-22T12:00:00Z');
   const expired = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08' };
   assert.equal(href({ profile: expired }, now), '/course/a1.1');
-  assert.equal(href({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), '/course/a2.1');
+  assert.equal(href({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), '/course/a1.1');
   assert.equal(href({ profile: expired, subscription: { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-10-23' } }, now), '/course/a2.1');
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   assert.ok(product, 'select the product from the canonical pricing data');
@@ -231,7 +231,7 @@ test('Astro continuation rejects inactive future periods and includes active cou
     assert.equal(href({ profile, subscription: { status, plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-10-21' } }, now), '/course/a1.1', status);
   }
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
-  const purchase = { product_key: product.key, status: 'active', access_until: '2026-11-01' };
+  const purchase = { product_key: product.key, status: 'active', created_at: '2026-10-01', access_until: '2026-11-01' };
   assert.equal(href({ profile, purchases: [purchase] }, now), '/course/a2.2', 'included Pro also opens a placed level outside the bought course');
   // The Pro window over, the placed A2.2 locks again — and the A2.1 course the
   // learner owns is where they continue, not the free course (SHL-17).

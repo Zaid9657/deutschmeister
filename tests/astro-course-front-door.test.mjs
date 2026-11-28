@@ -27,7 +27,7 @@ function walk(dir, out = []) {
 
 // Visible text says "start free" in either language; expressions like
 // {FREE_LEVEL_LABEL} or {code} are left in place — they never change the verdict.
-const START_FREE = /start.*(free|kostenlos)|(free|kostenlos).*start|start a1\.1/i;
+const START_FREE = /(?:start|try).*(free|kostenlos)|(free|kostenlos).*(?:start|try)|start a1\.1/i;
 // Literal `/course/a1.1`, or a template that fills the level in (`/course/${level}`,
 // `/course/${r.level}`) on the pages that render the free level from data.
 const COURSE_DOOR = /^\/course\/(a1\.1|\$\{[\w.]*level\})$/;
@@ -72,7 +72,7 @@ function startFreeAnchors(source) {
 // are held to the same rule as the pages.
 const COMPONENTS = join(root, 'astro-site', 'src', 'components', 'linie');
 const pages = [...walk(PAGES), ...walk(COMPONENTS), ...walk(join(root, 'astro-site/src/components/concept'))];
-const byPage = new Map(pages.map((p) => [relative(root, p), startFreeAnchors(readFileSync(p, 'utf8'))]));
+const byPage = new Map(pages.map((p) => [relative(root, p).replaceAll('\\', '/'), startFreeAnchors(readFileSync(p, 'utf8'))]));
 
 test('every "start free" CTA on the Astro site opens the course, never the grammar index', () => {
   for (const [page, anchors] of byPage) {
@@ -102,7 +102,7 @@ test('the known front-door CTAs still exist (the scan is not vacuous)', () => {
   assert.equal((template.match(/<PurchaseDoor level=\{level\}/g) || []).length, 2, 'hero and closing free doors share the checked PurchaseDoor');
   for (const [page, count] of Object.entries(expected)) {
     const anchors = byPage.get(page) ?? [];
-    assert.ok(anchors.length >= count, `${page}: expected ≥${count} "start free" CTA(s), found ${anchors.length}`);
+    assert.ok(anchors.length >= count, `${page}: expected ≥${count} free-Lektion CTA(s), found ${anchors.length}`);
   }
 });
 

@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: 'Was passiert nach dem kostenlosen Test?',
-    a: `Der AI Practice-Test endet nach ${TRIAL_DAYS} Tagen ohne automatische Abbuchung. Sie entscheiden selbst, ob Sie ein Abo abschließen. AI Practice monatlich kostet ${deEur(PLANS.monthly.price)} pro Monat. Lektion 1 des A1.1-Kurses bleibt kostenlos.`,
+    a: `Der AI Practice-Test endet nach ${TRIAL_DAYS} Tagen ohne automatische Abbuchung. KI-Werkzeuge sind beim Kauf eines verfügbaren Kurses enthalten. Lektion 1 des A1.1-Kurses bleibt kostenlos.`,
   },
   {
     q: 'Meldet mich der Kurs zur Prüfung an?',
@@ -131,7 +131,7 @@ const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
               <li>Keine Kreditkarte. Keine automatische Abbuchung.</li>
             </ul>
             <a href={signupHref} class="dm-key dm-key-siegel mt-6 w-full">AI Practice kostenlos ausprobieren</a>
-            <p class="mt-4 text-sm leading-relaxed text-graphite">Der telc-B1-Kursplan ist nicht im Test enthalten. Danach entscheiden Sie selbst: AI Practice monatlich kostet {deEur(PLANS.monthly.price)} pro Monat, wenn Sie ein Abo abschließen.</p>
+            <p class="mt-4 text-sm leading-relaxed text-graphite">Der telc-B1-Kursplan ist nicht im Test enthalten. KI-Werkzeuge sind beim Kauf eines verfügbaren Kurses enthalten.</p>
           </div>
         </div>
       </section>

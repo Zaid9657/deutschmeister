@@ -8,26 +8,28 @@
 ## Quick Facts
 - 84 grammar topics across 8 CEFR sub-levels (A1.1 to B2.2) — 12 in A1.1, A1.2, A2.1, A2.2, B1.1; 8 in B1.2, B2.1, B2.2
 - Guided A1.1 course: 12 situational lessons, Lektion 1 free with no account needed
-- A1.2 course: 12 situational lessons, €40.00 once
+- A1.1 course: 12 situational lessons, €100.00 regular price from 1 February 2027, one-time
+- A1.2 course: 12 situational lessons, €100.00 regular price from 1 February 2027, one-time
 - Free exam guides for 18 topics (German; 2 in English) and prep hubs for 6 exams (telc, Goethe, DTZ)
 - 48 listening exercises containing 480 native-speaker dialogue lines
 - 24 podcast episodes with native-speaker audio
 - 2,561 vocabulary words and 945 example sentences
-- Free CEFR level test (15–20 min, speaking included)
+- Free CEFR level test (about 20 min, speaking included)
 - Sentence X-Ray: paste any German sentence, get case/role/structure analysis
 
 ## Access Model (accurate)
 - **Free, no signup required:** Lektion 1 of the 12-lesson guided A1.1 course and all 12 A1.1 grammar topics
 - **Anonymous visitors:** 1 Sentence X-Ray analysis per day
 - **Free account:** 7-day AI Practice trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
-- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from €40.00 (A1.2 €40.00), with 3 months of AI Practice included. A2.1, A2.2, B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
+- **One-time level courses (no subscription), current prices at https://deutsch-meister.de/pricing/:** each sub-level is its own lifetime purchase, (A1.1 €100.00, A1.2 €100.00; regular prices from 1 February 2027), with 3 months of AI Practice included. A2.1, A2.2, B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
 - **telc B1 Komplettvorbereitung:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
-- **AI Practice — €9.99/month or €79.99/year:** 20 AI writing feedbacks/month, AI speaking practice, 50 Sentence X-Ray analyses/day. Opens the full A1.1 course; other courses are sold separately (active subscriptions started before 10 November 2026 retain access to all courses). Cancel anytime.
+- **AI tools:** included with a course purchase, at the paid allowances: 20 writing feedbacks/month, AI speaking practice and 50 Sentence X-Ray analyses/day. New AI Practice subscriptions are off sale. Existing subscribers keep their current access and billing portal.
 - Payments handled by Lemon Squeezy as merchant of record.
 
 ## Main URLs
 - Homepage: https://deutsch-meister.de/
 - A1.1 course (Lektion 1 free): https://deutsch-meister.de/course/a1.1
+- A1.1 course (one-time purchase): https://deutsch-meister.de/courses/a1-1/
 - A1.2 course (one-time purchase): https://deutsch-meister.de/courses/a1-2/
 - Courses overview: https://deutsch-meister.de/courses/
 - Grammar hub (all 84 topics): https://deutsch-meister.de/grammar/

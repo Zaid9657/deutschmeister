@@ -4,12 +4,13 @@ import { readFileSync } from 'node:fs';
 import { flagsFromRows } from '../netlify/functions/_shared/adminEntitlement.mjs';
 import { couponProduct } from '../netlify/functions/_shared/pricing.mjs';
 import { evaluateCoupon } from '../netlify/functions/_shared/adminCouponsLib.mjs';
-import { PLANS, LEVEL_COURSES } from '../src/data/pricing.js';
+import { LEVEL_COURSES } from '../src/data/pricing.js';
 
 process.env.SUPABASE_URL = 'http://supabase.stub';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'stub-service-role-key';
 process.env.LEMONSQUEEZY_MONTHLY_VARIANT_ID = '1393033';
-process.env.LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID = '2088888';
+process.env.LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID = '1393033';
+process.env.LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID = '2088888';
 
 const userId = '00000000-0000-0000-0000-000000000001';
 const couponId = '00000000-0000-0000-0000-000000000002';
@@ -111,22 +112,22 @@ test('manual Pro-day grants retain their paid window after status-aware flag syn
 
 test('coupon validation resolves the selected product scope and catalogue amount server-side', async () => {
   tables.coupons = [coupon({ applicable_variant_ids: ['2088888'] })];
-  const response = await validateCoupon(event({ code: 'welcome20', productKey: 'course_a2_1' }));
+  const response = await validateCoupon(event({ code: 'welcome20', productKey: 'course_a1_2' }));
   const result = JSON.parse(response.body);
-  const amount = Math.round(LEVEL_COURSES.course_a2_1.price * 100);
+  const amount = Math.round(LEVEL_COURSES.course_a1_2.price * 100);
   assert.equal(response.statusCode, 200, response.body);
   assert.equal(result.ok, true, response.body);
-  assert.equal(result.productKey, 'course_a2_1');
+  assert.equal(result.productKey, 'course_a1_2');
   assert.equal(result.discount, Math.round(amount * 0.2));
   assert.equal(result.final, amount - result.discount);
   assert.equal(result.checkoutUrl, undefined, 'numeric provider IDs must never become checkout UUIDs');
 });
 
 test('coupon minimum cannot be bypassed with an omitted or forged client amount', async () => {
-  const amount = Math.round(PLANS.monthly.price * 100);
+  const amount = Math.round(LEVEL_COURSES.course_a1_1.price * 100);
   tables.coupons = [coupon({ minimum_order_amount: amount + 1 })];
   for (const extra of [{}, { amountMinor: 999999, variantId: '2088888' }]) {
-    const response = await validateCoupon(event({ code: 'WELCOME20', productKey: 'monthly', ...extra }));
+    const response = await validateCoupon(event({ code: 'WELCOME20', productKey: 'course_a1_1', ...extra }));
     assert.equal(response.statusCode, 200, response.body);
     assert.equal(JSON.parse(response.body).reason, 'minimum_order');
   }
@@ -135,6 +136,9 @@ test('coupon minimum cannot be bypassed with an omitted or forged client amount'
 
 test('coupon products fail closed for unknown keys or checkout UUIDs in numeric variant config', async () => {
   const uuid = 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21';
+  assert.equal(couponProduct('course_a1_1', { LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID: uuid }), null);
+  assert.equal(couponProduct('course_a1_1', { LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID: '0' }), null);
+  assert.equal(couponProduct('a1_exam_pack', { LEMONSQUEEZY_A1_EXAM_PACK_VARIANT_ID: '123' }), null);
   assert.equal(couponProduct('monthly', { LEMONSQUEEZY_MONTHLY_VARIANT_ID: uuid }), null);
   assert.equal(couponProduct('monthly', { LEMONSQUEEZY_MONTHLY_VARIANT_ID: '0' }), null);
   assert.equal(couponProduct('monthly', {}), null);
@@ -159,22 +163,19 @@ test('admin coupons reject non-string actions before capability checks and mutat
   assert.equal(tables.coupons[0].status, 'active');
 });
 
-test('coupon form selects the product and checkout applies a code only to its validated offer', () => {
+test('coupon form binds the code to its course, with no recurring checkout and no competing launch claim', () => {
   const page = readFileSync(new URL('../src/pages/SubscriptionPage.jsx', import.meta.url), 'utf8');
   assert.match(page, /<CouponField\b[^>]*productKey=\{couponProduct\}/);
   assert.match(page, /<select\b[^>]*value=\{couponProduct\}/);
-  const checkoutBlocks = [...page.matchAll(/const checkoutUrl = LEMONSQUEEZY_CONFIG\.getCheckoutUrl\([\s\S]*?\n {4}\);/g)];
-  assert.equal(checkoutBlocks.length, 2);
-  const applied = { code: 'WELCOME20', productKey: 'monthly' };
-  const config = { getCheckoutUrl: (...args) => args.at(-1) };
-  for (const [index, block] of checkoutBlocks.entries()) {
-    const keyName = index === 0 ? 'planType' : 'productKey';
-    const checkoutCoupon = new Function('checkoutConfig', keyName, 'plan', 'variantId', 'user', 'coupon', `${block[0].replace('LEMONSQUEEZY_CONFIG', 'checkoutConfig')} return checkoutUrl;`);
-    assert.deepEqual(checkoutCoupon(config, 'monthly', { variantId: 'uuid' }, 'uuid', null, applied), applied);
-    assert.equal(checkoutCoupon(config, 'yearly', { variantId: 'uuid' }, 'uuid', null, applied), null);
-  }
+  assert.match(page, /!isLaunchActive\(priceNow\)/);
+  const blocks = [...page.matchAll(/const checkoutUrl = LEMONSQUEEZY_CONFIG\.getCheckoutUrl\([\s\S]*?\n {4}\);/g)];
+  assert.equal(blocks.length, 1, 'only one-time course checkout remains');
+  const applied = { code: 'WELCOME20', productKey: 'course_a1_1' };
+  const config = { getCheckoutUrl: (...args) => args[3] };
+  const checkoutCoupon = new Function('checkoutConfig', 'productKey', 'variantId', 'user', 'coupon', `${blocks[0][0].replace('LEMONSQUEEZY_CONFIG', 'checkoutConfig')} return checkoutUrl;`);
+  assert.deepEqual(checkoutCoupon(config, 'course_a1_1', 'uuid', null, applied), applied);
+  assert.equal(checkoutCoupon(config, 'course_a1_2', 'uuid', null, applied), null);
 });
-
 test('expiry sweep clears course-contributed Pro when a recoverable recurring row was retained', async () => {
   const now = Date.parse('2026-10-22T12:00:00Z');
   tables.purchases = [{ user_id: userId, status: 'active', access_until: new Date(now).toISOString() }];

@@ -47,8 +47,8 @@ export async function loadEntitlementSnapshot() {
   if (!user) return { signedIn: false, userId: null, verified: false, profile: null, purchases: [] };
 
   const [profileRead, purchasesRead, subscriptionRead] = await Promise.all([
-    supabase.from('profiles').select('is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
-    supabase.from('purchases').select('product_key, status, access_until').eq('user_id', user.id).eq('status', 'active'),
+    supabase.from('profiles').select('created_at, is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
+    supabase.from('purchases').select('product_key, status, access_until, created_at').eq('user_id', user.id).eq('status', 'active'),
     supabase.from('subscriptions').select('status, plan_type, subscription_start, created_at, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
   ]);
   return {

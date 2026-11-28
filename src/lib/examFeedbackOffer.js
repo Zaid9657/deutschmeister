@@ -1,8 +1,8 @@
 import { examTrackByKey } from '../data/examTracks.js';
-import { EXAM_COURSE, PRO_OFFER, stationFor } from '../data/offers.js';
+import { EXAM_COURSE, stationFor } from '../data/offers.js';
 
 // The AI Practice door: AI Practice is what adds exam-writing evaluations (offers.js PRO_OFFER).
-export const proFeedbackDoor = () => ({ title: PRO_OFFER.monthly.name, href: '/pricing/#pro', cta: 'AI Practice ansehen' });
+export const proFeedbackDoor = () => ({ title: 'Deutschkurse', href: '/courses/', cta: 'Kurse ansehen' });
 
 // Pure offer selection. The client passes the already sale-gated checkout id
 // from lemonsqueezy.js; this module never reads or duplicates the sale switch.

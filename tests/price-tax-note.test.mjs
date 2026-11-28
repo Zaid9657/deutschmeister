@@ -12,13 +12,11 @@ test('the tax note states that prices include VAT, in both languages', () => {
   assert.equal(PRICE_TAX_NOTE_DE, 'Alle Preise inkl. MwSt.');
 });
 
-test('every public price surface renders the tax note from pricing.js', () => {
+test('every public price component renders the tax note from pricing.js', () => {
   const surfaces = [
     'astro-site/src/components/concept/Ladder.astro',
     'astro-site/src/components/concept/OfferPage.astro',
-    'astro-site/src/components/concept/BetterTogether.astro',
-    'astro-site/src/components/concept/Offers.astro',
-    'astro-site/src/pages/pricing.astro',
+    'astro-site/src/pages/courses/index.astro',
     'astro-site/src/pages/courses/[level].astro',
   ];
   for (const path of surfaces) {
@@ -36,4 +34,19 @@ test('no price surface retypes the note or claims tax is added on top', () => {
     assert.doesNotMatch(source, /plus VAT|zzgl\. MwSt|excl\. VAT/i, `${path} must not say tax is added`);
     assert.doesNotMatch(source, /['"`>]Prices include VAT/, `${path} must not retype the note`);
   }
+});
+
+test('pricing and offer wrappers delegate their VAT note to Ladder exactly once', () => {
+  const page = read('astro-site/src/pages/pricing.astro');
+  const offers = read('astro-site/src/components/concept/Offers.astro');
+  const ladder = read('astro-site/src/components/concept/Ladder.astro');
+  assert.equal((page.match(/<Ladder\b/g) || []).length, 1);
+  assert.equal((offers.match(/<Ladder\b/g) || []).length, 1);
+  assert.doesNotMatch(page + offers, /\{PRICE_TAX_NOTE\}/, 'wrappers do not duplicate the child note');
+  assert.equal((ladder.match(/\{PRICE_TAX_NOTE\}/g) || []).length, 1);
+});
+
+test('completion and placement current-price surfaces render the shared VAT note', () => {
+  assert.match(read('src/pages/CourseCompletePage.jsx'), /de \? PRICE_TAX_NOTE_DE : PRICE_TAX_NOTE/);
+  assert.match(read('src/components/LevelTest/LevelTestResults.jsx'), /\{PRICE_TAX_NOTE\}/);
 });

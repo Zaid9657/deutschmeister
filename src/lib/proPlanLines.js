@@ -28,7 +28,7 @@ import {
 
 /** The /pricing/ AI Practice lines in German, in the same order and with the same figures. */
 const PRO_LINES_DE = [
-  'Das Abo öffnet den ganzen A1.1-Kurs · weitere Kurse separat',
+  'Bestehende Abonnenten behalten ihren bisherigen Zugang',
   `${PRO_WRITING_EVALUATIONS_PER_MONTH} KI-Schreibkorrekturen pro Monat`,
   'KI-Sprechtraining',
   XRAY_LINE_DE,

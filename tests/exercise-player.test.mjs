@@ -158,12 +158,12 @@ test('the lock sells the level it locks, on that course page', () => {
   const lock = src.match(/function LockedExercises\([\s\S]*?\n\}/)[0];
   assert.match(lock, /const coursePage = `\/courses\/\$\{levelToSlug\(level\.toLowerCase\(\)\)\}\/`;/);
   assert.match(src, /^import \{ levelToSlug \} from '\.\.\/data\/courseContents\.js';$/m);
-  assert.match(lock, /<a href=\{coursePage\} className=\{primary\}>\s*Buy the \{code\} course — \{eur\(course\.price\)\} once/);
-  assert.match(lock, /<a href="\/pricing\/#pro" className=\{buyable \? secondary : primary\}>/, 'Go Pro stays on the Pro comparison');
+  assert.match(lock, /<a href=\{coursePage\} className=\{primary\}>\s*See the \{code\} course/);
+  assert.doesNotMatch(lock, /eur\(|course\.price|€|\/pricing\/#pro/, 'the lock prints no unlabelled price or retired Pro offer');
   assert.doesNotMatch(lock, /href="\/pricing\/" className=\{primary\}/);
   // Signed out: a quiet second door to the course, from the same price data.
   assert.match(lock, /\{!signedIn && buyable && \(/);
-  assert.match(lock, /<a href=\{coursePage\}[^>]*>\s*Own \{code\} for \{eur\(course\.price\)\}/);
+  assert.match(lock, /<a href=\{coursePage\}[^>]*>\s*See the \{code\} course and its price/);
   assert.match(lock, /<a href=\{loginHref\} className=\{secondary\}>/);
   // The page each sellable level links is the station's own course page.
   for (const level of SELLABLE_LEVELS) {

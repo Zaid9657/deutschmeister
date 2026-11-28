@@ -10,7 +10,7 @@
 // support" and "Early access to new content", which nothing delivers; it is
 // the list /subscription's cards had been copied from. What Pro includes is
 // src/lib/proPlanLines.js (tests/subscription-plan-lines.test.mjs).
-import { PLANS, COURSES, LEVEL_COURSES, OFFER_PRODUCTS, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSES, LEVEL_COURSES, OFFER_PRODUCTS, CURRENCY, launchDiscountCode, isProductOnSale, LAUNCH_CODES } from '../data/pricing.js';
 
 export const LEMONSQUEEZY_CONFIG = {
   storeId: import.meta.env.VITE_LEMONSQUEEZY_STORE_ID || '309512',
@@ -22,7 +22,7 @@ export const LEMONSQUEEZY_CONFIG = {
       price: PLANS.monthly.price,
       currency: CURRENCY,
       interval: PLANS.monthly.interval,
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_VARIANT_ID || 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
+      variantId: '', // Retained for existing billing display only; off sale.
     },
     yearly: {
       name: PLANS.yearly.name,
@@ -30,7 +30,7 @@ export const LEMONSQUEEZY_CONFIG = {
       price: PLANS.yearly.price,
       currency: CURRENCY,
       interval: PLANS.yearly.interval,
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_YEARLY_VARIANT_ID || 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
+      variantId: '', // Existing renewals are handled by the webhook.
       savings: `${PLANS.yearly.savingPercent}%`,
     },
   },
@@ -62,10 +62,9 @@ export const LEMONSQUEEZY_CONFIG = {
   // spelled out rather than looked up by key.
   offerProducts: {
     a1_exam_pack: { ...OFFER_PRODUCTS.a1_exam_pack, variantId: import.meta.env.VITE_LEMONSQUEEZY_A1_EXAM_PACK_VARIANT_ID || '' },
-    a1_complete: { ...OFFER_PRODUCTS.a1_complete, variantId: import.meta.env.VITE_LEMONSQUEEZY_A1_COMPLETE_VARIANT_ID || '' },
-    all_access: { ...OFFER_PRODUCTS.all_access, variantId: import.meta.env.VITE_LEMONSQUEEZY_ALL_ACCESS_VARIANT_ID || '' },
   },
   levelCourses: {
+    course_a1_1: { ...LEVEL_COURSES.course_a1_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID || '' },
     course_a1_2: { ...LEVEL_COURSES.course_a1_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '' },
     course_a2_1: { ...LEVEL_COURSES.course_a2_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '' },
     course_a2_2: { ...LEVEL_COURSES.course_a2_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID || '' },
@@ -81,15 +80,21 @@ export const LEMONSQUEEZY_CONFIG = {
   // (comes back on the order webhook as meta.custom_data.coupon, which is how
   // the redemption ledger attributes it — deterministically, never guessed
   // from the discount total).
-  getCheckoutUrl: (variantId, userEmail, userId, coupon) => {
+  getCheckoutUrl: (variantId, userEmail, userId, coupon, productKey, now = Date.now()) => {
+    if (!variantId || (productKey && !isProductOnSale(productKey))) return null;
     const baseUrl = `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`;
     const params = new URLSearchParams({
       'checkout[email]': userEmail || '',
       'checkout[custom][user_id]': userId || '',
     });
-    if (coupon?.code) {
-      params.set('checkout[discount_code]', String(coupon.code));
-      params.set('checkout[custom][coupon]', String(coupon.code).trim().toUpperCase());
+    const level = LEVEL_COURSES[productKey]?.levels[0];
+    const launchCode = level ? launchDiscountCode(level, now) : null;
+    const manualCode = Object.values(LAUNCH_CODES).includes(coupon?.code) ? null : coupon?.code;
+    const code = launchCode || manualCode;
+    if (code) {
+      params.set('checkout[discount_code]', String(code));
+      // Launch codes belong to the provider, not the app coupon ledger.
+      if (!launchCode) params.set('checkout[custom][coupon]', String(code).trim().toUpperCase());
     }
     return `${baseUrl}?${params.toString()}`;
   },
