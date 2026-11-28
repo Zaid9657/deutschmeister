@@ -13,7 +13,7 @@ import { levelsForProduct } from '../../src/data/pricing.js';
 import { isLevelFree } from '../../src/config/freeTier.js';
 import { subscriptionStatus } from '../../src/lib/subscriptionStatus.js';
 
-const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 export const withoutImports = (source) => source.replace(/^import[\s\S]*?;\n/gm, '');
 
 /** checkTrialStatus / checkSubscriptionStatus from src/services/subscriptionService.js, as shipped. */

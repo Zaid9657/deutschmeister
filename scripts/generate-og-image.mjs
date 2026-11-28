@@ -28,7 +28,7 @@ import { color } from '../src/data/design-tokens.js';
 import { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } from '../src/data/marketing.js';
 
 /** The one claim line the card draws, and the stamp it carries. */
-export const OG_CLAIM = `${GRAMMAR_TOPIC_COUNT} grammar topics · ${LEVEL_COUNT} levels · ${FREE_LEVEL_LABEL} free`;
+export const OG_CLAIM = `${GRAMMAR_TOPIC_COUNT} grammar topics · ${LEVEL_COUNT} levels · ${FREE_LEVEL_LABEL} Lektion 1 free`;
 /** The tEXt keyword of that stamp (a standard PNG keyword). */
 export const OG_CLAIM_KEYWORD = 'Description';
 

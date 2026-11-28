@@ -43,7 +43,7 @@ import {
   SUBLEVEL_PRICES_EUR,
   COMING_SOON_LEVELS,
   SELLABLE_LEVELS,
-  COURSE_FROM_PRICE_EUR,
+  COURSE_FROM_PRICE_EUR, currentPrice, launchPrice,
   LEGACY_LEVEL_COURSES,
   courseForProduct,
   productKeyForLevel,
@@ -79,7 +79,7 @@ import { EXAM_TRACKS } from '../src/data/examTracks.js';
 import { EXAM_HUBS } from '../astro-site/src/data/exams/index.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n');
 
 /**
  * Strip comments and import statements so assertions see what ships, not what
@@ -116,7 +116,7 @@ test('derived figures follow from the prices', () => {
 test('level courses cover every paid sub-level exactly once, at its own price', () => {
   // Every level except the free one is a product; the free one never is —
   // a gap here is a level nobody can buy, an overlap is a level sold twice.
-  const paid = ALL_LEVELS.slice(1);
+  const paid = ALL_LEVELS;
   assert.deepEqual(Object.keys(SUBLEVEL_PRICES_EUR), paid);
   const covered = Object.values(LEVEL_COURSES).flatMap((c) => c.levels);
   assert.deepEqual(covered, paid);
@@ -131,7 +131,7 @@ test('level courses cover every paid sub-level exactly once, at its own price', 
   // Prices rise up the ladder, never fall (the owner's 40 / 50 / 60 / 65 map).
   const prices = paid.map((l) => SUBLEVEL_PRICES_EUR[l]);
   for (let i = 1; i < prices.length; i += 1) assert.ok(prices[i] >= prices[i - 1], 'a higher level must not be cheaper');
-  assert.equal(COURSE_FROM_PRICE_EUR, Math.min(...SELLABLE_LEVELS.map((l) => SUBLEVEL_PRICES_EUR[l])));
+  assert.equal(COURSE_FROM_PRICE_EUR, Math.min(...SELLABLE_LEVELS.map((l) => currentPrice(l))));
   assert.ok(SELLABLE_LEVELS.every((l) => !COMING_SOON_LEVELS.includes(l)));
   assert.ok(SELLABLE_LEVELS.length > 0, 'nothing would be buyable');
 
@@ -144,7 +144,7 @@ test('level courses cover every paid sub-level exactly once, at its own price', 
   assert.equal(courseForProduct('course_a1').legacy, true);
   assert.equal(bandCourseForLevel('B2.1').key, 'course_b2_1', 'case-insensitive: the DB is uppercase');
   assert.equal(bandCourseForLevel('B2.1').comingSoon, true);
-  assert.equal(bandCourseForLevel('a1.1'), null, 'the free level is not a product');
+  assert.equal(bandCourseForLevel('a1.1').key, 'course_a1_1', 'Lektion 1 is free; the course is a product');
   assert.equal(bandCourseForLevel('zz'), null);
   // Retired keys never reappear as live products.
   for (const k of Object.keys(LEGACY_LEVEL_COURSES)) assert.ok(!(k in LEVEL_COURSES), `${k} is retired`);
@@ -251,6 +251,7 @@ test('no page source retypes a price literal', () => {
     deNum(YEARLY_PER_DAY_EUR), // 0,22
     num(COURSE_TELC_B1_PRICE_EUR), // 89.00
     deNum(COURSE_TELC_B1_PRICE_EUR), // 89,00
+    ...ALL_LEVELS.map(launchPrice).flatMap((p) => [num(p), deNum(p)]),
     ...Object.values(SUBLEVEL_PRICES_EUR).flatMap((p) => [num(p), deNum(p)]), // 40.00, 50.00, 60.00, 65.00 and the German forms
   ];
 
@@ -463,13 +464,8 @@ test('the course copy claims the AI Practice window the webhook actually grants'
   // grants proDays from its own courseForVariant map. If they diverge, the
   // sales page promises a window the server does not grant.
   const webhook = read('netlify/functions/lemonsqueezy-webhook.mjs');
-  const granted = webhook.match(/proDays:\s*(\d+)/);
-  assert.ok(granted, 'courseForVariant proDays not found in the webhook');
-  assert.equal(
-    Number(granted[1]),
-    COURSE_PRO_DAYS,
-    'the webhook grants a different AI Practice window than the pricing data claims',
-  );
+  assert.match(webhook, /import \{ COURSE_PRO_DAYS, OFFER_PRODUCTS \} from '\.\/_shared\/pricing\.mjs'/);
+  assert.match(webhook, /proDays: OFFER_PRODUCTS\[productKey\]\?\.proDays \|\| COURSE_PRO_DAYS/);
   assert.equal(COURSES.telc_b1_komplett.proMonths, Math.floor(COURSE_PRO_DAYS / 30));
 });
 
@@ -488,8 +484,8 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   assert.deepEqual({ ...shared.SUBLEVEL_PRICES_EUR }, SUBLEVEL_PRICES_EUR);
   // The approved brief parks A2 on the client without changing functions.
   // Preserve the server catalogue and assert that the client is strictly more restrictive.
-  assert.deepEqual([...shared.COMING_SOON_LEVELS], ['b1.1', 'b1.2', 'b2.1', 'b2.2']);
-  assert.deepEqual(COMING_SOON_LEVELS, ['a2.1', 'a2.2', ...shared.COMING_SOON_LEVELS]);
+  assert.deepEqual([...shared.COMING_SOON_LEVELS], COMING_SOON_LEVELS);
+
   assert.deepEqual([...shared.ALL_LEVELS], ALL_LEVELS);
   assert.equal(shared.YEARLY_AS_MONTHLY_EUR, YEARLY_AS_MONTHLY_EUR);
   assert.equal(shared.MONTHLY_PER_DAY_EUR, MONTHLY_PER_DAY_EUR);
@@ -505,7 +501,7 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   }
   assert.equal(shared.productInfo('nope'), null);
   // The allow-list holds every figure a page may state, and nothing else.
-  const pagePrices = [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR)];
+  const pagePrices = [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR), ...ALL_LEVELS.map(shared.launchPrice), ...Object.values(shared.OFFER_PRODUCTS).map((p) => p.price)];
   assert.deepEqual([...shared.CATALOGUE_EURO_AMOUNTS].sort((a, b) => a - b), pagePrices.sort((a, b) => a - b));
 });
 
@@ -601,8 +597,8 @@ test('llms.txt files quote the current prices and allowances', () => {
   // from a stale llms.txt is exactly the claim we would never see ourselves.
   for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
     const body = read(file);
-    assert.ok(body.includes(eur(MONTHLY_PRICE_EUR)), `${file} does not quote ${eur(MONTHLY_PRICE_EUR)}`);
-    assert.ok(body.includes(eur(YEARLY_PRICE_EUR)), `${file} does not quote ${eur(YEARLY_PRICE_EUR)}`);
+    assert.doesNotMatch(body, /AI Practice — €[\d.,]+\/month/, 'retired subscriptions are not sold');
+    assert.ok(body.includes('regular prices from 1 February 2027'), 'static text labels future regular prices');
     assert.ok(
       body.includes(String(PRO_WRITING_EVALUATIONS_PER_MONTH)),
       `${file} does not quote the ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing feedbacks per month`,
@@ -960,7 +956,7 @@ test('the social card states the measured counts (public/og-image.png carries th
   // llms.txt change without one fails tests/llms.test.mjs.
   const { OG_CLAIM, OG_CLAIM_KEYWORD, pngTextChunks, withTextChunk } = await import('../scripts/generate-og-image.mjs');
   const { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } = await import('../src/data/marketing.js');
-  for (const value of [`${GRAMMAR_TOPIC_COUNT} grammar topics`, `${LEVEL_COUNT} levels`, `${FREE_LEVEL_LABEL} free`]) {
+  for (const value of [`${GRAMMAR_TOPIC_COUNT} grammar topics`, `${LEVEL_COUNT} levels`, `${FREE_LEVEL_LABEL} Lektion 1 free`]) {
     assert.ok(OG_CLAIM.includes(value), `the card's line does not derive "${value}" from marketing.js: "${OG_CLAIM}"`);
   }
   const png = readFileSync(join(ROOT, 'public/og-image.png'));
@@ -971,4 +967,18 @@ test('the social card states the measured counts (public/og-image.png carries th
   const bare = Buffer.concat([png.subarray(0, 33), Buffer.from('0000000049454e44ae426082', 'hex')]);
   assert.deepEqual(pngTextChunks(bare), {});
   assert.equal(pngTextChunks(withTextChunk(bare, OG_CLAIM_KEYWORD, OG_CLAIM))[OG_CLAIM_KEYWORD], OG_CLAIM);
+});
+
+
+test('course claims offer only the free first Lektion and never a retired product checkout', () => {
+  const failures = [];
+  for (const file of copyFiles()) {
+    const text = rendered(read(file))
+      .replace(/Lektion 1 (?:of|von) (?:the )?A1\.1(?: course)? (?:is )?free/gi, '')
+      .replace(/A1\.1 Lektion 1 free/gi, '');
+    if (/A1\.1 (?:is |completely |komplett )?(?:free|kostenlos)|free (?:guided )?A1\.1 course/i.test(text)) failures.push(`${file}: whole-course free claim`);
+    if (/\/subscription\?buy=(?:monthly|yearly|a1_complete|all_access)(?:['"&]|$)/.test(text)) failures.push(`${file}: retired checkout`);
+    if (/<(?:s|del)(?:\s|>)/i.test(text)) failures.push(`${file}: unlabelled former-price markup`);
+  }
+  assert.deepEqual(failures, []);
 });

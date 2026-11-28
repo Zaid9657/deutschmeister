@@ -9,7 +9,7 @@
 //      level (C-168): Lektion 1 of the free course for an A1.1 result — the most
 //      common one — instead of a grammar page.
 //   3. A result at a ticket station (A1.2–A2.2) leads with that level's course
-//      and one line to its ticket page; B1/B2 get the Pro route (C-096/C-109/
+//      and one line to its ticket page; B1/B2 keep grammar and a course-coming-soon note (C-096/C-109/
 //      C-170). Every figure comes from offers.js / pricing.js. Owner review:
 //      money and brand message (Team v5).
 import { test } from 'node:test';
@@ -22,8 +22,8 @@ import { calculatePlacement, focusTopics, topicLink } from '../src/components/Le
 import { drawQuestions } from '../src/components/LevelTest/drawQuestions.js';
 import { FIRST_LESSON_HREF, placedCourseHref } from '../src/lib/firstRun.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
-import { stationFor, stationStatusLine, EXAM_ROUTE } from '../src/data/offers.js';
-import { LEVEL_COURSES, productKeyForLevel, eur } from '../src/data/pricing.js';
+import { stationFor, stationStatusLine } from '../src/data/offers.js';
+import { currentPrice, coursePriceLine, LAUNCH_ENDS_AT, eur } from '../src/data/pricing.js';
 import { PLACEMENT_REF } from '../src/lib/placement.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -93,13 +93,13 @@ test('the screen ranks with focusTopics for both the chips and the Review card',
 // ── 2 & 3. where the result leads, evaluated from the screen's own code ─────
 
 /** The screen's destination block, run with the real modules for one result. */
-function destinations(finalSublevel) {
+function destinations(finalSublevel, priceNow = Date.parse('2026-11-27T12:00:00Z')) {
   const src = read(RESULTS);
   const block = src.slice(src.indexOf('  const placedCourse = placedCourseHref(finalSublevel);'), src.indexOf('  // The placement hook into the free A1.1 course'));
   assert.ok(block.includes('stationFor(finalSublevel)'), 'the destination block moved');
-  return new Function('finalSublevel', 'placedCourseHref', 'getTopicsForLevel', 'stationFor', 'stationStatusLine', 'EXAM_ROUTE', 'PLACEMENT_REF',
-    `${block}\nreturn { placedCourse, firstLesson, station, placedTicket, proHref };`)(
-    finalSublevel, placedCourseHref, getTopicsForLevel, stationFor, stationStatusLine, EXAM_ROUTE, PLACEMENT_REF);
+  return new Function('finalSublevel', 'placedCourseHref', 'getTopicsForLevel', 'stationFor', 'stationStatusLine', 'coursePriceLine', 'priceNow', 'PLACEMENT_REF',
+    `${block}\nreturn { placedCourse, firstLesson, station, placedTicket, courseComingSoon };`)(
+    finalSublevel, placedCourseHref, getTopicsForLevel, stationFor, stationStatusLine, coursePriceLine, priceNow, PLACEMENT_REF);
 }
 
 test('an A1.1 result starts Lektion 1 of the free course (a router link), with no offer', () => {
@@ -107,7 +107,7 @@ test('an A1.1 result starts Lektion 1 of the free course (a router link), with n
   assert.deepEqual(d.firstLesson, { to: FIRST_LESSON_HREF });
   assert.equal(FIRST_LESSON_HREF, '/course/a1.1/l/1');
   assert.equal(d.placedTicket, null);
-  assert.equal(d.proHref, null);
+  assert.equal(d.courseComingSoon, null);
   assert.match(read(RESULTS), /<Button variant="celebrate" size="lg" \{\.\.\.firstLesson\} className="flex-1">/);
 });
 
@@ -117,29 +117,30 @@ test('A1.2 results lead with their own course and their ticket, priced from pric
     const lower = level.toLowerCase();
     assert.deepEqual(d.firstLesson, { to: start }, `${level}: the course, not a grammar slug`);
     assert.equal(d.placedTicket.to, start);
-    const course = LEVEL_COURSES[productKeyForLevel(lower)];
-    assert.ok(d.placedTicket.ticketLine.includes(eur(course.price)), `${level}: the price is pricing.js's`);
-    assert.equal(d.placedTicket.ticketLine, `Your stop: ${level} · ${stationStatusLine(stationFor(lower))}`);
+    assert.ok(d.placedTicket.ticketLine.includes(eur(currentPrice(lower, '2026-11-27'))), `${level}: current price from pricing.js`);
+    assert.equal(d.placedTicket.ticketLine, `Your stop: ${level} · ${coursePriceLine(lower, '2026-11-27')} · ${stationStatusLine(stationFor(lower))}`);
     const u = new URL(d.placedTicket.ticketHref, 'https://deutsch-meister.de');
     assert.equal(u.pathname, stationFor(lower).coursePage, 'the Astro ticket page (trailing slash)');
     assert.match(u.pathname, /\/$/);
     assert.equal(u.searchParams.get('ref'), PLACEMENT_REF);
     assert.equal(u.searchParams.get('utm_medium'), 'onsite');
     assert.equal(u.searchParams.get('utm_content'), lower);
-    assert.equal(d.proHref, null);
+    assert.equal(d.courseComingSoon, null);
   }
 });
 
-test('a B1/B2 result keeps its grammar start and gets the Pro route offers.js names', () => {
-  for (const level of ['A2.1', 'A2.2', 'B1.1', 'B2.2']) {
+test('a B1/B2 result keeps its grammar start and gets a plain course-coming-soon note', () => {
+  for (const level of ['A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2']) {
     const d = destinations(level);
     const lower = level.toLowerCase();
     assert.equal(d.placedTicket, null, 'no course to sell yet (Im Bau)');
     assert.deepEqual(d.firstLesson, lower.startsWith('a2') ? { to: `/course/${lower}` } : { href: `/grammar/${lower}/${getTopicsForLevel(lower)[0].slug}/` });
-    const u = new URL(d.proHref, 'https://deutsch-meister.de');
-    assert.equal(`${u.pathname}${u.hash}`, EXAM_ROUTE.links.find((l) => l.href.startsWith('/pricing/')).href);
-    assert.equal(u.searchParams.get('ref'), PLACEMENT_REF);
-    assert.equal(u.searchParams.get('utm_content'), lower);
+    assert.equal(d.courseComingSoon, `${level} course coming soon.`);
+    const src = read(RESULTS);
+    // The note names the level, then the shared exam-route copy (offers.js, no price:
+    // tests/telc-pilot-gate.test.mjs). No AI Practice route is offered any more.
+    assert.match(src, /<p[^>]*data-placement-coming-soon>\{courseComingSoon\} \{EXAM_ROUTE\.body\}<\/p>/);
+    assert.doesNotMatch(src, /proHref|data-placement-pro/);
   }
 });
 
@@ -151,4 +152,16 @@ test('the offer card is built from offers.js and the A1.1 card stays for every r
   assert.match(src, /<Link to=\{placedTicket\.to\}/, 'the course is an SPA route');
   assert.match(src, /<a href=\{placedTicket\.ticketHref\}/, 'the ticket page is an Astro page: a full load that keeps the tag');
   assert.match(src, /<Card interactive as=\{Link\} to=\{courseHref\}/, 'the free A1.1 card is still offered');
+});
+
+// The results screen uses the same clock as every other SPA price surface.
+test('the placed-course price changes at the launch boundary with its launch label', () => {
+  const end = Date.parse(LAUNCH_ENDS_AT);
+  for (const now of [end, end + 1000]) {
+    const d = destinations('A1.2', now);
+    assert.ok(d.placedTicket.ticketLine.includes(coursePriceLine('a1.2', now)));
+    assert.ok(d.placedTicket.ticketLine.includes(eur(currentPrice('a1.2', now))));
+    assert.equal(d.placedTicket.ticketLine.includes('launch price'), now === end);
+  }
+  assert.match(read(RESULTS), /const priceNow = usePriceNow\(\);/);
 });

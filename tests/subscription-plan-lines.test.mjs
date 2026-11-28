@@ -28,7 +28,6 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { PLANS } from '../src/data/pricing.js';
 import { PRO_OFFER } from '../src/data/offers.js';
 import {
   PRO_DAILY_LIMIT,
@@ -112,14 +111,11 @@ test('proPlanLines hands out a copy, so a caller cannot rewrite the offer', asyn
   assert.notEqual(proPlanLines(true), proPlanLines(true));
 });
 
-test('every plan card on /subscription renders the lines and types no feature list', () => {
+test('new-buyer subscription cards are absent while course cards use canonical price display', () => {
   const page = code(read(PAGE));
-  assert.match(page, /import \{ proPlanLines \} from '\.\.\/lib\/proPlanLines\.js'/);
-  const rendered = page.match(/features:\s*proPlanLines\(isGerman\)/g) || [];
-  assert.equal(rendered.length, Object.keys(PLANS).length, 'one proPlanLines() per plan the checkout sells');
-  assert.doesNotMatch(page, /features:\s*(?:isGerman|\[)/, 'a plan card types its own feature list');
+  assert.doesNotMatch(page, /handleSubscribe|plans.map|Subscribe Now/);
+  assert.match(page, /<CoursePrice level=\{firstLevel\}/);
 });
-
 test('the checkout config carries no unrendered plan feature list', () => {
   assert.doesNotMatch(code(read(CHECKOUT_CONFIG)), /\bfeatures\s*:/);
 });

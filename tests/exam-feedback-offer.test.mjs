@@ -10,11 +10,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { examFeedbackOffer, writingOfferMoment, proFeedbackDoor } from '../src/lib/examFeedbackOffer.js';
-import { EXAM_COURSE, PRO_OFFER, stationFor } from '../src/data/offers.js';
+import { EXAM_COURSE, stationFor } from '../src/data/offers.js';
 import { EXAM_TRACKS } from '../src/data/examTracks.js';
 import { levelsForProduct } from '../src/data/pricing.js';
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 /** hasPaidAccess as SchreibenPage builds it from the subscription context. */
 const paidAccess = ({ subscribed = false, purchases = [] } = {}) =>
@@ -62,8 +62,8 @@ test('other writing exams receive the matching existing station or AI Practice o
   }
   const b2 = examFeedbackOffer({ examKey: 'telc_b2', ...trial });
   assert.deepEqual(b2, proFeedbackDoor());
-  assert.equal(b2.title, PRO_OFFER.monthly.name);
-  assert.equal(b2.href, '/pricing/#pro');
+  assert.equal(b2.title, 'Deutschkurse');
+  assert.equal(b2.href, '/courses/');
 });
 
 test('the moment decides: trial result → offer, trial limit → AI Practice door, trial over → offer, paid → nothing', () => {

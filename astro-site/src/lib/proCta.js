@@ -21,7 +21,6 @@
 // (tests/claims.test.mjs). Pure, so tests/pro-cta.test.mjs pins it under
 // node --test; the page renders it at build time and its script re-renders it
 // once it knows whether a session exists.
-import { PLANS, eur } from '../data/pricing.js';
 import { TRIAL_DAYS } from '../data/marketing.js';
 import { hasRecurringBilling } from '../../../src/lib/checkoutAccess.js';
 import { BILLING_PORTAL_URL } from '../../../src/lib/billingPortal.js';
@@ -34,7 +33,7 @@ export const SIGNUP_URL = 'https://deutsch-meister.de/signup';
  * @param {{ signedIn?: boolean, cycle?: 'monthly'|'yearly', subscription?: object|null }} [p]
  * @returns {{ action: 'signup'|'checkout'|'portal', label: string, note: string, href: string|null, plan: string|null }}
  */
-export function proCta({ signedIn = false, cycle = 'monthly', subscription = null } = {}) {
+export function proCta({ signedIn = false, subscription = null } = {}) {
   if (!signedIn) {
     return {
       action: 'signup',
@@ -53,14 +52,5 @@ export function proCta({ signedIn = false, cycle = 'monthly', subscription = nul
       plan: null,
     };
   }
-  const plan = PLANS[cycle] || PLANS.monthly;
-  return {
-    action: 'checkout',
-    label: `Add AI Practice — ${eur(plan.price)}/${plan.interval}`,
-    note: plan.key === 'yearly'
-      ? `${eur(plan.asMonthly)} a month, billed yearly · cancel anytime`
-      : `${eur(plan.perDay)} a day · cancel anytime`,
-    href: null,
-    plan: plan.key,
-  };
+  return { action: 'courses', label: 'See courses', note: 'AI Practice is included with a course purchase.', href: '/courses/', plan: null };
 }

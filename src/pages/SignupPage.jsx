@@ -258,10 +258,10 @@ const SignupPage = () => {
             className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            Start A1.1 free. Try AI Practice for {TRIAL_DAYS} days.
+            Try A1.1 Lektion 1 free. Try AI Practice for {TRIAL_DAYS} days.
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Lektion 1 of A1.1 is free. Your account also includes a limited AI Practice trial. A paid AI Practice subscription opens the rest of A1.1; other courses are purchased separately. No payment details needed.
+            Lektion 1 of A1.1 is free. Your account also includes a limited AI Practice trial. Buy each course separately to open its guided lessons. No payment details needed.
           </p>
         </div>
 

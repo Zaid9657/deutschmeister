@@ -18,18 +18,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../src/data/marketing.js';
 import { spawnWithFiles as spawnSync } from './helpers/spawnWithFiles.mjs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import vm from 'node:vm';
 
-import { COURSE_TELC_B1_PRICE_EUR, COURSE_PRO_MONTHS, PLANS, eur, deEur } from '../src/data/pricing.js';
+import { COURSE_TELC_B1_PRICE_EUR, eur, deEur } from '../src/data/pricing.js';
 import { renderShort, renderFull, telcOnSale } from '../scripts/build-llms.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n');
 
 const spaConfig = read('src/config/lemonsqueezy.js');
 const variants = read('astro-site/src/lib/courseVariants.js');
@@ -122,51 +120,12 @@ test('off sale, the page offers the attributed free-account door instead', () =>
 // page itself had no Buy button: a visitor with intent to buy hit a dead end.
 // The same switch now gates all three.
 
-/** The /pricing/ FAQ list, evaluated for one sale state. */
-function pricingFaqs({ onSale, levelCourses }) {
-  const block = pricing.match(/const FAQS = (\[[\s\S]*?\n\]);/);
-  assert.ok(block, 'const FAQS not found in pricing.astro');
-  return vm.runInNewContext(`(${block[1]})`, {
-    FREE_LEVEL_LABEL: 'A1.1', TOPICS_PER_LEVEL: 12, TRIAL_DAYS: 7, FREE_DAILY_LIMIT: 1,
-    BILLING_PORTAL_LABEL: 'portal.example', BILLING_PORTAL_URL: 'https://portal.example',
-    COURSE_PRO_MONTHS, COURSE_TELC_B1_PRICE_EUR, PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT, PLANS, eur,
-    showLevelCourses: levelCourses, priceList: 'A1.2 €40.00', telcOnSale: onSale,
-  });
-}
 
-test('/pricing/ reads the same switch and sells the package only while it is on', () => {
-  assert.match(pricing, /import \{[^}]*\btelcPilotVariant\b[^}]*\} from '\.\.\/lib\/courseVariants\.js';/);
-  assert.match(pricing, /const telcOnSale = Boolean\(telcPilotVariant\(\)\);/);
-  assert.doesNotMatch(pricing, /TELC_B1_ON_SALE|LEMONSQUEEZY_TELC_B1_VARIANT_ID/, 'an env read on /pricing/ would bypass the gate');
-
-  // The FAQ (and with it the FAQPage JSON-LD built from FAQS).
-  for (const levelCourses of [true, false]) {
-    const off = pricingFaqs({ onSale: false, levelCourses });
-    for (const { q, a } of off) {
-      assert.ok(!a.includes(TELC_PRICE), `off sale (level courses ${levelCourses}): "${q}" prices the telc package`);
-      assert.doesNotMatch(a, /Komplettvorbereitung/, `off sale (level courses ${levelCourses}): "${q}" offers the telc package`);
-    }
-    const on = pricingFaqs({ onSale: true, levelCourses });
-    assert.ok(on.some(({ a }) => a.includes(TELC_PRICE)), `on sale (level courses ${levelCourses}): the one-time answer names the package`);
-  }
-
-  // The card: its price and "one-time" line sit in the TRUE branch of
-  // `{telcOnSale ? (`; the off-sale branch carries the attributed door.
-  const template = pricing.slice(pricing.indexOf('\n---\n', 4) + 5);
-  const sold = [...template.matchAll(/\{eur\(COURSE_TELC_B1_PRICE_EUR\)\}|one-time · no subscription/g)];
-  assert.ok(sold.length >= 2, 'the card still renders its price and terms when on sale');
-  for (const m of sold) {
-    const before = template.slice(0, m.index);
-    const open = before.lastIndexOf('{telcOnSale ? (');
-    assert.ok(open >= 0, `"${m[0]}" renders outside the telcOnSale guard`);
-    // A branch ends at a line that starts with ") : (" or ")}" — not at the ")}"
-    // closing an inline expression such as {eur(…)}.
-    assert.doesNotMatch(before.slice(open), /\n\s*\)\s*:\s*\(|\n\s*\)\}/, `"${m[0]}" renders in the off-sale branch`);
-  }
-  assert.match(pricing, /const telcSignupHref = onsiteHref\('signup', 'telc-pilot', '[a-z-]+'\);/);
-  assert.match(template, /\{!telcOnSale && \(\s*<a href=\{telcSignupHref\}/, 'off sale, the card offers the attributed free-account door');
+test('/pricing/ does not sell the off-sale telc package', () => {
+  assert.doesNotMatch(pricing, /telcPilotVariant|TELC_B1_ON_SALE|data-course-key="telc_b1_komplett"/);
+  assert.match(pricing, /<Ladder/);
+  assert.doesNotMatch(read('astro-site/src/components/concept/Ladder.astro'), /telc_b1_komplett/);
 });
-
 test('the shared offer copy names no price for the package, whatever the switch', async () => {
   // offers.js renders on the homepage, /courses/, /pricing/ and the level-test
   // result, none of which reads the sale switch: EXAM_ROUTE ended on "the telc
@@ -195,7 +154,7 @@ test('the shared offer copy names no price for the package, whatever the switch'
     }
     assert.ok(offers.EXAM_ROUTE.links.some((l) => l.href === '/telc-b1-komplettvorbereitung/'), 'the route still links the package\'s page');
   }
-  assert.match(pricing, /\{EXAM_ROUTE\.title\}<\/strong> \{EXAM_ROUTE\.body\}/, '/pricing/ renders the shared route as it is');
+  assert.match(pricing, /OFFER_FAQ/, '/pricing/ renders canonical course answers');
   assert.match(read('src/components/LevelTest/LevelTestResults.jsx'), /\{EXAM_ROUTE\.body\}/, 'the level-test result renders the same copy');
 });
 

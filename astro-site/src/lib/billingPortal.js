@@ -18,3 +18,5 @@ export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/bill
 
 /** The same address without the scheme, for copy (the FAQ answer and its FAQPage JSON-LD text). */
 export const BILLING_PORTAL_LABEL = BILLING_PORTAL_URL.replace(/^https:\/\//, '');
+
+export { subscriptionManagementLabel } from '../../../src/lib/billingPortal.js';

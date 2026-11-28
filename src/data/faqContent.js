@@ -9,7 +9,7 @@
 // the page component — this file is data, and lucide components don't belong
 // in a module the prerender imports.
 
-import { PLANS, eur } from './pricing.js';
+import { COURSE_PRO_DAYS } from './pricing.js';
 import {
   TRIAL_SPEAKING_SESSIONS,
   ANON_DAILY_LIMIT,
@@ -21,6 +21,7 @@ import {
 } from './marketing.js';
 import { EXAM_TRACKS } from './examTracks.js';
 import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
+import { EXISTING_SUBSCRIBER_BILLING_COPY } from '../lib/billingPortal.js';
 
 /**
  * The date of the last change to the FAQ copy below. public/sitemap-spa.xml
@@ -106,7 +107,7 @@ export const FAQ_CATEGORIES = [
     items: [
       {
         q: 'How much does DeutschMeister cost?',
-        a: `Annual AI Practice costs ${eur(PLANS.yearly.price)} per year, equivalent to ${eur(PLANS.yearly.asMonthly)} per month or less than ${eur(PLANS.yearly.perDay)} per day. Monthly AI Practice costs ${eur(PLANS.monthly.price)} per month.`,
+        a: `Each course is a separate one-time purchase with ${COURSE_PRO_DAYS} days of AI tools included. New AI Practice subscriptions are off sale. ${EXISTING_SUBSCRIBER_BILLING_COPY}`,
       },
       {
         q: 'Is there a free version?',

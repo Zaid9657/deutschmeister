@@ -22,7 +22,7 @@ import { subscriptionStatus } from '../src/lib/subscriptionStatus.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { levelsForProduct, productKeyForLevel } from '../src/data/pricing.js';
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 /** A PostgREST-shaped fake: select projects, eq filters, order sorts, maybeSingle unwraps. */
 function database(tables, userId) {

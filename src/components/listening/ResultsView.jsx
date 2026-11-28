@@ -140,10 +140,10 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, audioUrl,
             <p className="text-xs text-graphite mb-3">
               {isGerman
                 ? 'Abonnieren Sie, um nach Ihrer Testphase weiterzulernen.'
-                : 'Subscribe to keep learning after your trial ends.'}
+                : 'Buy a course to continue its guided lessons.'}
             </p>
             <Button href="/pricing/" size="sm">
-              {isGerman ? 'Jetzt upgraden' : 'Upgrade to AI Practice'}
+              {isGerman ? 'Kurse ansehen' : 'See courses'}
             </Button>
           </Card>
         </Reveal>

@@ -1,4 +1,4 @@
-import { useParams, useLocation, Navigate } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree, beyondFreeLektionen } from '../config/freeTier';
@@ -46,7 +46,7 @@ const LevelSubscriptionGuard = ({ children, level: levelProp, programme }) => {
   // Logged in but neither subscription/trial nor a level course covering it
   if (gated ? !hasFullCourse(level) : !hasLevelAccess(level) && !ownsExamProgramme(purchases, programme)
     && !(/^\/(?:reading|listening)\//.test(location.pathname) && hasExamPracticeAccess(purchases, level))) {
-    return <Navigate to="/subscription" state={{ from: location }} replace />;
+    return <LockedContentOverlay level={level} />;
   }
 
   return children;

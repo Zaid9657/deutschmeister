@@ -1,110 +1,313 @@
-// Price values for email and any other function surface that cannot import the
-// pricing data layer.
+// What the checkout actually charges — the commerce layer.
 //
-// THIS IS A SYNCED COPY of src/data/pricing.js, not a second opinion.
-// netlify/functions/ has its own dependency tree and is bundled by esbuild, so
-// a relative import reaching back into src/ is fragile (same reasoning as
-// _shared/brand.mjs). tests/claims.test.mjs compares every value below against
-// the data layer and fails if they drift — which is the only thing keeping a
-// synced copy honest. If a price changes, change src/data/pricing.js first and
-// let the failing test point here.
+// DUPLICATED between the SPA and the Astro site (byte-identical, enforced by
+// scripts/check-duplicates.mjs). A cross-package import is fragile with two
+// separate node_modules trees, which is the same reason competitorComparisons.js
+// is duplicated. Change one copy, run `npm run check:duplicates`.
+//
+// Companion file: ./marketing.js — what the copy CLAIMS. Keep the split:
+//   pricing.js  = what the buyer is charged and what they get (must match the
+//                 Lemon Squeezy dashboard)
+//   marketing.js = what we say about it (must match this file and the servers)
+//
+// THE RULE THIS FILE EXISTS TO ENFORCE: derive, never retype. Before this file,
+// "€0.33/day", "€0.22/day", "€6.67/month" and "Save 33%" were typed by hand in
+// four files. All four happened to be arithmetically correct, but a single price
+// change would have made every one of them false at once, silently — and a
+// price claim that disagrees with the checkout is irreführende Werbung under
+// UWG §5, not a typo. The helpers below recompute on every build instead.
+//
+// Provenance: prices verified against src/config/lemonsqueezy.js and the
+// Lemon Squeezy store (309512) checkout, 2026-08-22.
 
+/** Gross price in EUR, billed monthly. */
 export const MONTHLY_PRICE_EUR = 9.99;
 
-/** English price convention: €9.99 (mirrors pricing.js `eur`). */
-export const eur = (v) => `€${v.toFixed(2)}`;
-
-// ─── The catalogue, for the support agent ────────────────────────────────────
-// support-agent.mjs may quote a price only if it is one of these, and its
-// reply validator rejects any euro amount that is not (CATALOGUE_EURO_AMOUNTS).
-// Same synced-copy doctrine as above: tests/claims.test.mjs compares every
-// value here against src/data/pricing.js.
-
+/** Gross price in EUR, billed once per year. */
 export const YEARLY_PRICE_EUR = 79.99;
+
+export const CURRENCY = 'EUR';
+
+/**
+ * Days used to derive the monthly plan's per-day rate. A month, not 30.44 —
+ * the claim is "less than X a day" about a monthly subscription, and 30 is the
+ * number a reader checks it against.
+ */
+const DAYS_PER_MONTH = 30;
+const DAYS_PER_YEAR = 365;
+const MONTHS_PER_YEAR = 12;
+
+/** Round half-up to cents. Number.toFixed rounds half-to-even in some engines. */
+const cents = (n) => Math.round(n * 100) / 100;
+
+/** 9.99 -> "9.99". English/schema.org form: point decimal, no symbol. */
+export const num = (n) => cents(n).toFixed(2);
+
+/** 9.99 -> "9,99". German form: comma decimal, no symbol. */
+export const deNum = (n) => num(n).replace('.', ',');
+
+/** 9.99 -> "€9.99". English form: symbol first, no space. */
+export const eur = (n) => `€${num(n)}`;
+
+/**
+ * The store charges tax-inclusive prices: the buyer pays the number on the page.
+ * Provenance: Lemon Squeezy store 309512, "Enable tax-inclusive pricing" switched on by the
+ * owner on 2026-11-11; the A1 Exam Pack checkout for Germany then showed €59.00 with
+ * "VAT (19% included in total)". Remove these notes if that setting is ever switched off.
+ */
+export const PRICE_TAX_NOTE = 'Prices include VAT.';
+export const PRICE_TAX_NOTE_DE = 'Alle Preise inkl. MwSt.';
+
+/** 9.99 -> "9,99 €". German form: symbol last, regular space (not U+00A0). */
+export const deEur = (n) => `${deNum(n)} €`;
+
+/** What the yearly plan works out to per month — "€6.67/month" territory. */
+export const YEARLY_AS_MONTHLY_EUR = cents(YEARLY_PRICE_EUR / MONTHS_PER_YEAR);
+
+/** Per-day rate of the monthly plan. */
+export const MONTHLY_PER_DAY_EUR = cents(MONTHLY_PRICE_EUR / DAYS_PER_MONTH);
+
+/** Per-day rate of the yearly plan. */
+export const YEARLY_PER_DAY_EUR = cents(YEARLY_PRICE_EUR / DAYS_PER_YEAR);
+
+/**
+ * Whole-percent saving of paying yearly instead of twelve monthly charges.
+ * Floored, never rounded up: overstating a discount is the direction that
+ * misleads.
+ */
+export const YEARLY_SAVING_PERCENT = Math.floor(
+  ((MONTHLY_PRICE_EUR * MONTHS_PER_YEAR - YEARLY_PRICE_EUR) / (MONTHLY_PRICE_EUR * MONTHS_PER_YEAR)) * 100,
+);
+
+/**
+ * One-time exam-prep courses. Same discipline as the subscription prices:
+ * these are what the Lemon Squeezy checkout charges (store 309512), every
+ * user-facing figure derives, and tests/claims.test.mjs bans the literals
+ * from page sources. `proDays` mirrors the included AI Practice window the webhook
+ * grants (netlify/functions/lemonsqueezy-webhook.mjs courseForVariant) —
+ * change both together or the copy claims a window the server doesn't grant.
+ */
 export const COURSE_TELC_B1_PRICE_EUR = 89;
 export const COURSE_PRO_DAYS = 90;
 
-/** Gross one-time price in EUR per sub-level. A1.1 is free and has no product. */
-export const SUBLEVEL_PRICES_EUR = Object.freeze({
-  'a1.2': 40,
-  'a2.1': 50,
-  'a2.2': 50,
-  'b1.1': 60,
-  'b1.2': 60,
-  'b2.1': 65,
-  'b2.2': 65,
-});
+/** The included-AI Practice-window claim in months — "3 Monate AI Practice-Zugang inklusive". */
+export const COURSE_PRO_MONTHS = Math.floor(COURSE_PRO_DAYS / DAYS_PER_MONTH);
 
-/** Listed, priced, not yet buyable ("Coming soon", no checkout). */
-export const COMING_SOON_LEVELS = Object.freeze(['b1.1', 'b1.2', 'b2.1', 'b2.2']);
-
-export const ALL_LEVELS = Object.freeze(['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2']);
-
-const cents = (n) => Math.round(n * 100) / 100;
-
-/** Derived exactly as pricing.js derives them — never typed. */
-export const YEARLY_AS_MONTHLY_EUR = cents(YEARLY_PRICE_EUR / 12);
-export const MONTHLY_PER_DAY_EUR = cents(MONTHLY_PRICE_EUR / 30);
-export const YEARLY_PER_DAY_EUR = cents(YEARLY_PRICE_EUR / 365);
-
-/** German price convention: 9,99 € (mirrors pricing.js `deEur`). */
-export const deEur = (v) => `${cents(v).toFixed(2).replace('.', ',')} €`;
-
-/** 'a1.2' → 'course_a1_2' (mirrors pricing.js productKeyForLevel). */
-export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
-
-// Coupon eligibility uses provider variant IDs (functions scope), never the
-// checkout UUIDs the front ends use to open a checkout. Prices stay in this
-// synced catalogue; a caller cannot lower the order value in their request.
-export function couponProduct(productKey, env = process.env) {
-  if (typeof productKey !== 'string') return null;
-  const level = Object.keys(SUBLEVEL_PRICES_EUR).find((l) => productKeyForLevel(l) === productKey);
-  const price = productKey === 'monthly' ? MONTHLY_PRICE_EUR
-    : productKey === 'yearly' ? YEARLY_PRICE_EUR
-      : productKey === 'telc_b1_komplett' ? COURSE_TELC_B1_PRICE_EUR
-        : level && !COMING_SOON_LEVELS.includes(level) ? SUBLEVEL_PRICES_EUR[level] : null;
-  if (price == null) return null;
-  const envKey = productKey === 'telc_b1_komplett' ? 'TELC_B1' : productKey.toUpperCase();
-  const variantId = String(env[`LEMONSQUEEZY_${envKey}_VARIANT_ID`] || '').trim();
-  if (!/^[1-9]\d*$/.test(variantId)) return null;
-  return { productKey, variantId, amountMinor: Math.round(price * 100) };
-}
-
-// The retired band keys an old purchase can still carry (pricing.js
-// LEGACY_LEVEL_COURSES): not for sale, but a purchases row with one of them
-// still unlocks these levels.
-const LEGACY_PRODUCTS = Object.freeze({
-  course_a1: { name: 'Deutsch A1 Kurs', levels: ['a1.1', 'a1.2'] },
-  course_a2: { name: 'Deutsch A2 Kurs', levels: ['a2.1', 'a2.2'] },
-  course_b1: { name: 'Deutsch B1 Kurs', levels: ['b1.1', 'b1.2'] },
-  course_b2: { name: 'Deutsch B2 Kurs', levels: ['b2.1', 'b2.2'] },
-  course_alle: { name: 'Deutsch Komplettkurs (A1–B2)', levels: ALL_LEVELS },
-});
+export const COURSES = {
+  telc_b1_komplett: {
+    key: 'telc_b1_komplett',
+    name: 'telc B1 Komplettvorbereitung',
+    price: COURSE_TELC_B1_PRICE_EUR,
+    proDays: COURSE_PRO_DAYS,
+    proMonths: COURSE_PRO_MONTHS,
+  },
+};
 
 /**
- * What a purchases.product_key is called and unlocks (mirrors pricing.js
- * courseForProduct + levelsForProduct). The telc course unlocks no level;
- * an unknown key is null.
+ * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md),
+ * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there):
+ * Every sub-level is its own one-time, lifetime product
+ * with its own price, plus the same included AI Practice window as the telc course.
+ * B1 and B2 are listed but not yet buyable — they render as "Coming soon"
+ * until the Course Factory has rebuilt them (Wave 7 B–D and Waves 8–10); a
+ * coming-soon course has no checkout id and never opens one. The A1–B2 bundle
+ * is parked for the same reason (half of it is coming soon); its legacy key
+ * stays resolvable below so an existing purchase keeps its access.
+ *
+ * `levels` is what the entitlement unlocks (src/contexts/SubscriptionContext.jsx
+ * hasLevelAccess) — lowercase URL form, same as FREE_LEVELS.
  */
-export function productInfo(productKey) {
-  const key = String(productKey || '');
-  if (key === 'a1_exam_pack') return { key, name: 'A1 Exam Pack', levels: [] };
-  if (key === 'a1_complete') return { key, name: 'A1 Complete', levels: ['a1.2'] };
-  if (key === 'all_access') return { key, name: 'All-Access Pass', levels: [...ALL_LEVELS] };
-  if (key === 'telc_b1_komplett') return { key, name: 'telc B1 Komplettvorbereitung', levels: [] };
-  const level = Object.keys(SUBLEVEL_PRICES_EUR).find((l) => productKeyForLevel(l) === key);
-  if (level) return { key, name: `Deutsch ${level.toUpperCase()} Kurs`, levels: [level] };
-  const legacy = LEGACY_PRODUCTS[key];
-  return legacy ? { key, name: legacy.name, levels: [...legacy.levels] } : null;
-}
+export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
-/** Every euro figure the product states — the only amounts a support reply may contain. */
+/** Regular gross one-time price in EUR per sub-level, VAT included. */
+export const SUBLEVEL_PRICES_EUR = {
+  'a1.1': 100,
+  'a1.2': 100,
+  'a2.1': 110,
+  'a2.2': 120,
+  'b1.1': 130,
+  'b1.2': 140,
+  'b2.1': 150,
+  'b2.2': 160,
+};
+
+/** Owner decision 2026-11-26. End is inclusive, in Europe/Berlin. */
+export const LAUNCH_ENDS_AT = '2027-01-31T22:59:59Z';
+export const LAUNCH_VALID_UNTIL = '2027-01-31';
+export const LAUNCH_CODES = Object.freeze({ a11: 'LAUNCH80', other: 'LAUNCH50' });
+const instant = (now) => now instanceof Date ? now.getTime() : typeof now === 'number' ? now : Date.parse(now);
+// The final advertised second is included; regular prices start at midnight Berlin.
+export const isLaunchActive = (now = Date.now()) => instant(now) < Date.parse(LAUNCH_ENDS_AT) + 1000;
+export const regularPrice = (level) => SUBLEVEL_PRICES_EUR[String(level).toLowerCase()];
+export const launchDiscountPercent = (level) => regularPrice(level) == null ? 0 : String(level).toLowerCase() === 'a1.1' ? 80 : 50;
+export const launchPrice = (level) => cents(regularPrice(level) * (1 - launchDiscountPercent(level) / 100));
+export const currentPrice = (level, now = Date.now()) => isLaunchActive(now) ? launchPrice(level) : regularPrice(level);
+export const launchDiscountCode = (level, now = Date.now()) => !regularPrice(level) || !isLaunchActive(now)
+  ? null : String(level).toLowerCase() === 'a1.1' ? LAUNCH_CODES.a11 : LAUNCH_CODES.other;
+export const coursePriceLine = (level, now = Date.now(), language = 'en') => {
+  const de = language === 'de';
+  const money = de ? deEur : eur;
+  if (!isLaunchActive(now)) return money(regularPrice(level));
+  return de
+    ? `${money(currentPrice(level, now))} · Einführungspreis bis 31. Januar 2027 · danach ${money(regularPrice(level))} ab 1. Februar 2027 (${launchDiscountPercent(level)} % gespart)`
+    : `${money(currentPrice(level, now))} · launch price until 31 January 2027 · then ${money(regularPrice(level))} from 1 February 2027 (save ${launchDiscountPercent(level)}%)`;
+};
+export const courseOffer = (level, now = Date.now()) => ({
+  '@type': 'Offer', price: num(currentPrice(level, now)), priceCurrency: CURRENCY,
+  ...(isLaunchActive(now) ? { priceValidUntil: LAUNCH_VALID_UNTIL } : {}),
+});
+
+/** Listed, priced, not yet buyable — rendered as "Coming soon" with no checkout. */
+export const COMING_SOON_LEVELS = ['a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
+
+/** Sub-levels a visitor can buy today (priced and not coming soon). */
+export const SELLABLE_LEVELS = Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l));
+
+/** The cheapest buyable course — the "from €…" figure on the pricing page. */
+export const courseFromPrice = (now = Date.now()) => Math.min(...SELLABLE_LEVELS.map((l) => currentPrice(l, now)));
+export const COURSE_FROM_PRICE_EUR = courseFromPrice();
+
+/** Product key for a sub-level: 'a1.2' → 'course_a1_2' (env vars are COURSE_A1_2). */
+export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
+
+const sublevel = (level) => {
+  const code = level.toUpperCase();
+  return {
+    key: productKeyForLevel(level),
+    code,
+    name: `German ${code} Course`,
+    nameDe: `Deutsch ${code} Kurs`,
+    price: SUBLEVEL_PRICES_EUR[level],
+    proDays: COURSE_PRO_DAYS,
+    proMonths: COURSE_PRO_MONTHS,
+    levels: [level],
+    comingSoon: COMING_SOON_LEVELS.includes(level),
+  };
+};
+
+/** The catalogue: one product per paid sub-level, in ladder order. */
+export const LEVEL_COURSES = Object.fromEntries(
+  Object.keys(SUBLEVEL_PRICES_EUR).map((level) => [productKeyForLevel(level), sublevel(level)]),
+);
+
+/**
+ * Retired products (sold 2026-09-03 → 2026-09-08 as whole bands at €49 and the
+ * A1–B2 bundle at €129). Not on sale and rendered nowhere as an offer; kept so
+ * that levelsForProduct() still honours a purchases row carrying one of these
+ * keys, and so the dashboard can still name what the buyer owns.
+ */
+const LEGACY_BAND_PRICE_EUR = 49;
+const LEGACY_BUNDLE_PRICE_EUR = 129;
+const legacyBand = (key, code, name, nameDe, levels, price = LEGACY_BAND_PRICE_EUR) => ({
+  key, code, name, nameDe, price, proDays: COURSE_PRO_DAYS, proMonths: COURSE_PRO_MONTHS, levels, legacy: true,
+});
+export const LEGACY_LEVEL_COURSES = {
+  course_a1: legacyBand('course_a1', 'A1', 'German A1 Course', 'Deutsch A1 Kurs', ['a1.1', 'a1.2']),
+  course_a2: legacyBand('course_a2', 'A2', 'German A2 Course', 'Deutsch A2 Kurs', ['a2.1', 'a2.2']),
+  course_b1: legacyBand('course_b1', 'B1', 'German B1 Course', 'Deutsch B1 Kurs', ['b1.1', 'b1.2']),
+  course_b2: legacyBand('course_b2', 'B2', 'German B2 Course', 'Deutsch B2 Kurs', ['b2.1', 'b2.2']),
+  course_alle: legacyBand('course_alle', 'A1–B2', 'German Complete Course (A1–B2)', 'Deutsch Komplettkurs (A1–B2)', ALL_LEVELS, LEGACY_BUNDLE_PRICE_EUR),
+};
+
+/** Owner-approved offer ladder (2026-11-09). AI windows match webhook fulfilment. */
+export const OFFER_PRODUCTS = {
+  a1_exam_pack: { key: 'a1_exam_pack', code: 'A1 Exam Pack', name: 'A1 Exam Pack', price: 59, proDays: 60, proMonths: 2, levels: [], exams: ['start-deutsch-1'], home: '/start-deutsch-1-kurs', slug: 'a1-exam-pack' },
+  a1_complete: { key: 'a1_complete', code: 'A1 Complete', name: 'A1 Complete', price: 89, proDays: 180, proMonths: 6, levels: ['a1.2'], exams: ['start-deutsch-1'], home: '/course/a1.2', slug: 'a1-complete' },
+  all_access: { key: 'all_access', code: 'All-Access Pass', name: 'All-Access Pass', price: 199, proDays: 365, proMonths: 12, levels: ALL_LEVELS, allExamPacks: true, home: '/course/a1.1', slug: 'all-access' },
+};
+
+/** Retired keys remain resolvable for existing ownership; never checkout targets. */
+export const RETIRED_PRODUCT_KEYS = ['monthly', 'yearly', 'a1_complete', 'all_access', 'telc_b1_komplett', ...Object.keys(LEGACY_LEVEL_COURSES)];
+export const isProductOnSale = (key) => key === OFFER_PRODUCTS.a1_exam_pack.key
+  || Boolean(LEVEL_COURSES[key] && !LEVEL_COURSES[key].comingSoon);
+
+/** Expand this registry when an exam programme goes on sale; the Pass follows automatically. */
+export const SELLABLE_EXAM_PROGRAMMES = ['start-deutsch-1'];
+export const examsForProduct = (key) => OFFER_PRODUCTS[key]?.allExamPacks
+  ? SELLABLE_EXAM_PROGRAMMES : OFFER_PRODUCTS[key]?.exams || [];
+export const ownsExamProgramme = (purchases = [], slug) => purchases.some((p) =>
+  (!p.status || p.status === 'active') && examsForProduct(p.product_key).includes(slug));
+
+/** A course (current or legacy) by product key, or null — what a purchases row means. */
+export const courseForProduct = (productKey) => OFFER_PRODUCTS[productKey] || LEVEL_COURSES[productKey] || LEGACY_LEVEL_COURSES[productKey] || null;
+
+/** Levels a product key unlocks — [] for unknown keys and for the telc course. */
+export const levelsForProduct = (productKey) => courseForProduct(productKey)?.levels || [];
+
+/**
+ * A kept AI Practice-day grant: when a paid subscription takes the one subscriptions
+ * row, the rest of an admin grant is stored as a purchases row with this
+ * product (netlify/functions/_shared/subscriptionEntitlement.mjs
+ * GRANT_WINDOW_PRODUCT). It is a time-limited AI Practice window, opened by its
+ * access_until — never a bought course.
+ */
+export const GRANT_WINDOW_PRODUCT = 'pro_days';
+
+/** Active purchases that are things the learner owns: every one except a kept grant window. */
+export const ownedPurchases = (purchases = []) => (purchases || []).filter(
+  (p) => (!p.status || p.status === 'active') && p.product_key !== GRANT_WINDOW_PRODUCT,
+);
+
+/** The buyable-or-coming course for a level (lowercase), or null for the free level. */
+export const courseForLevel = (level) => LEVEL_COURSES[productKeyForLevel(level || '')] || null;
+
+/** @deprecated name from the band era — now resolves to the sub-level course. */
+export const bandCourseForLevel = courseForLevel;
+
+/** Exam material stays open; AI sessions/feedback keep their server allowance. */
+export const hasExamPracticeAccess = (purchases, level) =>
+  String(level || '').toLowerCase().startsWith('a1.') && ownsExamProgramme(purchases, 'start-deutsch-1');
+
+/** Permanent ownership, independent of included AI expiry. */
+export const ownsProduct = (key, purchases = []) => {
+  const active = purchases.filter((p) => !p.status || p.status === 'active');
+  if (active.some((p) => p.product_key === key)) return true;
+  if (key === 'all_access') return false;
+  if (OFFER_PRODUCTS[key] && active.some((p) => p.product_key === 'all_access')) return true;
+  const levels = levelsForProduct(key);
+  const exams = examsForProduct(key);
+  return levels.length + exams.length > 0
+    && levels.every((level) => active.some((p) => levelsForProduct(p.product_key).includes(level)))
+    && exams.every((slug) => ownsExamProgramme(active, slug));
+};
+
+export const PLANS = {
+  monthly: {
+    key: 'monthly',
+    name: 'AI Practice Monthly',
+    nameDe: 'AI Practice Monatlich',
+    price: MONTHLY_PRICE_EUR,
+    interval: 'month',
+    intervalDe: 'Monat',
+    perDay: MONTHLY_PER_DAY_EUR,
+  },
+  yearly: {
+    key: 'yearly',
+    name: 'AI Practice Yearly',
+    nameDe: 'AI Practice Jährlich',
+    price: YEARLY_PRICE_EUR,
+    interval: 'year',
+    intervalDe: 'Jahr',
+    perDay: YEARLY_PER_DAY_EUR,
+    asMonthly: YEARLY_AS_MONTHLY_EUR,
+    savingPercent: YEARLY_SAVING_PERCENT,
+  },
+};
+
+/** Function consumers use the byte-identical shared copy, too. */
+export const productInfo = (key) => {
+  const product = courseForProduct(key) || COURSES[key];
+  return product ? { key, name: product.nameDe || product.name, levels: product.levels || [] } : null;
+};
+export function couponProduct(productKey, env = globalThis.process?.env || {}) {
+  if (!LEVEL_COURSES[productKey] || !isProductOnSale(productKey)) return null;
+  const product = courseForProduct(productKey);
+  const variantId = String(env[`LEMONSQUEEZY_${productKey.toUpperCase()}_VARIANT_ID`] || '').trim();
+  if (!/^[1-9]\d*$/.test(variantId)) return null;
+  return { productKey, variantId, amountMinor: Math.round(product.price * 100) };
+}
 export const CATALOGUE_EURO_AMOUNTS = Object.freeze([
-  MONTHLY_PRICE_EUR,
-  YEARLY_PRICE_EUR,
-  YEARLY_AS_MONTHLY_EUR,
-  MONTHLY_PER_DAY_EUR,
-  YEARLY_PER_DAY_EUR,
-  COURSE_TELC_B1_PRICE_EUR,
-  ...Object.values(SUBLEVEL_PRICES_EUR),
+  MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR,
+  YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR),
+  ...ALL_LEVELS.map(launchPrice), ...Object.values(OFFER_PRODUCTS).map((p) => p.price),
 ]);

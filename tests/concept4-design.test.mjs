@@ -39,13 +39,13 @@ test('the money pages use the approved compositions and no replaced train board 
   for (const scene of ['hero-group', 'scene-cafe', 'scene-work', 'scene-doctor']) assert.ok(home.includes(`'${scene}'`) || home.includes(`"${scene}"`));
   assert.match(home, /<FirstStop/); assert.match(home, /<RouteBand/); assert.match(home, /<Offers/);
   const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.match(pricing, /Pay once for your course/); assert.match(pricing, /Practise more if you want/);
+  assert.match(pricing, /Pay once for/); assert.match(pricing, /your next course/);
   assert.match(read('astro-site/src/pages/courses/[level].astro'), /You can introduce yourself\. Now handle/);
   for (const file of ['LineBoard.astro', 'StationArt.astro', 'Ticket.astro', 'LineSection.astro']) assert.equal(existsSync(new URL(`../astro-site/src/components/linie/${file}`, import.meta.url)), false);
 });
 test('only A1.2 is sold; all later levels have coming-next data and no purchasable variant', () => {
-  assert.deepEqual(SELLABLE_LEVELS, ['a1.2']); assert.deepEqual(COMING_SOON_LEVELS, ALL_LEVELS.slice(2));
-  assert.equal(courseForLevel('a1.1'), null);
+  assert.deepEqual(SELLABLE_LEVELS, ['a1.1', 'a1.2']); assert.deepEqual(COMING_SOON_LEVELS, ALL_LEVELS.slice(2));
+  assert.equal(courseForLevel('a1.1').key, 'course_a1_1');
   const variant = read('astro-site/src/lib/courseVariants.js'); assert.match(variant, /c\.comingSoon \? ''/);
   const door = read('astro-site/src/components/concept/PurchaseDoor.astro');
   assert.ok(door.indexOf('course?.comingSoon ?') < door.indexOf('course?.variantId ?'));
@@ -65,7 +65,7 @@ test('AI Practice offers derived writing/X-Ray allowances, no speaking count or 
   const lines = PRO_OFFER.lines.join(' ');
   assert.ok(lines.includes(String(PRO_DAILY_LIMIT))); assert.ok(lines.includes(String(PRO_WRITING_EVALUATIONS_PER_MONTH)));
   assert.match(lines, /AI speaking practice/); assert.doesNotMatch(lines, /\d+ (AI )?speaking|all.*levels|every.*level|unlimited/i);
-  assert.match(lines, /other courses sold separately/);
+  assert.equal(PRO_OFFER.onSale, false); assert.match(lines, /Existing subscribers/);
 });
 test('calm motion is readable at rest, uses token tiers and only transform/opacity frames', () => {
   assert.deepEqual(Object.values(motionLinie.duration), ['140ms', '220ms', '420ms', '800ms']);

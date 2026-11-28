@@ -46,7 +46,7 @@ const SLIDES = [
     headline: 'How much German do you know?',
     // Honest time: the test's own landing page says 15–20 minutes.
     body:
-      `New to German? Lektion 1 of the free ${FREE_COURSE_LEVEL.toUpperCase()} course starts with the first „Hallo“, one short step at a time. Already know some? The placement test (15–20 min) finds your exact level.`,
+      `New to German? Lektion 1 of the ${FREE_COURSE_LEVEL.toUpperCase()} course is free and starts with the first „Hallo“, one short step at a time. Already know some? The placement test (15–20 min) finds your exact level.`,
     isFinal: true,
   },
 ];

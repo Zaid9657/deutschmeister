@@ -1,0 +1,14 @@
+---
+import { regularPrice, eur, deEur, coursePriceLine, LAUNCH_ENDS_AT } from '../data/pricing.js';
+const { level, language = 'en' } = Astro.props;
+// The durable, no-JS fallback never publishes an expired promotion.
+const fallback = (language === 'de' ? deEur : eur)(regularPrice(level));
+---
+<span data-course-price-display={level} data-price-language={language} data-launch-ends-at={LAUNCH_ENDS_AT}>
+  <span data-price-fallback>{fallback} ? {language === 'de' ? 'ab 1. Februar 2027' : 'from 1 February 2027'}</span>
+  <template data-build-price>{coursePriceLine(level, Date.now(), language)}</template>
+</span>
+<script>
+  import { enhanceCoursePrices } from '../lib/coursePriceDisplay.js';
+  enhanceCoursePrices();
+</script>

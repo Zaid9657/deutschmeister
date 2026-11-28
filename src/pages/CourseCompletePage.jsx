@@ -5,8 +5,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { courseFor } from '../data/courses/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
+import CoursePrice from '../components/CoursePrice.jsx';
 import { stationFor, stationStatusLine, ticketLines } from '../data/offers.js';
-import { productKeyForLevel } from '../data/pricing.js';
+import { productKeyForLevel, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy.js';
 import { setBuyIntent } from '../lib/buyIntent.js';
 import { track } from '../lib/analytics';
@@ -191,15 +192,16 @@ export default function CourseCompletePage() {
                   <>
                     {step.ticket && (
                       <>
-                        <p className="mt-2 text-[0.9375rem] font-bold text-ink">{de ? `Deutsch ${nextCode} · ${step.station.priceLabel}` : step.ticket.title}</p>
+                        <p className="mt-2 text-[0.9375rem] font-bold text-ink">{de ? `Deutsch ${nextCode}` : step.ticket.title}</p>
                         <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{de ? 'Lernen Sie mit dem nächsten Kurs weiter. Inhalte und Kaufbedingungen finden Sie auf der Kursseite.' : step.ticket.body}</p>
                       </>
                     )}
-                    {step.station && <p className="mt-2 font-data text-[0.75rem] text-graphite">{de ? `${nextCode} ist verfügbar.` : stationStatusLine(step.station)}</p>}
+                    {step.station && <p className="mt-2 font-data text-[0.75rem] text-graphite">{de ? `${nextCode} ist verfügbar.` : stationStatusLine(step.station)} · <CoursePrice level={step.station.level} language={de ? 'de' : 'en'} /></p>}
+                    <p className="mt-1 text-xs text-graphite">{de ? PRICE_TAX_NOTE_DE : PRICE_TAX_NOTE}</p>
                     <div className="mt-4 flex flex-wrap items-center gap-4">
                       {checkoutReady && (
                         <Button to={`/subscription?buy=${step.productKey}`} onClick={buyNext} variant="primary" size="md">
-                          {de ? 'Kaufen:' : 'Buy'} {nextCode} · {step.station.priceLabel}
+                          {de ? 'Kaufen:' : 'Buy'} {nextCode}
                         </Button>
                       )}
                       {step.coursePage && (

@@ -121,7 +121,14 @@ test('placement preview is a labelled real-bank example and entry controls stay 
 test('pricing never treats a missing billing record as the signed-out visitor\'s', () => {
   // undefined === undefined made `billing?.userId === currentUser()?.id` true when signed out
   // and billing was null, throwing on billing.subscription before the Pro CTA rendered.
-  const pricing = read('astro-site/src/pages/pricing.astro');
+  const pricing = read('astro-site/src/components/CourseCheckout.astro');
   assert.doesNotMatch(pricing, /billing\?\.userId === currentUser\(\)\?\.id/);
   assert.match(pricing, /billing && currentUser\(\) && billing\.userId === currentUser\(\)\.id/);
+  const sameViewer = new Function('billing', 'currentUser', 'return Boolean(' + pricing.match(/billing && currentUser\(\) && billing\.userId === currentUser\(\)\.id/)[0] + ');');
+  for (const [billing, viewer, expected] of [
+    [null, null, false], [undefined, null, false], [{ userId: 'a' }, null, false],
+    [null, { id: 'a' }, false], [{ userId: 'a' }, { id: 'b' }, false],
+    [{ userId: 'a' }, { id: 'a' }, true],
+  ]) assert.equal(sameViewer(billing, () => viewer), expected);
+
 });

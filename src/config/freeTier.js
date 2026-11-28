@@ -21,6 +21,11 @@ export const FREE_LEKTIONEN = Object.freeze({ 'a1.1': 1 });
 // netlify/functions/_shared/supportCatalog.mjs (tests/lektion-gate.test.mjs).
 export const LEKTION_GATE_FROM = '2026-11-22T11:30:00.000Z';
 
+// The go-live of course-by-course pricing (owner: "Yes, go live", 2026-11-28).
+// Purchases and subscriptions from before this instant keep their old meaning.
+// Tests inject their own cutoff. Invalid/missing purchase dates fail closed.
+export const PRICING_V2_FROM = '2026-11-28T11:00:00.000Z';
+
 /** The free Lektion count of a gated level while the gate is live, else 0. */
 export const freeLektionen = (level, gateFrom = LEKTION_GATE_FROM) =>
   (gateFrom && FREE_LEKTIONEN[String(level || '').toLowerCase()]) || 0;

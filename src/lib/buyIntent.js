@@ -6,6 +6,7 @@
 // email round-trip in a fresh tab) and hands every post-auth redirect the
 // destination that resumes it: /subscription?buy=<key>, which opens the
 // checkout once and clears the intent. Only known product keys are honoured.
+import { isProductOnSale } from '../data/pricing.js';
 import { safeGet, safeSet, safeRemove } from '../utils/safeStorage.js';
 import { confirmationReturnFromSearch } from './confirmationContinuity.js';
 import { peekReturnPath } from './returnPath.js';
@@ -20,12 +21,12 @@ const KEY = 'dm_buy_intent';
 const VALID = /^(monthly|yearly|telc_b1_komplett|a1_exam_pack|a1_complete|all_access|course_[a-z0-9]+(?:_[0-9])?)$/;
 
 export const setBuyIntent = (productKey) => {
-  if (VALID.test(productKey || '')) safeSet(KEY, productKey);
+  if (VALID.test(productKey || '') && isProductOnSale(productKey)) safeSet(KEY, productKey);
 };
 
 export const peekBuyIntent = () => {
   const v = safeGet(KEY);
-  return v && VALID.test(v) ? v : null;
+  return v && VALID.test(v) && isProductOnSale(v) ? v : null;
 };
 
 export const clearBuyIntent = () => safeRemove(KEY);

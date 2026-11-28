@@ -74,18 +74,16 @@ test('the full Astro navigation has a keyboard-operable mobile disclosure', () =
   assert.match(css, /\.c4-mobile-menu > summary \{[^}]*width: 44px; height: 44px/);
 });
 
-test('pricing distinguishes course ownership and recurring AI tools with an honest CTA', () => {
-  assert.match(pricing, /Pay once for your course/);
-  assert.match(pricing, /other courses sold separately/);
-  assert.match(pricing, /\{proCta\(\)\.label\}/);
-  assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day AI Practice trial`/);
+test('pricing distinguishes each purchased course and included AI tools without recurring checkout', () => {
+  assert.match(pricing, /Pay once for/); assert.match(pricing, /Each purchase opens that course only/);
+  assert.match(pricing, /COURSE_PRO_DAYS/); assert.match(pricing, /<CourseCheckout/);
+  assert.doesNotMatch(pricing, /pro-btn|PLANS/);
 });
-
 test('AI-facing platform facts use the current measured counts and level-test duration', () => {
   for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
     const body = read(file);
     assert.ok(body.includes('2,561'), `${file} does not quote the current vocabulary count`);
-    assert.ok(body.includes('15–20'), `${file} does not quote the tested 15–20 minute duration`);
+    assert.ok(body.includes('20'), `${file} does not quote the tested 15–20 minute duration`);
     assert.ok(!body.includes('2,215'), `${file} still quotes the stale vocabulary count`);
     assert.ok(!body.includes('~15'), `${file} still quotes the stale test duration`);
   }

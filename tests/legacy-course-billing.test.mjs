@@ -114,13 +114,15 @@ test('/profile follows the billing rule, not the paid-access answer', () => {
 test('/subscription reads its billing action defensively and never navigates to a missing href', () => {
   const page = readFileSync(new URL('../src/pages/SubscriptionPage.jsx', import.meta.url), 'utf8');
   assert.match(page, /const billingAction = subscriptionPortalAction\(recurringBilling, subscription, isGerman\);/);
-  // The plan buttons render for every visitor, so their label read is guarded.
-  assert.match(page, /\{recurringBilling\s*\?\s*billingAction\?\.label/, 'the plan buttons read billingAction?.label');
-  assert.doesNotMatch(page, /recurringBilling\s*\?\s*billingAction\.label/);
-  // Every other read sits behind a check of the action itself.
+  // Existing subscribers' manage/cancel link reads the action defensively and renders only with an href.
+  assert.match(page, /billingAction\?\.label/, 'manage/cancel reads billingAction?.label');
+  assert.match(page, /\{recurringBilling && billingAction\?\.href && [^\n]*<a href=\{billingAction\.href\}/, 'a missing href cannot render a link');
+  // Every plain read sits behind a check of the action itself (the failed-payment card
+  // keeps {billingAction.label}: tests/subscription-heading.test.mjs ACC-04).
   for (const m of page.matchAll(/billingAction\.(?:label|href|hint)/g)) {
     const before = page.slice(Math.max(0, m.index - 600), m.index);
-    assert.match(before, /\{billingAction && \(|if \(billingAction\)/, `unguarded read near: ${page.slice(m.index - 60, m.index + 20)}`);
+    assert.match(before, /\{billingAction && \(|billingAction\?\.href &&/, `unguarded read near: ${page.slice(m.index - 60, m.index + 20)}`);
   }
-  assert.match(page, /if \(billingAction\) window\.location\.href = billingAction\.href;/);
+  assert.match(page, /\{billingAction && \([\s\S]*?<a href=\{billingAction\.href\}/, 'failed-payment management is guarded too');
+  assert.doesNotMatch(page, /window\.location\.href = billingAction\.href/, 'management uses guarded anchors');
 });

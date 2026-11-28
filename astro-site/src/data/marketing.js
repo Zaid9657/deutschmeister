@@ -215,8 +215,8 @@ export const XRAY_LINE = `${PRO_DAILY_LIMIT} Sentence X-Ray analyses per day`;
 export const XRAY_LINE_DE = `${PRO_DAILY_LIMIT} Satz-Röntgen-Analysen pro Tag`;
 
 /** The free offer, stated with what it actually includes. */
-export const FREE_OFFER_LINE = `${FREE_LEVEL_LABEL} free, no account needed`;
-export const FREE_OFFER_LINE_DE = `${FREE_LEVEL_LABEL} komplett kostenlos, ohne Konto`;
+export const FREE_OFFER_LINE = `Lektion 1 of ${FREE_LEVEL_LABEL} is free, no account needed`;
+export const FREE_OFFER_LINE_DE = `Lektion 1 von ${FREE_LEVEL_LABEL} kostenlos, ohne Konto`;
 
 /**
  * The founder-experience line — the site's "Who", told anonymously. It asserts

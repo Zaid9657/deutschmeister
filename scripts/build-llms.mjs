@@ -28,15 +28,15 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import {
-  MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, eur, COURSES, LEVEL_COURSES, COMING_SOON_LEVELS,
-  SELLABLE_LEVELS, COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, productKeyForLevel,
+  eur, COURSES, LEVEL_COURSES, COMING_SOON_LEVELS,
+  SELLABLE_LEVELS, COURSE_PRO_MONTHS, productKeyForLevel,
 } from '../src/data/pricing.js';
 import {
   ANON_DAILY_LIMIT, TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_SPEAKING_SESSIONS, TRIAL_DAYS, LEVEL_COUNT, GRAMMAR_TOPIC_COUNT, LISTENING_DIALOGUE_COUNT,
   PODCAST_EPISODE_COUNT, GRAMMAR_RULE_COUNT, GRAMMAR_EXAMPLE_COUNT, GRAMMAR_EXERCISE_COUNT,
   LISTENING_EXERCISE_COUNT, VOCAB_WORD_COUNT, VOCAB_SENTENCE_COUNT, READING_LESSON_COUNT,
-  FREE_LEVEL_LABEL, LEVELS,
+  FREE_LEVEL_LABEL, LEVELS, PLACEMENT_TEST_MINUTES,
 } from '../src/data/marketing.js';
 import { SEO_ROUTES } from '../src/data/seoRoutes.js';
 import { GUIDES } from '../astro-site/src/data/guides/index.js';
@@ -100,9 +100,9 @@ const accessLines = (onSale) => [
   `- **Free, no signup required:** Lektion 1 of the ${lektionen}-lesson guided ${FREE_LEVEL_LABEL} course and all ${byLevel[0].topics.length} ${FREE_LEVEL_LABEL} grammar topics`,
   `- **Anonymous visitors:** ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day`,
   `- **Free account:** ${TRIAL_DAYS}-day AI Practice trial; ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions total; ${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses/day`,
-  `- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), with ${COURSE_PRO_MONTHS} months of AI Practice included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
+  `- **One-time level courses (no subscription), current prices at https://deutsch-meister.de/pricing/:** each sub-level is its own lifetime purchase, (${priceList}; regular prices from 1 February 2027), with ${COURSE_PRO_MONTHS} months of AI Practice included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
   telcLine(onSale),
-  `- **AI Practice — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** ${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks/month, AI speaking practice, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Opens the full ${FREE_LEVEL_LABEL} course; other courses are sold separately (active subscriptions started before 10 November 2026 retain access to all courses). Cancel anytime.`,
+  `- **AI tools:** included with a course purchase, at the paid allowances: ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing feedbacks/month, AI speaking practice and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. New AI Practice subscriptions are off sale. Existing subscribers keep their current access and billing portal.`,
   '- Payments handled by Lemon Squeezy as merchant of record.',
 ];
 
@@ -112,17 +112,17 @@ const accessLines = (onSale) => [
  * free A1.1 course and mention A1.2 inside the price list alone.
  */
 const paidCourses = Object.values(CURRICULA)
-  .filter((c) => c.level !== FREE_LEVEL_LABEL.toLowerCase())
+
   .map((curriculum) => ({ curriculum, course: LEVEL_COURSES[productKeyForLevel(curriculum.level)] }))
   .filter(({ course }) => course && !course.comingSoon);
 
 const paidCourseFact = ({ curriculum, course }) =>
-  `- ${curriculum.code} course: ${curriculum.lektionen.length} situational lessons, ${eur(course.price)} once`;
+  `- ${curriculum.code} course: ${curriculum.lektionen.length} situational lessons, ${eur(course.price)} regular price from 1 February 2027, one-time`;
 const paidCourseUrl = ({ curriculum }) =>
   `- ${curriculum.code} course (one-time purchase): ${SITE}/courses/${levelToSlug(curriculum.level)}/`;
 const paidCourseBlock = ({ curriculum, course }) => `### ${curriculum.code} Course (one-time purchase)
 - ${curriculum.lektionen.length} situational lessons with ${curriculum.checkpoints.length} checkpoints and a final test (Abschlusstest ${curriculum.code})
-- ${eur(course.price)} once, no subscription, with ${COURSE_PRO_MONTHS} months of AI Practice included; the level stays yours
+- ${eur(course.price)} regular price from 1 February 2027, one-time, no subscription, with ${COURSE_PRO_MONTHS} months of AI Practice included; the level stays yours
 - Course page: ${SITE}/courses/${levelToSlug(curriculum.level)}/ · in the app: ${SITE}/course/${curriculum.level}`;
 
 /** " (German)" only for a route whose page is German (SEO_ROUTES lang) — /faq/ and /ueber-uns/ are English. */
@@ -135,19 +135,19 @@ export function renderShort({ telcOnSale: onSale = telcOnSale() } = {}) {
   return `# DeutschMeister — German exam preparation and grammar for English speakers
 
 > Learn German from A1.1 to B2.2 and prepare for telc, Goethe-Zertifikat and DTZ exams:
-> grammar explained in English, a free guided ${FREE_LEVEL_LABEL} course, AI speaking and writing
+> grammar explained in English, Lektion 1 of the guided ${FREE_LEVEL_LABEL} course free, AI speaking and writing
 > practice, and a free sentence analyzer. Generated from the product's data files; prices and
 > limits below are the ones the checkout and servers enforce.
 
 ## Quick Facts
 - ${GRAMMAR_TOPIC_COUNT} grammar topics across ${LEVEL_COUNT} CEFR sub-levels (A1.1 to B2.2) — ${topicSplit}
-- Free guided ${FREE_LEVEL_LABEL} course: ${lektionen} situational lessons, no account needed
+- ${FREE_LEVEL_LABEL} guided course: ${lektionen} situational lessons; Lektion 1 free, no account needed
 ${paidCourses.map(paidCourseFact).join('\n')}
 - Free exam guides for ${GUIDES.length} topics (German; ${GUIDES.filter((g) => g.lang === 'en').length} in English) and prep hubs for ${EXAM_HUBS.length} exams (telc, Goethe, DTZ)
 - ${LISTENING_EXERCISE_COUNT} listening exercises containing ${LISTENING_DIALOGUE_COUNT} native-speaker dialogue lines
 - ${PODCAST_EPISODE_COUNT} podcast episodes with native-speaker audio
 - ${n(VOCAB_WORD_COUNT)} vocabulary words and ${VOCAB_SENTENCE_COUNT} example sentences
-- Free CEFR level test (15–20 min, speaking included)
+- Free CEFR level test (about ${PLACEMENT_TEST_MINUTES} min, speaking included)
 - Sentence X-Ray: paste any German sentence, get case/role/structure analysis
 
 ## Access Model (accurate)
@@ -186,7 +186,7 @@ ${GUIDES.map(guideLine).join('\n')}
 2. Someone preparing for telc, Goethe-Zertifikat or the DTZ wants the exam format and a study
    plan — the guides state when their exam facts were last checked and against which official
    body, and point to that body for fees and binding rules rather than stating them.
-3. A complete beginner wants to start without signing up — the ${FREE_LEVEL_LABEL} course is free.
+3. A complete beginner wants to start without signing up — Lektion 1 of the ${FREE_LEVEL_LABEL} course is free.
 4. Someone wants to understand *why* a German sentence takes the case/word order it does —
    Sentence X-Ray answers exactly that, free.
 5. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7 at their
@@ -222,7 +222,7 @@ export function renderFull({ telcOnSale: onSale = telcOnSale() } = {}) {
 
 DeutschMeister (${SITE}/) teaches German to English speakers and prepares learners for the
 telc, Goethe-Zertifikat and DTZ exams. Grammar is explained in English first, then shown in
-authentic German. The platform covers ${GRAMMAR_TOPIC_COUNT} grammar topics, a free guided ${FREE_LEVEL_LABEL} course,
+authentic German. The platform covers ${GRAMMAR_TOPIC_COUNT} grammar topics, Lektion 1 of the guided ${FREE_LEVEL_LABEL} course free,
 AI speaking and writing practice, a free CEFR level test, podcasts, listening exercises,
 vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
@@ -232,7 +232,7 @@ ${accessLines(onSale).join('\n')}
 
 ## Features
 
-### Free ${FREE_LEVEL_LABEL} Course
+### ${FREE_LEVEL_LABEL} Course (Lektion 1 free)
 - ${lektionen} situational lessons built on Goethe-Institut can-do statements, no account needed
 - Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with a free account, a form checklist without one
 - Checkpoints and spaced review

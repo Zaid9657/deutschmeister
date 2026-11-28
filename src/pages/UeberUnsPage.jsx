@@ -72,7 +72,7 @@ const UeberUnsPage = () => {
           </p>
 
           <div className="mb-6 flex flex-wrap justify-center gap-3">
-            <Button href="/course/a1.1">Start A1.1 free</Button>
+            <Button href="/course/a1.1">Try A1.1 Lektion 1 free</Button>
             <Button href="/courses/a1-2/" variant="secondary">Inspect the A1.2 course</Button>
           </div>
           <div className="hero-line flex flex-wrap justify-center gap-3" style={{ '--d': '240ms' }}>

@@ -20,6 +20,13 @@
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { hasRecurringBilling } from './checkoutAccess.js';
 
+export const EXISTING_SUBSCRIBER_BILLING_COPY = 'Existing subscribers keep their current access and can manage billing in the customer portal.';
+
+// Shared navigation copy; keep billing-management labels beside the portal decision.
+export function subscriptionManagementLabel(language = 'en') {
+  return language === 'de' ? 'Abo verwalten' : 'Manage subscription';
+}
+
 /** The store's customer portal. The customer signs in with the email address they paid with. */
 export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/billing';
 

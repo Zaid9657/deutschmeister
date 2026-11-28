@@ -1,3 +1,4 @@
+import { courseAccessReason, fullCourseReason } from './lib/levelEntitlement.js';
 // Support agent — the rules, pure. netlify/functions/support-agent.mjs fetches,
 // writes and mails; everything it DECIDES is a function in this file, so
 // tests/support-agent.test.mjs can hold each decision without a network.
@@ -18,7 +19,7 @@
 import { OPEN_STATUSES, isPendingAiDraft, AI_DRAFT_MARKER, AI_BLOCKED_MARKER } from './adminSupportLib.mjs';
 import {
   CATALOGUE_EURO_AMOUNTS, MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, COURSE_TELC_B1_PRICE_EUR,
-  COURSE_PRO_DAYS, SUBLEVEL_PRICES_EUR, COMING_SOON_LEVELS, ALL_LEVELS, eur, deEur, productInfo,
+  COURSE_PRO_DAYS, SUBLEVEL_PRICES_EUR, currentPrice, coursePriceLine, COMING_SOON_LEVELS, ALL_LEVELS, eur, deEur, productInfo,
 } from './pricing.mjs';
 import {
   SITE, FREE_LEVELS, FREE_LEKTIONEN, LEKTION_GATE_FROM, EXAM_TRACKS, MOCK_EXAMS, GUIDES, PLAN_CLAIMS, SITE_LINKS,
@@ -212,11 +213,7 @@ export function libraryHas(topic, names) {
 
 /** Mirrors src/contexts/SubscriptionContext.jsx hasLevelAccess: free ∨ trial/sub live ∨ bought course. */
 export function levelsOpen({ profile, subscription, purchases = [], now }) {
-  const subLive = subscription?.subscription_end ? new Date(subscription.subscription_end) > now : false;
-  const trialLive = profile?.trial_ends_at ? new Date(profile.trial_ends_at) > now : false;
-  if (subLive || trialLive) return [...ALL_LEVELS];
-  const bought = purchases.filter((p) => p.status === 'active').flatMap((p) => productInfo(p.product_key)?.levels || []);
-  return ALL_LEVELS.filter((l) => FREE_LEVELS.includes(l) || bought.includes(l));
+  return ALL_LEVELS.filter((level) => courseAccessReason({ profile, subscription, purchases }, level, Number(now)));
 }
 
 /**
@@ -227,13 +224,8 @@ export function levelsOpen({ profile, subscription, purchases = [], now }) {
  */
 export function gatedCourses({ profile, subscription, purchases = [], now, gateFrom = LEKTION_GATE_FROM }) {
   if (!gateFrom) return [];
-  const subLive = subscription?.subscription_end ? new Date(subscription.subscription_end) > now : false;
-  const active = purchases.filter((p) => p.status === 'active');
-  const whole = Date.parse(profile?.created_at) < Date.parse(gateFrom)
-    || subLive || profile?.subscription_tier === 'premium'
-    || active.some((p) => p.product_key !== 'pro_days' || new Date(p.access_until) > now);
   return Object.entries(FREE_LEKTIONEN).map(([level, free]) => ({
-    level, free_lektionen: free, whole_course_open: whole || active.some((p) => (productInfo(p.product_key)?.levels || []).includes(level)),
+    level, free_lektionen: free, whole_course_open: Boolean(fullCourseReason({ profile, subscription, purchases }, level, Number(now), gateFrom)),
   }));
 }
 
@@ -283,8 +275,9 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
       pro_yearly: price(YEARLY_PRICE_EUR),
       pro_yearly_per_month: price(YEARLY_AS_MONTHLY_EUR),
       telc_b1_komplett: price(COURSE_TELC_B1_PRICE_EUR),
-      level_courses: Object.entries(SUBLEVEL_PRICES_EUR).map(([level, p]) => ({
-        level, ...price(p), buyable_now: !COMING_SOON_LEVELS.includes(level), url: courseUrl(level),
+      retired_new_sales: ['monthly', 'yearly', 'a1_complete', 'all_access', 'telc_b1_komplett'],
+      level_courses: Object.keys(SUBLEVEL_PRICES_EUR).map((level) => ({
+        level, ...price(currentPrice(level, Number(now))), terms_en: coursePriceLine(level, Number(now)), terms_de: coursePriceLine(level, Number(now), 'de'), buyable_now: !COMING_SOON_LEVELS.includes(level), url: courseUrl(level),
       })),
       every_course_includes_pro_days: COURSE_PRO_DAYS,
     },
@@ -295,7 +288,7 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
       course_gate: LEKTION_GATE_FROM
         ? Object.entries(FREE_LEKTIONEN).map(([level, free]) => ({
             level, free_lektionen: free, free_without_account: true,
-            rest_opens_with: ['a paid AI Practice subscription', 'any purchased course or pack'],
+            rest_opens_with: ['purchase of this course', 'preserved access from an existing subscription or purchase before the pricing switch'],
             trial_opens_rest: false,
             accounts_created_before_keep_whole_course: day(LEKTION_GATE_FROM),
           }))
@@ -324,7 +317,7 @@ Rules. Code checks every one after you answer; a reply that breaks one is never 
 1. State only facts that are in FACTS. If FACTS does not answer the question, do not guess: set "escalate" to "needs-human".
 2. Never say an action was taken or will be taken: no "I have refunded / reset / changed / unlocked / cancelled / deleted / forwarded", no "we will look into it", no "we will get back to you". You cannot change anything; you explain and point to pages.
 3. Never promise or discuss a refund, a cancellation or a deletion. If the customer asks for one, disputes a charge, threatens legal action, complains, or is abusive, set "escalate" to the matching reason and leave "body" empty.
-4. Prices: only the exact figures in FACTS.prices, written as given there. No other euro amount.
+4. Prices: only the exact figures in FACTS.prices, written as given there. For courses quote terms_en or terms_de in full, including dated launch terms. No other euro amount. Never offer products in retired_new_sales to a new buyer.
 5. Links: only URLs that appear in FACTS. No other website and no email address other than kontakt@deutsch-meister.de.
 6. Answer in German if the customer wrote German, otherwise in English. German always uses "Sie", never "du".
 7. Write the body only: a greeting line ("Guten Tag," or "Hello,"), then the answer in short paragraphs. No sign-off, no name, no signature: the system adds the team signature and the AI disclosure.

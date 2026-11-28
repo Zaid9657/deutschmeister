@@ -11,28 +11,25 @@ test('desktop navigation uses accessible native disclosures in both renderers', 
   const spa = read('src/components/Navbar.jsx'); const astro = read('astro-site/src/layouts/Layout.astro');
   for (const source of [spa, astro]) {
     assert.match(source, /c4-nav-dropdown/); assert.match(source, /<summary>/);
-    assert.match(source, /Start A1\.1 free/); assert.match(source, /NAV_GROUPS/);
+    assert.match(source, /Try A1\.1 Lektion 1 free/); assert.match(source, /NAV_GROUPS/);
   }
   assert.match(spa, /aria-expanded=\{isOpen\}/); assert.match(astro, /<details class="c4-mobile-menu"/);
 });
 
-test('pricing separates the no-account course, account trial and paid AI Practice', () => {
+test('pricing separates the free lesson, paid course and preserved billing', () => {
   const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.match(pricing, /A1.1 free, no account needed/);
-  assert.match(pricing, /href="\/course\/a1\.1"/);
-  assert.match(pricing, /other courses sold separately/);
-  assert.match(pricing, /\{proCta\(\)\.label\}/); assert.match(pricing, /\{proCta\(\)\.note\}/);
-  const cta = read('astro-site/src/lib/proCta.js');
-  assert.match(cta, /Start \$\{TRIAL_DAYS\}-day AI Practice trial/);
-  assert.match(cta, /No card · no automatic charge/);
+  assert.match(pricing, /Lektion 1 of A1.1 is free/);
+  assert.match(pricing, /FREE_COURSE_HREF/);
+  assert.match(pricing, /Each purchase opens that course only/);
+  assert.match(pricing, /Manage or cancel your subscription/);
+  assert.doesNotMatch(pricing, /pro-btn|PLANS/);
 });
-
 test('signup describes the trial without presenting A1.1 as account-gated', () => {
   const signup = read('src/pages/SignupPage.jsx');
 
-  assert.match(signup, /Start A1\.1 free\. Try AI Practice for \{TRIAL_DAYS\} days/);
+  assert.match(signup, /Try A1\.1 Lektion 1 free\. Try AI Practice for \{TRIAL_DAYS\} days/);
   assert.doesNotMatch(signup, /All \$\{LEVEL_COUNT\} levels/);
-  assert.match(signup, /other courses are purchased separately/);
+  assert.match(signup, /Buy each course separately/);
   // The way out opens the free course itself (tests/free-door.test.mjs).
   assert.match(signup, /Start the \{FREE_LEVEL_LABEL\} course without an account/);
   assert.match(signup, /no automatic charge when the trial ends/);
