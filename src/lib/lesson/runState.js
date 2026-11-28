@@ -70,8 +70,24 @@ function asReadAloud(v) {
   return out;
 }
 
+const CHECK_OUTCOMES = new Set(['shown', 'practised', 'missed', 'unverified']);
+/**
+ * Where the final check stands (2026-11-25): the sitting, the verdict of each finished turn, and the person
+ * the learner chose from the check's own list („Schwester"), which the later turns are about. Never an answer.
+ */
+function asCheck(v) {
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+  const outcomes = asList(v.outcomes).map((o) => {
+    if (CHECK_OUTCOMES.has(o)) return o; // older snapshots
+    return o && CHECK_OUTCOMES.has(o.outcome) && typeof o.revealed === 'boolean'
+      ? { outcome: o.outcome, revealed: o.revealed, ...(typeof o.listened === 'boolean' ? { listened: o.listened } : {}) } : null;
+  }).filter(Boolean).slice(0, 40);
+  if (!outcomes.length && !asIndex(v.retake)) return null;
+  return { retake: asIndex(v.retake), outcomes, chosen: typeof v.chosen === 'string' && v.chosen ? v.chosen.slice(0, 40) : null };
+}
+
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {}, check = null } = {}, now = Date.now()) {
   return {
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),
@@ -96,6 +112,7 @@ export function packRun({ flow = 'legacy', sceneReadAloud = {}, soundReadAloud =
     // The read-aloud results as they were recorded (2026-10-25): the Sprechen stage's hand-off to
     // the coach is a full page load, and a line measured before it is not idle when it resumes.
     readAloud: asReadAloud(readAloud),
+    check: asCheck(check),
   };
 }
 

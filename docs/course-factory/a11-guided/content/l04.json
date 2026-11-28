@@ -5,6 +5,106 @@
       "titleEn": "Prices at the flea market",
       "instructionDe": "Lesen Sie das Schild. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the sign. Tap a word for its meaning.",
+      "series": {
+        "titleDe": "Die Zahlen von 11 bis 100",
+        "titleEn": "The numbers from 11 to 100",
+        "noteDe": "Zuerst kommt die kleine Zahl, dann die große: 45 ist fünf-und-vierzig.",
+        "noteEn": "The small number comes first, then the big one: 45 is fünfundvierzig (five-and-forty).",
+        "items": [
+          {
+            "label": "11",
+            "de": "elf"
+          },
+          {
+            "label": "12",
+            "de": "zwölf"
+          },
+          {
+            "label": "13",
+            "de": "dreizehn"
+          },
+          {
+            "label": "14",
+            "de": "vierzehn"
+          },
+          {
+            "label": "15",
+            "de": "fünfzehn"
+          },
+          {
+            "label": "16",
+            "de": "sechzehn"
+          },
+          {
+            "label": "17",
+            "de": "siebzehn"
+          },
+          {
+            "label": "18",
+            "de": "achtzehn"
+          },
+          {
+            "label": "19",
+            "de": "neunzehn"
+          },
+          {
+            "label": "20",
+            "de": "zwanzig"
+          },
+          {
+            "label": "21",
+            "de": "einundzwanzig"
+          },
+          {
+            "label": "30",
+            "de": "dreißig"
+          },
+          {
+            "label": "40",
+            "de": "vierzig"
+          },
+          {
+            "label": "45",
+            "de": "fünfundvierzig"
+          },
+          {
+            "label": "50",
+            "de": "fünfzig"
+          },
+          {
+            "label": "57",
+            "de": "siebenundfünfzig"
+          },
+          {
+            "label": "60",
+            "de": "sechzig"
+          },
+          {
+            "label": "70",
+            "de": "siebzig"
+          },
+          {
+            "label": "72",
+            "de": "zweiundsiebzig"
+          },
+          {
+            "label": "80",
+            "de": "achtzig"
+          },
+          {
+            "label": "84",
+            "de": "vierundachtzig"
+          },
+          {
+            "label": "90",
+            "de": "neunzig"
+          },
+          {
+            "label": "100",
+            "de": "hundert"
+          }
+        ]
+      },
       "text": "Flohmarkt\nFrau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!",
       "questions": [
         {
@@ -17,7 +117,12 @@
           ],
           "answer": "The bag.",
           "explanationDe": "Auf dem Schild steht: Tasche: 5. Der Preis ist in Euro.",
-          "explanationEn": "The sign says: Tasche (bag): 5. The price is in euros."
+          "explanationEn": "The sign says: Tasche (bag): 5. The price is in euros.",
+          "optionsDe": [
+            "Die Uhr.",
+            "Der Rucksack.",
+            "Die Tasche."
+          ]
         },
         {
           "promptDe": "Was kosten vier Stühle zusammen? Wählen Sie.",
@@ -29,7 +134,12 @@
           ],
           "answer": "Forty euros.",
           "explanationDe": "Auf dem Schild steht: Vier Stühle kosten zusammen nur 40 Euro.",
-          "explanationEn": "The sign says that four chairs together cost only 40 euros."
+          "explanationEn": "The sign says that four chairs together cost only 40 euros.",
+          "optionsDe": [
+            "Zwölf Euro.",
+            "Vierzig Euro.",
+            "Zwanzig Euro."
+          ]
         }
       ]
     },
@@ -37,6 +147,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "e613df9b",
         "meaning": {
           "promptDe": "Was sagt Frau Wolf? Wählen Sie die Bedeutung.",
           "promptEn": "What does Frau Wolf say? Choose the meaning.",
@@ -45,7 +156,12 @@
             "It is a lamp and costs eighteen euros.",
             "It is a lamp and costs eight euros."
           ],
-          "answer": "It is a lamp and costs eight euros."
+          "answer": "It is a lamp and costs eight euros.",
+          "optionsDe": [
+            "Das ist eine Uhr, und sie kostet acht Euro.",
+            "Das ist eine Lampe, und sie kostet achtzehn Euro.",
+            "Das ist eine Lampe, und sie kostet acht Euro."
+          ]
         },
         "say": {
           "line": 0
@@ -54,6 +170,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "89714fea",
         "meaning": {
           "promptDe": "Was kostet der Tisch? Wählen Sie die Bedeutung.",
           "promptEn": "What does the table cost? Choose the meaning.",
@@ -62,7 +179,12 @@
             "Fifteen euros.",
             "Five euros."
           ],
-          "answer": "Fifteen euros."
+          "answer": "Fifteen euros.",
+          "optionsDe": [
+            "Fünfzig Euro.",
+            "Fünfzehn Euro.",
+            "Fünf Euro."
+          ]
         },
         "say": {
           "line": 2
@@ -71,6 +193,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "91629a7e",
         "meaning": {
           "promptDe": "Was sagt Tim über den Tisch? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about the table? Choose the meaning.",
@@ -79,7 +202,12 @@
             "He wants to buy it now.",
             "He thinks it is too old."
           ],
-          "answer": "He thinks it is expensive."
+          "answer": "He thinks it is expensive.",
+          "optionsDe": [
+            "Der Tisch ist teuer.",
+            "Er kauft den Tisch.",
+            "Der Tisch ist zu alt."
+          ]
         },
         "say": {
           "line": 4
@@ -88,6 +216,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "f3dc0e0e",
         "meaning": {
           "promptDe": "Was kauft Tim? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim buy? Choose the meaning.",
@@ -96,7 +225,12 @@
             "The chair and the lamp.",
             "The lamp and the shelf."
           ],
-          "answer": "The chair and the lamp."
+          "answer": "The chair and the lamp.",
+          "optionsDe": [
+            "Den Tisch und den Stuhl.",
+            "Den Stuhl und die Lampe.",
+            "Die Lampe und das Regal."
+          ]
         },
         "say": {
           "line": 6
@@ -105,6 +239,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "bbd9aaa6",
         "meaning": {
           "promptDe": "Was kostet das Regal? Wählen Sie die Bedeutung.",
           "promptEn": "What does the shelf cost? Choose the meaning.",
@@ -113,7 +248,12 @@
             "Thirteen euros.",
             "Thirty euros."
           ],
-          "answer": "Thirty euros."
+          "answer": "Thirty euros.",
+          "optionsDe": [
+            "Fünfzig Euro.",
+            "Dreizehn Euro.",
+            "Dreißig Euro."
+          ]
         },
         "say": {
           "line": 8

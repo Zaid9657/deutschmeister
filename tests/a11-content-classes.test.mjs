@@ -136,14 +136,18 @@ test('coverage is said, not hidden: a Lektion without a linked listening exercis
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   const recap = readFileSync(new URL('../src/components/lesson/RecapStage.jsx', import.meta.url), 'utf8');
   assert.match(recap, /lektion\.links\?\.listeningExercise == null && t\('recap\.coverage\.noListening', lang\)/);
-  assert.match(recap, /lektion\.links\?\.readingOrder == null && t\('recap\.coverage\.noReading', lang\)/);
+  assert.match(recap, /noReading && t\('recap\.coverage\.noReading', lang\)/);
+  // A guided Lektion has its own reading text in part 1, so it never says it has none (browser walk 2026-11-25: L2, L6).
+  assert.match(recap, /const noReading = Boolean\(lektion\) && lektion\.links\?\.readingOrder == null && !lektion\.guided\?\.read;/);
+  assert.ok(CURRICULUM_A11.lektionen.every((l) => l.guided?.read), 'every A1.1 Lektion has a reading text');
   const strings = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
   for (const key of ['recap.coverage.noListening', 'recap.coverage.noReading']) {
     assert.equal((strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':`, 'g')) || []).length, 2, `${key} in English and German`);
   }
-  // The measured gaps this line speaks for (2026-10-06): listening L2, 3, 5, 7, 11, 12 · reading L2, 6.
+  // The measured gaps this line speaks for (2026-10-06): listening L2, 3, 5, 7, 11, 12 · reading L2, 6. Lektion 10
+  // since 2026-11-22: its exercise 3 is the final test's Hören, which a practice link would show first.
   const gaps = (field) => CURRICULUM_A11.lektionen.filter((l) => l.links?.[field] == null).map((l) => l.nr);
-  assert.deepEqual(gaps('listeningExercise'), [2, 3, 5, 7, 11, 12]);
+  assert.deepEqual(gaps('listeningExercise'), [2, 3, 5, 7, 10, 11, 12]);
   assert.deepEqual(gaps('readingOrder'), [2, 6]);
 });
 
@@ -162,4 +166,25 @@ test('5E, cards too: no rule card shows a grammatical job sentence as a mistake 
     }
   }
   assert.deepEqual(offenders, []);
+});
+
+// Loop round 1, item 5: the English of the course is one English — British spelling, "lesson", curly apostrophes.
+test('the English of A1.1 says lesson, colour, mum and exercise book, and its apostrophes are curly', async () => {
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  const MIXED = /\bLektion(?:en)?\b|\bcolou?r\b(?<!colour)|\bmoms?\b|\bnotebooks?\b/i;
+  const bad = [];
+  const english = (path) => /(?:En|^en|\.en)$/.test(path.replace(/\[\d+\]/g, ''));
+  const walk = (x, path) => {
+    if (typeof x === 'string') {
+      if (!english(path)) return;
+      if (MIXED.test(x)) bad.push(`${path}: ${x.slice(0, 80)}`);
+      if (/\w'\w/.test(x)) bad.push(`${path}: straight apostrophe: ${x.slice(0, 80)}`);
+    } else if (Array.isArray(x)) x.forEach((y, i) => walk(y, `${path}[${i}]`));
+    else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) walk(v, `${path}.${k}`);
+  };
+  walk(CURRICULUM_A11.lektionen, 'lektionen');
+  for (const it of POOL) for (const f of ['questionEn', 'explanationEn']) if (MIXED.test(it[f] || '')) bad.push(`${it.id}.${f}: ${it[f].slice(0, 80)}`);
+  for (const [k, v] of Object.entries(STRINGS.en)) if (MIXED.test(v)) bad.push(`strings ${k}: ${v.slice(0, 80)}`);
+  assert.deepEqual(bad, []);
 });

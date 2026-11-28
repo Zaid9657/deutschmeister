@@ -62,6 +62,7 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
     <StageShell
       variant="input"
       eyebrow={t('stage.phonetik.eyebrow', lang)}
+      part={stage.part}
       title={t('stage.phonetik.title', lang)}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}

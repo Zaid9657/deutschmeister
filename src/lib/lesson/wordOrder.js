@@ -1,0 +1,122 @@
+// Closed grammar for derived tiles. Unsupported dialogue lines stay dialogue
+// input: a single stored order is not evidence that every other order is wrong.
+const pronoun = '(?:ich|du|er|sie|es|wir|ihr|Sie)';
+const subject = `(?:${pronoun}|das|(?:der|die|das|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere) [A-ZÄÖÜ][a-zäöüß]+)`;
+const copula = '(?:bin|bist|ist|sind|seid|war|warst|waren|wart)';
+const capitalise = (s) => s[0].toUpperCase() + s.slice(1);
+
+/**
+ * A word-order task needs something to order: four words or more. „Guten Tag!“ (L9) and „Ich bin
+ * frei.“ (L7) as tiles, „Bist du müde?“ as a word bag whose opening is named — two or three words
+ * leave at most one choice (2026-11-23 screen walk). Used by the derived tiles and the practice draw.
+ */
+export const WORD_ORDER_MIN_WORDS = 4;
+export const hasOrderToBuild = (sentence) => String(sentence || '').trim().split(/\s+/).filter(Boolean).length >= WORD_ORDER_MIN_WORDS;
+/** A pool item a lesson may serve as far as word order goes: a sentence-building item has four words to order. */
+export const ordersEnough = (item) => item?.type !== 'sentence_building' || hasOrderToBuild(item.answer);
+const lowerFirst = (s) => s === 'Sie' ? s : s[0].toLowerCase() + s.slice(1);
+
+/**
+ * Licensed dialogue sentences: lines the frames below do not cover, each with EVERY order a
+ * teacher marks correct, the dialogue's own first. An entry is closed — any other order of
+ * its tiles is wrong — and joins only when two readings agree on the whole set and both call
+ * it complete: the course session's and Codex's (2026-11-24, the G4 follow-up of the 46c7ca80
+ * review; the two Lektion 3 lines after a second, adversarial Codex pass over every
+ * arrangement). Lines whose set stays open — „auch“ or „nicht“ that changes its focus when it
+ * moves, echo W-questions, sie/Sie, a request whose object may open it — stay dialogue input only.
+ */
+export const LICENSED_ORDERS = Object.freeze({
+  // A1.1
+  'Ich heiße Ana Chakiri.': ['Ich heiße Ana Chakiri.', 'Ana Chakiri heiße ich.'],
+  'Mein Nachname ist Chakiri.': ['Mein Nachname ist Chakiri.', 'Chakiri ist mein Nachname.'],
+  // „sie“ is singular here (ist); „von meiner Schwester“ stays with „der Mann“.
+  'Sie ist noch jung.': ['Sie ist noch jung.', 'Noch jung ist sie.', 'Noch ist sie jung.', 'Jung ist sie noch.'],
+  'Der Mann von meiner Schwester kommt aus Marokko.': ['Der Mann von meiner Schwester kommt aus Marokko.',
+    'Aus Marokko kommt der Mann von meiner Schwester.'],
+  'Ich schwimme jede Woche.': ['Ich schwimme jede Woche.', 'Jede Woche schwimme ich.'],
+  'Ich spiele am Wochenende Fußball.': ['Ich spiele am Wochenende Fußball.', 'Am Wochenende spiele ich Fußball.',
+    'Fußball spiele ich am Wochenende.', 'Ich spiele Fußball am Wochenende.'],
+  'Mein Hobby ist Sport.': ['Mein Hobby ist Sport.', 'Sport ist mein Hobby.'],
+  'Das Café ist gut.': ['Das Café ist gut.', 'Gut ist das Café.'],
+  // A1.2
+  'Ich sehe zehn Minuten fern.': ['Ich sehe zehn Minuten fern.', 'Zehn Minuten sehe ich fern.'],
+  'Der Kühlschrank hat kein Brot.': ['Der Kühlschrank hat kein Brot.', 'Kein Brot hat der Kühlschrank.'],
+  'Ich frage die Nachbarin.': ['Ich frage die Nachbarin.', 'Die Nachbarin frage ich.'],
+  'Der Teppich ist auf der Terrasse.': ['Der Teppich ist auf der Terrasse.', 'Auf der Terrasse ist der Teppich.'],
+  'Seit einer Woche regnet es.': ['Seit einer Woche regnet es.', 'Es regnet seit einer Woche.'],
+  'Am Abend kommt ein Gewitter.': ['Am Abend kommt ein Gewitter.', 'Ein Gewitter kommt am Abend.'],
+});
+
+/** All orders of a supported frame, or [] when its grammar is not covered. */
+export function wordOrderAnswers(text) {
+  const line = String(text || '').trim();
+  if (Object.prototype.hasOwnProperty.call(LICENSED_ORDERS, line)) return [...LICENSED_ORDERS[line]];
+  if (/^(?:Guten (?:Tag|Morgen|Abend)|Gute Nacht|Auf Wiedersehen|Vielen Dank)[.!]$/.test(line)) return [line];
+  const end = line.slice(-1);
+  if (!/[.!?]/.test(end)) return [];
+  const body = line.slice(0, -1);
+  const finish = (orders) => [...new Set(orders.map((s) => `${capitalise(s)}${end}`))];
+
+  // One subject and one predicate, optionally modified by a certainty adverb.
+  // No arbitrary adjective/verb guesses: the predicate vocabulary is closed.
+  const number = '(?:eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwanzig|fünfzehn|vierhundertachtzig)';
+  const pred = `(?:Studentin|Student|Lehrer|Lehrerin|müde|krank|schön|gut|teuer|billig|alt|jung|groß|klein|rot|blau|gelb|grün|weiß|schwarz|frei|neu|weit|gesund|schnell|lecker|sonnig|wolkig|windig|warm|kalt|glücklich|pünktlich|hier|da|zu kurz|${number}(?: Euro)?|um ${number}(?: Uhr)?)`;
+  const statement = new RegExp(`^(${subject}) (${copula}) (?:(bestimmt|wirklich) )?(${pred})$`, 'i').exec(body);
+  if (statement && end !== '?') {
+    const [, s, v, adv, p] = statement;
+    const sub = lowerFirst(s);
+    if (!adv) return finish([`${s} ${v} ${p}`, `${p} ${v} ${sub}`]);
+    return finish([`${s} ${v} ${adv} ${p}`, `${s} ${v} ${p} ${adv}`, `${adv} ${v} ${sub} ${p}`, `${adv} ${p} ${v} ${sub}`, `${p} ${v} ${sub} ${adv}`]);
+  }
+
+  // A copular question permits V1 and confirmation/echo V2. The subject and
+  // predicate remain whole constituents, including a price or a time phrase.
+  const polar = new RegExp(`^(${copula}) (${subject}) (${pred})$`, 'i').exec(body);
+  if (polar && end === '?') {
+    const [, v, s, p] = polar;
+    const verb = v.toLowerCase();
+    return finish([`${verb} ${s} ${p}`, `${s} ${verb} ${p}`, `${p} ${verb} ${s}`,
+      // A weak subject pronoun cannot follow the predicate: *Ist rot es?
+      ...(s.includes(' ') ? [`${verb} ${p} ${s}`] : [])]);
+  }
+
+  const price = new RegExp(`^(${subject}) kostet (${number} Euro)$`, 'i').exec(body);
+  if (price && end !== '?') return finish([body, `${price[2]} kostet ${lowerFirst(price[1])}`]);
+
+  const arrival = new RegExp(`^(${subject}) (komme|kommst|kommt|kommen) (jetzt|heute|morgen)$`, 'i').exec(body);
+  if (arrival && end !== '?') return finish([body, `${arrival[3]} ${arrival[2]} ${lowerFirst(arrival[1])}`]);
+
+  // Bare accusative states are a closed lexical frame, not arbitrary haben objects.
+  const have = new RegExp(`^(${subject}) (habe|hast|hat|haben|habt) (Hunger|Durst|Zeit|Verspätung)$`, 'i').exec(body);
+  if (have && end !== '?') return finish([body, `${have[3]} ${have[2]} ${lowerFirst(have[1])}`]);
+  const haveQuestion = new RegExp(`^(Habe|Hast|Hat|Haben|Habt) (${subject}) (Hunger|Durst|Zeit|Verspätung)$`, 'i').exec(body);
+  if (haveQuestion && end === '?') {
+    const [, verb, s, object] = haveQuestion;
+    const v = verb.toLowerCase();
+    return finish([`${v} ${s} ${object}`, `${s} ${v} ${object}`, `${object} ${v} ${s}`,
+      ...(s.includes(' ') ? [`${v} ${object} ${s}`] : [])]);
+  }
+
+  // A polar question with one pronoun, one time adverb and a separable verb.
+  // Confirmation questions have the same tiles and keep the final question mark.
+  const question = /^(Kaufst|Kauft|Kaufen) (du|ihr|Sie) (heute|morgen|jetzt) ein$/.exec(body);
+  if (question && end === '?') {
+    const [, v, s, time] = question;
+    const verb = v.toLowerCase();
+    return finish([`${verb} ${s} ${time} ein`, `${verb} ${time} ${s} ein`, `${s} ${verb} ${time} ein`, `${time} ${verb} ${s} ein`]);
+  }
+
+  // A three-word origin/destination question, with an optional direct address.
+  const wh = /^(Woher|Wohin) (kommst|kommt|kommen|gehst|geht|gehen|fährst|fahrt|fahren) (du|ihr|Sie)(?:, ([A-ZÄÖÜ][a-zäöüß]+))?$/.exec(body);
+  if (wh && end === '?') {
+    const [, w, v, s, name] = wh;
+    const cores = [[w, v, s], [s, v, w.toLowerCase()], [v, s, w.toLowerCase()]];
+    const orders = name ? cores.flatMap((words) => Array.from({ length: words.length + 1 }, (_, at) => {
+      const copy = [...words];
+      copy.splice(at, 0, name);
+      return copy.join(' ');
+    })) : cores.map((words) => words.join(' '));
+    return finish(orders);
+  }
+  return [];
+}

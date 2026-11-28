@@ -1,11 +1,12 @@
-import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
+import CommandHelp from './CommandHelp.jsx';
+import { guidedFeedback, feedbackReason, tipFor } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Eye } from 'lucide-react';
+import { Check, Eye, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
@@ -36,7 +37,8 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * `eyebrowKey` names the stage this item is shown in: 'stage.practice.eyebrow'
  * by default, 'stage.requeue.eyebrow' when the player re-asks the misses after
  * the writing step — the requeue used to reuse "Step 4 · Practice" after
- * "Step 6 · Writing", which read as the lesson going backwards.
+ * "Step 6 · Writing", which read as the lesson going backwards. `part` (the
+ * stage's part, from the player) goes in front of it: „Part 3 of 3 · Try again“.
  *
  * `allowReveal` (after-evaluation gap #3) gates a secondary "Show answer"
  * control, shown only in the requeue stage (the player passes it there; the
@@ -52,7 +54,7 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * revealed item is not re-collected into `misses` after the requeue stage,
  * so it simply ends there).
  */
-export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false, hintFirst = false }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', part = null, allowReveal = false, hintFirst = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
@@ -73,6 +75,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   // dictation, spelling), never from this call site — that is what keeps the
   // lesson, the checkpoint and the review grading one grader (REVIEW #6 BLOCKER 3).
   const checkOpts = useMemo(() => checkOptionsFor(item), [item]);
+  const tip = !hintFirst && !state ? tipFor(item.hint, lang) : null;
   const answer = typed ? value : picked;
   const canSubmit = String(answer || '').trim().length > 0;
 
@@ -116,8 +119,9 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
+      <CommandHelp />
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
@@ -130,6 +134,8 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
           <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             {chips.map((opt) => {
               const on = picked === opt;
+              // A wrong choice never carries the check mark; a revealed item says nothing about the choice.
+              const Mark = state?.result === RESULT.WRONG ? X : Check;
               return (
                 <button
                   key={opt}
@@ -142,7 +148,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
                   }`}
                 >
                   <span>{opt}</span>
-                  {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
+                  {on && !state?.revealed && <Mark className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
               );
             })}
@@ -154,7 +160,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
             </label>
             <input
               id={`answer-${item.id}`}
-              aria-describedby={[`question-${item.id}`, !hintFirst && item.hint && !state ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
+              aria-describedby={[`question-${item.id}`, tip ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
               ref={inputRef}
               type="text"
               value={value}
@@ -165,9 +171,9 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }}
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
-              placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
+              placeholder={['sentence_building', 'error_correction'].includes(item.type) ? t('practice.wholeSentence', lang) : '…'}
             />
-            {!hintFirst && item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
+            {tip && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: tip })}</p>}
           </div>
         )}
 

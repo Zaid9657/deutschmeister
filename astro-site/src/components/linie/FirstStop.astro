@@ -34,7 +34,7 @@ const items = DEMO_ITEM_IDS.map((id) => {
     answer: it.answer,
     // What the page needs to grade with the real checker: the accepted
     // answers and the item fields checkOptionsFor() reads. Nothing else.
-    grade: { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, caseSensitive: it.caseSensitive === true },
+    grade: { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, questionDe: it.questionDe, caseSensitive: it.caseSensitive === true },
     explanation: bold(explanationsEn[id]),
     prefill: it.type === 'error_correction' ? (String(it.questionDe).match(/„(.+?)“/) || [])[1] || '' : '',
   };

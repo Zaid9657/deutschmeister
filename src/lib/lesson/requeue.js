@@ -29,6 +29,7 @@
 // nothing else this Lektion may show.
 import { poolItems } from './buildLesson.js';
 import { isUsableItem } from '../../data/lessonPools/quality.js';
+import { ordersEnough } from './wordOrder.js';
 
 export const REQUEUE_CAP = 4;
 
@@ -38,10 +39,11 @@ export const REQUEUE_CAP = 4;
  * scripts/build-lesson-pool.mjs, is the first Lektion that has taught every
  * word of the item — a stamped item is served at or after its stamp,
  * `minLektion: null` never, an unstamped item (a hand-built test pool) always.
+ * A word bag of fewer than four words is never served either (wordOrder.js `ordersEnough`).
  * tests/requeue-lektion.test.mjs holds both predicates to the same verdicts.
  */
 export const servableIn = (item, lektionNr) =>
-  !item.assessment && (!Object.prototype.hasOwnProperty.call(item, 'minLektion')
+  !item.assessment && ordersEnough(item) && (!Object.prototype.hasOwnProperty.call(item, 'minLektion')
   || (Number.isInteger(item.minLektion) && (!Number.isInteger(lektionNr) || item.minLektion <= lektionNr)));
 
 /** The ids of the pool items Lektion `lektionNr` may not serve: a retry there skips them like seen ones. */
@@ -82,7 +84,7 @@ const isWriting = (it) => it.stage === 'writing' || String(it.id).startsWith('sc
 export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds, level } = {}) {
   // At the course's own level, like the practice draw (`pickPracticeItems`): without it every level
   // was filtered by A1.1's syllabus rules.
-  const items = poolItems(pool).filter((it) => !it.assessment && isUsableItem(it, { level }));
+  const items = poolItems(pool).filter((it) => !it.assessment && isUsableItem(it, { level }) && ordersEnough(it));
   const used = new Set(usedIds);
   const avoid = avoidIds instanceof Set ? avoidIds : new Set(avoidIds || []);
   const out = [];

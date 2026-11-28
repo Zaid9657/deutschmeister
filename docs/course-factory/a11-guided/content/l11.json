@@ -2,14 +2,14 @@
   "guided": {
     "read": {
       "titleDe": "Tims Zettel für Freitag",
-      "titleEn": "Tim's note for Friday",
+      "titleEn": "Tim’s note for Friday",
       "instructionDe": "Lesen Sie Tims Zettel. Tippen Sie auf ein Wort für seine Bedeutung.",
-      "instructionEn": "Read Tim's note. Tap a word for its meaning.",
+      "instructionEn": "Read Tim’s note. Tap a word for its meaning.",
       "text": "Wochentag: Freitag\nUm sechs Uhr aufstehen, duschen, frühstücken\nLena anrufen – noch nicht gemacht!\nUm vier Uhr Lena abholen: Sie möchte mitkommen.\nDas Wörterbuch für Lena mitbringen!\nDann einkaufen: Brot, Kaffee und Wasser. Tee habe ich schon.\nUm sieben Uhr nach Hause. Abends bin ich müde.\nLetzte Woche: jeden Tag gearbeitet. Am Sonntag: bis neun schlafen!",
       "questions": [
         {
           "promptDe": "Was macht Tim um vier Uhr? Wählen Sie die Antwort.",
-          "promptEn": "What does Tim do at four o'clock? Choose the answer.",
+          "promptEn": "What does Tim do at four o’clock? Choose the answer.",
           "options": [
             "He calls Lena, and then they have breakfast.",
             "He picks Lena up, and then they go shopping.",
@@ -17,7 +17,12 @@
           ],
           "answer": "He picks Lena up, and then they go shopping.",
           "explanationDe": "Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.",
-          "explanationEn": "The note says: pick Lena up at four o'clock, then go shopping."
+          "explanationEn": "The note says: pick Lena up at four o’clock, then go shopping.",
+          "optionsDe": [
+            "Er ruft Lena an, dann frühstücken sie.",
+            "Er holt Lena ab, dann kaufen sie ein.",
+            "Er geht nach Hause und schläft bis neun."
+          ]
         },
         {
           "promptDe": "Was kauft Tim nicht? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Tea, because he already has some.",
           "explanationDe": "Auf dem Zettel steht: Tee habe ich schon. Tim kauft Brot, Kaffee und Wasser.",
-          "explanationEn": "The note says: I already have tea. Tim buys bread, coffee and water."
+          "explanationEn": "The note says: I already have tea. Tim buys bread, coffee and water.",
+          "optionsDe": [
+            "Tee: Er hat schon Tee.",
+            "Brot: Er hat schon Brot.",
+            "Kaffee: Er trinkt keinen Kaffee."
+          ]
         }
       ]
     },
@@ -37,6 +47,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "7d23718c",
         "meaning": {
           "promptDe": "Was hat Tim gestern gemacht? Wählen Sie die Bedeutung.",
           "promptEn": "What did Tim do yesterday? Choose the meaning.",
@@ -45,7 +56,12 @@
             "He was working.",
             "He went shopping."
           ],
-          "answer": "He was working."
+          "answer": "He was working.",
+          "optionsDe": [
+            "Er hat Deutsch gelernt.",
+            "Er hat gearbeitet.",
+            "Er hat eingekauft."
+          ]
         },
         "say": {
           "line": 1
@@ -54,6 +70,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "f253f48a",
         "meaning": {
           "promptDe": "Was sagt Tim über den Morgen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about his mornings? Choose the meaning.",
@@ -62,7 +79,12 @@
             "He gets up at seven and is tired.",
             "He gets up at six and feels fine."
           ],
-          "answer": "He gets up at six and is tired."
+          "answer": "He gets up at six and is tired.",
+          "optionsDe": [
+            "Er steht um sechs auf und ist müde.",
+            "Er steht um sieben auf und ist müde.",
+            "Er steht um sechs auf, und es geht ihm gut."
+          ]
         },
         "say": {
           "line": 3
@@ -71,6 +93,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "38cad4d1",
         "meaning": {
           "promptDe": "Was macht Tim am Freitag? Wählen Sie die Bedeutung.",
           "promptEn": "What is Tim doing on Friday? Choose the meaning.",
@@ -79,7 +102,12 @@
             "He is staying at home and sleeping in.",
             "He is going shopping and asks Lena to come."
           ],
-          "answer": "He is going shopping and asks Lena to come."
+          "answer": "He is going shopping and asks Lena to come.",
+          "optionsDe": [
+            "Er arbeitet und kauft nicht ein.",
+            "Er ist zu Hause und schläft lange.",
+            "Er kauft ein und fragt: Kommt Lena mit?"
+          ]
         },
         "say": {
           "line": 5
@@ -88,15 +116,21 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "a8a93210",
         "meaning": {
           "promptDe": "Was sagt Lena? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say? Choose the meaning.",
           "options": [
-            "She is coming along and asks Tim to call her.",
+            "She is coming along and is bringing a bag.",
             "She cannot come and will call Tim next week.",
             "She is coming along and will pick Tim up at six."
           ],
-          "answer": "She is coming along and asks Tim to call her."
+          "answer": "She is coming along and is bringing a bag.",
+          "optionsDe": [
+            "Sie kommt mit und bringt eine Tasche mit.",
+            "Sie kommt nicht mit und ruft Tim nächste Woche an.",
+            "Sie kommt mit und holt Tim um sechs ab."
+          ]
         },
         "say": {
           "line": 7
@@ -105,15 +139,21 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "f7793e6f",
         "meaning": {
-          "promptDe": "Was macht Tim am Sonntag? Wählen Sie die Bedeutung.",
-          "promptEn": "What does Tim do on Sunday? Choose the meaning.",
+          "promptDe": "Bis wann schläft Tim? Wählen Sie die Bedeutung.",
+          "promptEn": "Until when does Tim sleep? Choose the meaning.",
           "options": [
-            "He gets up at six.",
-            "He sleeps until nine.",
-            "He works until nine."
+            "Until six; his brother sleeps until nine.",
+            "Until nine; his brother sleeps until six.",
+            "Until eight, then he has a shower."
           ],
-          "answer": "He sleeps until nine."
+          "answer": "Until six; his brother sleeps until nine.",
+          "optionsDe": [
+            "Bis sechs, sein Bruder schläft bis neun.",
+            "Bis neun, sein Bruder schläft bis sechs.",
+            "Bis acht, dann duscht er."
+          ]
         },
         "say": {
           "line": 9
@@ -123,7 +163,7 @@
   },
   "nextHook": {
     "de": "Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?",
-    "en": "Ana's birthday is coming up and she is planning a party. Who will she invite?"
+    "en": "Ana’s birthday is coming up and she is planning a party. Who will she invite?"
   },
   "notes": [
     "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 5–7 are one arrangement (shopping, coming along, the call); I cut after line 5 because line 6 both answers and asks, so 4–6 / 6–8 keeps each chunk to one exchange. A 3-line chunk 4–7 would leave line 7 with 8–9, which is a different topic.",

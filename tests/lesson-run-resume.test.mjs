@@ -42,6 +42,21 @@ function withWindow(storage, fn) {
 
 const NOW = Date.UTC(2026, 9, 1, 8, 0, 0);
 
+// Walk L, 13 (2026-11-25): a refresh at turn 3 of the final check started it again.
+test('the run keeps where the final check stands: the verdicts and the chosen person, never an answer', () => {
+  const check = { retake: 1, outcomes: ['shown', 'missed', 'unverified'], chosen: 'Schwester', answers: ['Das ist meine Schwester Ana.'] };
+  const run = packRun({ stageKey: 'check', stageIndex: 13, itemIndex: 0, attempt: 1, attempts: [], misses: [], requeued: [], combo: 0, dueCards: [], check }, NOW);
+  assert.deepEqual(run.check, { retake: 1, outcomes: ['shown', 'missed', 'unverified'], chosen: 'Schwester' });
+  assert.doesNotMatch(JSON.stringify(run), /Ana/, 'no answer is stored');
+  assert.deepEqual(unpackRun(JSON.parse(JSON.stringify(run)), NOW).check, run.check);
+  for (const bad of [null, 'x', [], { outcomes: ['lovely'] }, { outcomes: {} }, {}]) {
+    assert.equal(packRun({ stageKey: 'check', stageIndex: 13, itemIndex: 0, attempt: 1, check: bad }, NOW).check, null, JSON.stringify(bad));
+  }
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.match(player, /resume=\{checkRun\} onProgress=\{setCheckRun\}/);
+  assert.match(player, /useState\(\(\) => resumed\?\.check \|\| null\)/);
+});
+
 test('packRun → unpackRun round-trips a run and normalises bad numbers', () => {
   const run = packRun({
     stageKey: 'speaking', stageIndex: 8, itemIndex: 0, attempt: 2,
@@ -146,7 +161,7 @@ test('LessonPlayerPage restores the run on mount, saves it on every change, and 
     'the recap clears the run, and a run past the recap is never saved again');
   assert.match(src, /if \(!cancelled && !resumed && !started\.current\) setAttempt/, 'a resumed run keeps its draw, and so does a started one');
   assert.match(src, /if \(resumed\) return undefined;/, 'a resumed run keeps its warm-up cards');
-  assert.match(src, /readAloud,\s*\}\), owner\);/, 'the read-aloud results travel with the run');
+  assert.match(src, /readAloud, check: checkRun,\s*\}\), owner\);/, 'the read-aloud results and the place in the check travel with the run');
 });
 
 test('every full-page exit from a lesson stage returns to the Lektion URL the player resumes on', () => {
@@ -209,7 +224,7 @@ test('the player keeps every read-aloud result as it is recorded, and the Sprech
   assert.ok(go.length > 0, 'the coach hand-off is still a full page load');
   // A restored line says what was measured (ReadAloudLine itself starts idle), from the string table.
   assert.match(stage, /results\[l\.index\] && !recordedNow\.has\(l\.index\) && \(/);
-  assert.match(stage, /t\('speaking\.intelligibility', lang, \{ pct: Math\.round\(results\[l\.index\]\.pct \* 100\) \}\)/);
+  assert.match(stage, /speechLine\(results\[l\.index\]\.pct, lang\)/);
   assert.match(stage, /primaryDisabled=\{lines\.length > 0 && !allDone\}/, 'Next opens once every line has a result — restored ones included');
 });
 
@@ -244,4 +259,19 @@ test('signing in resumes the NEWER of the account and guest snapshots (2026-10-2
     // The course home offers the same run the player resumes.
     assert.equal(latestRun('a1.1', ['a1.1-l05'], NOW, 'user-a').runId, 'guest');
   });
+});
+
+test('listening evidence survives save and reload; absent or non-boolean claims do not count', async () => {
+  const { packRun, unpackRun } = await import('../src/lib/lesson/runState.js');
+  const { canDoShown } = await import('../src/lib/lesson/finalCheck.js');
+  const now = Date.now();
+  for (const listened of [true, false, undefined, 'true']) {
+    const evidence = { outcome: 'shown', revealed: false, ...(listened === undefined ? {} : { listened }) };
+    const saved = packRun({ flow: 'guided', stageKey: 'check', check: { retake: 0, outcomes: [evidence] } }, now);
+    const restored = unpackRun(JSON.parse(JSON.stringify(saved)), now + 100, 'guided');
+    const outcome = restored.check.outcomes[0];
+    assert.equal(canDoShown([{ canDo: 0, listen: true }], [outcome], 1)[0], listened === true);
+    assert.equal(outcome.listened, typeof listened === 'boolean' ? listened : undefined);
+    assert.equal(canDoShown([{ canDo: 0 }], [outcome], 1)[0], true, 'ordinary answer evidence is preserved');
+  }
 });

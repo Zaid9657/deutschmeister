@@ -16,12 +16,15 @@ import { dirname, join } from 'node:path';
 
 import {
   planRenders, sha1, slugify, voiceForSpeaker, phonetikSpeechText, wordSpeechText,
-  estimateCents, renderManifest, SPEAKER_VOICES, VOICE_FEMALE, VOICE_MALE, VOICE_DEFAULT,
-  RATE, BUCKET, ssml,
+  estimateCents, renderManifest, settleManifest, SPEAKER_VOICES, VOICE_FEMALE, VOICE_MALE, VOICE_DEFAULT,
+  RATE, RATE_LISTEN, RATE_SPELL, BUCKET, ssml,
 } from '../scripts/generate-course-audio.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import manifest from '../src/data/curricula/a11.audio.js';
-import { audioFor, hasRecordings, speakGermanChecked } from '../src/lib/lesson/speech.js';
+import { audioFor, clipFor, textKey, hasRecordings, speakGermanChecked } from '../src/lib/lesson/speech.js';
+import buildLesson from '../src/lib/lesson/buildLesson.js';
+import { checkTurns, modelAnswer, ownAnswer } from '../src/lib/lesson/finalCheck.js';
+import { sayText } from '../src/lib/lesson/scene.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -45,9 +48,21 @@ test('planRenders covers every dialogue line of all 12 Lektionen', () => {
   assert.equal(byKind('line').length, CURRICULUM_A11.lektionen.reduce((n, l) => n + l.dialog.lines.length, 0));
 });
 
-test('the checkpoint dictation lines need no separate render — they ARE dialogue lines', () => {
-  // buildCheckpoint.dialogLines() flattens lektion.dialog.lines with their index,
-  // so the `line-<i>` keys above already cover every checkpoint Hören item.
+test('a Lektion dictates and reads aloud its dialogue lines; a checkpoint speaks its own bank, planned by its words', () => {
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const clips = plan.filter((e) => e.lektionId === cp.id);
+    assert.equal(clips.length, 28, `${cp.id}: four papers of two dictations, three texts and two lines to read aloud`);
+    for (const paper of cp.hoeren.papers) for (const u of [...paper.say, ...paper.hear, ...paper.read]) {
+      const entry = clips.find((e) => e.key === textKey(u.de || u.text));
+      assert.ok(entry, `${u.id} is not planned`);
+      assert.equal(entry.text, u.de || u.text);
+      assert.equal(entry.path, `course/a1.1/${cp.id}/${entry.key}.mp3`);
+      if (u.voice) assert.equal(entry.voice, u.voice === 'm' ? VOICE_MALE : VOICE_FEMALE);
+      // …and the player looks exactly there: the level is the part of the id before the first hyphen.
+      assert.equal(clipFor({ [entry.key]: { url: 'https://x/cp.mp3' } }, null, entry.text), 'https://x/cp.mp3');
+      assert.equal(cp.id.split('-')[0], 'a1.1');
+    }
+  }
   for (const lektion of CURRICULUM_A11.lektionen) {
     for (const idx of lektion.hoeren?.lines || []) {
       assert.ok(
@@ -131,9 +146,24 @@ test('every planned clip has a text, a voice, a unique path and a storage path u
     assert.ok(e.text && e.text.trim(), `empty text for ${e.path}`);
     assert.ok(VERIFIED_VOICES.has(e.voice), `unknown voice ${e.voice}`);
     assert.match(e.path, /^course\/a1\.1\/[^/]+\/[a-z0-9-]+\.mp3$/);
+    if (e.kind === 'alias') continue; // repeats an earlier clip: same file on purpose (next test)
     assert.ok(!paths.has(e.path), `duplicate path ${e.path}`);
     paths.add(e.path);
   }
+});
+
+test('a key that repeats a clip says the same words in the same voice, and costs nothing', () => {
+  const aliases = byKind('alias');
+  assert.ok(aliases.length > 0, 'the guided "say it" lines are dialogue lines');
+  for (const a of aliases) {
+    const source = plan.find((e) => e.lektionId === a.lektionId && e.key === a.aliasOf);
+    assert.ok(source && source.kind !== 'alias', `${a.lektionId}/${a.key} repeats a clip that is rendered`);
+    assert.equal(source.text, a.text);
+    assert.equal(source.voice, a.voice);
+    assert.equal(source.path, a.path);
+    assert.ok(plan.indexOf(source) < plan.indexOf(a), 'the clip is planned before the key that repeats it');
+  }
+  assert.equal(estimateCents(aliases), 0);
 });
 
 // ── voices ──────────────────────────────────────────────────────────────────
@@ -207,7 +237,7 @@ test('sha1 is stable — it is the whole idempotency contract', () => {
 });
 
 test('the cost estimate follows from the characters, not from a retyped number', () => {
-  const chars = plan.reduce((n, e) => n + e.text.length, 0);
+  const chars = plan.filter((e) => e.kind !== 'alias').reduce((n, e) => n + e.text.length, 0); // a repeated clip is rendered once
   assert.equal(estimateCents(plan), Math.round(chars * 16e-6 * 100 * 100) / 100);
   assert.ok(estimateCents(plan) < 100, 'the whole level must cost cents, not dollars');
 });
@@ -275,7 +305,8 @@ test('the three playback screens ask the manifest before they synthesise', () =>
   const dialog = read('src/components/lesson/DialogStage.jsx');
   // Since 2026-10 the screens call playChecked, which asks the manifest (audioFor) first and reports
   // whether sound actually started; the keys are unchanged.
-  assert.match(read('src/lib/lesson/speech.js'), /export function playChecked[\s\S]{0,200}const url = audioFor\(lektionId, key\);\s*if \(url\) return playRecordingChecked/, 'playChecked asks the manifest before it synthesises');
+  assert.match(read('src/lib/lesson/speech.js'), /export function playChecked[\s\S]{0,200}const url = audioFor\(lektionId, key, text\);\s*if \(url\) return playRecordingChecked/, 'playChecked asks the manifest before it synthesises');
+  assert.match(read('src/components/lesson/PlayButton.jsx'), /const recorded = !!audioFor\(lektionId, audioKey, text\);/, 'and the badge asks the same question the play does');
   assert.match(dialog, /playChecked\(id, `line-\$\{i\}`/, 'DialogStage plays line-<i>');
   assert.match(dialog, /Aufnahme/);
   assert.match(dialog, /Computerstimme/);
@@ -426,4 +457,96 @@ test('listening items: no sound offers a way on, and reading the line is recorde
       assert.ok((strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':`, 'g')) || []).length === 2, `${key} in both chrome languages (${lang})`);
     }
   }
+});
+
+// ── the guided Lektion: every line it speaks is planned, and found by its words ─────────────────────
+
+/** Every German line a guided Lektion can ask the player to speak, in every sitting, as the player builds it. */
+function guidedSpoken(lektion) {
+  const { stages } = buildLesson({ curriculum: CURRICULUM_A11, lektion, pool: [], dueCards: [], attempt: 1 });
+  const stage = (key) => stages.find((s) => s.key === key);
+  const said = [];
+  for (const chunk of stage('scene').chunks) {
+    for (const line of chunk.lines) said.push(['scene line', line.de, `line-${line.index}`]);
+    if (!chunk.say.ownName) said.push(['scene say', sayText(chunk.say)]);
+  }
+  for (const line of stage('fluency').lines) if (!line.ownName) said.push(['fluency', sayText(line)]);
+  for (const item of stage('sound').items) said.push(['sound', item.text]);
+  const check = stage('check')?.check;
+  for (let retake = 0; check && retake < 6; retake += 1) {
+    for (const turn of checkTurns(check, retake)) {
+      if (turn.cue) said.push(['check cue', turn.cue.de]);
+      if (turn.listen) said.push(['check listen', turn.spoken]);
+      if (turn.spell) said.push(['check spell', turn.spoken]);
+      if ((turn.example || !ownAnswer(turn)) && !turn.listen) said.push(['check answer', modelAnswer(turn)]);
+    }
+  }
+  return said;
+}
+
+test('every line a guided Lektion speaks has a clip in the plan: under its key, or under its words', () => {
+  let checked = 0;
+  for (const lektion of CURRICULUM_A11.lektionen.filter((l) => l.flow === 'guided')) {
+    // A manifest as the run would write it: one entry per planned key.
+    const clips = Object.fromEntries(plan.filter((e) => e.lektionId === lektion.id).map((e) => [e.key, { url: `https://x/${e.path}` }]));
+    for (const [where, text, key] of guidedSpoken(lektion)) {
+      if (!text || text.includes('…')) continue; // the learner's own words: never a recording
+      // A scene line has its place (`line-<i>`); every other line has only its words.
+      assert.ok(key ? clips[key] : clipFor(clips, 'no-such-key', text), `${lektion.id} ${where}: no clip planned for „${text}“`);
+      checked += 1;
+    }
+  }
+  assert.ok(checked > 400, `the walk is not vacuous (${checked})`);
+});
+
+test('a clip found by its words is the clip of exactly those words', () => {
+  assert.equal(textKey('Was ist dein Hobby?'), textKey('  Was ist  dein Hobby? '), 'spacing is not a different sentence');
+  assert.notEqual(textKey('Was ist dein Hobby?'), textKey('Was ist dein Hobby'), 'punctuation is: it changes how the line is spoken');
+  assert.notEqual(textKey('Tanzt du gern?'), textKey('Kochst du gern?'));
+  assert.match(textKey('Guten Tag!'), /^t-[a-z0-9]+$/);
+  const clips = { 'line-0': { url: 'https://x/line-0.mp3' }, [textKey('Tanzt du gern?')]: { url: 'https://x/t.mp3' } };
+  assert.equal(clipFor(clips, 'line-0', 'anything'), 'https://x/line-0.mp3', 'a key of its own wins');
+  assert.equal(clipFor(clips, 'check-cue-4', 'Tanzt du gern?'), 'https://x/t.mp3');
+  assert.equal(clipFor(clips, 'check-cue-4', 'Kochst du gern?'), null, 'a retake with another sentence gets no recording of the first');
+  assert.equal(clipFor(clips, 'check-cue-4'), null, 'no words given, no guess');
+  assert.equal(clipFor(undefined, 'line-0', 'x'), null);
+  const keys = new Set();
+  for (const e of plan.filter((p) => p.kind === 'say' || p.kind === 'alias')) {
+    assert.equal(e.key, textKey(e.text), 'a guided clip is filed under the key of its words');
+    assert.ok(!keys.has(`${e.lektionId}|${e.key}`), `two texts under one key in ${e.lektionId}`);
+    keys.add(`${e.lektionId}|${e.key}`);
+  }
+});
+
+test('a heard number and a spelled name are recorded slower than a dialogue line', () => {
+  const listen = plan.filter((e) => e.rate === RATE_LISTEN);
+  const spell = plan.filter((e) => e.rate === RATE_SPELL);
+  assert.ok(listen.length > 0 && spell.length > 0);
+  assert.match(ssml('7', VOICE_DEFAULT, RATE_LISTEN), /<prosody rate="-20%">7<\/prosody>/);
+  assert.match(ssml('A-N-A.', VOICE_DEFAULT, RATE_SPELL), /<prosody rate="-30%">/);
+  assert.match(ssml('Guten Tag.', VOICE_DEFAULT), new RegExp(`<prosody rate="${RATE}">`), 'everything else keeps the course rate');
+});
+
+test('after a run the manifest holds the plan: repeated keys filled, failed and rewritten ones left out', () => {
+  const l7 = plan.filter((e) => e.lektionId === 'a1.1-l07');
+  const alias = l7.find((e) => e.kind === 'alias');
+  const said = l7.find((e) => e.kind === 'say');
+  const clip = (e) => ({ url: `https://x/${e.path}`, sha1: sha1(e.text), voice: e.voice });
+  // Everything rendered: every planned key of the Lektion ends up in the manifest, an alias with its source's file.
+  const all = { 'a1.1-l07': Object.fromEntries(l7.filter((e) => e.kind !== 'alias').map((e) => [e.key, clip(e)])) };
+  assert.equal(settleManifest(all, plan), 0);
+  assert.deepEqual(Object.keys(all['a1.1-l07']).sort(), l7.map((e) => e.key).sort());
+  assert.deepEqual(all['a1.1-l07'][alias.key], all['a1.1-l07'][alias.aliasOf]);
+  // The source render failed, or it was rendered from other words: the alias stays out.
+  const failed = { 'a1.1-l07': { [said.key]: clip(said) } };
+  settleManifest(failed, plan);
+  assert.equal(failed['a1.1-l07'][alias.key], undefined);
+  const stale = { 'a1.1-l07': { [alias.aliasOf]: { ...clip(alias), sha1: sha1('an older line') }, [alias.key]: clip(alias) } };
+  settleManifest(stale, plan);
+  assert.equal(stale['a1.1-l07'][alias.key], undefined, 'a clip of older words is not repeated under the new words');
+  // A sentence the course no longer says, and a Lektion left with nothing, leave the manifest.
+  const gone = { 'a1.1-l07': { [said.key]: clip(said), 't-gone': clip(said), 'line-99': clip(said) }, 'a1.1-l99': { 'line-0': clip(said) } };
+  assert.equal(settleManifest(gone, plan), 3);
+  assert.deepEqual(Object.keys(gone), ['a1.1-l07']);
+  assert.deepEqual(Object.keys(gone['a1.1-l07']), [said.key]);
 });

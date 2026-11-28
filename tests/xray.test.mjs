@@ -384,7 +384,7 @@ test('the offer is one card built from ui/Button and ui/Card, with attributed pa
   assert.ok(!/\bto=/.test(offer), 'a router <Link> would drop ?ref=xray (attribution.js runs on page load)');
   assert.ok(!/\b(modal|dialog|popup|fixed inset)\b/i.test(offer), 'no popup');
   assert.match(offer, /Create a free account/);
-  assert.match(offer, /Start the free \{FREE_LEVEL_LABEL\} course/);
+  assert.match(offer, /Start \{FREE_LEVEL_LABEL\}: \{FREE_LEKTION_LABEL\} free/);
   // Figures come from marketing.js, never typed.
   assert.match(offer, /\{TRIAL_DAILY_LIMIT\}/);
   assert.match(offer, /\{TRIAL_DAYS\}/);

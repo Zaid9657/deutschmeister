@@ -1,0 +1,17 @@
+Use your image generation tool to make THREE separate pictures and save them as PNG files in the current working directory. Do not write code, do not build HTML or SVG, do not edit or create any other file. If image generation is not available to you, say so in one line and stop.
+
+References in the current directory (also attached): `otter-ref.png` (the character sheet) and `concept.png` (the approved lesson screens). Keep exactly this otter in all three pictures: grey river otter, cream chest and muzzle, small dark nose, whiskers, coral satchel worn across the body on a coral strap. Keep the same flat, softly textured illustration style and palette: dark teal, coral, warm cream, soft grey-blue.
+
+HARD RULE FOR ALL THREE: no text of any kind. No letters, no numbers, no signs with writing, no labels, no logos, no punctuation marks, no question marks, no watermark.
+
+PICTURE 1, save as `scene.png`
+Landscape, aspect ratio 4:3, full bleed, no border, no phone frame, no rounded corners.
+A hostel reception in an old German city. The otter has just arrived: it stands on the left in front of the wooden reception desk with a small teal suitcase beside it, looking up at the receptionist with a friendly, slightly shy smile. Behind the desk on the right stands a friendly bird receptionist (blue-grey and white, as in the references) wearing a coral scarf. On the desk: a brass desk bell. Background: a tall arched window with a soft view of old-town towers, a hanging lamp above the desk, a blank wooden board on the wall with no writing. Warm, calm, welcoming morning light. Both characters fully visible, with room around them so the picture can be cropped to a wide strip through its middle.
+
+PICTURE 2, save as `otter-thinking.png`
+Square 1:1. The otter alone, from the waist up, centred, one paw on its chin, eyes looking up to one side, thinking. Three short coral accent strokes near its head. Transparent background if you can produce one; otherwise a perfectly flat pure white background with no shadow, no ground and no texture.
+
+PICTURE 3, save as `otter-satisfied.png`
+Square 1:1. The otter alone, from the waist up, centred, eyes closed, a quiet content smile, head slightly raised, proud of the learner. Three short coral accent strokes near its head. Transparent background if you can produce one; otherwise a perfectly flat pure white background with no shadow, no ground and no texture.
+
+When all three files are saved, reply with one line per file: its name, its pixel size, and whether its background is transparent.

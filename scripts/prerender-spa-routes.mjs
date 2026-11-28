@@ -29,6 +29,7 @@ import {
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
   TRIAL_SPEAKING_SESSIONS,
+  FREE_LEKTION_LABEL,
   FREE_LEVEL_LABEL,
   PODCAST_EPISODE_COUNT,
   TRIAL_DAYS,
@@ -622,7 +623,7 @@ ${faqSection(PODCAST_FAQS)}
   <dl class="mx-auto grid max-w-4xl gap-3 px-5 py-8 sm:grid-cols-3" aria-label="Inspect the product">
     <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${GRAMMAR_TOPIC_COUNT}</dt><dd>Public grammar topics to inspect</dd></div>
     <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${LEVEL_COUNT}</dt><dd>Practice levels, with guided courses built in order</dd></div>
-    <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${FREE_LEVEL_LABEL}</dt><dd>The free first course · no account needed</dd></div>
+    <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${FREE_LEVEL_LABEL}</dt><dd>${FREE_LEKTION_LABEL} free · no account needed</dd></div>
   </dl>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
     <h2 class="${H_SECTION}">Who is behind DeutschMeister</h2>

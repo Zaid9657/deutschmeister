@@ -16,10 +16,12 @@ import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
+import { numberWordsToDigits } from '../src/lib/lesson/check.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
 import { CURRICULA, ALL_CURRICULA, curriculumFor, anyCurriculumFor } from '../src/data/curricula/index.js';
 import { writingTaskByKey, courseWritingTasks } from '../src/data/writingTasks.js';
+import { generatedCurriculum } from './helpers/generatedCheckpoint.mjs';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
   wortfeldCoverage, itemLexis, drawnLexis, drawnAssignment, loadExtraItems, loadPoolItems,
@@ -195,20 +197,18 @@ function addProducedVorgriffe(c, spec, n) {
 /**
  * n more examTeile claims for which their own Lektion has no surface (RULE 16).
  *
- * Only the Lesen family can be stripped, and that is a property of the schema, not a shortcut:
- * every Lektion is hard-gated to exactly two `hoeren.lines`, a `sprechen.readAloud` and a
- * `schreiben.taskKey`, so a Hören, Sprechen or Schreiben claim always has a surface — pulling
- * `links.listeningExercise` (what this mutation used to do) no longer removes one, which is
- * exactly the measurement artefact DaF review #7, MAJOR 3 is about. A reading surface is the link
- * alone, so nulling `links.readingOrder` on a Lektion that claims a Lesen Teil removes it for real.
- * Six Lektionen per level are in that state, far above any overshoot the ratchets can ask for.
+ * Change the text type beneath a backed writing claim while keeping its task surface.
+ * A1.1 no longer claims Lesen parts for links to outside exercises, so removing those links
+ * cannot plant an unbacked claim there. A Formular/Mitteilung mismatch exercises the format
+ * check at either level without depending on which reading labels the level advertises.
  */
 function unbackExamTeile(c, n) {
   let done = 0;
   for (const l of c.lektionen) {
     if (done >= n) break;
-    if (l.examTeile.some((t) => t.startsWith('Lesen')) && l.links.readingOrder !== null && l.links.readingOrder !== undefined) {
-      l.links.readingOrder = null;
+    const writing = l.examTeile.find((t) => t === 'Schreiben Teil 1' || t === 'Schreiben Teil 2');
+    if (writing && l.schreiben?.kind === (writing === 'Schreiben Teil 1' ? 'formular' : 'mitteilung')) {
+      l.schreiben.kind = writing === 'Schreiben Teil 1' ? 'mitteilung' : 'formular';
       done += 1;
     }
   }
@@ -252,8 +252,7 @@ test('rule 2: the 12 situations in order, can-dos in ich-Form, exam Teile from t
     assert.ok(l.examTeile.length >= 1 && l.examTeile.length <= 3);
     for (const t of l.examTeile) assert.ok(EXAM_TEILE.includes(t), t);
   });
-  const seen = new Set(L.flatMap((l) => l.examTeile));
-  assert.deepEqual([...EXAM_TEILE].filter((t) => !seen.has(t)), [], 'every one of the 11 Teile is rehearsed');
+  assert.ok(L.every(l => l.examTeile.every(t => !/^(?:Hören|Lesen) Teil/u.test(t))), 'dictation and dialogue reading stay general practice');
 });
 
 test('rule 3: every grammar slug is primary exactly once, in the taught order', () => {
@@ -263,11 +262,12 @@ test('rule 3: every grammar slug is primary exactly once, in the taught order', 
     assert.ok(l.grammarSlugs.length >= 1 && l.grammarSlugs.length <= 3);
     assert.ok(l.grammarSlugs.includes(l.primarySlug));
     for (const s of l.grammarSlugs) assert.ok(GRAMMAR_SLUGS.includes(s), s);
-    // A practice topic is either one of the twelve grammar slugs of the Lektion or a declared
-    // practice-only topic of the level — a pool topic with no rule card that is never primary
-    // („numbers“, the L2 Zahlwort items). Anything else is a typo or a mislabelled item.
+    // A practice topic is a grammar slug taught by now (by this Lektion or an earlier one: spiral
+    // review) or a declared practice-only topic of the level — a pool topic with no rule card that is
+    // never primary („numbers“, the L2 Zahlwort items). Anything else is a typo or a mislabelled item.
+    const taughtByNow = L.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs);
     for (const t of l.practiceRule.topics) {
-      assert.ok(l.grammarSlugs.includes(t) || PRACTICE_ONLY_A11.includes(t), t);
+      assert.ok(taughtByNow.includes(t) || PRACTICE_ONLY_A11.includes(t), t);
     }
     assert.ok(l.practiceRule.typedMin >= 3);
   }
@@ -352,7 +352,7 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
       assert.ok(Number.isInteger(i) && i >= 0 && i < l.dialog.lines.length, `Lektion ${l.nr}: index ${i}`);
     }
     const open = l.sprechen.open;
-    assert.ok(open.teil.startsWith('Sprechen') && l.examTeile.includes(open.teil));
+    assert.ok(open.teil.startsWith('Sprechen') && (open.teil === 'Sprechen üben' || l.examTeile.includes(open.teil)));
     assert.equal(open.hintWords.length, 3);
     if (open.missionOrder !== null) {
       assert.ok(open.missionOrder >= 1 && open.missionOrder <= 8);
@@ -732,7 +732,8 @@ test('rule 25: every A1.1 Lektion carries its four English twins, and bodyEn tea
 test('rule 25: a notice without bodyEn is reported by RULE 25, and by nothing else', () => {
   // The pool half is neutralised with a pool that is complete, so the one error is the mutation.
   const completePool = [{ id: 'x', explanationDe: 'x', explanationEn: 'x' }];
-  const c = clone();
+  // (The stand-in pool holds no reserved checkpoint tasks, so the papers are the generated ones.)
+  const c = generatedCurriculum(clone());
   c.lektionen[0].notice.bodyEn = '';
   const errors = validateCurriculum(c, undefined, completePool);
   assert.ok(failsWith(errors, 25), 'validateCurriculum did not report RULE 25');
@@ -745,12 +746,12 @@ test('rule 25: a notice without bodyEn is reported by RULE 25, and by nothing el
     (x) => { x.lektionen[10].notice.bodyEn = Array(81).fill('word').join(' '); },
     (x) => { x.lektionen[11].notice.bodyEn = 'A <b>bold</b> rule'; },
   ]) {
-    const m = clone();
+    const m = generatedCurriculum(clone());
     mutate(m);
     assert.ok(failsWith(validateCurriculum(m, undefined, completePool), 25), 'a missing or malformed twin was not reported');
   }
   // And the pool half: an item without explanationEn is reported with its id.
-  const poolErrors = validateCurriculum(clone(), undefined, [{ id: 'no-english-1', explanationDe: 'x', explanationEn: '' }]);
+  const poolErrors = validateCurriculum(generatedCurriculum(clone()), undefined, [{ id: 'no-english-1', explanationDe: 'x', explanationEn: '' }]);
   assert.ok(poolErrors.some((e) => e.startsWith(RULE25_POOL_PREFIX) && e.includes('no-english-1')), `pool half not reported: ${poolErrors.join(' | ')}`);
 });
 
@@ -770,6 +771,7 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     'a Schreiben taskKey that resolves to nothing': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l99'; },
     'a Schreiben taskKey pointing at another Lektion\'s task': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l03'; },
     'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['verb-haben']; },
+    'a practice topic only a later Lektion teaches': (c) => { c.lektionen[4].practiceRule.topics = [...c.lektionen[4].practiceRule.topics, 'possessive-articles']; },
     'a practice topic that is neither a grammar slug nor practice-only': (c) => { c.lektionen[1].practiceRule.topics = [...c.lektionen[1].practiceRule.topics, 'no-such-topic']; },
     'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
     'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },
@@ -1750,7 +1752,8 @@ test('rule 16: the question is whether the Lektion has a SURFACE for the Teil, n
   );
   // …and a Teil whose surface is really gone is still reported, per family.
   const gone = cloneOf(CURRICULUM_A11);
-  const lesen = gone.lektionen.find((l) => l.examTeile.some((t) => t.startsWith('Lesen')));
+  const lesen = gone.lektionen[3];
+  lesen.examTeile = ['Lesen Teil 2'];
   lesen.links.readingOrder = null;
   assert.ok(examTeileBacked(gone).some((o) => o.nr === lesen.nr && o.teil.startsWith('Lesen')));
   const stumm = cloneOf(CURRICULUM_A11);
@@ -1832,7 +1835,7 @@ for (const key of LEVEL_KEYS) {
       for (const t of l.examTeile) assert.ok(EXAM_TEILE.includes(t), t);
     });
     const seen = new Set(LL.flatMap((l) => l.examTeile));
-    assert.deepEqual([...EXAM_TEILE].filter((t) => !seen.has(t)), [], 'every one of the 11 SD1 Teile is rehearsed');
+    if (C.level !== 'a1.1') assert.deepEqual([...EXAM_TEILE].filter((t) => !seen.has(t)), [], 'every one of the 11 SD1 Teile is rehearsed');
   });
 
   test(`${spec.code}: every grammar slug of the level is primary exactly once, in the taught order`, () => {
@@ -1843,8 +1846,9 @@ for (const key of LEVEL_KEYS) {
       assert.ok(l.grammarSlugs.includes(l.primarySlug));
       for (const g of l.grammarSlugs) assert.ok(spec.grammarSlugs.includes(g), g);
       const practiceOnly = spec.practiceOnlyTopics || [];
+      const taughtByNow = LL.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs);
       for (const t of l.practiceRule.topics) {
-        assert.ok(l.grammarSlugs.includes(t) || practiceOnly.includes(t), t);
+        assert.ok(taughtByNow.includes(t) || practiceOnly.includes(t), t);
       }
       assert.ok(l.practiceRule.typedMin >= 3);
     }
@@ -1913,7 +1917,7 @@ for (const key of LEVEL_KEYS) {
         assert.ok(Number.isInteger(i) && i >= 0 && i < l.dialog.lines.length, `L${l.nr}: index ${i}`);
       }
       const open = l.sprechen.open;
-      assert.ok(open.teil.startsWith('Sprechen') && l.examTeile.includes(open.teil));
+      assert.ok(open.teil === 'Sprechen üben' || (open.teil.startsWith('Sprechen Teil ') && l.examTeile.includes(open.teil)));
       assert.equal(open.hintWords.length, 3);
       if (open.missionOrder !== null) {
         assert.ok(open.missionOrder >= 1 && open.missionOrder <= spec.missionCount);
@@ -2250,3 +2254,30 @@ test('the untaught-lexis gate is non-circular: the lexicon does not read the poo
   assert.ok(!after.has('honig'));
 });
 
+
+test('contact models in L2 and L6 use complete German numbers and L5 packing questions have relevant answers', () => {
+  for (const nr of [2, 6]) {
+    const lesson = CURRICULUM_A11.lektionen[nr - 1];
+    const phoneLines = lesson.dialog.lines.filter(x => /^Null /u.test(x.de) || /Telefonnummer ist/u.test(x.de));
+    assert.equal(phoneLines.length, 1);
+    for (const line of phoneLines) {
+      const digits = numberWordsToDigits(line.de).replace(/[^0-9]/g, '');
+      assert.match(digits, /^0(?:172|421)[0-9]{7}$/u);
+    }
+  }
+  const [l2, l5, l6] = [2, 5, 6].map(nr => CURRICULUM_A11.lektionen[nr - 1]);
+  assert.match(l2.dialog.lines[8].de, /Telefonnummer für das Formular/u);
+  // Tim's picture belongs to his room, matching the lesson's reading text.
+  assert.match(l5.dialog.lines[8].de, /^Wo ist mein Schlüssel.*Welche Farbe hat das Bild.*für dein Zimmer/u);
+  assert.match(l5.dialog.lines[9].de, /^Er ist hier.*Das Bild ist blau.*für mein Zimmer/u);
+  assert.match(l6.dialog.lines[6].de, /Telefonnummer vom Büro/u);
+});
+
+test('exam labels follow the practised format: price information is Part 2; invitations and dictation are general practice', () => {
+  assert.equal(CURRICULUM_A11.lektionen[3].sprechen.open.teil, 'Sprechen Teil 2');
+  for (const nr of [8, 12]) assert.equal(CURRICULUM_A11.lektionen[nr - 1].sprechen.open.teil, 'Sprechen üben');
+  assert.deepEqual(examTeileBacked(CURRICULUM_A11), []);
+  const c = structuredClone(CURRICULUM_A11);
+  c.lektionen[3].examTeile = ['Sprechen Teil 3', 'Hören Teil 2', 'Lesen Teil 2'];
+  assert.equal(examTeileBacked(c).filter(x => x.nr === 4).length, 3);
+});

@@ -1,3 +1,4 @@
+import CommandHelp from './CommandHelp.jsx';
 import GuidedMatchItem from './GuidedMatchItem.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Check, X } from 'lucide-react';
@@ -5,7 +6,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { matchOutcome } from '../../lib/lesson/check.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Display-order shuffle for the two columns (Fisher–Yates). This has no
@@ -46,7 +47,7 @@ export default function MatchItem(props) {
   return props.hintFirst ? <GuidedMatchItem {...props} /> : <LegacyMatchItem {...props} />;
 }
 
-function LegacyMatchItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
+function LegacyMatchItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', part = null }) {
   const [lang] = useLessonLang();
   const [deCol, setDeCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.de)));
   const [enCol, setEnCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.en)));
@@ -127,8 +128,9 @@ function LegacyMatchItem({ item, index, total, onResult, onNext, eyebrowKey = 's
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
+      <CommandHelp />
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('match.instructions', lang)}</p>

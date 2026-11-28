@@ -4,6 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import { AudioSourceBadge } from './DialogStage.jsx';
+import { inline } from './NoticeStage.jsx';
 import { t } from '../../lib/lesson/strings.js';
 
 // The per-mode review-card renderer, pulled out of src/pages/lesson/ReviewPage.jsx
@@ -55,6 +56,10 @@ export default function ReviewCard({
   const [failed, setFailed] = useState(null);
   useEffect(() => { setFailed(null); }, [content]);
   if (!content) return null;
+  // An empty typed answer is not an answer (the checkpoint's rule): it used to lock the card as wrong.
+  const canCheck = String(typed || '').trim().length > 0;
+  // A typed answer that was wrong is graded: „Knew it" beside it saved „wrong" all the same.
+  const missed = mode === 'typed' && verdict === false;
   const listen = async () => {
     const result = await onPlay();
     setFailed(result && result.ok === false ? result.reason || 'error' : null);
@@ -101,7 +106,7 @@ export default function ReviewCard({
           <p className="font-display text-xl text-ink">{content.back || content.front}</p>
           <form
             className="mt-4 flex flex-col gap-3 sm:flex-row"
-            onSubmit={(event) => { event.preventDefault(); onCheckTyped(); }}
+            onSubmit={(event) => { event.preventDefault(); if (canCheck) onCheckTyped(); }}
           >
             <label className="sr-only" htmlFor="review-answer">{t('review.inGerman', lang)}</label>
             <input
@@ -114,7 +119,7 @@ export default function ReviewCard({
               className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
               placeholder={t('review.typePlaceholder', lang)}
             />
-            {!revealed && <Button type="submit" className="sm:w-auto">{t('action.check', lang)}</Button>}
+            {!revealed && <Button type="submit" disabled={!canCheck} className="sm:w-auto">{t('action.check', lang)}</Button>}
           </form>
           {revealed && (
             <p className={`mt-3 flex items-center gap-2 text-sm font-bold ${verdict ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
@@ -127,7 +132,12 @@ export default function ReviewCard({
         <>
           <p className="font-display text-xl text-ink" lang="de">{content.front}</p>
           {content.detail && <p className="mt-1 text-sm text-graphite">{content.detail}</p>}
-          {revealed && content.back && <p className="mt-3 text-[0.9375rem] text-ink">{content.back}</p>}
+          {/* A rule card's back is the notice's text: its bold marks, and its English in English chrome. */}
+          {revealed && content.back && (
+            <p className="mt-3 text-[0.9375rem] text-ink" lang={lang !== 'de' && content.backEn ? 'en' : undefined}>
+              {inline(lang !== 'de' && content.backEn ? content.backEn : content.back)}
+            </p>
+          )}
         </>
       )}
 
@@ -137,12 +147,13 @@ export default function ReviewCard({
             {t(mode === 'say' ? 'review.sayReveal' : 'review.reveal', lang)}
           </Button>
         )}
-        {revealed && (
+        {revealed && missed && <Button onClick={() => onGrade(false)}>{t('action.next', lang)}</Button>}
+        {revealed && !missed && (
           <>
             <Button variant="secondary" onClick={() => onGrade(false)}>
               <X className="h-4 w-4" aria-hidden="true" /> {t('review.again', lang)}
             </Button>
-            <Button onClick={() => onGrade(verdict !== false)}>
+            <Button onClick={() => onGrade(true)}>
               <Check className="h-4 w-4" aria-hidden="true" /> {t('review.knew', lang)}
             </Button>
           </>

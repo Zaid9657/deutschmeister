@@ -12,6 +12,7 @@ import {
   wortfeldInputCoverage, wortfeldCoverage, noticeFormCoverage, missionlessLektionen,
   producedBeforeTaught, itemLexis, loadPoolItems, taughtUpTo, levelSpec, untaughtTokens,
 } from '../scripts/validate-curriculum.mjs';
+import { lessonDateFormat } from '../src/lib/lesson/strings.js';
 import { loadJsxModule } from './helpers/renderJsx.mjs';
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const pool = { items: loadPoolItems() };
@@ -47,11 +48,12 @@ function hooks() {
   };
 }
 const icons = new Proxy({}, { get: (_, name) => name });
-const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key });
+const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key, partEyebrow: (_part, name) => name });
 
 async function exercise(name, lang = 'de') {
   const state = hooks(); const results = []; let continued = 0;
   const stubs = {
+    './CommandHelp.jsx': { default: 'CommandHelp' },
     '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'),
     react: state.react, 'lucide-react': icons,
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
@@ -217,21 +219,57 @@ test('completion reports actual milestones, preserves the live next course and o
   // Live-next-course and existing checkout/access branches also run in course-certificate.test.
 });
 
-test('a certificate cannot render its completion claim or print action while progress is pending', async () => {
-  const state = hooks();
-  const Component = (await loadJsxModule('src/pages/CourseCertificatePage.jsx', {
+const certificate = async (state, { user = null, loading = false, lang = 'de', done = new Set(), completedAt = null } = {}) => (
+  (await loadJsxModule('src/pages/CourseCertificatePage.jsx', {
     react: state.react,
     'react-router-dom': { useParams: () => ({ level: 'a1.1' }), Link: 'Link', Navigate: 'Navigate' },
-    '../contexts/AuthContext': { useAuth: () => ({ user: null }) },
+    '../contexts/AuthContext': { useAuth: () => ({ user, loading }) },
+    '../lib/lesson/strings.js': { useLessonLang: () => [lang], lessonDateFormat }, '../hooks/useScreenTitle.js': { useScreenTitle: () => {} },
     '../data/courses/index.js': { courseFor: () => ({}) },
+    '../data/courseTests/index.js': { courseTestDescription: () => 'Adaptierter Kurstest.' },
     '../data/curricula/index.js': { curriculumFor: () => curriculum, curriculumPath },
     '../services/lessonService.js': { programKeyFor: () => 'a11_course' },
-    '../services/programProgress': { getProgramProgress: async () => new Set() },
-    '../lib/courseFlow.js': { flattenCourse: () => [], isComplete: () => false, courseComplete: () => '/complete', courseHome: () => '/course/a1.1' },
+    '../services/programProgress': { getProgramProgress: async () => done, getProgramCompletedAt: async () => completedAt },
+    '../lib/courseFlow.js': { flattenCourse: () => [], isComplete: () => false, courseCertificate: () => '/course/a1.1/certificate', courseComplete: () => '/complete', courseHome: () => '/course/a1.1' },
     '../components/ui/Button.jsx': { default: 'Button' }, '../components/FullPageRedirect.jsx': { default: 'Redirect' },
-  })).default;
-  const tree = state.render(Component, {});
-  assert.match(words(tree), /Kursfortschritt wird geprüft/);
-  assert.doesNotMatch(words(tree), /abgeschlossen hat|Drucken/);
-  assert.equal(node(tree, 'Link').props.to, '/course/a1.1');
+  })).default
+);
+
+test('a certificate cannot render its completion claim or print action while progress is pending', async () => {
+  for (const who of [{ user: { id: 'u1' } }, { loading: true }]) {
+    const state = hooks();
+    const tree = state.render(await certificate(state, who), {});
+    assert.match(words(tree), /Kursfortschritt wird geprüft/);
+    assert.doesNotMatch(words(tree), /abgeschlossen hat|Drucken/);
+    assert.equal(node(tree, 'Link').props.to, '/course/a1.1');
+  }
+});
+
+// MAJOR 5 (2026-11-25): a guest read „wird geprüft …" for ever, in German under English chrome, and the
+// certificate carried the day it was opened.
+test('a guest on the certificate page is told why and gets a way on, in the chrome language', async () => {
+  for (const [lang, said, other] of [['de', /Melden Sie sich an/, /Sign in/], ['en', /Sign in to open it/, /Melden|Anmelden|Kursfortschritt/]]) {
+    const state = hooks();
+    const tree = state.render(await certificate(state, { lang }), {});
+    assert.match(words(tree), said);
+    assert.doesNotMatch(words(tree), other, lang);
+    const door = node(tree, 'Button');
+    assert.equal(door.props.to, '/login');
+    assert.equal(door.props.state.from.pathname, '/course/a1.1/certificate', 'sign-in comes back here');
+    assert.equal(node(tree, 'Link').props.to, '/course/a1.1');
+  }
+});
+
+test('the certificate shows the day the last step was completed, in German, with the chrome around it in its own language', async () => {
+  const done = new Set(curriculumPath(curriculum).map((n) => n.id));
+  for (const lang of ['de', 'en']) {
+    const state = hooks();
+    const Component = await certificate(state, { user: { id: 'u1', email: 'a@example.test' }, lang, done, completedAt: '2026-10-03T12:00:00+00:00' });
+    state.render(Component, {});
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    const text = words(state.render(Component, {}));
+    assert.match(text, /abgeschlossen hat/);
+    assert.match(text, /3\. Oktober 2026/, 'never today\'s date when the data has one');
+    assert.match(text, lang === 'de' ? /Drucken/ : /Print \/ save as PDF/);
+  }
 });

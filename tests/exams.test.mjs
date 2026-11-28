@@ -485,6 +485,32 @@ test('the runner honours a per-part playsAllowed cap (Wave 4 PR D2)', () => {
   assert.match(runSrc, /const PLAYS_ALLOWED = 2;/, 'the default stays two plays for every mock that does not set the field');
   assert.match(runSrc, /const playsAllowed = part\.playsAllowed \?\? PLAYS_ALLOWED;/, 'MockListeningPart must resolve the per-part cap');
   assert.match(runSrc, /const canPlay = plays < playsAllowed;/, 'the play guard must read the resolved cap');
-  assert.match(runSrc, /Noch \$\{playsAllowed - plays\}× abspielbar/, 'the counter label must read the resolved cap');
+  assert.match(runSrc, /copy\.playsLeft\(playsAllowed - plays\)/, 'the counter label must read the resolved cap');
+  assert.match(runSrc, /playsLeft: \(n\) => `Noch \$\{n\}× abspielbar/, 'and say it');
   assert.ok(!/plays < PLAYS_ALLOWED|PLAYS_ALLOWED - plays/.test(runSrc), 'nothing may read the module constant directly once a part can override it');
+});
+
+test('a course final test cannot be passed with a section answered by one constant guess (sectionPasses, 2026-11-20)', async () => {
+  const { attemptVerdict, sectionGuessCeiling, scoreObjectiveSections, mergeListeningResult, verdictFor } = await import('../src/services/examScoring.js');
+  const { COURSE_TESTS } = await import('../src/data/courseTests/index.js');
+  for (const { mock, slug } of COURSE_TESTS) {
+    const items = mock.sections.flatMap((s) => s.parts.flatMap((p) => p.items || []));
+    if (!items.length) continue;
+    // The independent score's case: the first option everywhere, listening 7 of 10.
+    const first = Object.fromEntries(items.map((it) => [it.id, it.options[0].key]));
+    const guessed = mergeListeningResult(scoreObjectiveSections(mock, first), { score: 7, max: 10 });
+    const attempt = { score: guessed.score, max_score: guessed.maxScore, section_scores: guessed.sectionScores };
+    assert.equal(attemptVerdict(attempt, mock), 'nicht-bereit', `${slug}: a section passed by one constant answer`);
+    // Every answer right passes, as before.
+    const right = Object.fromEntries(items.map((it) => [it.id, it.answer]));
+    const known = mergeListeningResult(scoreObjectiveSections(mock, right), { score: 7, max: 10 });
+    assert.notEqual(attemptVerdict({ score: known.score, max_score: known.maxScore, section_scores: known.sectionScores }, mock), 'nicht-bereit', slug);
+    for (const section of mock.sections) assert.ok(sectionGuessCeiling(section) <= (section.parts.flatMap((p) => p.items || []).length || 0), slug);
+  }
+  // An attempt saved without section scores is judged by its percent alone.
+  const a11 = COURSE_TESTS.find((t) => t.slug === 'abschlusstest-a1-1').mock;
+  assert.equal(attemptVerdict({ score: 11, max_score: 18 }, a11), verdictFor(61, a11.passPercent));
+  for (const file of ['src/pages/Modelltest/ModelltestResult.jsx', 'src/lib/course/levelTestReconcile.js']) {
+    assert.match(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', file), 'utf8'), /attemptVerdict/, file);
+  }
 });

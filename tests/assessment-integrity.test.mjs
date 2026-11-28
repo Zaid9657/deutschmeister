@@ -221,9 +221,9 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Uhr / kosten / 20 Euro]', 'Die Uhr kostet 20 Euro.')), 'Die Uhr');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / feiern / unser / Fest]', 'Wir feiern unser Fest.')), 'Wir');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / sammeln / die Flaschen]', 'Wir sammeln die Flaschen.')), 'Wir');
-  // Nothing competes for the opening: a copula's predicate, a pronoun object with its prefix.
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), null);
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), null);
+  // Live Batch 1 + #229/X-041: keep 'Ich' cues; „Lehrer bin ich.“ and „Dich rufe ich an.“ are valid German.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), 'Ich');
   // …nor an imperative (its verb opens it), nor two constituents read as one phrase.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [machen / die Tür / auf]', 'Mach die Tür auf!')), null);
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [Ana / kaufen / den Kuchen / im Geschäft]', 'Ana kauft den Kuchen im Geschäft.')), null);
@@ -267,7 +267,7 @@ test('writing grader: task fulfilment decides — off-topic and copied texts can
   const off = gateEvaluation(l10, 'Ich mag Pizza und Musik. Mein Hund heißt Max. Viele Grüße, Ana', model({ task: 0, structure: 5, accuracy: 5, vocabulary: 5 }, [false, false, false]));
   assert.equal(off.total_score, 0);
   // One Leitpunkt of three: task ≤ 2, total ≤ 8 — even when the model said task 4.
-  const one = gateEvaluation(l10, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana', model({ task: 4, structure: 4, accuracy: 4, vocabulary: 4 }, [true, false, false]));
+  const one = gateEvaluation(l10, 'Guten Tag, Frau Ramos! Der Zug hat Verspätung. Viele Grüße, Ana', model({ task: 4, structure: 4, accuracy: 4, vocabulary: 4 }, [true, false, false]));
   assert.equal(one.scores.task, 2);
   assert.ok(one.total_score <= 8);
   // The task copied back scores 0, whatever the model said.
@@ -435,7 +435,10 @@ test('checkpoint and read-aloud audio use checked playback; an item read instead
   const { readFileSync } = await import('node:fs');
   const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(page, /\bplayLine\b/, 'no unchecked playback in an assessment');
-  assert.match(page, /<PlayButton[^>]*onFallback=\{\(\) => \{ setShownText\(true\); onReadInstead\(item\.id\); \}\}/);
+  // …and only until it is answered: a wrong answer could be taken out of the score afterwards (2026-11-25).
+  const audio = page.match(/<PlayButton lektionId=\{item\.lektionId\}[\s\S]*?\/>/)?.[0] || '';
+  assert.match(audio, /onPlayed=\{feedback \? undefined : \(\) => setHeard\(true\)\}/);
+  assert.match(audio, /onFallback=\{feedback \? undefined : \(\) => \{ setShownText\(true\); onReadInstead\(item\.id\); \}\}/);
   assert.match(page, /const scoredItems = useMemo\(\(\) => items\.filter\(\(i\) => !notHeard\.has\(i\.id\)\), \[items, notHeard\]\)/);
   assert.match(page, /scoreCheckpoint\(scoredItems, finalAnswers\)/, 'the result and the saved attempt leave it out');
   const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
@@ -496,14 +499,16 @@ test('assessment a11y: a checkpoint verdict takes focus, and the writing coverag
 });
 
 test('the course says what its final test is and what an account is for', async () => {
-  // Codex score review, 2026-10-08: „ends with the Start Deutsch 1 final test" (it is our shortened
-  // practice test in that format), and „sign up only to save your progress" (AI feedback needs it too).
+  // Course assessments describe their actual sections and own scoring rule, not the reference
+  // exam's format. Account disclosure must also include AI feedback, not only saving progress.
   const { readFileSync } = await import('node:fs');
   const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(home, /ends with the \{curriculum\.examName\} final test/);
-  assert.match(home, /ends with a shortened practice test in the \$\{curriculum\.examName\} format/);
+  assert.match(home, /courseTestDescription\(curriculum\.testSlug, lang\)/);
+  assert.doesNotMatch(home, /shortened practice test in the \$?\{curriculum\.examName\} format|im Format \$\{curriculum\.examName\}/);
   const { A11_META } = await import('../src/data/curricula/a11.meta.js');
-  assert.match(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
+  assert.match(A11_META.aboutEn, /Adapted course assessment: Listening \(15 min\), Reading \(15 min\), Writing \(10 min\)/);
+  assert.doesNotMatch(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
   assert.match(A11_META.aboutEn, /not an official exam/);
   assert.match(A11_META.aboutEn, /AI feedback/);
   assert.doesNotMatch(A11_META.aboutEn, /only if you want to save/);
@@ -515,7 +520,7 @@ test('the grader returns real booleans, and the read-aloud extra-word count reac
   const { gateEvaluation } = await import('../netlify/functions/evaluate-writing.mjs');
   const { writingTaskByKey } = await import('../src/data/writingTasks.js');
   const task = writingTaskByKey('goethe_a1', 'a11-l10');
-  const out = gateEvaluation(task, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana',
+  const out = gateEvaluation(task, 'Guten Tag, Frau Ramos! Der Zug hat Verspätung. Viele Grüße, Ana',
     { scores: { task: 1, structure: 4, accuracy: 4, vocabulary: 4 }, total_score: 13, leitpunkt_check: ['false', 'true', 'false'] });
   assert.deepEqual(out.leitpunkt_check, [false, true, false]);
   const { readFileSync } = await import('node:fs');

@@ -4,6 +4,7 @@ import { Trophy, Award, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { courseFor } from '../data/courses/index.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import CoursePrice from '../components/CoursePrice.jsx';
 import { stationFor, stationStatusLine, ticketLines } from '../data/offers.js';
@@ -21,6 +22,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 import FullPageRedirect from '../components/FullPageRedirect.jsx';
 import { localDoneIds } from '../lib/course/localProgress.js';
 import { useLessonLang } from '../lib/lesson/strings.js';
+import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import LangToggle from '../components/lesson/LangToggle.jsx';
 
 // The end of the path: the one screen that may celebrate (design rule 2 —
@@ -72,6 +74,7 @@ export default function CourseCompletePage() {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const de = lang === 'de';
+  useScreenTitle(`${de ? 'Kursabschluss' : 'Course completion'} ${String(level || '').toUpperCase()}`, lang);
   const { hasLevelAccess, loading: subLoading } = useSubscription() || {};
   const [done, setDone] = useState(() => user ? new Set() : localDoneIds(level));
   const [loaded, setLoaded] = useState(() => !user);
@@ -117,11 +120,36 @@ export default function CourseCompletePage() {
     if (!user) setBuyIntent(step.productKey);
   };
   const testSlug = curriculum ? curriculum.testSlug : course.testSlug;
-  const testFormat = curriculum ? curriculum.examName : course.testFormat;
+
+  // The card that is the learner's next step stands first and carries the primary button: the course while
+  // steps are open (the final test led here at 0 %), the test and the certificate once it is complete.
+  const testCard = (
+    <Reveal key="test">
+      <Card raised className="flex h-full flex-col p-5">
+        <h2 className="font-bold text-ink">{de ? 'Abschlusstest zum Kurs' : 'Final course assessment'}</h2>
+        <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{de ? 'Ein Übungstest zum Kurs. Das Ergebnis ist kein Goethe-/telc-Ergebnis.' : 'A practice test for this course. The result is not a Goethe or telc exam result.'} {courseTestDescription(testSlug, lang)}</p>
+        <Button to={`/modelltest/${testSlug}`} variant={complete ? 'primary' : 'secondary'} size="md" className="mt-4">{complete ? (de ? 'Test wiederholen' : 'Repeat the test') : (de ? 'Zum Abschlusstest' : 'Take the final test')} <ArrowRight className="ml-1 h-4 w-4" /></Button>
+      </Card>
+    </Reveal>
+  );
+  const certificateCard = (
+    <Reveal key="certificate" delay={60}>
+      <Card raised className="flex h-full flex-col p-5">
+        <h2 className="font-bold text-ink">{de ? 'Teilnahmebescheinigung' : 'Certificate of completion'}</h2>
+        <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{complete ? (de ? 'Ihre Teilnahme am Kurs, zum Drucken oder als PDF.' : 'Your course participation, ready to print or save as PDF.') : (de ? 'Verfügbar nach Abschluss des Lernpfads.' : 'Available when the path is complete.')}</p>
+        {complete ? (
+          <Button to={courseCertificate(level)} variant="primary" size="md" className="mt-4"><Award className="mr-1 h-4 w-4" /> {de ? 'Bescheinigung öffnen' : 'Open certificate'}</Button>
+        ) : (
+          <Button to={courseHome(level)} variant="primary" size="md" className="mt-4">{de ? 'Zurück zum Lernpfad' : 'Back to the path'}</Button>
+        )}
+      </Card>
+    </Reveal>
+  );
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
-      <div className="mx-auto max-w-2xl px-4 py-10">
+      {/* pt-20: the navbar is fixed (h-16); with py-10 it covered the language toggle at every width. */}
+      <div className="mx-auto max-w-2xl px-4 pb-10 pt-20 sm:pt-24">
         <div className="mb-4 flex justify-end"><LangToggle /></div>
         <div className="relative overflow-hidden rounded-clay">
           <Aurora />
@@ -144,24 +172,7 @@ export default function CourseCompletePage() {
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <Reveal>
-            <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">{de ? 'Abschlusstest' : 'Final test'} · {testFormat}</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{de ? 'Ein Übungstest zum Kurs. Das Ergebnis ist kein Goethe-/telc-Ergebnis.' : 'A practice test for this course. The result is not a Goethe or telc exam result.'}</p>
-              <Button to={`/modelltest/${testSlug}`} variant="primary" size="md" className="mt-4">{complete ? (de ? 'Test wiederholen' : 'Repeat the test') : (de ? 'Zum Abschlusstest' : 'Take the final test')} <ArrowRight className="ml-1 h-4 w-4" /></Button>
-            </Card>
-          </Reveal>
-          <Reveal delay={60}>
-            <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">{de ? 'Teilnahmebescheinigung' : 'Certificate of completion'}</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{complete ? (de ? 'Ihre Teilnahme am Kurs, zum Drucken oder als PDF.' : 'Your course participation, ready to print or save as PDF.') : (de ? 'Verfügbar nach Abschluss des Lernpfads.' : 'Available when the path is complete.')}</p>
-              {complete ? (
-                <Button to={courseCertificate(level)} variant="primary" size="md" className="mt-4"><Award className="mr-1 h-4 w-4" /> {de ? 'Bescheinigung öffnen' : 'Open certificate'}</Button>
-              ) : (
-                <Button to={courseHome(level)} variant="secondary" size="md" className="mt-4">{de ? 'Zurück zum Lernpfad' : 'Back to the path'}</Button>
-              )}
-            </Card>
-          </Reveal>
+          {complete ? [testCard, certificateCard] : [certificateCard, testCard]}
         </div>
 
         {curriculum && <div className="mt-6">

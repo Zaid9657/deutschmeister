@@ -128,8 +128,9 @@ import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
-  isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts,
+  isPoliteFormItem, thirdPersonCaseItem, minimalArticleCorrection, frontedAcceptedForms,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue, verbFirstCue, namedRepairAccepts, taskConstraintsEn,
+  middleFieldAcceptedForms, englishEchoesGerman, fullSentenceDe,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -295,9 +296,28 @@ raw.forEach(repairFrontedOrder);
 // `answer`/`accepted` are never touched.
 const openingCued = [];
 function repairOpeningCue(item) {
-  const opening = missingOpeningCue(item);
+  // A1.1: the opening of a yes/no question is the tested verb, so its cue is the verb's place. (A1.2's
+  // banks were reviewed with their openings; its build keeps them.)
+  if (level === 'a1.1') {
+    const place = verbFirstCue(item);
+    if (place !== null) {
+      if (place) {
+        const prompt = String(item.questionDe).replace(/\s*\(Beginnen Sie mit „[^“]*“\)/, '');
+        item.questionDe = /:\s*\[/.test(prompt) ? prompt.replace(/:\s*(?=\[)/, ` ${place}: `) : `${prompt} ${place}`;
+        openingCued.push({ id: item.id, questionDe: item.questionDe });
+      }
+      return;
+    }
+  }
+  // Live Batch 1 cues every statement/question; X-041's narrower detector
+  // still guards object shapes without treating two constituents as one.
+  const opening = missingOpeningCue(item, { allStatements: true });
   if (!opening) return;
-  item.questionDe = String(item.questionDe).replace(/:\s*(?=\[)/, ` (Beginnen Sie mit „${opening}“): `);
+  const prompt = String(item.questionDe);
+  const cue = ` (Beginnen Sie mit „${opening}“)`;
+  item.questionDe = /:\s*\[/.test(prompt)
+    ? prompt.replace(/:\s*(?=\[)/, `${cue}: `)
+    : `${prompt}${cue}`;
   openingCued.push({ id: item.id, questionDe: item.questionDe });
 }
 
@@ -510,9 +530,8 @@ const { kept, excluded, counts } = filterPool(raw, { level });
  * ignored: a stale entry here would otherwise outlive the item it is about.
  */
 const ACCEPTED_EXTRAS_BY_LEVEL = {
-  'a1.1': {
-    '827c155d-7b87-53a3-b047-d53ab532f296': ['zwanzig nach sechs', 'sechs Uhr zwanzig', 'zwanzig nach 6'],
-  },
+  // Its one entry („18:20, umgangssprachlich“) went with the item: the course teaches only halb and Viertel (quality.js, 2026-11-25).
+  'a1.1': {},
 };
 
 /** The widenings for the level being built — an id is only ever in one level. */
@@ -547,17 +566,18 @@ const flatten = (word) =>
  * Deterministic wrong spellings: umlaut/ß lost, a doubled letter lost, two
  * letters swapped, the penultimate letter dropped — the four mistakes a
  * beginner's dictation actually makes. A candidate that loses its last vowel
- * (Gruß → Grß) is thrown away: an obviously impossible word is not a distractor.
+ * (Gruß → Grß) or begins as no German word does (Danke → Dnake) is thrown away: an
+ * obviously impossible word is not a distractor. The swap then moves on by one letter (Dakne).
  */
+const BEGINS = /^(?:[aeiouäöü]|[b-df-hj-np-tv-z][aeiouäöüy]|(?:bl|br|ch|dr|fl|fr|gl|gn|gr|kl|kn|kr|pf|ph|pl|pr|ps|qu|sch|sk|sl|sm|sp|st|th|tr|ts|wr|zw))/i;
 function misspellings(word) {
-  const plausible = (c) => c !== word && c.length >= 3 && /[aeiouäöü]/i.test(c);
-  const chars = word.split('');
-  const i = Math.floor(chars.length / 2);
-  if (chars.length > 3) [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]];
+  const plausible = (c) => c !== word && c.length >= 3 && /[aeiouäöü]/i.test(c) && BEGINS.test(c);
+  const swapped = (i) => { const chars = word.split(''); [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]]; return chars.join(''); };
+  const i = Math.floor(word.length / 2);
   const candidates = [
     flatten(word),
     word.replace(/(.)\1/, '$1'),
-    chars.join(''),
+    word.length > 3 ? (plausible(swapped(i)) ? swapped(i) : swapped(i + 1)) : word,
     word.slice(0, -2) + word.slice(-1),
   ];
   return [...new Set(candidates.filter(plausible))].slice(0, 3);
@@ -859,10 +879,11 @@ let extra = [];
 if (existsSync(extraUrl)) {
   const parsed = JSON.parse(readFileSync(extraUrl, 'utf8'));
   extra = Array.isArray(parsed) ? parsed : parsed.items || [];
-  if (level === 'a1.2') {
-    const { ASSESSMENT_A12 } = await import('../src/data/lessonPools/a12.assessment.js');
-    extra.push(...ASSESSMENT_A12.map((item) => structuredClone(item)));
-  }
+  // The checkpoints' reserved tasks: in the pool, but no practice or remediation draw may serve them.
+  const reserved = level === 'a1.2'
+    ? (await import('../src/data/lessonPools/a12.assessment.js')).ASSESSMENT_A12
+    : (await import('../src/data/lessonPools/a11.assessment.js')).ASSESSMENT_A11;
+  extra.push(...reserved.map((item) => structuredClone(item)));
   // REVIEW #4 BLOCKER 2: the extras go through the same gate, so they get the
   // same repair — and because the repair skips any prompt that already carries
   // a bracket, an item whose author wrote the cue by hand is untouched.
@@ -1070,8 +1091,8 @@ const normalised = [...kept, ...supplement, ...extra].map(normaliseRegister).fil
 // Round 5 set `caseSensitive: true` on the three items it had found by hand,
 // and round 6 measured what a list costs: two items of exactly the same shape
 // never got it, so `Frau Müller, ___ sind sehr freundlich.` counted `sie` as a
-// typo — i.e. as CORRECT — while the identical `Frau Kaya, sprechen ___
-// Englisch?` marked it wrong. Two of the unflagged ones are items of the GRADED
+// typo — i.e. as CORRECT — while the identical `Herr Weber, sprechen ___
+// Englisch?` (then still addressed to Frau Kaya) marked it wrong. Two of the unflagged ones are items of the GRADED
 // Checkpoint 4, whose own rule card says the polite Ihr is "immer mit großem I".
 //
 // So the flag is DERIVED from the answer key here and the hand entry is kept as
@@ -1109,6 +1130,16 @@ for (const item of [...kept, ...supplement, ...extra]) {
   if (hand) caseHandFlagged.push(item.id);
   else if (derived) caseDerived.push({ id: item.id, topic: item.topic, answer: item.answer });
   if (hand || derived) item.caseSensitive = true;
+  // „Die Eltern lieben ___ Kinder. (sie, Plural)“: where the cue names „sie“, the capital is the polite „Ihre“, another person —
+  // no slip (Claude score, 2026-11-25). Inside the sentence only; at its start the capital is the sentence's.
+  if (thirdPersonCaseItem(item)) item.caseSensitive = true;
+  // (a) A gap inside the sentence takes the small letter the sentence has: a capital there is the case slip the checker
+  // gives a second try for, never a second right answer (Claude score, 2026-11-25: „Mach's gut und Schönen Tag noch!“).
+  const q = String(item.questionDe || '');
+  const at = q.indexOf('___');
+  if (item.type === 'fill_blank' && at > 0 && !/[.!?:]\s*„?$/.test(q.slice(0, at).trim()) && /^\p{Ll}/u.test(String(item.answer || '')) && !/(?:Substantiv|Nomen)/.test(q)) {
+    item.accepted = (item.accepted || []).filter((a) => a === item.answer || !(/^\p{Lu}/u.test(a) && a.toLocaleLowerCase('de') === item.answer));
+  }
 }
 
 // ── REVIEW #6 MAJOR 4: drop legacy items built on words the course never teaches ──
@@ -1286,6 +1317,9 @@ console.log(
 // none (measured 2026-10-19).
 const namedRepairDropped = [];
 for (const item of items) {
+  if (!namedRepairAccepts(item, item.answer)) {
+    throw new Error(`${item.id}: the model answer does not repair the named element`);
+  }
   if (!Array.isArray(item.accepted)) continue;
   const dropped = item.accepted.filter((a) => !namedRepairAccepts(item, a));
   if (!dropped.length) continue;
@@ -1298,6 +1332,56 @@ for (const item of items) {
 }
 if (namedRepairDropped.length) console.log(`named repairs: dropped ${namedRepairDropped.length} accepted entr(y/ies) that repair another element: ${namedRepairDropped.join('; ')}`);
 
+// Whole-sentence correction keys require an explicit production instruction.
+// Apply after all source repairs; never patch individual generated item ids.
+if (level === 'a1.1') for (const item of items) {
+  if (item.type !== 'error_correction' || (String(item.answer || '').match(/\p{L}+/gu) || []).length < 2) continue;
+  if (!item.questionDe.includes('Schreiben Sie den ganzen Satz.')) item.questionDe += ' Schreiben Sie den ganzen Satz.';
+  if (!String(item.questionEn || '').includes('Write the whole sentence.')) item.questionEn = [item.questionEn, 'Write the whole sentence.'].filter(Boolean).join(' ');
+}
+
+// Last: authored corrections and automatic cues have both reached their final
+// German wording. Carry every binding cue into the learner's English hint.
+for (const item of items) {
+  repairOpeningCue(item);
+  const constraints = taskConstraintsEn(item).filter((en) => !String(item.questionEn || '').includes(en));
+  if (constraints.length) item.questionEn = [item.questionEn, ...constraints].filter(Boolean).join(' ');
+}
+// The English line says in English what the item asks; it never repeats the German stem (2026-11-23
+// screen walk). A bank item gets its English in <level>.corrections.json, a template item in its template.
+const echoes = items.filter(englishEchoesGerman).map((it) => it.id);
+if (echoes.length) {
+  console.error(`${echoes.length} item(s) whose questionEn repeats the German stem — write their English: ${echoes.join(', ')}`);
+  process.exit(1);
+}
+
+// An explanation is a sentence, not a sum of forms (quality.js fullSentenceDe). A1.1 only: A1.2's
+// explanations are read with their own rebuild.
+if (level === 'a1.1') for (const item of items) item.explanationDe = fullSentenceDe(item.explanationDe);
+
+// 2026-10-25 re-evaluation (re-landed 2026-11-19): with every opening named, the phrases between the
+// finite verb and the final verb part may still stand in another licensed order (quality.js,
+// middleFieldOrders). The key GAINS those readings, never loses one; every order is printed here.
+const middleFieldRepaired = [];
+for (const item of items) {
+  const have = new Set([item.answer, ...(item.accepted || [])]);
+  const added = middleFieldAcceptedForms(item).filter((a) => !have.has(a));
+  if (!added.length) continue;
+  item.accepted = [...new Set([item.answer, ...(item.accepted || []), ...added])];
+  middleFieldRepaired.push(`${item.id}: ${added.filter((a) => /[.?]$/.test(a)).join(' | ')}`);
+}
+if (middleFieldRepaired.length) console.log(`middle field: ${middleFieldRepaired.length} item(s) gained licensed orders:\n  ${middleFieldRepaired.join('\n  ')}`);
+
+// A named opening is a task constraint, also after every expansion above.
+// Keep valid middle-field variants while removing old fronted keys that do
+// not perform the authored task. A1.1's source is the takeover scope.
+if (level === 'a1.1') for (const item of items) {
+  if (item.type !== 'sentence_building') continue;
+  const opening = item.questionDe?.match(/Beginnen Sie mit „([^“]+)“/u)?.[1];
+  if (!opening) continue;
+  if (!opensWith(item.answer, opening)) throw Error(item.id + ': model does not keep the required opening');
+  item.accepted = (item.accepted || [item.answer]).filter(answer => opensWith(answer, opening));
+}
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 // DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so
 // no checkpoint makes the learner type or say a dialogue line built on grammar taught later.
@@ -1395,3 +1479,12 @@ for (const [key, n] of [...minLektionHist].sort((a, b) => (a[0] === 'null') - (b
 console.log('items per topic:');
 for (const [topic, n] of [...perTopic].sort()) console.log(`  ${String(n).padStart(3)}  ${topic}`);
 console.log(`→ ${target.pathname}`);
+
+// The checker's list of course words (src/data/courseWords.js) is read from both pools and both
+// courses, so every pool build refreshes it; tests/checker-real-words.test.mjs fails when it is stale.
+{
+  const { courseWords, render } = await import('./build-course-words.mjs');
+  const words = courseWords();
+  writeFileSync(new URL('../src/data/courseWords.js', import.meta.url), render(words));
+  console.log(`→ src/data/courseWords.js (${words.length} course words for the checker)`);
+}

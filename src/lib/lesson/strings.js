@@ -1,5 +1,5 @@
-import { useCallback, useSyncExternalStore } from 'react';
-import { safeGet, safeSet } from '../../utils/safeStorage.js';
+import { DEFAULT_LESSON_LANG, normalizeLessonLang } from './lessonLang.js';
+import { SESSION_COUNT } from './sessions.js';
 
 // The lesson chrome's string table (Wave 1, 2026-09-19).
 //
@@ -29,28 +29,41 @@ import { safeGet, safeSet } from '../../utils/safeStorage.js';
 // German in both tables on purpose: they are the words the learner will meet
 // on the exam paper, so the chrome names them the way the exam does.
 
-export const LESSON_LANG_KEY = 'dm_lesson_lang';
-export const DEFAULT_LESSON_LANG = 'en';
-export const LESSON_LANGS = ['en', 'de'];
+// The flag itself lives in lessonLang.js, so a screen that needs the language and no string (the app shell) loads no table.
+export {
+  DEFAULT_LESSON_LANG, LESSON_LANG_KEY, LESSON_LANGS, normalizeLessonLang, readLessonLang, useLessonLang, writeLessonLang,
+} from './lessonLang.js';
 
 export const STRINGS = {
   en: {
+    'help.commandsArabic': 'Task commands · مساعدة بالعربية',
+    'checkpoint.exchange.title': 'A short personal conversation',
+    'checkpoint.exchange.lead': 'Try these few turns with the speaking coach, using your own details and without reading a model answer.',
+    'checkpoint.exchange.open': 'Open the speaking coach',
+    'checkpoint.exchange.back': 'Back to checkpoint',
+    'checkpoint.exchange.return': 'In the coach, use “Back to checkpoint”. Then reflect here on how it went.',
+    'checkpoint.exchange.self': 'I answered personally and asked a question without reading an answer.',
+    'checkpoint.exchange.honest': 'Your own self-check, not a conversation score. It does not change the checkpoint result.',
     'sound.correct': 'Yes, that matches the sound model.',
     'sound.correction': 'The sound model is: {answer}',
     "sound.title": "Listen, notice, then say it",
     "sound.lead": "Listen, check the sound model, then say the line aloud.",
     "sound.syllables": "Syllables: {syllables}",
     "sound.say": "Now say the line aloud.",
-    "read.title": "Read a short text",
+    "read.title": "Reading",
+    'read.correct': 'Yes, that is right.',
+    'read.correction': 'The answer is: {answer}',
     "fluency.title": "Say it again, from memory",
     "fluency.lead": "Use the familiar line for this situation. Take your time; this round has no practice score.",
-    "fluency.cue": "Scene {n} of {total}",
+    "fluency.cue": "From memory {n}/{total}",
     "fluency.show": "Show the line",
     "fluency.progress": "{n} of {total} said",
     "fluency.name": "Enter your name to reuse your introduction. The name stays only in this run.",
+    "fluency.surname": "Enter your surname only, to spell it again. It stays only in this run.",
 
     'scene.part': 'Lesson {nr} · Part {part} of {total}',
     'scene.chunk': 'Scene {n} of {total}',
+    'writing.editRetry': 'Edit and try again',
     'scene.hear': 'Hear and read',
     'scene.meaning': 'Check the meaning',
     'scene.say': 'Now you say it',
@@ -90,13 +103,14 @@ export const STRINGS = {
     // the German original, so it is named in German — the learner is looking
     // for the German, and „Deutsch" is the one word every learner already has.
     'lang.readOther': 'Auf Deutsch lesen',
+    'lang.explainArabic': 'Explain in Arabic · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Recording',
     'player.stepOf': 'Step {n} of {total}',
     'audio.playing': 'Playing …',
     'audio.slower': 'Slower',
-    'audio.retry': 'Try again',
+    'audio.retry': 'Try the sound again',
     'audio.showText': 'Show the text instead',
     'audio.skipItem': 'Skip — I cannot hear it',
     'audio.readInstead': 'You read this line instead of hearing it — it does not count as listening.',
@@ -114,29 +128,31 @@ export const STRINGS = {
     'audio.synthetic': 'Computer voice',
 
     // ── stage eyebrows and titles ────────────────────────────────────────────
-    'stage.warmup.eyebrow': 'Step 0 · Review',
+    // The stage's own name; StageShell and the item screens put its part in front (partEyebrow below).
+    'stage.part': 'Part {part} of {total}',
+    'stage.warmup.eyebrow': 'Review',
     'stage.warmup.title': 'A quick refresher',
-    'stage.pretest.eyebrow': 'Step 1 · Try first',
-    'stage.input.eyebrow': 'Step 2 · Input',
+    'stage.pretest.eyebrow': 'Try first',
+    'stage.input.eyebrow': 'Input',
     'stage.input.title': 'Dialogue',
-    'stage.wortfeld.eyebrow': 'Step 2 · Vocabulary',
+    'stage.wortfeld.eyebrow': 'Vocabulary',
     'stage.wortfeld.title': '{n} new words',
     'stage.wortfeld.lead': 'Tap a card for the translation, the speaker to hear it.',
-    'stage.notice.eyebrow': 'Step 3 · Grammar',
+    'stage.notice.eyebrow': 'Grammar',
     'stage.notice.examples': 'Examples from the dialogue',
-    'stage.phonetik.eyebrow': 'Step 3 · Pronunciation',
+    'stage.phonetik.eyebrow': 'Pronunciation',
     'stage.phonetik.title': 'Listen and repeat',
     'phonetik.listenFor': 'Stress falls on the capitalised syllable.',
     'phonetik.sayAfter': 'Say it after the voice',
     'phonetik.said': 'Said it',
-    'stage.practice.eyebrow': 'Step 4 · Practice {n}/{total}',
-    'stage.derived.eyebrow': 'Step 4 · More practice {n}/{total}',
-    'stage.dictation.eyebrow': 'Step 4 · Listening {n}/{total}',
-    'stage.speaking.eyebrow': 'Step 5 · Speaking',
+    'stage.practice.eyebrow': 'Practice {n}/{total}',
+    'stage.derived.eyebrow': 'More practice {n}/{total}',
+    'stage.dictation.eyebrow': 'Listening {n}/{total}',
+    'stage.speaking.eyebrow': 'Speaking',
     'stage.speaking.title': 'Repeat first, then speak freely',
-    'stage.writing.eyebrow': 'Step 6 · Writing',
-    'stage.requeue.eyebrow': 'Step 7 · Try again {n}/{total}',
-    'stage.recap.eyebrow': 'Step 8 · Recap',
+    'stage.writing.eyebrow': 'Writing',
+    'stage.requeue.eyebrow': 'Try again {n}/{total}',
+    'stage.recap.eyebrow': 'Recap',
     'stage.recap.title': 'Lesson complete',
 
     // ── pretest ──────────────────────────────────────────────────────────────
@@ -145,7 +161,7 @@ export const STRINGS = {
     'pretest.note': "Haven't learned this yet? That's the point. The attempt counts, not the score.",
     'pretest.model': 'Model answer',
     'pretest.goodStart': 'Your sentence already starts off right.',
-    'pretest.first.eyebrow': 'Step 1 · Your first sentence',
+    'pretest.first.eyebrow': 'Your first sentence',
     'pretest.first.listen': 'Listen and read',
     'pretest.first.yourTurn': 'Now you — with your own name',
     'pretest.first.again': 'Once more, without looking',
@@ -165,6 +181,8 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Show all English',
     'wortfeld.hideAllEnglish': 'Hide all English',
+    'wortfeld.memory': 'Try from memory',
+    'wortfeld.memoryLead': 'Say the German word to yourself, then tap the card to check.',
     'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: computer voice',
     'wortfeld.audioBadge.recordings': 'Audio: recordings',
@@ -202,6 +220,8 @@ export const STRINGS = {
 
     'feedback.correct': 'Correct!',
     'feedback.typo': 'Almost — just a typo',
+    // Written by Codex (round 4 of the loop): a typo of capitals only says what it is.
+    'feedback.typo.case': 'In German, sentences and all nouns start with a capital letter.',
     'feedback.corrected': 'Done — after a second try',
     'feedback.wrong': 'Not yet',
     'feedback.revealed': 'Here is the answer',
@@ -248,7 +268,12 @@ export const STRINGS = {
     'writing.words': 'words',
     'writing.target': 'Target {min}–{max}',
     'writing.checklist': 'Checklist',
+    'writing.row.length': '{range} words',
+    'writing.row.anrede': 'Greeting',
+    'writing.row.gruss': 'Sign-off',
     'writing.formcheckLive': 'Form check: only the form (length, points, greeting and sign-off) — not a grade yet.',
+    // A Formular has no length, Leitpunkte, greeting or sign-off: its check is per field (writing.js scoreWriting).
+    'writing.formcheckLive.formular': 'Form check: only the form (every field filled in, and a name, a country, a time, a number and so on where the field asks for one) — not a grade yet.',
     'writing.done': 'done',
     'writing.missing': 'still missing',
     'writing.signInForAi': 'Sign in to get an AI assessment.',
@@ -258,7 +283,7 @@ export const STRINGS = {
     'writing.quotaUsed': 'Your AI assessment allowance is used up. Form check, no AI assessment.',
     'writing.unreachable': "Form check, no AI assessment — the grader wasn't reachable just now.",
     'writing.offline': 'Form check, no AI assessment — no connection to the grader.',
-    'writing.assessmentNote': 'An assessment by exam criteria — not an official grade.',
+    'writing.assessmentNote': 'Assessment with our course practice rubric — not official exam scoring.',
     'writing.remaining': ' {n} AI assessments left.',
     'writing.criteria.task': 'Task',
     'writing.criteria.structure': 'Structure',
@@ -274,10 +299,14 @@ export const STRINGS = {
     'writing.corrections': 'Corrections',
     'writing.sample': 'Sample text',
     'writing.fallbackNote': "This checklist only checks the form (length, points, greeting and sign-off). It doesn't correct your German.",
+    'writing.fallbackNote.formular': "This checklist only checks the form (every field filled in, and a name, a country, a time, a number and so on where the field asks for one). It doesn't correct your German.",
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % on the first try',
     'recap.canDo.title': 'What you can do now',
+    'recap.canDo.inCheck.written': 'Shown in the final check, in writing.',
+    'recap.canDo.inCheck.spoken': 'Shown in the final check, by speaking or in writing.',
+    'recap.canDo.notInCheck': 'Not shown in the final check yet.',
     'recap.canDo.next': 'It comes back for review on {date}. The checkpoint at the end of this chapter then checks the chapter again, with new tasks.',
     'recap.canDo.due': 'Your lesson cards are ready for review now. The checkpoint at the end of this chapter checks the chapter again, with new tasks.',
     'recap.canDo.unscheduled': 'Your review date will be available after the lesson cards are saved to your account. The checkpoint at the end of this chapter checks the chapter again, with new tasks.',
@@ -300,19 +329,19 @@ export const STRINGS = {
     'recap.skill.speaking.self-confirmed': 'Read aloud and confirmed by you — not measured',
     'recap.skill.speaking.skipped': 'Skipped — nothing recorded',
     'recap.skill.writing': 'Writing',
-    'recap.skill.writing.assessed': 'AI-assessed: {pct} % on the four exam criteria',
+    'recap.skill.writing.assessed': 'AI-assessed: {pct} % on the four course practice criteria',
     'recap.skill.writing.self-checked': 'Checked with the checklist only — not assessed',
     'recap.skill.writing.self-checked-limit': 'Checked with the checklist only — today’s AI assessments are used up',
     'recap.skill.writing.skipped': 'Not reached',
     'recap.done': 'Done. The lesson counts at any score — what wobbled today comes back for review.',
 
     // ── go deeper (recap) ────────────────────────────────────────────────────
-    'recap.coverage.noListening': 'There is no extra listening exercise for this Lektion yet; its listening practice is the dialogue and the dictation.',
-    'recap.coverage.noReading': 'There is no reading text for this Lektion yet.',
+    'recap.coverage.noListening': 'There is no extra listening exercise for this lesson yet; its listening practice is the dialogue and the dictation.',
+    'recap.coverage.noReading': 'There is no reading text for this lesson yet.',
     'recap.goDeeper.title': 'Go deeper',
-    'recap.goDeeper.listening': 'Listening exercise for this Lektion',
-    'recap.goDeeper.reading': 'Reading text for this Lektion',
-    'recap.goDeeper.speaking': 'Speaking mission for this Lektion',
+    'recap.goDeeper.listening': 'Listening exercise for this lesson',
+    'recap.goDeeper.reading': 'Reading text for this lesson',
+    'recap.goDeeper.speaking': 'Speaking mission for this lesson',
     'recap.follow.title': 'German in your feed',
     'recap.follow.body': 'One post a day: the sentence of the day, a common mistake, an exam fact.',
 
@@ -323,9 +352,9 @@ export const STRINGS = {
 
     // ── milestone card (course home) ─────────────────────────────────────────
     'milestone.day1.title': 'Day 1 — you started',
-    'milestone.day1.body': 'The first Lektion is the hardest one to begin. It is done.',
+    'milestone.day1.body': 'The first lesson is the hardest one to begin. It is done.',
     'milestone.day7.title': '7 days — this is a habit now',
-    'milestone.day7.body': 'A week of German, one Lektion at a time.',
+    'milestone.day7.body': 'A week of German, one lesson at a time.',
     'milestone.day30.title': '30 days — a month of German',
     'milestone.day30.body': 'A month of showing up. That is how a language gets learned.',
     'milestone.dismiss': 'Dismiss',
@@ -391,7 +420,9 @@ export const STRINGS = {
     'checkpoint.notScored': ' · not scored',
     'checkpoint.sectionAria': '{name}: {pct} percent',
     'checkpoint.sectionBelow': 'Below {pct} % — this part needs another go.',
-    'checkpoint.sectionGuess': 'No more than the same answer everywhere would get — read the texts again.',
+    'checkpoint.sectionGuess': 'No more than the same answer everywhere would get.',
+    'checkpoint.sectionGuess.lesen': 'No more than the same answer everywhere would get — read the texts again.',
+    'checkpoint.sectionGuess.hoeren': 'No more than the same answer everywhere would get — listen to the lines again.',
     'checkpoint.sectionRealTask': 'The writing task itself did not pass — the two short exercises cannot make up for it.',
     'checkpoint.assessed': 'Assessed this time: {list}.',
     'checkpoint.partlyAssessed': 'Partly assessed: {list} — only the measured tasks count.',
@@ -399,7 +430,8 @@ export const STRINGS = {
     'checkpoint.drillsOnly': 'Schreiben counted only the two sentence exercises — your text was not graded.',
     'checkpoint.readInstead': 'Shown as text — this item does not count toward your score.',
     'checkpoint.saveFailed': 'Not saved to your account yet. Your result is shown here; the course page also completes a saved pass.',
-    'checkpoint.intro': "20 tasks from {sections} — in the format of your exam. The test draws on this chapter's lessons and revisits grammar from earlier chapters.",
+    'checkpoint.intro.heard': "20 tasks from {sections} — an adapted course assessment, not an exam simulation. Listening uses dictation and short texts you hear with a question; reading uses short texts; language tasks practise grammar; writing includes sentence drills and a separate writing task; speaking is read-aloud. The course pass rules shown here are not official exam scoring. The test draws on this chapter's lessons and revisits grammar from earlier chapters.",
+    'checkpoint.intro': "20 tasks from {sections} — an adapted course assessment, not an exam simulation. Listening uses dictation and word recognition; reading uses short texts; language tasks practise grammar; writing includes sentence drills and a separate writing task; speaking is read-aloud. The course pass rules shown here are not official exam scoring. The test draws on this chapter's lessons and revisits grammar from earlier chapters.",
     'checkpoint.passRule': 'Pass from {overall} % overall and at least {section} % in every scored part — more than answering the same option everywhere would get. A graded writing task must pass by itself.',
     'checkpoint.blocked': 'No attempts left in this window. Open again from {time}.',
     'checkpoint.remaining': '{remaining} of {limit} attempts left in {hours} hours.',
@@ -411,12 +443,34 @@ export const STRINGS = {
     'checkpoint.correctOf': '{correct} of {total} scored tasks correct',
     'checkpoint.whyTitle': 'What it came down to',
     'checkpoint.nextLesson': 'Continue: Lesson {nr}',
+    'checkpoint.finalTest': 'Continue: final test',
+    'checkpoint.alreadyPassed': 'You have passed this checkpoint. You can take it again; the pass stays.',
+    'checkpoint.repeatLessons': 'The lessons of this chapter:',
+    'checkpoint.practiceChip': 'Practice',
     'checkpoint.practiceFirst': 'Practise first',
-    'checkpoint.practiceLead': "{n} tasks on exactly the topics that didn't stick. Then take the checkpoint again.",
+    'checkpoint.practiceMore': 'Grammar practice',
+    'checkpoint.practiceLead.targeted': '{n} tasks on the grammar topics you missed. Then take the checkpoint again.',
+    'checkpoint.practiceLead.mixed': '{n} tasks: {k} on the grammar topics you missed, the others on other grammar of this checkpoint. Then take the checkpoint again.',
+    'checkpoint.practiceLead.chapter': '{n} tasks on the grammar of this checkpoint.',
+    'checkpoint.practiceLead.missing': 'Not included: {list}. For that, repeat the lessons named above.',
+
+    // ── what a missed task came down to (check.js ERROR_TAGS; parts of the test keep their German names) ──
+    'errorTag.Artikel': 'Article',
+    'errorTag.Kasus': 'Case',
+    'errorTag.Verbstellung': 'Word order',
+    'errorTag.Konjugation': 'Verb form',
+    'errorTag.Plural': 'Plural',
+    'errorTag.Rechtschreibung': 'Spelling',
+    'errorTag.Wortschatz': 'Vocabulary',
+    'errorTag.Aussprache': 'Pronunciation',
+    'errorTag.Hören': 'Hören',
+    'errorTag.Lesen': 'Lesen',
+    'errorTag.Schreiben': 'Schreiben',
 
     // ── Landeskunde (checkpoint result) ─────────────────────────────────────
     'landeskunde.eyebrow': 'Cultural note',
     'landeskunde.source': 'Source:',
+    'landeskunde.commonKnowledge': 'common knowledge',
 
     // ── review ───────────────────────────────────────────────────────────────
     'review.title': 'Review',
@@ -424,6 +478,7 @@ export const STRINGS = {
     'review.loading': 'Loading …',
     'review.nothingDue': 'Nothing is due today.',
     'review.signIn': 'Sign in so your reviews are saved.',
+    'review.signInLink': 'Sign in',
     'review.mode.flashcard': 'Card',
     'review.mode.listening': 'Listening',
     'review.mode.typed': 'Writing',
@@ -444,6 +499,57 @@ export const STRINGS = {
     'session.continue': 'Continue with part {next}',
     'session.later': 'Stop for today — continue here next time',
     'session.saved': 'Your place is saved. Short, regular sessions are how this sticks.',
+    // ── the otter's lines (written by Codex, 2026-11-17; the founder judges them by playing) ──
+    'otter.retry': 'Not quite yet. You have one more try.',
+    'otter.unclear': 'You practised saying the line aloud. We couldn’t clearly recognise the words in this recording.',
+    'otter.pause.1': 'You’ve finished the first part. Your place is saved, so you can take a break.',
+    'otter.pause.2': 'You’ve completed two parts already. Take a break if you need one—your place is saved.',
+    'otter.end': 'You made time for German and completed lesson {nr}. Take a moment to feel proud of what you’ve practised.',
+    'otter.back': 'Welcome back. Your place is saved; take a moment to settle in.',
+    // The final check (2026-11-18). The otter's lines are Codex's, from the founder's words. Each check's
+    // opening and passed line belong to its Lektion (`guided.check.open`/`passed` in the curriculum, 2026-11-19).
+    'otter.check.missed': 'Take a moment to look at the answer. Then we’ll carry on together.',
+    'otter.check.notYet': 'Revisit {part} when you’re ready. You can try the check again now or go on to {next}.',
+    // What {next} names: the real next step on the course path (finalCheck.nextAfter).
+    'check.next.lektion': 'Lesson {nr}',
+    'check.next.checkpoint': 'the checkpoint',
+    'check.next.test': 'the final test',
+    'recap.canDo.notYet': 'Still to practise',
+    // The first and latest recording (2026-11-18); title and labels by Codex.
+    'recap.voices.title': 'You spoke German today. Take a moment to listen to yourself.',
+    'recap.voices.first': 'Your first recording',
+    'recap.voices.latest': 'Your latest recording',
+    'recap.voices.device': 'These recordings stay only on this device and are deleted after 7 days.',
+    'recap.voices.delete': 'Delete now',
+    'check.eyebrow': 'Final check {n}/{total}',
+    'check.eyebrow.done': 'Final check',
+    // Read by a screen reader beside a shown can-do, whose tick is only an icon; „Still to practise“ is the other.
+    'check.shown': 'Shown',
+    'check.title': 'What you showed',
+    'check.typeInstead': 'Type instead',
+    'check.letters': 'Show the letters as words',
+    'check.notHeard': 'Correct — practised without successful audio playback; not counted as listening evidence.',
+    'check.practised': 'Correct — practised with the letters shown; not counted as independent evidence.',
+    'check.again': 'Try the check again',
+    'check.goOn': 'Go on',
+    'check.and': ' and ',
+    'check.example': 'For example',
+    'check.beyond': 'We could not check this wording. Please answer once more, starting with the words below.',
+    'check.beyond.end': 'We could not check this wording either. This is the answer of the lesson:',
+    'check.beyond.started': 'Your beginning is right. We could not check the rest. This lesson says it like this:',
+    'check.fault.german': 'Answer in German.',
+    'check.fault.address': 'Check the form of address: informal or polite?',
+    'check.fault.article': 'Check the little word before the noun (der, die, das, ein, mein …) and its ending.',
+    'check.fault.verb': 'Check the verb and its ending.',
+    'check.fault.order': 'Check the order of the words.',
+    'check.fault.missing': 'A word is missing.',
+    'check.fault.extra': 'There is one word too many.',
+    'check.fault.word': 'One word does not fit here.',
+    'check.fault.task': 'Read the task once more.',
+    'check.fault.sentence': 'Answer in a whole sentence.',
+    'check.fault.spelling': 'Listen again and check each letter.',
+    'check.fault.heard': 'Listen once more.',
+    'check.unchecked': 'The rest of your sentence is right. The course does not know „{word}“, so this word and its article were not checked.',
     'review.roundDone': 'This round is done',
     'review.moreDue': '{n} more cards are due today — a few minutes.',
     'review.nextRound': 'Next round',
@@ -452,22 +558,34 @@ export const STRINGS = {
   },
 
   de: {
+    'help.commandsArabic': 'Aufgaben verstehen · مساعدة بالعربية',
+    'checkpoint.exchange.title': 'Ein kurzes persönliches Gespräch',
+    'checkpoint.exchange.lead': 'Üben Sie diese wenigen Gesprächsschritte mit dem Sprechcoach: mit Ihren eigenen Angaben und ohne eine Musterantwort abzulesen.',
+    'checkpoint.exchange.open': 'Sprechcoach öffnen',
+    'checkpoint.exchange.back': 'Zurück zum Checkpoint',
+    'checkpoint.exchange.return': 'Wählen Sie im Coach „Zurück zum Checkpoint“. Schätzen Sie danach hier ein, wie es ging.',
+    'checkpoint.exchange.self': 'Ich habe persönlich geantwortet und eine Frage gestellt, ohne eine Antwort abzulesen.',
+    'checkpoint.exchange.honest': 'Ihre eigene Einschätzung, keine Gesprächsnote. Das Checkpoint-Ergebnis bleibt davon unabhängig.',
     'sound.correct': 'Ja, das passt zur Lautvorlage.',
     'sound.correction': 'Die Lautvorlage ist: {answer}',
     "sound.title": "Hören, erkennen, nachsprechen",
     "sound.lead": "Hören Sie zu, prüfen Sie die Vorlage und sprechen Sie die Zeile nach.",
     "sound.syllables": "Silben: {syllables}",
     "sound.say": "Sprechen Sie die Zeile jetzt laut aus.",
-    "read.title": "Lesen Sie einen kurzen Text",
+    "read.title": "Lesen",
+    'read.correct': 'Ja, das stimmt.',
+    'read.correction': 'Richtig ist: {answer}',
     "fluency.title": "Noch einmal aus dem Gedächtnis",
     "fluency.lead": "Sagen Sie die bekannte Zeile für diese Situation. Lassen Sie sich Zeit; diese Runde zählt nicht zum Übungsergebnis.",
-    "fluency.cue": "Szene {n} von {total}",
+    "fluency.cue": "Aus dem Gedächtnis {n}/{total}",
     "fluency.show": "Zeile anzeigen",
     "fluency.progress": "{n} von {total} gesprochen",
     "fluency.name": "Geben Sie Ihren Namen für Ihre Vorstellung ein. Der Name bleibt nur in dieser Sitzung.",
+    "fluency.surname": "Geben Sie nur Ihren Nachnamen ein und buchstabieren Sie ihn noch einmal. Der Name bleibt nur in dieser Sitzung.",
 
     'scene.part': 'Lektion {nr} · Teil {part} von {total}',
     'scene.chunk': 'Szene {n} von {total}',
+    'writing.editRetry': 'Bearbeiten und erneut versuchen',
     'scene.hear': 'Hören und lesen Sie',
     'scene.meaning': 'Prüfen Sie die Bedeutung',
     'scene.say': 'Jetzt sprechen Sie',
@@ -504,13 +622,14 @@ export const STRINGS = {
     'lang.de': 'Deutsch',
     'lang.en': 'English',
     'lang.readOther': 'Auf Englisch lesen',
+    'lang.explainArabic': 'Auf Arabisch erklären · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Aufnahme',
     'player.stepOf': 'Schritt {n} von {total}',
     'audio.playing': 'Wird abgespielt …',
     'audio.slower': 'Langsamer',
-    'audio.retry': 'Noch einmal versuchen',
+    'audio.retry': 'Ton noch einmal versuchen',
     'audio.showText': 'Stattdessen den Text zeigen',
     'audio.skipItem': 'Überspringen — ich höre nichts',
     'audio.readInstead': 'Sie haben diese Zeile gelesen statt gehört — das zählt nicht als Hören.',
@@ -528,29 +647,30 @@ export const STRINGS = {
     'audio.synthetic': 'Computerstimme',
 
     // ── stage eyebrows and titles ────────────────────────────────────────────
-    'stage.warmup.eyebrow': 'Schritt 0 · Wiederholung',
+    'stage.part': 'Teil {part} von {total}',
+    'stage.warmup.eyebrow': 'Wiederholung',
     'stage.warmup.title': 'Kurz auffrischen',
-    'stage.pretest.eyebrow': 'Schritt 1 · Erst probieren',
-    'stage.input.eyebrow': 'Schritt 2 · Input',
+    'stage.pretest.eyebrow': 'Erst probieren',
+    'stage.input.eyebrow': 'Input',
     'stage.input.title': 'Dialog',
-    'stage.wortfeld.eyebrow': 'Schritt 2 · Wortfeld',
+    'stage.wortfeld.eyebrow': 'Wortfeld',
     'stage.wortfeld.title': '{n} neue Wörter',
     'stage.wortfeld.lead': 'Tippen Sie auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören.',
-    'stage.notice.eyebrow': 'Schritt 3 · Grammatik',
+    'stage.notice.eyebrow': 'Grammatik',
     'stage.notice.examples': 'Beispiele aus dem Dialog',
-    'stage.phonetik.eyebrow': 'Schritt 3 · Aussprache',
+    'stage.phonetik.eyebrow': 'Aussprache',
     'stage.phonetik.title': 'Hören und nachsprechen',
     'phonetik.listenFor': 'Die Betonung liegt auf der großgeschriebenen Silbe.',
     'phonetik.sayAfter': 'Sprechen Sie es nach der Stimme nach',
     'phonetik.said': 'Gesagt',
-    'stage.practice.eyebrow': 'Schritt 4 · Üben {n}/{total}',
-    'stage.derived.eyebrow': 'Schritt 4 · Mehr üben {n}/{total}',
-    'stage.dictation.eyebrow': 'Schritt 4 · Hören {n}/{total}',
-    'stage.speaking.eyebrow': 'Schritt 5 · Sprechen',
+    'stage.practice.eyebrow': 'Üben {n}/{total}',
+    'stage.derived.eyebrow': 'Mehr üben {n}/{total}',
+    'stage.dictation.eyebrow': 'Hören {n}/{total}',
+    'stage.speaking.eyebrow': 'Sprechen',
     'stage.speaking.title': 'Erst nachsprechen, dann frei sprechen',
-    'stage.writing.eyebrow': 'Schritt 6 · Schreiben',
-    'stage.requeue.eyebrow': 'Schritt 7 · Noch einmal {n}/{total}',
-    'stage.recap.eyebrow': 'Schritt 8 · Rückblick',
+    'stage.writing.eyebrow': 'Schreiben',
+    'stage.requeue.eyebrow': 'Noch einmal {n}/{total}',
+    'stage.recap.eyebrow': 'Rückblick',
     'stage.recap.title': 'Lektion geschafft',
 
     // ── pretest ──────────────────────────────────────────────────────────────
@@ -559,7 +679,7 @@ export const STRINGS = {
     'pretest.note': 'Noch nichts gelernt? Genau darum geht es. Der Versuch zählt, nicht die Note.',
     'pretest.model': 'Modellantwort',
     'pretest.goodStart': 'Ihr Satz fängt schon richtig an.',
-    'pretest.first.eyebrow': 'Schritt 1 · Ihr erster Satz',
+    'pretest.first.eyebrow': 'Ihr erster Satz',
     'pretest.first.listen': 'Hören und lesen',
     'pretest.first.yourTurn': 'Jetzt Sie – mit Ihrem eigenen Namen',
     'pretest.first.again': 'Noch einmal, ohne hinzusehen',
@@ -579,6 +699,8 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Alle Übersetzungen zeigen',
     'wortfeld.hideAllEnglish': 'Alle Übersetzungen verbergen',
+    'wortfeld.memory': 'Aus dem Gedächtnis',
+    'wortfeld.memoryLead': 'Sagen Sie das deutsche Wort leise, dann tippen Sie auf die Karte.',
     'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: Computerstimme',
     'wortfeld.audioBadge.recordings': 'Audio: Aufnahmen',
@@ -616,6 +738,7 @@ export const STRINGS = {
 
     'feedback.correct': 'Richtig',
     'feedback.typo': 'Fast — nur ein Tippfehler',
+    'feedback.typo.case': 'Im Deutschen werden Satzanfänge und alle Nomen großgeschrieben.',
     'feedback.corrected': 'Geschafft — im zweiten Anlauf',
     'feedback.wrong': 'Noch nicht',
     'feedback.revealed': 'Hier ist die Antwort',
@@ -662,7 +785,11 @@ export const STRINGS = {
     'writing.words': 'Wörter',
     'writing.target': 'Ziel {min}–{max}',
     'writing.checklist': 'Checkliste',
+    'writing.row.length': '{range} Wörter',
+    'writing.row.anrede': 'Anrede',
+    'writing.row.gruss': 'Gruß',
     'writing.formcheckLive': 'Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine Bewertung.',
+    'writing.formcheckLive.formular': 'Formcheck: nur die Form (jedes Feld ausgefüllt, und ein Name, ein Land, eine Uhrzeit, eine Zahl usw., wo das Feld danach fragt), noch keine Bewertung.',
     'writing.done': 'erledigt',
     'writing.missing': 'fehlt noch',
     'writing.signInForAi': 'Melden Sie sich an, um eine KI-Bewertung zu bekommen.',
@@ -672,7 +799,7 @@ export const STRINGS = {
     'writing.quotaUsed': 'Ihr Kontingent an KI-Bewertungen ist aufgebraucht. Formcheck, keine KI-Bewertung.',
     'writing.unreachable': 'Formcheck, keine KI-Bewertung — die Bewertung war gerade nicht erreichbar.',
     'writing.offline': 'Formcheck, keine KI-Bewertung — keine Verbindung zur Bewertung.',
-    'writing.assessmentNote': 'Einschätzung nach Prüfungskriterien — keine offizielle Bewertung.',
+    'writing.assessmentNote': 'Einschätzung nach unserem Kurs-Übungsraster — keine offizielle Prüfungsbewertung.',
     'writing.remaining': ' Noch {n} KI-Bewertungen frei.',
     'writing.criteria.task': 'Aufgabe',
     'writing.criteria.structure': 'Aufbau',
@@ -688,10 +815,14 @@ export const STRINGS = {
     'writing.corrections': 'Korrekturen',
     'writing.sample': 'Beispieltext',
     'writing.fallbackNote': 'Diese Checkliste prüft nur die Form (Länge, Punkte, Anrede und Gruß). Sie korrigiert Ihr Deutsch nicht.',
+    'writing.fallbackNote.formular': 'Diese Checkliste prüft nur die Form (jedes Feld ausgefüllt, und ein Name, ein Land, eine Uhrzeit, eine Zahl usw., wo das Feld danach fragt). Sie korrigiert Ihr Deutsch nicht.',
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % im ersten Versuch',
     'recap.canDo.title': 'Das können Sie jetzt',
+    'recap.canDo.inCheck.written': 'Im Abschlusscheck schriftlich gezeigt.',
+    'recap.canDo.inCheck.spoken': 'Im Abschlusscheck mündlich oder schriftlich gezeigt.',
+    'recap.canDo.notInCheck': 'Im Abschlusscheck noch nicht gezeigt.',
     'recap.canDo.next': 'Es kommt am {date} zur Wiederholung zurück. Der Checkpoint am Ende des Kapitels prüft das Kapitel dann noch einmal, mit neuen Aufgaben.',
     'recap.canDo.due': 'Ihre Lektionskarten sind jetzt zur Wiederholung fällig. Der Checkpoint am Ende des Kapitels prüft das Kapitel dann noch einmal, mit neuen Aufgaben.',
     'recap.canDo.unscheduled': 'Ihr Wiederholungstermin steht fest, sobald die Lektionskarten in Ihrem Konto gespeichert sind. Der Checkpoint am Ende des Kapitels prüft das Kapitel dann noch einmal, mit neuen Aufgaben.',
@@ -714,7 +845,7 @@ export const STRINGS = {
     'recap.skill.speaking.self-confirmed': 'Laut gelesen und von Ihnen bestätigt — nicht gemessen',
     'recap.skill.speaking.skipped': 'Übersprungen — nichts aufgenommen',
     'recap.skill.writing': 'Schreiben',
-    'recap.skill.writing.assessed': 'Von der KI bewertet: {pct} % nach den vier Prüfungskriterien',
+    'recap.skill.writing.assessed': 'Von der KI bewertet: {pct} % nach den vier Kurs-Übungskriterien',
     'recap.skill.writing.self-checked': 'Nur mit der Checkliste geprüft — nicht bewertet',
     'recap.skill.writing.self-checked-limit': 'Nur mit der Checkliste geprüft — die KI-Bewertungen für heute sind aufgebraucht',
     'recap.skill.writing.skipped': 'Nicht erreicht',
@@ -804,7 +935,9 @@ export const STRINGS = {
     'checkpoint.notScored': ' · nicht bewertet',
     'checkpoint.sectionAria': '{name}: {pct} Prozent',
     'checkpoint.sectionBelow': 'Unter {pct} % — dieser Teil muss noch einmal.',
-    'checkpoint.sectionGuess': 'Nicht mehr, als immer dieselbe Antwort ergäbe – lesen Sie die Texte noch einmal.',
+    'checkpoint.sectionGuess': 'Nicht mehr, als immer dieselbe Antwort ergäbe.',
+    'checkpoint.sectionGuess.lesen': 'Nicht mehr, als immer dieselbe Antwort ergäbe – lesen Sie die Texte noch einmal.',
+    'checkpoint.sectionGuess.hoeren': 'Nicht mehr, als immer dieselbe Antwort ergäbe – hören Sie die Sätze noch einmal.',
     'checkpoint.sectionRealTask': 'Die Schreibaufgabe selbst ist nicht bestanden – die zwei kurzen Übungen gleichen das nicht aus.',
     'checkpoint.assessed': 'Diesmal bewertet: {list}.',
     'checkpoint.partlyAssessed': 'Teilweise bewertet: {list} – nur die gemessenen Aufgaben zählen.',
@@ -812,9 +945,10 @@ export const STRINGS = {
     'checkpoint.drillsOnly': 'Beim Schreiben zählten nur die zwei Satzübungen – Ihr Text wurde nicht bewertet.',
     'checkpoint.readInstead': 'Als Text gezeigt — diese Aufgabe zählt nicht zu Ihrem Ergebnis.',
     'checkpoint.saveFailed': 'Noch nicht in Ihrem Konto gespeichert. Ihr Ergebnis steht hier; die Kursseite schließt einen gespeicherten Erfolg auch nachträglich ab.',
-    'checkpoint.intro': '20 Aufgaben aus {sections} — im Format Ihrer Prüfung. Der Test zieht aus den Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.',
+    'checkpoint.intro.heard': '20 Aufgaben aus {sections} — ein adaptierter Kurstest, keine Prüfungssimulation. Hören prüft Diktate und kurze Hörtexte mit einer Frage, Lesen kurze Texte, Sprachbausteine Grammatik. Schreiben enthält Satzübungen und eine eigene Schreibaufgabe; Sprechen ist Vorlesen. Es gelten die hier gezeigten Kurs-Bestehensregeln, keine offizielle Prüfungsbewertung. Der Test zieht aus den Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.',
+    'checkpoint.intro': '20 Aufgaben aus {sections} — ein adaptierter Kurstest, keine Prüfungssimulation. Hören prüft Diktate und Worterkennung, Lesen kurze Texte, Sprachbausteine Grammatik. Schreiben enthält Satzübungen und eine eigene Schreibaufgabe; Sprechen ist Vorlesen. Es gelten die hier gezeigten Kurs-Bestehensregeln, keine offizielle Prüfungsbewertung. Der Test zieht aus den Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.',
     'checkpoint.passRule': 'Bestanden ab {overall} % insgesamt und mindestens {section} % in jedem bewerteten Teil – mehr, als immer dieselbe Antwort ergäbe. Eine bewertete Schreibaufgabe muss selbst bestanden sein.',
-    'checkpoint.blocked': 'Keine Versuche mehr in diesem Zeitfenster. Wieder frei ab {time} Uhr.',
+    'checkpoint.blocked': 'Keine Versuche mehr in diesem Zeitfenster. Wieder frei ab dem {time} Uhr.',
     'checkpoint.remaining': 'Noch {remaining} von {limit} Versuchen in {hours} Stunden.',
     'checkpoint.limit': '{limit} Versuche pro {hours} Stunden.',
     'checkpoint.start': 'Checkpoint starten',
@@ -824,12 +958,33 @@ export const STRINGS = {
     'checkpoint.correctOf': '{correct} von {total} bewerteten Aufgaben richtig',
     'checkpoint.whyTitle': 'Woran es lag',
     'checkpoint.nextLesson': 'Weiter: Lektion {nr}',
+    'checkpoint.finalTest': 'Weiter: Abschlusstest',
+    'checkpoint.alreadyPassed': 'Diesen Checkpoint haben Sie bestanden. Sie können ihn noch einmal machen; er bleibt bestanden.',
+    'checkpoint.repeatLessons': 'Die Lektionen dieses Kapitels:',
+    'checkpoint.practiceChip': 'Übung',
     'checkpoint.practiceFirst': 'Zuerst üben',
-    'checkpoint.practiceLead': '{n} Aufgaben zu genau den Themen, die eben nicht saßen. Danach den Checkpoint noch einmal.',
+    'checkpoint.practiceMore': 'Grammatik üben',
+    'checkpoint.practiceLead.targeted': '{n} Aufgaben zu den Grammatikthemen mit Fehlern. Machen Sie danach den Checkpoint noch einmal.',
+    'checkpoint.practiceLead.mixed': '{n} Aufgaben: {k} zu den Grammatikthemen mit Fehlern, die anderen zur übrigen Grammatik dieses Checkpoints. Machen Sie danach den Checkpoint noch einmal.',
+    'checkpoint.practiceLead.chapter': '{n} Aufgaben zur Grammatik dieses Checkpoints.',
+    'checkpoint.practiceLead.missing': 'Nicht dabei: {list}. Wiederholen Sie dafür die Lektionen, die oben stehen.',
+
+    'errorTag.Artikel': 'Artikel',
+    'errorTag.Kasus': 'Kasus',
+    'errorTag.Verbstellung': 'Verbstellung',
+    'errorTag.Konjugation': 'Konjugation',
+    'errorTag.Plural': 'Plural',
+    'errorTag.Rechtschreibung': 'Rechtschreibung',
+    'errorTag.Wortschatz': 'Wortschatz',
+    'errorTag.Aussprache': 'Aussprache',
+    'errorTag.Hören': 'Hören',
+    'errorTag.Lesen': 'Lesen',
+    'errorTag.Schreiben': 'Schreiben',
 
     // ── Landeskunde (checkpoint result) ─────────────────────────────────────
     'landeskunde.eyebrow': 'Landeskunde',
     'landeskunde.source': 'Quelle:',
+    'landeskunde.commonKnowledge': 'allgemein bekannt',
 
     // ── review ───────────────────────────────────────────────────────────────
     'review.title': 'Wiederholen',
@@ -837,6 +992,7 @@ export const STRINGS = {
     'review.loading': 'Wird geladen …',
     'review.nothingDue': 'Heute ist nichts fällig.',
     'review.signIn': 'Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.',
+    'review.signInLink': 'Anmelden',
     'review.mode.flashcard': 'Karte',
     'review.mode.listening': 'Hören',
     'review.mode.typed': 'Schreiben',
@@ -857,6 +1013,51 @@ export const STRINGS = {
     'session.continue': 'Weiter mit Teil {next}',
     'session.later': 'Für heute aufhören – nächstes Mal geht es hier weiter',
     'session.saved': 'Ihr Platz ist gespeichert. Kurz und regelmäßig – so bleibt es hängen.',
+    'otter.retry': 'Noch nicht ganz. Sie können es noch einmal versuchen.',
+    'otter.unclear': 'Sie haben den Satz laut gesprochen und geübt. Wir konnten die Wörter in dieser Aufnahme nicht klar erkennen.',
+    'otter.pause.1': 'Sie haben den ersten Teil geschafft. Ihr Platz ist gespeichert, und Sie können eine Pause machen.',
+    'otter.pause.2': 'Sie haben schon zwei Teile geschafft. Machen Sie bei Bedarf eine Pause – Ihr Platz ist gespeichert.',
+    'otter.end': 'Sie haben sich Zeit für Deutsch genommen und Lektion {nr} abgeschlossen. Seien Sie stolz auf das, was Sie geübt haben.',
+    'otter.back': 'Willkommen zurück. Ihr Platz ist gespeichert; kommen Sie in Ruhe wieder an.',
+    'otter.check.missed': 'Schauen Sie sich die Antwort in Ruhe an. Dann machen wir gemeinsam weiter.',
+    'otter.check.notYet': 'Wiederholen Sie {part}, wenn Sie so weit sind. Sie können den Abschlusscheck gleich noch einmal versuchen oder mit {next} weitermachen.',
+    'check.next.lektion': 'Lektion {nr}',
+    'check.next.checkpoint': 'dem Checkpoint',
+    'check.next.test': 'dem Abschlusstest',
+    'recap.canDo.notYet': 'Zum Weiterüben',
+    'recap.voices.title': 'Sie haben heute Deutsch gesprochen. Hören Sie sich in Ruhe zu.',
+    'recap.voices.first': 'Ihre erste Aufnahme',
+    'recap.voices.latest': 'Ihre neueste Aufnahme',
+    'recap.voices.device': 'Diese Aufnahmen bleiben nur auf diesem Gerät und werden nach 7 Tagen gelöscht.',
+    'recap.voices.delete': 'Jetzt löschen',
+    'check.eyebrow': 'Abschlusscheck {n}/{total}',
+    'check.eyebrow.done': 'Abschlusscheck',
+    'check.shown': 'Gezeigt',
+    'check.title': 'Das haben Sie gezeigt',
+    'check.typeInstead': 'Lieber tippen',
+    'check.letters': 'Buchstaben als Wörter zeigen',
+    'check.notHeard': 'Richtig — ohne erfolgreiche Audiowiedergabe geübt; nicht als Hörnachweis gezählt.',
+    'check.practised': 'Richtig — mit eingeblendeten Buchstaben geübt; nicht als selbstständig gezeigt gezählt.',
+    'check.again': 'Check noch einmal',
+    'check.goOn': 'Weitermachen',
+    'check.and': ' und ',
+    'check.example': 'Zum Beispiel',
+    'check.beyond': 'Wir konnten diese Formulierung nicht prüfen. Antworten Sie bitte noch einmal und beginnen Sie mit den Wörtern unten.',
+    'check.beyond.end': 'Auch diese Formulierung konnten wir nicht prüfen. So antwortet die Lektion:',
+    'check.beyond.started': 'Ihr Anfang ist richtig. Den Rest konnten wir nicht prüfen. In der Lektion heißt es so:',
+    'check.fault.german': 'Antworten Sie auf Deutsch.',
+    'check.fault.address': 'Prüfen Sie die Anrede: vertraut oder höflich?',
+    'check.fault.article': 'Prüfen Sie das kleine Wort vor dem Nomen (der, die, das, ein, mein …) und seine Endung.',
+    'check.fault.verb': 'Prüfen Sie das Verb und seine Endung.',
+    'check.fault.order': 'Prüfen Sie die Reihenfolge der Wörter.',
+    'check.fault.missing': 'Ein Wort fehlt.',
+    'check.fault.extra': 'Ein Wort ist zu viel.',
+    'check.fault.word': 'Ein Wort passt hier nicht.',
+    'check.fault.task': 'Lesen Sie die Aufgabe noch einmal.',
+    'check.fault.sentence': 'Antworten Sie in einem ganzen Satz.',
+    'check.fault.spelling': 'Hören Sie noch einmal und prüfen Sie jeden Buchstaben.',
+    'check.fault.heard': 'Hören Sie noch einmal.',
+    'check.unchecked': 'Der Rest Ihres Satzes ist richtig. „{word}“ kennt der Kurs nicht; dieses Wort und sein Artikel wurden nicht geprüft.',
     'review.roundDone': 'Diese Runde ist geschafft',
     'review.moreDue': 'Heute sind noch {n} Karten dran – ein paar Minuten.',
     'review.nextRound': 'Nächste Runde',
@@ -865,8 +1066,10 @@ export const STRINGS = {
   },
 };
 
-/** 'en' or 'de'; anything else (a stale or tampered flag) is the default. */
-export const normalizeLessonLang = (value) => (LESSON_LANGS.includes(value) ? value : DEFAULT_LESSON_LANG);
+// ponytail: below half of the words recognised counts as "unclear"; tune once real recordings are reviewed.
+export const UNCLEAR_BELOW = 0.5;
+/** What a mic-scored line shows instead of a percentage: speech recognition is not a pronunciation grade. */
+export const speechLine = (pct, lang) => t(pct < UNCLEAR_BELOW ? 'otter.unclear' : 'speaking.said', lang);
 
 /**
  * One chrome string. Falls back to `en`, then to the key itself — a missing
@@ -883,6 +1086,14 @@ export function t(key, lang = DEFAULT_LESSON_LANG, vars = null) {
 }
 
 /**
+ * A stage header (2026-11-23): the stage's part of the Lektion (sessions.js) — the one numbering the
+ * player shows, the scene's header and the pause screens included — then the stage's own name. The
+ * old „Step 0–8“ numbers came from the legacy stage list and skipped the guided stages.
+ */
+export const partEyebrow = (part, name, lang = DEFAULT_LESSON_LANG) =>
+  (part ? `${t('stage.part', lang, { part, total: SESSION_COUNT })} · ${name}` : name);
+
+/**
  * The date formatter for the chrome language: de-DE in Deutsch-Modus, en-GB
  * otherwise (day first, like the German — the audience is learners of German,
  * not one English-speaking country).
@@ -890,61 +1101,17 @@ export function t(key, lang = DEFAULT_LESSON_LANG, vars = null) {
 export const lessonDateFormat = (lang, options) =>
   new Intl.DateTimeFormat(normalizeLessonLang(lang) === 'de' ? 'de-DE' : 'en-GB', options);
 
-// ── the persisted flag, shared by every screen that mounts the hook ──────────
-//
-// A module-level store rather than a context provider: the player, the
-// checkpoint and the review page are three separate routes, none wrapped by a
-// common course provider, and the toggle in one header must be reflected in
-// every stage component below it on the next render. useSyncExternalStore is
-// the React 18 way to subscribe to exactly that.
-
-const listeners = new Set();
-let current = null; // null = not read yet
-
-/** `?lang=de` / `?lang=en` on the URL wins once and is persisted from then on. */
-function fromQuery() {
-  try {
-    const v = new URLSearchParams(window.location.search).get('lang');
-    return LESSON_LANGS.includes(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
-export function readLessonLang() {
-  if (current !== null) return current;
-  if (typeof window === 'undefined') return DEFAULT_LESSON_LANG;
-  const q = fromQuery();
-  if (q) {
-    safeSet(LESSON_LANG_KEY, q);
-    current = q;
-  } else {
-    current = normalizeLessonLang(safeGet(LESSON_LANG_KEY));
-  }
-  return current;
-}
-
-export function writeLessonLang(next) {
-  const lang = normalizeLessonLang(next);
-  current = lang;
-  safeSet(LESSON_LANG_KEY, lang);
-  listeners.forEach((fn) => fn());
-  return lang;
-}
-
-const subscribe = (fn) => {
-  listeners.add(fn);
-  return () => listeners.delete(fn);
-};
-const getServerSnapshot = () => DEFAULT_LESSON_LANG;
-
-/**
- * [lang, setLang] — the chrome language of the lesson screens, persisted in
- * `dm_lesson_lang` through safeStorage (a blocked localStorage means "English
- * this session", never a crash). Default English (docs/language-strategy.md).
- */
-export function useLessonLang() {
-  const lang = useSyncExternalStore(subscribe, readLessonLang, getServerSnapshot);
-  const setLang = useCallback((next) => writeLessonLang(next), []);
-  return [lang, setLang];
-}
+// Optional help for recurring instructions; Arabic is isolated from German
+// content in CommandHelp. Owner's native reader reviews these short lines.
+export const TASK_COMMANDS_AR = [
+  ['Weiter', 'انتقل إلى الخطوة التالية بعد الانتهاء.'],
+  ['Zurück', 'ارجع إلى الخطوة السابقة.'],
+  ['Lesen', 'اقرأ النص بهدوء.'],
+  ['Hören', 'استمع أولًا، ثم أجب.'],
+  ['Ergänzen', 'اكتب الكلمة المناسبة في الفراغ.'],
+  ['Satz bilden', 'رتّب الكلمات، وابدأ بالكلمة المطلوبة.'],
+  ['Fragen', 'اطرح سؤالًا يناسب الموقف.'],
+  ['Sprechen', 'أجب بصوتك وبمعلوماتك.'],
+  ['Schreiben', 'اكتب جملًا كاملة عن المطلوب.'],
+  ['Prüfen', 'راجع إجابتك، ثم اضغط زر التحقّق.'],
+];

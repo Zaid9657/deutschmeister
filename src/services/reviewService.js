@@ -275,6 +275,7 @@ export function buildCardIndex(curriculum) {
         kind: cardKinds.PATTERN,
         front: lektion.notice?.title || slug,
         back: lektion.notice?.bodyDe || '',
+        backEn: lektion.notice?.bodyEn || '',
         speak: lektion.notice?.examples?.[0] || '',
         detail: lektion.notice?.examples?.[0] || '',
         lektionNr: lektion.nr,

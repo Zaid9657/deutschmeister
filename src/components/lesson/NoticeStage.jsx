@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { latinMatches } from '../../lib/lesson/bidi.js';
 
 /** **bold** → <strong>, *italic* → <em>. The curriculum's notice body is plain
  * text with at most those two marks, so nothing here needs a markdown parser
@@ -22,7 +23,24 @@ export function inline(text) {
  * in Deutsch-Modus it is inverted. Exported for the practice feedback, which
  * shows `explanationEn` / `explanationDe` the same way.
  */
-export function OtherLanguage({ text, lang, className = '' }) {
+
+/**
+ * Arabic text with each German run isolated left-to-right, so brackets and "?" stay where they belong.
+ * A short run stays on one line („E [eː]"); a whole sentence may wrap, or it runs past a phone's edge.
+ */
+export function isolateLatin(text) {
+  const out = [];
+  let at = 0;
+  for (const m of latinMatches(text)) {
+    if (m.index > at) out.push(text.slice(at, m.index));
+    out.push(<bdi key={m.index} dir="ltr" lang="de" className={m.run.length > 24 ? undefined : 'whitespace-nowrap'}>{m.run}</bdi>);
+    at = m.index + m.run.length;
+  }
+  if (at < text.length) out.push(text.slice(at));
+  return out;
+}
+
+export function OtherLanguage({ text, lang, className = '', textLang = lang === 'de' ? 'en' : 'de', labelKey = 'lang.readOther' }) {
   const [open, setOpen] = useState(false);
   if (!text) return null;
   return (
@@ -33,11 +51,11 @@ export function OtherLanguage({ text, lang, className = '' }) {
         aria-expanded={open}
         className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel hover:text-siegel-deep"
       >
-        {t('lang.readOther', lang)}
+        {t(labelKey, lang)}
       </button>
       {open && (
-        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={lang === 'de' ? 'en' : 'de'}>
-          {inline(text)}
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={textLang} dir={textLang === 'ar' ? 'rtl' : undefined}>
+          {textLang === 'ar' ? isolateLatin(text) : inline(text)}
         </p>
       )}
     </div>
@@ -62,7 +80,7 @@ export default function NoticeStage({ stage, onBack, onDone }) {
   const main = english ? notice.bodyEn : notice.bodyDe;
   const other = english ? notice.bodyDe : notice.bodyEn;
   return (
-    <StageShell eyebrow={t('stage.notice.eyebrow', lang)} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
+    <StageShell eyebrow={t('stage.notice.eyebrow', lang)} part={stage.part} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
       <Card className="p-5 sm:p-6">
         {notice.readingExample && (
           <section className="mb-5 border-b border-rule pb-5" aria-label={notice.readingExample.title}>
@@ -72,12 +90,14 @@ export default function NoticeStage({ stage, onBack, onDone }) {
             <details className="mt-3 text-sm">
               <summary className="cursor-pointer font-bold text-siegel">{lang === 'de' ? 'Antwort und Erklärung' : 'Answer and explanation'}</summary>
               <p className="mt-2 font-bold" lang="de">{notice.readingExample.answer}</p>
-              <p className="mt-1 text-graphite">{lang === 'de' ? notice.readingExample.explanationDe : notice.readingExample.explanationEn}</p>
+              <p className="mt-1 text-graphite">{inline(lang === 'de' ? notice.readingExample.explanationDe : notice.readingExample.explanationEn)}</p>
             </details>
           </section>
         )}
         <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(main)}</p>
         <OtherLanguage text={other} lang={lang} className="mt-3" />
+        {/* Arabic help (2026-11-17): the rule once more for learners who read Arabic better. */}
+        <OtherLanguage text={notice.bodyAr} lang={lang} textLang="ar" labelKey="lang.explainArabic" className="mt-2" />
         {(notice.examples || []).length > 0 && (
           <div className="mt-5 border-t border-rule pt-4">
           <p className="mb-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('stage.notice.examples', lang)}</p>

@@ -5,7 +5,7 @@
       "titleEn": "The café menu",
       "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the menu. Tap a word for its meaning.",
-      "text": "Café Bremen\nBei uns essen und trinken Sie gut!\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro",
+      "text": "Café Bremen\nBei uns essen und trinken Sie gut!\nHeute im Café: ein Kellner und eine Kellnerin.\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro",
       "questions": [
         {
           "promptDe": "Sie möchten Suppe und eine Tasse Tee. Was kostet das zusammen? Wählen Sie die Antwort.",
@@ -17,7 +17,12 @@
           ],
           "answer": "7 euros.",
           "explanationDe": "Auf der Karte steht: Suppe kostet 5 Euro, eine Tasse Tee kostet 2 Euro. Zusammen sind das 7 Euro.",
-          "explanationEn": "The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros."
+          "explanationEn": "The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros.",
+          "optionsDe": [
+            "5 Euro.",
+            "7 Euro.",
+            "8 Euro."
+          ]
         },
         {
           "promptDe": "Wann gibt es im Café Frühstück? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Monday to Saturday, from 7 to 11.",
           "explanationDe": "Auf der Karte steht: Frühstück von Montag bis Samstag, 7 bis 11 Uhr. Am Sonntag ist kein Frühstück.",
-          "explanationEn": "The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday."
+          "explanationEn": "The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday.",
+          "optionsDe": [
+            "Montag bis Samstag, von 7 bis 11 Uhr.",
+            "Montag bis Freitag, von 7 bis 11 Uhr.",
+            "Jeden Tag, von 7 bis 11 Uhr."
+          ]
         }
       ]
     },
@@ -37,6 +47,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "966eaa39",
         "meaning": {
           "promptDe": "Was möchte Ana? Wählen Sie die Bedeutung.",
           "promptEn": "What would Ana like? Choose the meaning.",
@@ -45,7 +56,12 @@
             "She is thirsty and orders a coffee.",
             "She is tired and orders a tea."
           ],
-          "answer": "She is thirsty and orders a coffee."
+          "answer": "She is thirsty and orders a coffee.",
+          "optionsDe": [
+            "Sie hat Hunger und möchte eine Suppe.",
+            "Sie hat Durst und möchte einen Kaffee.",
+            "Sie ist müde und möchte einen Tee."
+          ]
         },
         "say": {
           "line": 1
@@ -54,6 +70,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "6b30f2c6",
         "meaning": {
           "promptDe": "Hat Ana auch Hunger? Wählen Sie die Bedeutung.",
           "promptEn": "Is Ana hungry too? Choose the meaning.",
@@ -62,7 +79,12 @@
             "Yes, and she orders soup.",
             "No, she only wants a drink."
           ],
-          "answer": "Yes, and she orders cake."
+          "answer": "Yes, and she orders cake.",
+          "optionsDe": [
+            "Ja, sie möchte Kuchen.",
+            "Ja, sie möchte Suppe.",
+            "Nein, sie möchte nur etwas trinken."
+          ]
         },
         "say": {
           "line": 3
@@ -71,15 +93,21 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "092e89a6",
         "meaning": {
           "promptDe": "Was bestellt Ana noch? Wählen Sie die Antwort.",
           "promptEn": "What else does Ana order? Choose the answer.",
           "options": [
             "A cup of tea and a mineral water.",
             "A glass of orange juice and a beer.",
-            "A glass of mineral water and an orange juice."
+            "A glass of mineral water."
           ],
-          "answer": "A glass of mineral water and an orange juice."
+          "answer": "A glass of mineral water.",
+          "optionsDe": [
+            "Eine Tasse Tee und ein Mineralwasser.",
+            "Ein Glas Orangensaft und ein Bier.",
+            "Ein Glas Mineralwasser."
+          ]
         },
         "say": {
           "line": 5
@@ -88,15 +116,21 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "c7826f5c",
         "meaning": {
-          "promptDe": "Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.",
-          "promptEn": "Paul also has tea, beer and wine. What does Ana say? Choose the meaning.",
+          "promptDe": "Was kommt sofort? Wählen Sie die Bedeutung.",
+          "promptEn": "What is coming right away? Choose the meaning.",
           "options": [
-            "Yes, please: she orders a glass of wine.",
-            "No, thank you: she will eat bread with salad.",
-            "No, thank you: she would like the bill."
+            "Coffee and cake, but no water.",
+            "Coffee, water and cake.",
+            "Tea, water and soup."
           ],
-          "answer": "No, thank you: she will eat bread with salad."
+          "answer": "Coffee, water and cake.",
+          "optionsDe": [
+            "Kaffee und Kuchen, aber kein Wasser.",
+            "Kaffee, Wasser und Kuchen.",
+            "Tee, Wasser und Suppe."
+          ]
         },
         "say": {
           "line": 7
@@ -105,15 +139,21 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "5d60ab9c",
         "meaning": {
-          "promptDe": "Was sagt Paul? Wählen Sie die Bedeutung.",
-          "promptEn": "What does Paul say? Choose the meaning.",
+          "promptDe": "Wann hat das Café auch Bier und Wein? Wählen Sie die Bedeutung.",
+          "promptEn": "When does the café have beer and wine too? Choose the meaning.",
           "options": [
-            "The waitress is coming right away with the bread.",
-            "The waitress is sorry: there is no bread today.",
-            "The bread will take another twenty minutes."
+            "In the afternoon.",
+            "In the evening.",
+            "In the morning."
           ],
-          "answer": "The waitress is coming right away with the bread."
+          "answer": "In the evening.",
+          "optionsDe": [
+            "Nachmittags.",
+            "Abends.",
+            "Morgens."
+          ]
         },
         "say": {
           "line": 9

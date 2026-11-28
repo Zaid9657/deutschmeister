@@ -5,10 +5,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { stationFor } from '../../data/offers.js';
-import { courseHome } from '../../lib/courseFlow.js';
+import { courseCertificate, courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
 import { attemptMock } from '../../data/mockExams/forms.js';
-import { verdictFor } from '../../services/examScoring';
+import { attemptVerdict, costliestSection, guessedSections } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
 import { completeLevelTest } from '../../services/lessonService.js';
@@ -51,6 +51,12 @@ const VERDICT_COPY = {
     body: 'In den automatisch ausgewerteten Teilen liegen Sie unter der dokumentierten 60%-Grenze. Das ist eine Standortbestimmung, kein Urteil — sehen Sie sich unten an, welcher Teil die meisten Punkte gekostet hat.',
   },
 };
+
+/** The result of an attempt that fails on one section alone. No pronoun: some exam mocks duzen, the courses say Sie. */
+export const sectionCopy = (below, percent, passPercent) => ({
+  title: `Noch nicht bestanden: ${below.map((s) => s.title).join(' und ')}`,
+  body: `Insgesamt sind es ${percent} %, das reicht (Grenze: ${passPercent} %). ${below.map((s) => `Im Teil ${s.title} sind es aber nur ${s.score} von ${s.max} Punkten. So viele Punkte gibt es auch für immer dieselbe Antwort; nötig sind dort mindestens ${s.need}.`).join(' ')}`,
+});
 
 // Practice for the weakest section, at the TEST's own level (resolved.gateLevel: the course's level,
 // or an exam track's last sub-level). These links were a fixed B1.1, so an A1.1 or A1.2 learner
@@ -169,19 +175,24 @@ const ModelltestResult = () => {
     if (!attemptIsThisTest) return;
     const curriculum = curriculumForTestSlug(examSlug);
     if (!curriculum) return;
-    const percent = Math.round((attempt.score / attempt.max_score) * 100);
-    if (verdictFor(percent, mock.passPercent) === 'nicht-bereit') return;
+    if (attemptVerdict(attempt, mock) === 'nicht-bereit') return;
     completeLevelTest(user.id, curriculum.level, levelTestNodeId(curriculum));
   }, [user, attempt, mock, examSlug, attemptIsThisTest]);
+
+  // Readiness never contradicts this result: „Sie sind bereit" stands under a pass only, and a course test
+  // has its own pass rule, so „noch nicht ganz: zwei Tests mit 70 %" is for the exam mocks alone.
+  const attemptPassed = Boolean(attempt?.max_score && mock) && attemptVerdict(attempt, mock) !== 'nicht-bereit';
+  const showReady = Boolean(readiness?.ready) && attemptPassed;
+  const showNotReady = Boolean(readiness) && !readiness.ready && readiness.lastTwo.length > 0 && resolved?.kind !== 'course';
 
   // The one confetti burst for the readiness moment — separate from, and
   // never doubling, the pass-moment burst CompletionMoment fires below.
   useEffect(() => {
-    if (readiness?.ready && !readinessConfettiFired.current) {
+    if (showReady && !readinessConfettiFired.current) {
       readinessConfettiFired.current = true;
       confettiBurst();
     }
-  }, [readiness?.ready]);
+  }, [showReady]);
 
   if (loading) {
     return (
@@ -200,14 +211,22 @@ const ModelltestResult = () => {
   }
 
   const percent = Math.round((attempt.score / attempt.max_score) * 100);
-  const verdict = verdictFor(percent, mock.passPercent);
+  const verdict = attemptVerdict(attempt, mock);
   const passed = verdict !== 'nicht-bereit';
-  const copy = mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
+  // Over the percent line and still not passed: the reason is one section, never „unter der Grenze“
+  // (independent score, 2026-11-24: 14 of 18 points, 78 %, was told it was under the 60 % line).
+  const below = percent >= mock.passPercent ? guessedSections(attempt, mock) : [];
+  const copy = below.length ? sectionCopy(below, percent, mock.passPercent) : mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};
-  const weakest = Object.entries(sections)
-    .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))
-    .sort((a, b) => a.pct - b.pct)[0];
   const SECTION_HINTS = sectionHints(resolved.gateLevel || undefined);
+  const costliest = costliestSection(sections);
+  const hint = costliest ? SECTION_HINTS[costliest.key] : null;
+  // The points as they are: „die meisten Punkte" was untrue whenever two sections had lost the same number.
+  const hintLine = hint
+    ? `In „${hint.label}“ ${costliest.lost === 1 ? 'fehlt Ihnen ein Punkt' : `fehlen Ihnen ${costliest.lost} Punkte`} — genau da lohnt sich die nächste Einheit.`
+    : null;
+  // A pass on a live course's own final test: the way to its certificate and back to the course.
+  const passedCourse = passed && attemptIsThisTest ? curriculumForTestSlug(examSlug) : null;
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
@@ -254,17 +273,33 @@ const ModelltestResult = () => {
           </Card>
         </Reveal>
 
-        {/* Next action: attack the weakest section */}
-        {weakest && SECTION_HINTS[weakest.key] && (
+        {/* Next action: after a passed course test the certificate and the course; else the section that
+            cost the most points. A full score has none, and a fail is never announced like a win. */}
+        {(passedCourse || hint || passed) && (
           <Reveal delay={280} className="mt-6">
-            <CompletionMoment
-              headline="Übungstest abgeschlossen!"
-              detail={`Die meisten Punkte haben Sie in „${SECTION_HINTS[weakest.key].label}" liegen lassen — genau da lohnt sich die nächste Einheit.`}
-              nextLabel={SECTION_HINTS[weakest.key].linkLabel}
-              nextHref={SECTION_HINTS[weakest.key].href}
-              fullLoad={SECTION_HINTS[weakest.key].fullLoad}
-              celebrate={passed}
-            />
+            {passedCourse ? (
+              <>
+                <CompletionMoment
+                  headline="Abschlusstest bestanden!"
+                  detail={hintLine}
+                  nextLabel="Zur Teilnahmebescheinigung"
+                  nextHref={courseCertificate(passedCourse.level)}
+                />
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <Button variant="secondary" className="flex-1" to={courseHome(passedCourse.level)}>Zurück zum Kurs</Button>
+                  {hint && <Button variant="secondary" className="flex-1" {...(hint.fullLoad ? { href: hint.href } : { to: hint.href })}>{hint.linkLabel}</Button>}
+                </div>
+              </>
+            ) : (
+              <CompletionMoment
+                headline={passed ? 'Übungstest abgeschlossen!' : 'Das üben Sie als Nächstes'}
+                detail={hintLine}
+                nextLabel={hint ? hint.linkLabel : 'Zum Dashboard'}
+                nextHref={hint ? hint.href : '/dashboard'}
+                fullLoad={hint ? hint.fullLoad : false}
+                celebrate={passed}
+              />
+            )}
           </Reveal>
         )}
 
@@ -273,9 +308,9 @@ const ModelltestResult = () => {
             candy button and one confetti burst (an earned moment, distinct
             from the pass-moment burst above); not ready = a calm line, no
             button, no confetti — never a pass promise. */}
-        {readiness && readiness.lastTwo.length > 0 && (
+        {(showReady || showNotReady) && (
           <Reveal delay={310} className="mt-6">
-            {readiness.ready ? (
+            {showReady ? (
               <Card raised edge="limette" className="p-6 text-center">
                 <Chip tone="limette">Bereit</Chip>
                 <h2 className="mt-3 font-display text-xl font-semibold text-ink">Sie sind bereit</h2>

@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
 import { MAX_WRITING_POINTS } from '../../data/writingTasks';
 import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing.js';
+import { westernDigits } from '../../lib/lesson/digits.js';
+import { WritingArabicHelp, FeedbackArabicHelp } from './ArabicHelp.jsx';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -59,6 +61,15 @@ const AI_ROW_LABEL_EN = {
   fallback: 'cannot be checked without the AI assessment',
 };
 
+/**
+ * A row's name in the chrome language. The three form rows are chrome (their German is writing.js's, which
+ * tests pin); a Leitpunkt or a form field is the German task itself and stays German in both.
+ */
+const rowLabel = (c, lang) => {
+  if (c.key === 'length') return t('writing.row.length', lang, { range: c.label.replace(/\s.*$/, '') });
+  return c.key === 'anrede' || c.key === 'gruss' ? t(`writing.row.${c.key}`, lang) : c.label;
+};
+
 /** The Formcheck rows — live under the text, or as the fallback card after a submission without the KI. */
 function Checklist({ checks, mode, signedIn, lang }) {
   const aiLabelDe = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
@@ -91,7 +102,7 @@ function Checklist({ checks, mode, signedIn, lang }) {
               <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
             )}
             <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-              {c.label} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
+              {rowLabel(c, lang)} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
             </span>
           </li>
         );
@@ -115,17 +126,24 @@ const readDraft = (key) => {
 // its assessment are kept beside the draft — which is still dropped on submit — and come back with
 // the assessment shown and reported upward, without a second evaluate-writing request, until the
 // learner moves on (WritingStage's Next) or opens the improved-version editor. A checkpoint keeps
-// none: each attempt there is a new one. Only an AI assessment is kept, never the form-check fallback.
+// none: each attempt there is a new one. A guest's form check is kept too (2026-11-25: a refresh after
+// Submit emptied the guest's text and closed Next): no AI runs for a guest, so nothing better can
+// follow. A signed-in form-check fallback is not kept: its text stays as the draft instead, ready to
+// hand in for a real assessment.
 const assessedKeyOf = (key) => key.replace(/^dm_writing_draft:/, 'dm_writing_assessed:');
+const keepsOutcome = (key, outcome) => outcome?.scored === true
+  || (outcome?.usedFallback === true && key.startsWith('dm_writing_draft:guest:'));
 const readAssessed = (key) => {
   const d = safeGetJSON(assessedKeyOf(key), null);
-  return d && typeof d === 'object' && d.outcome?.scored === true
+  return d && typeof d === 'object' && keepsOutcome(key, d.outcome)
     && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
 };
 
-/** Drop a lesson's kept assessment — the learner has moved on past the writing stage. */
+/** Drop a lesson's kept assessment and draft — the learner has moved on past the writing stage. */
 export function forgetAssessedWriting(userId, taskKey, lektionId) {
-  safeRemove(assessedKeyOf(draftKey(userId, taskKey, lektionId)));
+  const key = draftKey(userId, taskKey, lektionId);
+  safeRemove(assessedKeyOf(key));
+  safeRemove(key);
 }
 
 // The feedback reached the screen but not the learner's record (evaluate-writing answered
@@ -194,7 +212,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
   const min = Number(task?.minWords) || 0;
   const max = Number(task?.maxWords) || 0;
   const inRange = count >= min && (!max || count <= max);
-  const submission = isFormular ? formularText(task?.fields, fields) : text;
+  const submission = isFormular ? formularText(task?.fields, fields) : westernDigits(text);
   // A Formular is handed in with EVERY field filled (DaF review #18, MAJOR 2): the button used to
   // open as soon as one field had a character. `filled` is a letter or a digit — see scoreWriting.
   const canSubmit = isFormular ? check.checks.length > 0 && check.checks.every((c) => c.filled) : !!text.trim();
@@ -218,9 +236,12 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
 
   const finish = (r, noteText) => {
     safeRemove(key);
-    // A lesson keeps its AI-assessed text until the learner moves on (see readAssessed).
-    if (keepAssessed && r.scored) {
+    // A lesson keeps its handed-in text until the learner moves on (see readAssessed): with its result,
+    // or, after a signed-in fallback, as a draft again.
+    if (keepAssessed && keepsOutcome(key, r)) {
       safeSetJSON(assessedKeyOf(key), { text, fields, outcome: r, note: noteText || null, savedAt: Date.now() });
+    } else if (keepAssessed) {
+      safeSetJSON(key, { text, fields, savedAt: Date.now() });
     }
     setOutcome(r);
     setNote(noteText || null);
@@ -304,6 +325,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
   return (
     <div>
       <Card className="p-5">
+        <WritingArabicHelp task={task} />
         {isFormular ? (
           <div className="space-y-3">
             {(task?.fields || []).map((field) => (
@@ -370,9 +392,10 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
             <Checklist checks={check.checks} mode="live" signedIn={!!user} lang={lang} />
             {/* Deutsch-Modus: „Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine
                 Bewertung." — the FernUSG line tests/writing-course.test.mjs pins; the English
-                twin says the same thing (writing.formcheckLive). */}
+                twin says the same thing (writing.formcheckLive). A Formular has none of those four:
+                its line names the per-field check scoreWriting really makes (`.formular`). */}
             <p className="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
-              {t('writing.formcheckLive', lang)}
+              {t(isFormular ? 'writing.formcheckLive.formular' : 'writing.formcheckLive', lang)}
             </p>
           </div>
         )}
@@ -498,8 +521,12 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
               the KI did not run rather than that it is checking (DaF review #21, Minor 33). */}
           <Checklist checks={check.checks} mode="fallback" signedIn={!!user} lang={lang} />
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
-            {note || t('writing.fallbackPlain', lang)} {t('writing.fallbackNote', lang)}
+            {note || t('writing.fallbackPlain', lang)} {t(isFormular ? 'writing.fallbackNote.formular' : 'writing.fallbackNote', lang)}
           </p>
+          <Button className="mt-4" variant="secondary" onClick={() => { safeRemove(assessedKeyOf(key)); setOutcome(null); setNote(null); }}>
+            {t('writing.editRetry', lang)}
+          </Button>
+          <FeedbackArabicHelp keys={['writing.editRetry']} />
         </Card>
       )}
 

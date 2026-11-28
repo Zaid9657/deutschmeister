@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { nextStep, canOpenLevel, selectRecipients, passesFinalTest } from '../netlify/functions/course-reminder.mjs';
+import { nextStep, canOpenLevel, selectRecipients, passesFinalTest, FINAL_TESTS } from '../netlify/functions/course-reminder.mjs';
+import { COURSE_TESTS } from '../src/data/courseTests/index.js';
+import { attemptVerdict, sectionGuessCeiling } from '../src/services/examScoring.js';
 
 const SQL = readFileSync(new URL('../migrations/2026-10-22-course-reminder-checkpoints.sql', import.meta.url), 'utf8')
   .replace(/--[^\n]*/g, '');
@@ -96,6 +98,29 @@ test('passesFinalTest is the course home\'s repair rule: a completed attempt at 
   assert.equal(passesFinalTest({ status: 'in_progress', score: 100, max_score: 100 }, 60), false, 'an unfinished attempt is no pass');
   assert.equal(passesFinalTest({ status: 'completed', score: 5, max_score: 0 }, 60), false);
   assert.equal(passesFinalTest(null, 60), false);
+});
+
+// The result screen and the course home judge a saved attempt with attemptVerdict; the mailer must not
+// count an attempt as passed that they call nicht-bereit (it would stop reminding a learner who has not passed).
+test('the mailer passes a final test exactly when the course does: no section won by one constant answer', () => {
+  for (const [level, final] of Object.entries(FINAL_TESTS)) {
+    const { mock } = COURSE_TESTS.find((t) => t.key === final.examKey);
+    assert.equal(final.passPercent, mock.passPercent, level);
+    const ceilings = Object.fromEntries(mock.sections.map((s) => [s.key, sectionGuessCeiling(s)]).filter(([, c]) => c > 0));
+    assert.deepEqual(final.guessCeiling, ceilings, `${level}: guessCeiling is the test's own ceiling per scored section`);
+    const [section, ceiling] = Object.entries(ceilings)[0];
+    const attempts = [
+      { status: 'completed', score: 61, max_score: 100, section_scores: { [section]: { score: ceiling, max: 8 } } },
+      { status: 'completed', score: 61, max_score: 100, section_scores: { [section]: { score: ceiling + 1, max: 8 } } },
+      { status: 'completed', score: 61, max_score: 100 },
+      { status: 'completed', score: 40, max_score: 100, section_scores: { [section]: { score: ceiling + 3, max: 8 } } },
+    ];
+    for (const a of attempts) {
+      assert.equal(passesFinalTest(a, final.passPercent, final.guessCeiling), attemptVerdict(a, mock) !== 'nicht-bereit', `${level}: ${JSON.stringify(a)}`);
+    }
+    assert.equal(passesFinalTest(attempts[0], final.passPercent, final.guessCeiling), false, 'a guessed section is no pass');
+    assert.equal(passesFinalTest(attempts[1], final.passPercent, final.guessCeiling), true);
+  }
 });
 
 test('canOpenLevel mirrors SubscriptionContext.hasLevelAccess', () => {

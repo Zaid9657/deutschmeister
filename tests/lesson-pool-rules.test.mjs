@@ -93,6 +93,7 @@ import {
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
   FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
   determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE, missingOpeningCue,
+  englishEchoesGerman, taskConstraintsEn,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -973,7 +974,7 @@ test('the per-topic floor still holds after the untaught-lexis drop', () => {
   // hand-written extras and has stood at 4 since it was introduced — it is not
   // a casualty of the lexis gate (the gate dropped 0 items from it). It is named
   // here rather than filtered out, so the day it is filled the list gets shorter.
-  assert.deepEqual(thin, ['a1.1 numbers: 4'], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
+  assert.deepEqual(thin, [], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
 });
 
 
@@ -1090,8 +1091,8 @@ test('the polite capital is a task signal, not an answer form — REVIEW #7 BLOC
   }), false, 'an item that calls itself informell is not a polite-form item');
   // The TASK, in each of its three shapes.
   assert.equal(t({
-    questionDe: 'Ist das ___ Geschenk, Frau Kaya? (Sie)', answer: 'Ihr', accepted: ['Ihr'],
-    explanationDe: 'Höflich zu Frau Kaya: Ihr mit großem I.',
+    questionDe: 'Ist das ___ Geschenk, Frau Ramos? (Sie)', answer: 'Ihr', accepted: ['Ihr'],
+    explanationDe: 'Höflich zu Frau Ramos: Ihr mit großem I.',
   }), true, 'the prompt names the formal counterpart');
   assert.equal(t({
     questionDe: 'Guten Tag! Wie geht es ___?', answer: 'Ihnen', accepted: ['Ihnen'], explanationDe: 'Mit großem I.',
@@ -1681,5 +1682,128 @@ test('an object that can open the sentence is cued in the PROMPT, never in the a
       if (!missingOpeningCue({ ...item, questionDe: uncue(item.questionDe) })) continue;
       assert.match(String(item.questionDe), /\(Beginnen Sie mit „[^“]+“/, `${file} ${item.id}: „${item.answer}" can open with its object and the prompt names no opening`);
     }
+  }
+});
+
+// 2026-11-23 screen walk of Lektionen 7–12, in English at 420 px.
+
+test('no English help line repeats its German stem: it says in English what the item asks', () => {
+  // Lektion 10 showed „___ du viel? (verb: arbeiten, person: du)“ under „___ du viel? (arbeiten)“.
+  assert.ok(englishEchoesGerman({ questionDe: '___ du viel? (arbeiten)', questionEn: '___ du viel? (verb: arbeiten, person: du)' }));
+  assert.ok(englishEchoesGerman({ questionDe: 'Das ist ___ Stuhl.', questionEn: 'Das ist ___ Stuhl. Use an indefinite article.' }));
+  assert.ok(!englishEchoesGerman({ questionDe: '___ du viel? (arbeiten)', questionEn: 'Do you work a lot? (verb: arbeiten, person: du)' }));
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const echoes = pool.items.filter(englishEchoesGerman).map((it) => `${it.id} · ${it.questionDe} | ${it.questionEn}`);
+    assert.deepEqual(echoes, [], `${level}: write the English of these items (bank: <level>.corrections.json; template: its builder)`);
+  }
+});
+
+test('a hint is never repeated: no English line says a task direction twice', () => {
+  // „Build the polite yes/no question about tomorrow. Begin with “Fahren”. Build a question.“ (L10, four
+  // items) and A1.2's „Use the present tense (Präsens). … Use the present tense.“: the build appended a
+  // direction the item's own English already gave.
+  const SAID = [
+    ['Build a question.', /\bquestion\b/i],
+    ['Build a request in the imperative.', /\b(?:imperative|request)\b/i],
+    ['Use the present tense.', /\bpresent tense\b/i],
+    ['Use the Perfekt.', /\bPerfekt\b/i],
+    ['Use a definite article.', /\bdefinite article\b/i],
+    ['Use an indefinite article.', /\bindefinite article\b/i],
+  ];
+  assert.deepEqual(taskConstraintsEn({
+    type: 'sentence_building',
+    questionDe: 'Bilden Sie die höfliche Frage (Beginnen Sie mit „Fahren“): [fahren / Sie / morgen / nach Deutschland]',
+    questionEn: 'Build the polite yes/no question about tomorrow.',
+  }), ['Begin with “Fahren”.']);
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const twice = [];
+    for (const it of pool.items) {
+      const en = String(it.questionEn || '');
+      const sentences = en.split(/(?<=[.!?])\s+/);
+      if (new Set(sentences).size !== sentences.length) twice.push(`${it.id}: ${en}`);
+      for (const [hint, said] of SAID) if (en.includes(hint) && said.test(en.replace(hint, ''))) twice.push(`${it.id}: ${en}`);
+    }
+    assert.deepEqual(twice, [], level);
+  }
+});
+
+// Both scores of 2026-11-25, checkpoint 3 and 4.
+test('a colloquial time is a full hour, a quarter or a half: no minutes the notice does not teach', async () => {
+  const { untaughtColloquialTime } = await import('../src/data/lessonPools/quality.js');
+  for (const q of ['Es ist ___. (18:20, umgangssprachlich)', 'Wie sagt man 2:50 umgangssprachlich?']) assert.equal(untaughtColloquialTime(q), true, q);
+  for (const q of ['Es ist ___. (2:30, umgangssprachlich)', 'Es ist ___. (2:45, umgangssprachlich)', 'Es ist ___. (20:45, offiziell)', 'Es ist ___. (18:20, offiziell)']) assert.equal(untaughtColloquialTime(q), false, q);
+  for (const it of POOL.items) assert.equal(untaughtColloquialTime(it.questionDe), false, `${it.id}: ${it.questionDe}`);
+});
+
+test('a yes/no question to build says where the verb stands, never which form opens it', async () => {
+  const { verbFirstCue } = await import('../src/data/lessonPools/quality.js');
+  const item = (questionDe, answer) => ({ type: 'sentence_building', questionDe, answer });
+  assert.equal(verbFirstCue(item('Bilden Sie die Frage: [kommen / du / morgen]', 'Kommst du morgen?')), '(das Verb steht vorn)');
+  assert.equal(verbFirstCue(item('Bilden Sie die Frage (das Verb steht vorn): [kommen / du / morgen]', 'Kommst du morgen?')), '', 'said already');
+  assert.equal(verbFirstCue(item('Bilden Sie den Satz: [wann / kommen / du]', 'Wann kommst du?')), null);
+  assert.equal(verbFirstCue(item('Bilden Sie den Satz: [du / kommen / morgen]', 'Du kommst morgen.')), null);
+  let n = 0;
+  for (const it of POOL.items) {
+    if (it.type !== 'sentence_building' || !/\?$/.test(it.answer) || verbFirstCue(it) === null) continue;
+    n += 1;
+    assert.doesNotMatch(it.questionDe, /Beginnen Sie mit/, `${it.id} prints the tested form: ${it.questionDe}`);
+    if (/das Verb steht vorn/.test(it.questionDe)) assert.match(it.questionEn || '', /verb comes first/i, `${it.id}: the English says it too`);
+  }
+  assert.ok(n >= 9, `yes/no questions to build: ${n}`);
+  // A manner PP may follow the goal; a time belongs before it (approved Phase 2 rule).
+  assert.ok(POOL.items.find((it) => it.id === 'extra-a11-l10-07').accepted.includes('Fahrt ihr in die Schweiz mit dem Auto?'));
+  assert.ok(!POOL.items.find((it) => it.id === 'extra-a11-l10-08').accepted.includes('Fahren Sie nach Deutschland morgen?'));
+});
+
+// The Claude score of 2026-11-25: a spelling task took the word itself, a gap inside a sentence its capital, and „Ihre“ for
+// „ihre“ (sie, Plural) was let through as a slip.
+test('a spelling is letters, a gap inside a sentence takes no capital it does not need, and „sie“ is not „Sie“', () => {
+  for (const it of POOL.items) {
+    if (/Buchstabieren Sie/.test(it.questionDe) && /[-\s]/.test(it.answer)) {
+      for (const a of it.accepted || []) assert.ok(/^(?:\p{L}[-\s]?)+$/u.test(a) && (/[-\s]/.test(a) || a === a.toLocaleUpperCase('de')), `${it.id}: „${a}“ is no spelling`);
+    }
+    const q = String(it.questionDe || '');
+    const inside = q.indexOf('___') > 0 && !/[.!?:]\s*„?$/.test(q.slice(0, q.indexOf('___')).trim());
+    if (it.type === 'fill_blank' && inside && /^\p{Ll}/u.test(it.answer) && !/(?:Substantiv|Nomen)/.test(q)) {
+      assert.ok(!(it.accepted || []).some((a) => a !== it.answer && a.toLocaleLowerCase('de') === it.answer && /^\p{Lu}/u.test(a)), `${it.id}: a capital inside the sentence`);
+    }
+    if (/\((?:sie|er|es)[,)]/.test(q) && /^(?:ihr|ihre|ihren|ihrem|ihrer|sie)$/.test(it.answer) && !/^___/.test(q.trim())) assert.equal(it.caseSensitive, true, it.id);
+  }
+});
+
+test('a wrong spelling begins as a German word does: no option is ruled out at sight (Danke, never Dnake) (2026-11-25)', () => {
+  const pool = JSON.parse(readFileSync('src/data/lessonPools/a11.json', 'utf8'));
+  const items = (pool.items || pool).filter((it) => it.questionDe === 'Welche Schreibweise ist richtig?' && it.options);
+  assert.ok(items.length >= 3);
+  const begins = /^(?:[aeiouäöü]|[b-df-hj-np-tv-z][aeiouäöüy]|(?:bl|br|ch|dr|fl|fr|gl|gn|gr|kl|kn|kr|pf|ph|pl|pr|ps|qu|sch|sk|sl|sm|sp|st|th|tr|ts|wr|zw))/i;
+  for (const it of items) for (const o of it.options) assert.match(o, begins, `${it.id}: ${o}`);
+});
+test('every whole-sentence correction explicitly asks for the whole sentence in German and English', () => {
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  let count = 0;
+  for (const item of pool.items) {
+    if (item.type !== 'error_correction' || (String(item.answer || '').match(/\p{L}+/gu) || []).length < 2) continue;
+    count++;
+    assert.ok(item.questionDe.includes('Schreiben Sie den ganzen Satz.'), item.id);
+    assert.ok(item.questionEn.includes('Write the whole sentence.'), item.id);
+  }
+  assert.ok(count > 20);
+});
+
+test('adding task directions is idempotent, including whole sentences and required openings', () => {
+  for (const questionEn of ['Begin with “Ich”.', 'Build the sentence, beginning with “Ich”.', 'Build a question, beginning with “Ich”.']) {
+    assert.deepEqual(taskConstraintsEn({ questionDe: '(Beginnen Sie mit „Ich“)', questionEn }), [], questionEn);
+  }
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) for (const item of pool.items) {
+    const once = taskConstraintsEn(item);
+    const expanded = { ...item, questionEn: [item.questionEn, ...once].join(' ') };
+    assert.deepEqual(taskConstraintsEn(expanded), [], level + ': ' + item.id);
+    const normalized = text => text.toLowerCase().replace(/[“”„"']/g, '').trim().replace(/^build (?:the|a) (?:sentence|question),? beginning with /, 'begin with ');
+    const directions = text => String(text || '').split(/[.;!?]+/).map(normalized).filter(x => /^write the whole sentence$|^begin with /.test(x));
+    const duplicates = text => { const list = directions(text); return list.length - new Set(list).size; };
+    // A1.2's unchanged prebuilt pool carries old repeats. Adding directions must
+    // create none; the regenerated A1.1 pool also has none left to start with.
+    assert.equal(duplicates(expanded.questionEn), duplicates(item.questionEn), level + ': ' + item.id);
+    if (level === 'a1.1') assert.equal(duplicates(expanded.questionEn), 0, item.id);
   }
 });

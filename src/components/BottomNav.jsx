@@ -79,10 +79,10 @@ const BottomNav = () => {
   return (
     <>
     {/* In-flow spacer so the fixed bar never covers page-end content */}
-    <div className={`h-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden ${spacer}`} aria-hidden="true" />
+    <div className={`h-[calc(4rem+env(safe-area-inset-bottom))] print:hidden lg:hidden ${spacer}`} aria-hidden="true" />
     <nav
       ref={navRef}
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-rule bg-white/95 pb-[env(safe-area-inset-bottom)] text-graphite backdrop-blur-md"
+      className="print:hidden lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-rule bg-white/95 pb-[env(safe-area-inset-bottom)] text-graphite backdrop-blur-md"
       data-ground="paper"
       aria-label="App navigation"
     >

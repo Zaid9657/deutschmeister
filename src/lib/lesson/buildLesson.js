@@ -21,6 +21,7 @@
 // used — see planPractice for the five rules it enforces.
 import { buildGuided } from './buildGuided.js';
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
+import { wordOrderAnswers, hasOrderToBuild, ordersEnough } from './wordOrder.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
 export function mulberry32(seed) {
@@ -501,6 +502,40 @@ export const taskShape = (item) => {
   return `${(item && item.type) || ''}:${skeleton}`;
 };
 
+/**
+ * THE SEVENTH DIVERSITY AXIS: the same drill twice in one seven (2026-11-23 screen walk). L8 asked
+ * „___ Abend“ → Am twice, L12 „(ich)“ → Mein twice and „(er)“ → sein twice: two task shapes and
+ * an answer key the cap allows twice, one exercise. A drill's STEMS are what its answer is formed
+ * from — a person or verb cue in its brackets („(ich)“, „(haben)“; the task categories such as
+ * „(bestimmter Artikel)“ name the task, not the source) and the content word on either side of
+ * its gap („___ Abend“, „___ Regal“). Two items are one drill when they share an answer key and a
+ * stem; „___ Tasche“ and „___ Lampe“ → die stay two, because the noun decides the answer.
+ */
+const SOURCE_CUE_MARKS = new Set(['zzmarkperson', 'zzmarkverbform']);
+export const drillStems = (item) => {
+  const q = String((item && item.questionDe) || '');
+  const stems = new Set();
+  for (const [, inner] of q.matchAll(/\(([^()]*)\)/g)) {
+    if (SOURCE_CUE_MARKS.has(instructionMark(inner))) stems.add(`cue:${inner.trim().toLowerCase()}`);
+  }
+  const words = withGaps(stripInstruction(q)).split(' ');
+  words.forEach((w, i) => {
+    if (w !== '_') return;
+    for (const [side, word] of [['before', words[i - 1]], ['after', words[i + 1]]]) {
+      if (word && word !== '_' && word.length > 2 && !LEMMA_STOPWORDS.has(word)) stems.add(`${side}:${word}`);
+    }
+  });
+  return stems;
+};
+const drillWith = (a, b, key, stems) => {
+  const k = key(a);
+  if (!k || k !== key(b)) return false;
+  const other = stems(b);
+  return [...stems(a)].some((s) => other.has(s));
+};
+/** True when `a` and `b` ask for the same answer from the same stem — one exercise shown twice. */
+export const sameDrill = (a, b) => drillWith(a, b, answerKey, drillStems);
+
 /** The situational vocabulary of one Lektion, as lemmas. */
 export function wortfeldTerms(lektion) {
   const out = new Set();
@@ -581,15 +616,18 @@ const memoProducedWords = (form) => {
   return words;
 };
 const memoPrintedList = memoByItem((item) => [...promptWords(item)], ['questionDe']);
+const memoAnswerKey = memoByItem(answerKey, ['answer']);
+const memoDrillStems = memoByItem(drillStems, ['questionDe']);
 const DRAW_READERS = {
   lemmas: memoByItem(itemLemmas, ['questionDe', 'answer']),
   answerLemmas: memoByItem(answerLemmas, ['answer']),
-  answerKey: memoByItem(answerKey, ['answer']),
+  answerKey: memoAnswerKey,
   taskShape: memoByItem(taskShape, ['questionDe', 'type']),
   leaks: (solved, prints) => leaksWith(solved, prints, memoPrintedList, memoProducedWords),
+  sameDrill: (a, b) => drillWith(a, b, memoAnswerKey, memoDrillStems),
 };
 /** The same readers without the memory — `{ memo: false }`, which the draw-identity test compares. */
-const PLAIN_READERS = { lemmas: itemLemmas, answerLemmas, answerKey, taskShape, leaks: leaksAnswer };
+const PLAIN_READERS = { lemmas: itemLemmas, answerLemmas, answerKey, taskShape, leaks: leaksAnswer, sameDrill };
 
 /**
  * The 7 controlled-practice items for ONE Lektion.
@@ -654,7 +692,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
   // The quality rules at the course's own level: without it the A1.1 syllabus rules (no accusative,
   // no ordinals …) dropped 57 of A1.2's 254 items, and its accusative Lektion drew 3 of 7 (2026-10-15).
-  const usable = poolItems(pool).filter((it) => !it.assessment && topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
+  const usable = poolItems(pool).filter((it) => !it.assessment && topics.has(it.topic) && isUsableItem(it, { level: options.level })
+    && ordersEnough(it) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];
@@ -691,10 +730,13 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   // the three polite items out of reach and a case-variant shares their key (DaF review #10
   // MAJOR 2, measured once the guard walked attempt 3). So the raw string travels with the key and
   // an item whose answer IS that string is preferred over one that merely shares its key.
+  // A seat may name several answers (`['vierzehn Uhr dreißig', 'zwanzig Uhr fünfundvierzig']`): any one of them takes it, so the
+  // draws of one Lektion rotate through them (round 4 of the loop: one official-time item stood in all three draws of L8).
   const coverKeys = [];
-  for (const raw of (rule && rule.mustCover) || []) {
-    const key = answerKey({ answer: raw });
-    if (key && !coverKeys.some((c) => c.key === key)) coverKeys.push({ raw: String(raw).trim(), key });
+  for (const entry of (rule && rule.mustCover) || []) {
+    const raws = (Array.isArray(entry) ? entry : [entry]).map((x) => String(x).trim());
+    const keys = raws.map((x) => answerKey({ answer: x })).filter(Boolean);
+    if (keys.length && !coverKeys.some((c) => c.keys.some((k) => keys.includes(k)))) coverKeys.push({ raws, keys, key: keys[0], raw: raws[0] });
   }
 
   const eligible = [];
@@ -753,6 +795,9 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
           if (read.leaks(it, seated) || read.leaks(seated, it)) return false;
         }
       }
+      if (!relax.drill) {
+        for (const seated of chosen.values()) if (read.sameDrill(it, seated)) return false;
+      }
       if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
       if (!relax.prior && priorIds.has(it.id)) return false;
       return true;
@@ -782,10 +827,10 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // typed and on the primary slug for preference, under the same caps as every
     // other pick. A key the pool cannot supply is a no-op — the draw is never
     // padded with something off-topic to satisfy it.
-    for (const { raw, key } of coverKeys) {
+    for (const { raws, keys } of coverKeys) {
       if (chosen.size >= PRACTICE_SIZE) break;
-      const all = ranked.filter((it) => read.answerKey(it) === key);
-      const exact = all.filter((it) => String(it.answer || '').trim() === raw);
+      const all = ranked.filter((it) => keys.includes(read.answerKey(it)));
+      const exact = all.filter((it) => raws.includes(String(it.answer || '').trim()));
       const candidates = [...exact, ...all.filter((it) => !exact.includes(it))];
       const preferred = [
         ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
@@ -852,11 +897,21 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       { carried: true },
       { lemma: true, carried: true, answerKey: true },
       { lemma: true, carried: true, answerKey: true, prior: true },
-      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true },
-      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, leak: true },
+      // A repeated drill (`sameDrill`) is a repeated task at its finest grain: it goes with the shape cap.
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, drill: true },
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, drill: true, leak: true },
     ];
     for (let stage = 0; stage < LADDER.length; stage += 1) {
       const relax = LADDER[stage];
+      // 0. THE CAN-DO SHARE (`practiceRule.topicMin`, loop round 3, 2026-11-25): L4–L6 drew almost nothing but article
+      //    drills, so prices, „Wo ist …?“ and „Wann ist die Pause?“ were never practised. A Lektion's named
+      //    topics take the seats it reserves for them first (a price drill spends the lemma budget the article drills would).
+      for (const [topic, min] of Object.entries((rule && rule.topicMin) || {})) {
+        const own = ranked.filter((it) => it.topic === topic);
+        const here = () => [...chosen.values()].filter((it) => it.topic === topic).length;
+        fill(own.filter(isTypedItem), relax, () => here() >= min, stage);
+        fill(own, relax, () => here() >= min, stage);
+      }
       // 1. the primary slug's share, REAL producers and typed items first. The
       //    slug on an item is a routing label; `drillsSlug` reads what the item
       //    makes the learner produce. Attempt 1 used to take whichever labelled
@@ -1026,6 +1081,10 @@ export function planPractice(curriculum, pool, attempt = 1, { memo = true } = {}
       priorByNr.set(nr, seen);
     }
   }
+  // AN ITEM BELONGS TO ONE LEKTION (`curriculum.oneLektionItems`, loop round 3): what another Lektion drew in an earlier attempt,
+  // or was written for another Lektion (`extra-a11-l06-…`), is not drawn here while this Lektion's own slice can fill the seven.
+  const drawnElsewhere = (nr) => new Set(curriculum?.oneLektionItems ? [...priorByNr].filter(([other]) => other !== nr).flatMap(([, ids]) => [...ids]) : []);
+  const writtenElsewhere = (nr) => (curriculum?.oneLektionItems ? new Set(poolItems(pool).filter((it) => { const m = String(it.id).match(/^extra-\w+-l(\d+)-/); return m && Number(m[1]) !== nr; }).map((it) => it.id)) : new Set());
 
   const lektionen = [...((curriculum && curriculum.lektionen) || [])].sort((a, b) => a.nr - b.nr);
   const plan = new Map();
@@ -1048,7 +1107,7 @@ export function planPractice(curriculum, pool, attempt = 1, { memo = true } = {}
         primarySlug: lektion.primarySlug || ((lektion.practiceRule || {}).topics || [])[0],
         ownTerms,
         earlierTerms: new Set(earlierTerms),
-        usedIds: new Set(usedIds),
+        usedIds: new Set([...usedIds, ...drawnElsewhere(lektion.nr), ...writtenElsewhere(lektion.nr)]),
         previousAnswerLemmas,
         priorAttemptIds: priorByNr.get(lektion.nr) || new Set(),
         report,
@@ -1122,24 +1181,40 @@ function buildWordOrderItem(lektion, attempt, rng) {
   const candidates = lines
     .map((l, i) => ({ de: l && l.de, index: i, tokens: String((l && l.de) || '').trim().split(/\s+/).filter(Boolean) }))
     .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS);
-  if (!candidates.length) return null;
-  const [chosen] = seededShuffle(candidates, rng);
+  // A long dialogue turn can contain a short complete sentence. Keep its audio
+  // line intact; only the derived tile task uses the sentence, with provenance.
+  const sentences = lines.flatMap((line, index) => String(line?.de || '').split(/(?<=[.!?])\s+/)
+    .map((de, sentenceIndex) => ({ de, index, sentenceIndex, tokens: de.trim().split(/\s+/).filter(Boolean) })))
+    .filter((c) => c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS && wordOrderAnswers(c.de).length);
+  if (!candidates.length && !sentences.length) return null;
+  const ordered = seededShuffle(candidates, rng);
+  const original = ordered[0] || sentences[0];
   // Reshuffle away from the original order when more than one arrangement
   // exists, so the tiles are never handed over already solved.
-  let shuffled = seededShuffle(chosen.tokens, rng);
-  for (let tries = 0; tries < 6 && shuffled.join(' ') === chosen.tokens.join(' ') && chosen.tokens.length > 1; tries += 1) {
+  let shuffled = seededShuffle(original.tokens, rng);
+  for (let tries = 0; tries < 6 && shuffled.join(' ') === original.tokens.join(' ') && original.tokens.length > 1; tries += 1) {
     shuffled = seededShuffle(shuffled, rng);
   }
+  // Consume the old draw's random stream before choosing a supported frame,
+  // so omitting an unsafe tile task does not redraw the listening task. The
+  // chosen sentence has something to order: four words or more (`hasOrderToBuild`).
+  const tiles = (candidate) => hasOrderToBuild(candidate.de) && wordOrderAnswers(candidate.de).length;
+  const chosen = ordered.find(tiles)
+    || seededShuffle(sentences.filter(tiles), mulberry32(derivedSeedFor(`${lektion.id}-sentences`, attempt)))[0];
+  if (!chosen) return null;
+  if (chosen !== original) shuffled = seededShuffle(chosen.tokens, mulberry32(derivedSeedFor(`${lektion.id}-tiles`, attempt)));
+  if (shuffled.join(' ') === chosen.tokens.join(' ')) shuffled = [...shuffled.slice(1), shuffled[0]];
   return {
     id: `derived-${lektion.id}-word_order-${attempt}`,
     type: 'word_order',
     topic: lektion.primarySlug || null,
     lineIndex: chosen.index,
-    promptDe: 'Bilden Sie diese Dialogzeile in ihrer ursprünglichen Wortfolge nach.',
-    promptEn: 'Rebuild this dialogue line in its original word order.',
+    ...(chosen.sentenceIndex == null ? {} : { sentenceIndex: chosen.sentenceIndex }),
+    promptDe: 'Bilden Sie diesen Satz aus der Dialogzeile in seiner ursprünglichen Wortfolge nach. Andere korrekte Wortfolgen werden ebenfalls akzeptiert.',
+    promptEn: 'Rebuild this sentence from the dialogue line in its original word order. Other correct word orders are also accepted.',
     tokens: shuffled,
     answer: chosen.de,
-    accepted: [chosen.de],
+    accepted: [...new Set([chosen.de, ...wordOrderAnswers(chosen.de)])],
   };
 }
 
@@ -1162,18 +1237,25 @@ function buildListenSelectItem(lektion, attempt, rng) {
 }
 
 /**
- * derivedItems(lektion, attempt) → up to 3 items, one `match`, one
- * `word_order`, one `listen_select` (omitted, never padded, when the
- * Lektion's own data is too thin to build it — e.g. fewer than 4 Wortfeld
- * rows, or no dialogue line short enough for a word-order tile set).
+ * Up to three tasks from taught material: matching, supported word order (or
+ * matching with different words), and listening. Omit any slot without enough
+ * source material; never invent vocabulary or an unsupported tile answer key.
  */
 export function derivedItems(lektion, attempt = 1) {
   if (!lektion) return [];
   const rng = mulberry32(derivedSeedFor(lektion.id, attempt));
+  const match = buildMatchItem(lektion, attempt, rng);
+  const wordOrder = buildWordOrderItem(lektion, attempt, rng);
+  const listenSelect = buildListenSelectItem(lektion, attempt, rng);
+  // Keep the practice slot when a line's grammar is outside the tile rule.
+  // Reuse matching with different, already-taught words and a distinct id.
+  const remaining = (lektion.wortfeld || []).filter((word) => !match?.pairs.some((pair) => pair.de === word.de));
+  const replacement = !wordOrder && buildMatchItem({ ...lektion, wortfeld: remaining }, attempt,
+    mulberry32(derivedSeedFor(`${lektion.id}-more-words`, attempt)));
   const items = [
-    buildMatchItem(lektion, attempt, rng),
-    buildWordOrderItem(lektion, attempt, rng),
-    buildListenSelectItem(lektion, attempt, rng),
+    match,
+    wordOrder || (replacement && { ...replacement, id: `derived-${lektion.id}-match-more-${attempt}` }),
+    listenSelect,
   ].filter(Boolean);
   return items;
 }

@@ -12,11 +12,13 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import * as lucideIcons from 'lucide-react';
-import { A11_META, LANDESKUNDE, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
+import { A11_META, LANDESKUNDE, outcomeLineEn, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
+import { OWN_ICONS, WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
+import { abschlusstestA11 } from '../src/data/courseTests/abschlusstestA11.js';
+import buildLesson from '../src/lib/lesson/buildLesson.js';
 
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 const NRS = LEKTIONEN.map((l) => l.nr);
@@ -27,6 +29,7 @@ function englishStrings(meta) {
   out.push(meta.aboutEn);
   for (const c of meta.chapters) out.push(c.titleEn, c.storyEn);
   for (const c of meta.characters) out.push(c.roleEn);
+  for (const notes of Object.values(LANDESKUNDE)) for (const n of notes) out.push(n.titleEn, n.bodyEn);
   for (const intro of Object.values(meta.lektionIntro)) out.push(intro.situationEn, ...intro.canDoEn);
   out.push(...meta.outcomesEn);
   for (const s of meta.howItWorksEn.steps) out.push(s.label, s.descriptionEn);
@@ -166,9 +169,14 @@ test('charactersOf reads a new speaker off the data with a neutral fallback role
 
 test('the six outcomes are can-dos the course teaches, not marketing', () => {
   assert.equal(A11_META.outcomesEn.length, 6);
-  const all = new Set(Object.values(A11_META.lektionIntro).flatMap((i) => i.canDoEn.map((s) => s.replace(/^I can /, '').replace(/\.$/, ''))));
+  const all = new Set(Object.values(A11_META.lektionIntro).flatMap((i) => i.canDoEn.map(outcomeLineEn)));
+  const allDe = new Set(LEKTIONEN.flatMap((l) => l.canDo));
+  assert.equal(A11_META.outcomesDe.length, 6, 'the same six in Deutsch-Modus');
+  for (const line of A11_META.outcomesDe) assert.ok(allDe.has(line), `"${line}" is not one of the course's can-dos`);
   for (const line of A11_META.outcomesEn) {
     assert.ok(all.has(line), `outcome "${line}" is not one of the course's can-dos`);
+    // The list continues „By the end of A1.1 you can …": it read „you can say where I come from".
+    assert.doesNotMatch(line, /\b(I|my|me)\b/, `outcome "${line}" speaks as the learner`);
     assert.doesNotMatch(line, /\b(pass the|fluent|guarantee|in \d+ (days|weeks)|get a job|visa)\b/i, `outcome "${line}" reads as a promise`);
   }
   assert.equal(new Set(A11_META.outcomesEn).size, 6, 'no outcome twice');
@@ -180,7 +188,10 @@ test('the six outcomes are can-dos the course teaches, not marketing', () => {
 
 test('weeklyEstimate derives from the path minutes and the sustainable pace', () => {
   const est = weeklyEstimate();
-  const path = curriculumPath(CURRICULUM_A11);
+  // The final test's length is its own sections' sum, one value (the independent score, 2026-11-20: 65 vs 40).
+  const testMinutes = abschlusstestA11.sections.reduce((a, s) => a + s.minutes, 0);
+  const path = curriculumPath(CURRICULUM_A11, { testMinutes });
+  assert.equal(curriculumPath(CURRICULUM_A11).at(-1).minutes, null, 'no typed number for the final test');
   const sum = (kind) => path.filter((n) => n.kind === kind).reduce((a, n) => a + n.minutes, 0);
   assert.equal(est.lektionMinutes, LEKTIONEN.reduce((a, l) => a + l.minutes, 0));
   assert.equal(est.checkpointMinutes, sum('checkpoint'));
@@ -214,14 +225,37 @@ test('weeklyEstimate moves when the minutes move (it is not a typed figure)', ()
 // 6. How it works
 // ---------------------------------------------------------------------------
 
-test('the how-it-works row names the player stages in the order buildLesson runs them', () => {
+// I1 (2026-11-23): the row listed the ten legacy stages while every A1.1 Lektion runs the guided
+// ones (scene, sounds, reading, from memory, final check). The rule: the row IS the guided run, in
+// its order — every Lektion's built stage kinds (with a card due, so the warm-up is in) are the row
+// minus what that Lektion lacks, and every row is a stage some Lektion runs.
+test('the how-it-works row names the guided stages in the order the player runs them', () => {
   const keys = A11_META.howItWorksEn.steps.map((s) => s.key);
-  assert.deepEqual(keys, ['warmup', 'pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'recap']);
-  for (const s of A11_META.howItWorksEn.steps) {
-    assert.ok(s.label.length <= 12, `${s.key}: label "${s.label}" is too long for a row`);
-    const words = s.descriptionEn.trim().split(/\s+/).length;
-    assert.ok(words <= 10, `${s.key}: description has ${words} words, max 10`);
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const run = new Set();
+  for (const l of LEKTIONEN) {
+    const kinds = buildLesson({ curriculum: CURRICULUM_A11, lektion: l, pool, dueCards: [{ cardKey: 'due' }] }).stages.map((s) => s.kind);
+    assert.deepEqual(kinds, keys.filter((k) => kinds.includes(k)), `${l.id}: the course home must list its stages in their order`);
+    kinds.forEach((k) => run.add(k));
   }
+  assert.deepEqual(keys.filter((k) => !run.has(k)), [], 'the row names a stage no Lektion runs');
+  for (const s of A11_META.howItWorksEn.steps) {
+    // German compounds carry a soft hyphen where they may break.
+    for (const label of [s.label, ...s.labelDe.split('\u00AD')]) assert.ok(label.length <= 12, `${s.key}: label "${label}" is too long for a row`);
+    for (const line of [s.descriptionEn, s.descriptionDe]) {
+      const words = line.trim().split(/\s+/).length;
+      assert.ok(words <= 10, `${s.key}: description has ${words} words, max 10`);
+    }
+  }
+});
+
+// 2026-11-25: sixteen steps in five columns left the last card alone in its row.
+test('no how-it-works card stands alone: every column count of its grid divides the number of steps', () => {
+  const src = readFileSync(new URL('../src/components/course/CourseWelcome.jsx', import.meta.url), 'utf8');
+  const grid = src.match(/<ol className="([^"]*\bgrid-cols-[^"]*)"/)[1];
+  const columns = [...grid.matchAll(/grid-cols-(\d+)/g)].map((m) => Number(m[1]));
+  assert.ok(columns.length >= 2, grid);
+  for (const n of columns) assert.equal(A11_META.howItWorksEn.steps.length % n, 0, `${A11_META.howItWorksEn.steps.length} cards in ${n} columns`);
 });
 
 // ---------------------------------------------------------------------------
@@ -288,11 +322,14 @@ test('every Wortfeld word of every A1.1 Lektion has a WORTFELD_ICONS entry', () 
   }
 });
 
-test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-react icon', () => {
+test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-react icon, or to one the course draws', () => {
+  // „der Tisch" showed lucide's Table2, a spreadsheet (browser walk 2026-11-25).
+  assert.ok(Object.hasOwn(OWN_ICONS, WORTFELD_ICONS.Tisch));
+  assert.ok(![...Object.values(WORTFELD_ICONS)].some((name) => /^Table(?!t)/.test(name)), 'no spreadsheet icon');
   const names = new Set([...Object.values(WORTFELD_ICONS), WORTFELD_ICON_FALLBACK]);
   assert.ok(names.size > 0);
   for (const name of names) {
-    const icon = lucideIcons[name];
+    const icon = lucideIcons[name] || OWN_ICONS[name];
     // lucide-react icons are forwardRef components: functions under CJS, objects under ESM.
     assert.ok(
       typeof icon === 'function' || (typeof icon === 'object' && icon !== null),
@@ -309,7 +346,7 @@ test('every WORTFELD_ICONS value, and the fallback, is in the by-name icon map W
   const missing = [...names].filter((name) => !Object.prototype.hasOwnProperty.call(WORTFELD_ICON_COMPONENTS, name));
   assert.deepEqual(missing, [], `add to src/components/lesson/wortfeldIcons.js: ${missing.join(', ')}`);
   for (const [name, icon] of Object.entries(WORTFELD_ICON_COMPONENTS)) {
-    assert.equal(icon, lucideIcons[name], `"${name}" in wortfeldIcons.js must be lucide-react's ${name}`);
+    assert.equal(icon, OWN_ICONS[name] || lucideIcons[name], `"${name}" in wortfeldIcons.js must be lucide-react's ${name}`);
   }
 });
 
@@ -329,11 +366,15 @@ test('WortfeldStage renders an icon circle, a flip toggle and a "show all Englis
   assert.match(src, /wortfeld\.showAllEnglish/, 'must reference the show-all-English string key');
   assert.match(src, /wortfeld\.en/, 'a flipped card must render the text "EN" tag, not colour alone');
   assert.match(src, /WortfeldAudioBadge/, 'must keep an audio-source badge (one per stage since W3.4)');
+  // Memory mode: a pressed toggle; the card's German (and the line that spells it) waits for the tap.
+  assert.match(src, /aria-pressed=\{memory\}/);
+  assert.match(src, /const german = memory \? flipped : !flipped;/);
+  assert.match(src, /\{line && german && \(/);
 });
 
 test('the wortfeld string keys (EN tag, show/hide all English) exist in both chrome languages with no empty value', () => {
   const src = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
-  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish'];
+  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish', 'wortfeld.memory'];
   for (const key of keys) {
     const matches = src.match(new RegExp(`'${key.replace('.', '\\.')}':\\s*'[^']+'`, 'g')) || [];
     assert.equal(matches.length, 2, `"${key}" must appear once in each of the en/de tables with a non-empty value`);
@@ -346,10 +387,11 @@ test('the wortfeld string keys (EN tag, show/hide all English) exist in both chr
 
 test('every chapter has a Landeskunde note with both languages, both under 90 words, and a source', () => {
   const chapterNrs = A11_META.chapters.map((c) => c.nr);
-  assert.deepEqual(Object.keys(LANDESKUNDE).map(Number).sort(), chapterNrs, 'LANDESKUNDE must have exactly one entry per chapter');
-  for (const nr of chapterNrs) {
-    const note = LANDESKUNDE[nr];
-    assert.ok(note, `chapter ${nr} has no Landeskunde note`);
+  assert.deepEqual(Object.keys(LANDESKUNDE).map(Number).sort(), chapterNrs, 'LANDESKUNDE must have an entry for every chapter');
+  for (const nr of chapterNrs) assert.ok(LANDESKUNDE[nr].length > 0, `chapter ${nr} has no Landeskunde note`);
+  for (const [nr, note] of Object.entries(LANDESKUNDE).flatMap(([n, notes]) => notes.map((x) => [n, x]))) {
+    // A note stands at its own chapter: the registration one stood at checkpoint 2, the flea market at 3.
+    assert.ok(A11_META.chapters.find((c) => c.nr === Number(nr)).lektionen.includes(note.lektion), `"${note.titleDe}" is about Lektion ${note.lektion}, not chapter ${nr}`);
     for (const field of ['titleDe', 'titleEn', 'bodyEn', 'bodyDe', 'source']) {
       assert.ok(typeof note[field] === 'string' && note[field].trim().length > 0, `chapter ${nr}: "${field}" is empty`);
     }
@@ -364,7 +406,7 @@ test('every chapter has a Landeskunde note with both languages, both under 90 wo
 
 test('Landeskunde notes carry no outcome promise or exam-fee figure', () => {
   const BANNED = /\b(garantiert|Erfolg garantiert|bestehen Sie sicher|€\s?\d|EUR\s?\d)\b/i;
-  for (const [nr, note] of Object.entries(LANDESKUNDE)) {
+  for (const [nr, note] of Object.entries(LANDESKUNDE).flatMap(([n, notes]) => notes.map((x) => [n, x]))) {
     for (const field of ['bodyEn', 'bodyDe']) {
       assert.ok(!BANNED.test(note[field]), `chapter ${nr}: "${field}" reads like an outcome promise or an exam fee figure`);
     }
@@ -398,6 +440,23 @@ test('the duration estimate counts what the player actually builds, and no scree
   }
 });
 
+test('a checkpoint shows the range its own tasks give, counted on a built paper', async () => {
+  const { CHECKPOINT_COUNTS, STEP_SECONDS, checkpointMinutesEstimate } = await import('../src/data/curricula/a11.meta.js');
+  const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  for (const checkpoint of CURRICULUM_A11.checkpoints) {
+    const items = Object.values(buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: 'minutes' }));
+    const of = (section, ...types) => items.filter((i) => i.section === section && (!types.length || types.includes(i.type))).length;
+    assert.deepEqual({
+      dictationLine: of('hoeren', 'dictation'), readQuestion: of('hoeren', 'multiple_choice') + of('lesen'), checkpointText: of('lesen'),
+      practiceItem: of('bausteine'), derivedItem: of('schreiben', 'sentence_building'), writing: of('schreiben', 'graded_writing'), readAloudLine: of('sprechen'),
+    }, CHECKPOINT_COUNTS, `checkpoint ${checkpoint.nr}`);
+  }
+  const e = checkpointMinutesEstimate();
+  assert.ok(e.lo < e.hi && e.hi * 60 >= Object.entries(CHECKPOINT_COUNTS).reduce((a, [k, n]) => a + n * STEP_SECONDS[k][1], 0));
+  assert.match(readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8'), /checkpointMinutesEstimate\(\)/);
+});
+
 test('the guided estimate adds one checked meaning and say-it turn per chunk, retaining the legacy estimate elsewhere', async () => {
   const { lektionMinutesEstimate } = await import('../src/data/curricula/a11.meta.js');
   const l = LEKTIONEN[0];
@@ -405,7 +464,12 @@ test('the guided estimate adds one checked meaning and say-it turn per chunk, re
   const guided = lektionMinutesEstimate(l);
   assert.ok(guided.lo >= legacy.lo && guided.hi > legacy.hi, 'five-minute rounding may keep the low end in its original bucket');
   assert.deepEqual(lektionMinutesEstimate({ ...l, guided: undefined, flow: undefined }), legacy);
-  const more = lektionMinutesEstimate({ ...l, guided: { chunks: [...l.guided.chunks, ...l.guided.chunks] } });
+  const more = lektionMinutesEstimate({ ...l, guided: { ...l.guided, chunks: [...l.guided.chunks, ...l.guided.chunks] } });
   assert.ok(more.lo > guided.lo && more.hi > guided.hi, 'the estimate follows the data count');
   assert.equal(l.minutes, 15, 'the validator target is unchanged');
+  // The final check counts, turn by turn, and so does a series that is shown before it is tested.
+  const { STEP_SECONDS } = await import('../src/data/curricula/a11.meta.js');
+  const seconds = (x) => x * 60;
+  const noCheck = lektionMinutesEstimate({ ...l, guided: { ...l.guided, check: undefined } });
+  assert.ok(guided.hi - noCheck.hi >= Math.floor((l.guided.check.turns.length * STEP_SECONDS.checkTurn[1]) / seconds(5)) * 5);
 });

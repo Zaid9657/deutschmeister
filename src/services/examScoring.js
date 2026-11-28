@@ -68,6 +68,24 @@ export function scoreListeningAnswers(mock, keysByPart = {}, answers = {}) {
 }
 
 /**
+ * How many tasks of a section have no answer yet — asked before the section is handed in (an empty test was
+ * submitted without a word, browser walk of 2026-11-25). `keysByPart` as in scoreListeningAnswers; a writing
+ * task counts as one while its field is empty.
+ */
+export function openAnswers(section, answers = {}, keysByPart = {}) {
+  let open = 0;
+  const missing = (key) => { if (answers[key] === undefined || answers[key] === null || answers[key] === '') open += 1; };
+  for (const part of section?.parts || []) {
+    if (part.type === 'matching') for (const t of part.texts || []) missing(`${part.key}:${t.id}`);
+    else if (part.type === 'mc-group') for (const item of part.items || []) missing(item.id);
+    else if (part.type === 'cloze') for (const gap of part.gaps || []) missing(gap.id);
+    else if (part.type === 'listening') for (const item of keysByPart[part.key] || []) missing(`listening:${part.key}:${item.id}`);
+    else if (part.type === 'writing' && !String(answers[`writing:${part.key}`] || '').trim()) open += 1;
+  }
+  return open;
+}
+
+/**
  * Merge runtime listening results ({ score, max }) into an objective result.
  * Kept separate so the pure part stays testable without DB fixtures.
  */
@@ -83,9 +101,73 @@ export function mergeListeningResult(objective, listening) {
   };
 }
 
+/**
+ * The section that cost the most POINTS, or null when none was lost. Points, not percent: with 0 of 8 in Lesen
+ * and 0 of 10 in Hören the result named Lesen, and a full score still named one (browser walk, 2026-11-25).
+ */
+export function costliestSection(sectionScores = {}) {
+  return Object.entries(sectionScores || {})
+    .map(([key, s]) => ({ key, max: Number(s?.max) || 0, lost: Math.max(0, (Number(s?.max) || 0) - (Number(s?.score) || 0)) }))
+    .filter((s) => s.lost > 0)
+    // Equally many points: the shorter section, where they weigh more.
+    .sort((a, b) => b.lost - a.lost || a.max - b.max)[0] || null;
+}
+
 /** Percentage + band verdict. Richtwert only — the UI must label it so. */
 export function verdictFor(percent, passPercent) {
   if (percent >= passPercent + 15) return 'solide'; // comfortably above the line
   if (percent >= passPercent) return 'knapp'; // above, but without buffer
   return 'nicht-bereit'; // below the documented threshold
+}
+
+/**
+ * The most a learner scores in a section by giving one and the same answer everywhere — the same option key, or
+ * the same place in the list: the checkpoints' guess ceiling (buildCheckpoint.js `guessCeiling`), for the course
+ * tests. Listening keys load from the database, so a section without static keys has none (0).
+ */
+export function sectionGuessCeiling(section) {
+  const byKey = new Map();
+  const byPlace = new Map();
+  const add = (m, k) => m.set(k, (m.get(k) || 0) + 1);
+  for (const part of section?.parts || []) {
+    const items = part.type === 'mc-group' ? part.items || [] : part.type === 'cloze' ? part.gaps || [] : [];
+    for (const it of items) {
+      add(byKey, it.answer);
+      add(byPlace, (it.options || []).findIndex((o) => (o?.key ?? o) === it.answer));
+    }
+    if (part.type === 'matching') for (const t of part.texts || []) add(byKey, part.answers?.[t.id]);
+  }
+  const most = (m) => (m.size ? Math.max(...m.values()) : 0);
+  return Math.max(most(byKey), most(byPlace));
+}
+
+/** What each scored section with static keys needs: one point more than a constant answer gives (`sectionGuessCeiling`). */
+export function sectionPassMarks(mock) {
+  return (mock.sections || []).flatMap((section) => {
+    const ceiling = sectionGuessCeiling(section);
+    const max = scoreObjectiveSections({ sections: [section] }, {}).sectionScores[section.key]?.max
+      || (section.parts || []).reduce((n, p) => n + (p.questionNumbers?.length || 0), 0);
+    // A section whose keys load from the database names its own mark (`passMark`).
+    if (section.passMark) return [{ key: section.key, title: section.title, need: section.passMark, max }];
+    return ceiling > 0 ? [{ key: section.key, title: section.title, need: ceiling + 1, max }] : [];
+  });
+}
+
+/** The sections of a saved attempt below their own mark (`sectionPassMarks`), with the learner's points. */
+export function guessedSections(attempt, mock) {
+  const scores = attempt.section_scores || {};
+  return sectionPassMarks(mock).filter((m) => scores[m.key] && scores[m.key].score < m.need)
+    .map((m) => ({ ...m, score: scores[m.key].score, max: scores[m.key].max }));
+}
+
+/**
+ * The verdict of a saved attempt (the independent score, 2026-11-20): the band of its percent, but „nicht-bereit“
+ * while a scored section is no better than one constant answer — reading answered „first option“ throughout
+ * (4 of 8) with listening at 7 of 10 was 61 % and „knapp“. The checkpoints' `sectionPasses` rule, here for the
+ * final tests. An attempt saved without section scores is judged by its percent alone.
+ */
+export function attemptVerdict(attempt, mock) {
+  const verdict = verdictFor(Math.round((attempt.score / attempt.max_score) * 100), mock.passPercent);
+  if (verdict === 'nicht-bereit') return verdict;
+  return guessedSections(attempt, mock).length ? 'nicht-bereit' : verdict;
 }

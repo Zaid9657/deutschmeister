@@ -1,0 +1,2164 @@
+{
+ "items": [
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Frau Wolf, was ist das hier?",
+   "verdict": "right",
+   "why": "Correct identification question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Guten Tag! Was ist das da?",
+   "verdict": "right",
+   "why": "Greeting and correct question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Und das hier, was ist das?",
+   "verdict": "right",
+   "why": "Natural identification question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was ist das, bitte?",
+   "verdict": "right",
+   "why": "Correct polite question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "frau wolf was ist das",
+   "verdict": "right",
+   "why": "Missing capitals and punctuation are harmless."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was das ist?",
+   "verdict": "wrong",
+   "why": "Verb position is wrong for this question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Wie ist das?",
+   "verdict": "wrong",
+   "why": "Does not ask what the object is."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was sind das hier?",
+   "verdict": "wrong",
+   "why": "Singular object requires ist."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was ist du?",
+   "verdict": "wrong",
+   "why": "Wrong reference and verb form."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was kostet das hier?",
+   "verdict": "wrong",
+   "why": "Asks the price instead of identifying it."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Und wie viel kostet die Uhr?",
+   "verdict": "right",
+   "why": "Correct price question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Frau Wolf, was kostet sie?",
+   "verdict": "right",
+   "why": "Sie correctly refers to die Uhr."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie teuer ist die Uhr?",
+   "verdict": "right",
+   "why": "Correct alternative price question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Und der Preis für die Uhr?",
+   "verdict": "right",
+   "why": "Natural short question; no sentence required."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "was kostet die uhr",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kosten die Uhr?",
+   "verdict": "wrong",
+   "why": "Singular Uhr requires kostet."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viele kostet sie?",
+   "verdict": "wrong",
+   "why": "A price question requires wie viel."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kostet er?",
+   "verdict": "wrong",
+   "why": "Die Uhr requires sie."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel die Uhr kostet?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie kostet acht Euro.",
+   "verdict": "wrong",
+   "why": "States a price instead of asking."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18 €",
+   "verdict": "right",
+   "why": "Correct heard price."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18,00 Euro",
+   "verdict": "right",
+   "why": "Correct price with decimal notation."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "achtzehn Euro",
+   "verdict": "right",
+   "why": "Correct price written in words."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Preis: 18 Euro",
+   "verdict": "right",
+   "why": "Correct price with a label."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "achtzehn euro",
+   "verdict": "right",
+   "why": "Correct amount; capitalization is harmless."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "80 Euro",
+   "verdict": "wrong",
+   "why": "Confuses eighteen with eighty."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "8 Euro",
+   "verdict": "wrong",
+   "why": "The heard amount is eighteen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "81 €",
+   "verdict": "wrong",
+   "why": "Incorrect number."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "achtzig Euro",
+   "verdict": "wrong",
+   "why": "Eighty is not eighteen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18 Cent",
+   "verdict": "wrong",
+   "why": "Wrong currency unit."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Und der Stuhl, was kostet der?",
+   "verdict": "right",
+   "why": "Correct question with masculine reference."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie teuer ist der Stuhl?",
+   "verdict": "right",
+   "why": "Correct alternative price question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Frau Wolf, was kostet der Stuhl?",
+   "verdict": "right",
+   "why": "Correct question addressed to the seller."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Der Stuhl kostet wie viel?",
+   "verdict": "right",
+   "why": "Natural question with final question phrase."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "was kostet der stuhl bitte",
+   "verdict": "right",
+   "why": "Only writing conventions are missing."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet das Stuhl?",
+   "verdict": "wrong",
+   "why": "Stuhl requires der."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viel kosten der Stuhl?",
+   "verdict": "wrong",
+   "why": "Singular subject requires kostet."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie kostet der Stuhl?",
+   "verdict": "wrong",
+   "why": "Price question lacks viel or was."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wo kostet der Stuhl?",
+   "verdict": "wrong",
+   "why": "Wo does not ask the price."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viel kostet du für den Stuhl?",
+   "verdict": "wrong",
+   "why": "Wrong subject, verb agreement and register."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Zusammen 30 Euro",
+   "verdict": "right",
+   "why": "Correct total; fragment is allowed."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "30,00 €",
+   "verdict": "right",
+   "why": "Correct total in decimal notation."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "dreißig Euro",
+   "verdict": "right",
+   "why": "Correct total written in words."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Das macht 30 Euro.",
+   "verdict": "right",
+   "why": "Correct total in a sentence."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "dreissig euro",
+   "verdict": "right",
+   "why": "Correct amount; keyboard spelling is acceptable."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "dreizehn Euro",
+   "verdict": "wrong",
+   "why": "Confuses thirty with thirteen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "3 €",
+   "verdict": "wrong",
+   "why": "Incorrect total."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "300 Euro",
+   "verdict": "wrong",
+   "why": "Incorrect total."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "13 Euro",
+   "verdict": "wrong",
+   "why": "The total is thirty."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "30 Cent",
+   "verdict": "wrong",
+   "why": "Wrong currency unit."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Die Uhr kaufe ich.",
+   "verdict": "right",
+   "why": "Correct sentence with object first."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe die Lampe und den Stuhl.",
+   "verdict": "right",
+   "why": "Correct buying sentence and articles."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Frau Wolf, ich kaufe das Regal.",
+   "verdict": "right",
+   "why": "Correct sentence expressing a purchase."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Den Tisch kaufe ich.",
+   "verdict": "right",
+   "why": "Correct object-first sentence with den."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "ich kaufe die tasche",
+   "verdict": "right",
+   "why": "Complete correct sentence despite missing capitals."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe der Stuhl.",
+   "verdict": "wrong",
+   "why": "Kaufen requires den Stuhl."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufen die Uhr.",
+   "verdict": "wrong",
+   "why": "Ich requires kaufe."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Die Uhr und den Stuhl.",
+   "verdict": "wrong",
+   "why": "Task explicitly requires a sentence."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich bin kaufe die Lampe.",
+   "verdict": "wrong",
+   "why": "Bin cannot accompany kaufe here."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich brauche die Uhr.",
+   "verdict": "wrong",
+   "why": "States a need, not a purchase."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Und der Rucksack, was kostet der?",
+   "verdict": "right",
+   "why": "Correct price question and masculine reference."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie teuer ist er?",
+   "verdict": "right",
+   "why": "Er correctly refers to der Rucksack."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Der Rucksack kostet wie viel?",
+   "verdict": "right",
+   "why": "Natural question with final question phrase."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet der Rucksack, Frau Wolf?",
+   "verdict": "right",
+   "why": "Correct price question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "wie viel kostet der ruksack",
+   "verdict": "right",
+   "why": "Recognizable typo and missing capitals are harmless."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet sie?",
+   "verdict": "wrong",
+   "why": "Der Rucksack requires er."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet die Rucksack?",
+   "verdict": "wrong",
+   "why": "Wrong noun gender."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viel der Rucksack kostet?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viele kostet der Rucksack?",
+   "verdict": "wrong",
+   "why": "Price requires wie viel."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kosten er?",
+   "verdict": "wrong",
+   "why": "Er requires kostet."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45,00 Euro",
+   "verdict": "right",
+   "why": "Correct heard price."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "fünfundvierzig Euro",
+   "verdict": "right",
+   "why": "Correct number written in words."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Der Preis: 45 €",
+   "verdict": "right",
+   "why": "Correct price with a label."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45",
+   "verdict": "right",
+   "why": "Amount alone suffices in this context."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "funfundvierzig euro",
+   "verdict": "right",
+   "why": "Missing umlaut and capital do not obscure the number."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "54 Euro",
+   "verdict": "wrong",
+   "why": "Reverses the number components."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "vierzehn Euro",
+   "verdict": "wrong",
+   "why": "Incorrect heard amount."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "40 Euro",
+   "verdict": "wrong",
+   "why": "Omits the five."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "450 €",
+   "verdict": "wrong",
+   "why": "Incorrect amount."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45 Cent",
+   "verdict": "wrong",
+   "why": "Wrong currency unit."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Und die Lampe? Was kostet sie?",
+   "verdict": "right",
+   "why": "Correct question and feminine pronoun."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Lampe, wie teuer ist die?",
+   "verdict": "right",
+   "why": "Natural question with feminine reference."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet die Lampe, bitte?",
+   "verdict": "right",
+   "why": "Correct polite price question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Wie viel kostet die Lampe da?",
+   "verdict": "right",
+   "why": "Correct question identifying the lamp."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "frau wolf was kostet die lampe",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet das Lampe?",
+   "verdict": "wrong",
+   "why": "Lampe requires die."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Lampe, was kostet er?",
+   "verdict": "wrong",
+   "why": "Die Lampe requires sie."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Wie viel kosten die Lampe?",
+   "verdict": "wrong",
+   "why": "Singular Lampe requires kostet."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was die Lampe kostet?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Wie viele Lampen kaufen Sie?",
+   "verdict": "wrong",
+   "why": "Asks quantity purchased, not the lamp's price."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Zusammen sind das 57 Euro.",
+   "verdict": "right",
+   "why": "Correct total in a sentence."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "57,00 €",
+   "verdict": "right",
+   "why": "Correct total in decimal notation."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "siebenundfünfzig Euro",
+   "verdict": "right",
+   "why": "Correct total written in words."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "57 Euro zusammen",
+   "verdict": "right",
+   "why": "Correct total; no sentence required."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "siebenundfuenfzig euro",
+   "verdict": "right",
+   "why": "Keyboard spelling and lowercase are acceptable."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "75 Euro",
+   "verdict": "wrong",
+   "why": "Reverses the number components."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "17 Euro",
+   "verdict": "wrong",
+   "why": "Incorrect heard total."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "50 Euro",
+   "verdict": "wrong",
+   "why": "Omits the seven."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "45 Euro",
+   "verdict": "wrong",
+   "why": "Repeats the backpack price, not the total."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "5,70 Euro",
+   "verdict": "wrong",
+   "why": "Incorrect monetary value."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das hier ist mein Wörterbuch.",
+   "verdict": "right",
+   "why": "Correct identification in a full sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist eine Schere.",
+   "verdict": "right",
+   "why": "Correct sentence and article."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Hier ist mein Heft.",
+   "verdict": "right",
+   "why": "Complete sentence identifying the item."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ein Lineal ist das.",
+   "verdict": "right",
+   "why": "Correct sentence with identification first."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "das ist ein bleistift",
+   "verdict": "right",
+   "why": "Correct sentence despite missing capitals."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist einen Stift.",
+   "verdict": "wrong",
+   "why": "After ist, use ein Stift."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Hier mein Buch.",
+   "verdict": "wrong",
+   "why": "Missing verb; a sentence is required."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das sind mein Heft.",
+   "verdict": "wrong",
+   "why": "Singular Heft requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Eine Schere.",
+   "verdict": "wrong",
+   "why": "Correct noun phrase, but no sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist ein Tasche.",
+   "verdict": "wrong",
+   "why": "Tasche requires eine."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Hier.",
+   "verdict": "right",
+   "why": "The task explicitly allows hier."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Da ist es.",
+   "verdict": "right",
+   "why": "Correct location and neuter pronoun."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Wörterbuch ist da.",
+   "verdict": "right",
+   "why": "Correct location answer."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Es ist hier, Lena.",
+   "verdict": "right",
+   "why": "Correct pronoun and location."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "das woerterbuch ist hier",
+   "verdict": "right",
+   "why": "Keyboard spelling and lowercase are acceptable."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Er ist hier.",
+   "verdict": "wrong",
+   "why": "Das Wörterbuch requires es."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Das Wörterbuch sind da.",
+   "verdict": "wrong",
+   "why": "Singular subject requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Wörterbuch ist grün.",
+   "verdict": "wrong",
+   "why": "Gives colour instead of location."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie ist da.",
+   "verdict": "wrong",
+   "why": "Wrong pronoun for das Wörterbuch."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich bin hier.",
+   "verdict": "wrong",
+   "why": "Locates the learner, not the dictionary."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Lena, wo ist mein Stift?",
+   "verdict": "right",
+   "why": "Correct question about the learner's pen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Mein Stift, wo ist der?",
+   "verdict": "right",
+   "why": "Natural question with masculine reference."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist der Stift, Lena?",
+   "verdict": "right",
+   "why": "The definite article identifies the sought pen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist mein Stift, bitte?",
+   "verdict": "right",
+   "why": "Correct polite location question."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wo ist mein stift",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist dein Stift?",
+   "verdict": "wrong",
+   "why": "Asks about Lena's pen instead."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo sind mein Stift?",
+   "verdict": "wrong",
+   "why": "Singular Stift requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wer ist mein Stift?",
+   "verdict": "wrong",
+   "why": "Wer asks about a person, not location."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo mein Stift ist?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist meine Stift?",
+   "verdict": "wrong",
+   "why": "Masculine Stift requires mein."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft ist weiß.",
+   "verdict": "right",
+   "why": "Correct colour sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Es ist gelb, Lena.",
+   "verdict": "right",
+   "why": "Correct neuter pronoun and colour."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Rot ist mein Heft.",
+   "verdict": "right",
+   "why": "Correct sentence with colour first."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Das Heft ist blau und grün.",
+   "verdict": "right",
+   "why": "Correct sentence; two colours are possible."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "mein heft ist gruen",
+   "verdict": "right",
+   "why": "Keyboard spelling and lowercase are acceptable."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft hat blau.",
+   "verdict": "wrong",
+   "why": "Use ist with a colour adjective."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Es sind rot.",
+   "verdict": "wrong",
+   "why": "Singular es requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft ist eine gelb.",
+   "verdict": "wrong",
+   "why": "The colour adjective takes no article here."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Blau und grün.",
+   "verdict": "wrong",
+   "why": "Task explicitly requires a sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Heft ist schwarz.",
+   "verdict": "wrong",
+   "why": "Neuter Heft requires mein."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Und deine Tasche, welche Farbe hat sie?",
+   "verdict": "right",
+   "why": "Correct informal question and feminine reference."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat die Tasche, Lena?",
+   "verdict": "right",
+   "why": "Context identifies Lena's bag."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat deine Tasche, bitte?",
+   "verdict": "right",
+   "why": "Correct question using informal address."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Deine Tasche hat welche Farbe?",
+   "verdict": "right",
+   "why": "Valid question with final question phrase."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "welche farbe hat deine tasche",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat Ihre Tasche, Lena?",
+   "verdict": "wrong",
+   "why": "Uses formal address instead of du."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat meine Tasche?",
+   "verdict": "wrong",
+   "why": "Asks about the learner's own bag."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe haben deine Tasche?",
+   "verdict": "wrong",
+   "why": "Singular Tasche requires hat."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat dein Tasche?",
+   "verdict": "wrong",
+   "why": "Feminine Tasche requires deine."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Wo ist deine Tasche?",
+   "verdict": "wrong",
+   "why": "Asks location instead of colour."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Hier, Lena.",
+   "verdict": "right",
+   "why": "Correct short location answer."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Da ist sie.",
+   "verdict": "right",
+   "why": "Correct feminine pronoun and location."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Meine Schere ist hier.",
+   "verdict": "right",
+   "why": "Correct location sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Die Schere? Da.",
+   "verdict": "right",
+   "why": "Natural short answer; no sentence required."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "die schere ist da",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist hier.",
+   "verdict": "wrong",
+   "why": "Die Schere requires sie."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Es ist da.",
+   "verdict": "wrong",
+   "why": "Wrong pronoun for die Schere."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Die Schere sind hier.",
+   "verdict": "wrong",
+   "why": "German Schere is singular here."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Meine Schere ist weiß.",
+   "verdict": "wrong",
+   "why": "Gives colour instead of location."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wo ist deine Schere?",
+   "verdict": "wrong",
+   "why": "Asks back instead of locating the learner's scissors."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Lena, mein Heft: Wo ist es?",
+   "verdict": "right",
+   "why": "Correct location question and neuter reference."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist das Heft, bitte?",
+   "verdict": "right",
+   "why": "Context identifies the learner's exercise book."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Mein Heft, wo ist das?",
+   "verdict": "right",
+   "why": "Natural question with neuter demonstrative."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist mein Heft, Lena?",
+   "verdict": "right",
+   "why": "Correct question about the learner's item."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "wo ist mein heft",
+   "verdict": "right",
+   "why": "Missing capitals and punctuation are harmless."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist meine Heft?",
+   "verdict": "wrong",
+   "why": "Neuter Heft requires mein."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist dein Heft?",
+   "verdict": "wrong",
+   "why": "Asks about Lena's exercise book instead."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo mein Heft ist?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo sind mein Heft?",
+   "verdict": "wrong",
+   "why": "Singular Heft requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Was ist mein Heft?",
+   "verdict": "wrong",
+   "why": "Does not ask where the item is."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche ist braun.",
+   "verdict": "right",
+   "why": "Correct colour sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Schwarz ist meine Tasche.",
+   "verdict": "right",
+   "why": "Correct sentence with colour first."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Sie ist weiß und blau.",
+   "verdict": "right",
+   "why": "Correct feminine reference and colour description."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Tasche ist grün, Lena.",
+   "verdict": "right",
+   "why": "Correct full sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "meine tasche ist weiss",
+   "verdict": "right",
+   "why": "Lowercase and ss keyboard spelling are acceptable."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Mein Tasche ist gelb.",
+   "verdict": "wrong",
+   "why": "Feminine Tasche requires meine."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Sie hat rot.",
+   "verdict": "wrong",
+   "why": "Use ist with a colour adjective."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Braun.",
+   "verdict": "wrong",
+   "why": "Task explicitly requires a sentence."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche sind blau.",
+   "verdict": "wrong",
+   "why": "Singular subject requires ist."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Tasche ist ein schwarz.",
+   "verdict": "wrong",
+   "why": "The colour adjective takes no article here."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Dein Stift, welche Farbe hat der?",
+   "verdict": "right",
+   "why": "Correct informal question with masculine reference."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Lena, welche Farbe hat dein Stift?",
+   "verdict": "right",
+   "why": "Correct question about Lena's pen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat der Stift, bitte?",
+   "verdict": "right",
+   "why": "Context identifies Lena's pen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Dein Stift hat welche Farbe?",
+   "verdict": "right",
+   "why": "Valid question with final question phrase."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "welche farbe hat dein stift",
+   "verdict": "right",
+   "why": "Only writing conventions are missing."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat Ihr Stift, Lena?",
+   "verdict": "wrong",
+   "why": "Formal address conflicts with the required du."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat mein Stift?",
+   "verdict": "wrong",
+   "why": "Asks about the learner's pen instead."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe haben dein Stift?",
+   "verdict": "wrong",
+   "why": "Singular Stift requires hat."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat deine Stift?",
+   "verdict": "wrong",
+   "why": "Masculine Stift requires dein."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Wie viel kostet dein Stift?",
+   "verdict": "wrong",
+   "why": "Asks price instead of colour."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Einen Computer brauche ich.",
+   "verdict": "right",
+   "why": "Correct object-first sentence with einen."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Guten Morgen! Ich brauche ein Telefon.",
+   "verdict": "right",
+   "why": "Greeting followed by a correct need sentence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche einen Stift und Papier.",
+   "verdict": "right",
+   "why": "Correct sentence and masculine object form."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ein Handy brauche ich, Herr Weber.",
+   "verdict": "right",
+   "why": "Correct sentence with object first."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich brauche eine schere",
+   "verdict": "right",
+   "why": "Complete correct sentence despite lowercase."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche ein Computer.",
+   "verdict": "wrong",
+   "why": "Masculine object requires einen Computer."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauchen ein Telefon.",
+   "verdict": "wrong",
+   "why": "Ich requires brauche."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Einen Computer und ein Telefon.",
+   "verdict": "wrong",
+   "why": "Task explicitly requires a sentence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich bin brauche ein Handy.",
+   "verdict": "wrong",
+   "why": "Bin cannot accompany brauche here."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe ein Telefon.",
+   "verdict": "wrong",
+   "why": "States possession instead of a need."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Herr Weber, wo ist mein Büro?",
+   "verdict": "right",
+   "why": "Correct question about the learner's office."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist bitte mein Büro?",
+   "verdict": "right",
+   "why": "Correct polite location question."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Büro, wo ist das?",
+   "verdict": "right",
+   "why": "Natural question with neuter reference."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Und wo ist mein Büro?",
+   "verdict": "right",
+   "why": "Correct location question."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "wo ist mein buero",
+   "verdict": "right",
+   "why": "Keyboard spelling and lowercase are acceptable."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist Ihr Büro?",
+   "verdict": "wrong",
+   "why": "Asks about Herr Weber's office instead."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo sind mein Büro?",
+   "verdict": "wrong",
+   "why": "Singular Büro requires ist."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wann ist mein Büro?",
+   "verdict": "wrong",
+   "why": "Wann asks time, not location."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo mein Büro ist?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist meine Büro?",
+   "verdict": "wrong",
+   "why": "Neuter Büro requires mein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Herr Weber, wann ist die Pause?",
+   "verdict": "right",
+   "why": "Correct question about break time."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Und wann ist Pause?",
+   "verdict": "right",
+   "why": "Natural question; article omission is idiomatic here."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Die Pause, wann ist die?",
+   "verdict": "right",
+   "why": "Natural question with feminine reference."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann haben wir Pause?",
+   "verdict": "right",
+   "why": "Correct alternative question about break time."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wann ist die pause bitte",
+   "verdict": "right",
+   "why": "Only capitals and punctuation are missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist die Pause?",
+   "verdict": "wrong",
+   "why": "Asks location instead of time."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann sind die Pause?",
+   "verdict": "wrong",
+   "why": "Singular Pause requires ist."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann die Pause ist?",
+   "verdict": "wrong",
+   "why": "Wrong word order for a direct question."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann ist der Pause?",
+   "verdict": "wrong",
+   "why": "Pause requires die."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Die Pause ist um eins.",
+   "verdict": "wrong",
+   "why": "States a time instead of asking."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Samira Haddad, guten Tag.",
+   "verdict": "right",
+   "why": "Natural telephone introduction with own name."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hier ist Omar Mansour.",
+   "verdict": "right",
+   "why": "Correct telephone self-identification."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Guten Tag, ich heiße Rania.",
+   "verdict": "right",
+   "why": "Correct greeting and self-identification."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Youssef.",
+   "verdict": "right",
+   "why": "Name alone is sufficient on the phone."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "hallo hier ist nour",
+   "verdict": "right",
+   "why": "Correct introduction despite missing capitals."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich heißt Samir.",
+   "verdict": "wrong",
+   "why": "Ich requires heiße."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie heißen Sie?",
+   "verdict": "wrong",
+   "why": "Asks the caller's name instead."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich heißen Hassan.",
+   "verdict": "wrong",
+   "why": "Wrong verb form after ich."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Name ist Ahmed.",
+   "verdict": "wrong",
+   "why": "Masculine Name requires mein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Guten Tag, Herr Weber.",
+   "verdict": "wrong",
+   "why": "Greeting does not give the learner's name."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421 5730",
+   "verdict": "right",
+   "why": "Correct complete digit sequence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421/5730",
+   "verdict": "right",
+   "why": "Slash is an acceptable separator."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421-5730",
+   "verdict": "right",
+   "why": "Hyphen does not change the number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0 4 2 1 5 7 3 0",
+   "verdict": "right",
+   "why": "All digits are correct and ordered."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "(0421) 5730",
+   "verdict": "right",
+   "why": "Parentheses around the area code are acceptable."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "4215730",
+   "verdict": "wrong",
+   "why": "Required initial zero is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "04217530",
+   "verdict": "wrong",
+   "why": "Five and seven are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "04215780",
+   "verdict": "wrong",
+   "why": "Eight replaces the heard three."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0423381",
+   "verdict": "wrong",
+   "why": "Repeats the scene's different number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "01712345678",
+   "verdict": "wrong",
+   "why": "This is not the office number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171 234 5678",
+   "verdict": "right",
+   "why": "Correct mobile number with grouping."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "01712345678",
+   "verdict": "right",
+   "why": "Correct complete digit sequence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171/2345678",
+   "verdict": "right",
+   "why": "Separator does not change the number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171-2345678",
+   "verdict": "right",
+   "why": "Correct digits with an acceptable separator."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0 1 7 1 2 3 4 5 6 7 8",
+   "verdict": "right",
+   "why": "Correct digits written individually."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "1712345678",
+   "verdict": "wrong",
+   "why": "Required initial zero is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "01712346578",
+   "verdict": "wrong",
+   "why": "Five and six are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171234567",
+   "verdict": "wrong",
+   "why": "Final eight is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "017123456789",
+   "verdict": "wrong",
+   "why": "Adds a digit that was not spoken."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "04215730",
+   "verdict": "wrong",
+   "why": "Gives the office number instead."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 6214",
+   "verdict": "right",
+   "why": "Correct office number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "04216214",
+   "verdict": "right",
+   "why": "Correct complete digit sequence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421/6214",
+   "verdict": "right",
+   "why": "Slash is an acceptable separator."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "(0421) 6214",
+   "verdict": "right",
+   "why": "Correct number with area-code parentheses."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0 4 2 1 6 2 1 4",
+   "verdict": "right",
+   "why": "Correct digits written individually."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "04212614",
+   "verdict": "wrong",
+   "why": "Six and two are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "04216241",
+   "verdict": "wrong",
+   "why": "Final one and four are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "4216214",
+   "verdict": "wrong",
+   "why": "Required initial zero is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421621",
+   "verdict": "wrong",
+   "why": "Final four is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "04215730",
+   "verdict": "wrong",
+   "why": "Repeats the first sitting's number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 876 5432",
+   "verdict": "right",
+   "why": "Correct mobile number with grouping."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "01528765432",
+   "verdict": "right",
+   "why": "Correct complete digit sequence."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152/8765432",
+   "verdict": "right",
+   "why": "Separator does not change the number."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152-8765432",
+   "verdict": "right",
+   "why": "Correct digits with an acceptable separator."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0 1 5 2 8 7 6 5 4 3 2",
+   "verdict": "right",
+   "why": "Correct digits written individually."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "01527865432",
+   "verdict": "wrong",
+   "why": "Eight and seven are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "01528765423",
+   "verdict": "wrong",
+   "why": "Final three and two are transposed."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "1528765432",
+   "verdict": "wrong",
+   "why": "Required initial zero is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152876543",
+   "verdict": "wrong",
+   "why": "Final two is missing."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "01712345678",
+   "verdict": "wrong",
+   "why": "Repeats the first sitting's mobile number."
+  }
+ ]
+}

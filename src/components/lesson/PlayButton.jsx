@@ -34,7 +34,7 @@ export default function PlayButton({ lektionId, audioKey, text, rate = 0.92, lab
   const [lang] = useLessonLang();
   const [state, setState] = useState('idle'); // idle | loading | playing | failed
   const [reason, setReason] = useState(null);
-  const recorded = !!audioFor(lektionId, audioKey);
+  const recorded = !!audioFor(lektionId, audioKey, text);
 
   const play = async (slow) => {
     setState('loading');

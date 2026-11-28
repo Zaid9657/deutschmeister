@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { GROUP_MAX, groupWords, lineFor } from '../src/lib/lesson/wortfeldPacing.js';
+import { GROUP_MAX, groupWords, lineFor, metIn } from '../src/lib/lesson/wortfeldPacing.js';
 import buildLesson from '../src/lib/lesson/buildLesson.js';
 
 test('every A1.1 Lektion pages its words in groups of at most six, each word once, in order', () => {
@@ -23,6 +23,44 @@ test('every A1.1 Lektion pages its words in groups of at most six, each word onc
     assert.ok(Math.max(...g.map((x) => x.length)) - Math.min(...g.map((x) => x.length)) <= 1, `n=${n} balanced`);
   }
   assert.deepEqual(groupWords([]), []);
+});
+
+test('an example line holds its word: never another word that only contains it (browser walk 2026-11-25)', () => {
+  assert.equal(lineFor('das Buch', ['Tim, wo ist das Wörterbuch?']), null);
+  assert.equal(lineFor('die Woche', ['Ich spiele am Wochenende Fußball.', 'Ich schwimme jede Woche.']), 'Ich schwimme jede Woche.');
+  assert.equal(lineFor('der Tag', ['Ja, ich kaufe am Freitag ein.']), null);
+  assert.equal(lineFor('wohnen', ['Vorname, Nachname und Wohnort, bitte.', 'Ich wohne in Bremen.']), 'Ich wohne in Bremen.');
+  assert.equal(lineFor('fahren', ['Kostet die Fahrkarte zwanzig Euro?']), null);
+  assert.equal(lineFor('die Sprache', ['Welche Sprachen sprechen deine Eltern?']), 'Welche Sprachen sprechen deine Eltern?', 'a plural is the word');
+  assert.equal(lineFor('schön', ['Mai ist ein schöner Monat!']), 'Mai ist ein schöner Monat!', 'an ending is the word');
+  assert.equal(lineFor('Wie geht es Ihnen?', ['Guten Tag! Wie geht es Ihnen?']), 'Guten Tag! Wie geht es Ihnen?', 'a phrase');
+  // By class, every card of every A1.1 Lektion: some word of its line is the word itself, alone or with a short ending.
+  for (const l of CURRICULUM_A11.lektionen) {
+    const lines = l.dialog.lines.map((x) => x.de);
+    for (const w of l.wortfeld) {
+      const line = lineFor(w.de || w.word, lines);
+      if (!line) continue;
+      const bare = String(w.de || w.word).replace(/^(der|die|das)\s+/i, '').toLowerCase();
+      if (/\s/.test(bare)) { assert.ok(line.toLowerCase().includes(bare), `L${l.nr} ${w.de}`); continue; }
+      const stem = bare.length > 5 && bare.endsWith('en') ? bare.slice(0, -2) : bare;
+      const near = line.toLowerCase().split(/[^\p{L}\p{N}-]+/u).filter((token) => token.startsWith(stem));
+      assert.ok(near.some((token) => token.length - stem.length <= 3), `L${l.nr} ${w.de}: „${line}"`);
+    }
+    // Where a word is taught (the scene's words or the reading text) is decided as before: the word in the scene, whole or inside another.
+    for (const w of l.wortfeld) if (lineFor(w.de || w.word, lines)) assert.ok(metIn(w.de || w.word, lines), `L${l.nr} ${w.de}`);
+  }
+  assert.equal(metIn('das Buch', ['Tim, wo ist das Wörterbuch?']), true);
+});
+
+test('the page of words is the player’s saved position, and the picture is cut where the heads are', () => {
+  const src = readFileSync(new URL('../src/components/lesson/WortfeldStage.jsx', import.meta.url), 'utf8');
+  const player = readFileSync(new URL('../src/pages/lesson/LessonPlayerPage.jsx', import.meta.url), 'utf8');
+  // Browser walk 2026-11-25: a refresh on the second page of words went back to the first one.
+  assert.match(player, /<WortfeldStage [^>]*group=\{itemIndex\} onGroup=\{setItemIndex\}/);
+  assert.match(src, /const group = Math\.min\(savedGroup, Math\.max\(groups\.length - 1, 0\)\);/, 'a saved page past the end is the last page');
+  assert.match(src, /onGroup\?\.\(n\)/);
+  assert.match(player, /\(INPUT\|TEXTAREA\|H3\)/, 'the group heading keeps the focus the stage gave it');
+  assert.match(src, /object-\[center_20%\]/, 'Lektion 9: Paul keeps his head');
 });
 
 test('a word card shows the dialogue line the word was met in — and nothing when there is none', () => {

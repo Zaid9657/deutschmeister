@@ -7,7 +7,7 @@ import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, TRIAL_DAYS } from '../config/limits';
-import { FREE_LEVEL_LABEL } from '../data/marketing.js';
+import { FREE_LEKTION_LABEL, FREE_LEVEL_LABEL } from '../data/marketing.js';
 import { getAttribution } from '../lib/attribution';
 import { getOrCreateAnonId, isLikelyCrawler, xraySource, XRAY_OFFER } from '../lib/xray.js';
 import { grammarTopicLink } from '../lib/xrayTopics.js';
@@ -343,7 +343,7 @@ function XRayOffer({ atLimit = false }) {
         {atLimit ? "That's your free analysis for today." : 'Now learn to build sentences like this yourself.'}
       </h3>
       <p className="text-sm text-graphite leading-relaxed">
-        Start with the free {FREE_LEVEL_LABEL} course — short, guided lessons, no account needed. A free
+        Start with {FREE_LEKTION_LABEL} of the {FREE_LEVEL_LABEL} course: short, guided, free, no account needed. A free
         account adds {TRIAL_DAILY_LIMIT} Sentence X-Ray analyses a day for your first {TRIAL_DAYS} days.
       </p>
       <div className="flex flex-col sm:flex-row gap-2 mt-4">
@@ -352,7 +352,7 @@ function XRayOffer({ atLimit = false }) {
           <ArrowRight size={14} />
         </Button>
         <Button variant="secondary" href={XRAY_OFFER.courseHref}>
-          Start the free {FREE_LEVEL_LABEL} course
+          Start {FREE_LEVEL_LABEL}: {FREE_LEKTION_LABEL} free
         </Button>
       </div>
     </Card>

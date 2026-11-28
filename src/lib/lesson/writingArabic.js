@@ -1,0 +1,36 @@
+// Task-specific writing help. A changed instruction needs a reviewed translation,
+// rather than silently falling back to generic writing commands.
+export const WRITING_INSTRUCTIONS_AR = {
+  'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Füllen Sie das Anmeldeformular im Hostel für Ana aus.': 'تأتي Ana Chakiri من المغرب وتتكلم العربية. املأ استمارة التسجيل في النزل ببيانات Ana.',
+  'Sie sind Ana Chakiri, am 3.5.1998 geboren, aus Marokko, ledig. Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'أنت في هذا التمرين Ana Chakiri، من المغرب، وتاريخ ميلادك 3.5.1998 وحالتك الاجتماعية أعزب. تريد التسجيل في مدرسة اللغة. اكتب رسالة قصيرة ببياناتك. ابدأ بتحية واختم بعبارة وداع.',
+  'Ana Chakiri ist ledig. Sie kommt aus Marokko und spricht Arabisch und Deutsch. Sie lernt Deutsch in der Sprachschule. Füllen Sie das Formular für den Sprachkurs aus.': 'الحالة الاجتماعية لـ Ana Chakiri هي أعزب. تأتي من المغرب وتتكلم العربية والألمانية وتتعلم الألمانية في مدرسة اللغة. املأ استمارة دورة اللغة ببياناتها.',
+  'Sie sind auf dem Flohmarkt. Schreiben Sie Lena eine Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'أنت في سوق الأشياء المستعملة. اكتب رسالة إلى Lena. ابدأ بتحية واختم بعبارة وداع.',
+  'Lena Brandt ist im Kurs A1. Ihr Kurs ist in Zimmer 12. Auf dem Tisch sind ein Wörterbuch und ein Heft. Das Heft ist grün. Füllen Sie die Liste für das Kursmaterial aus.': 'تحضر Lena Brandt دورة A1 في الغرفة 12. على الطاولة قاموس ودفتر أخضر. املأ قائمة أدوات الدورة بهذه المعلومات.',
+  'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'اكتب رسالة قصيرة إلى مديرتك Frau Berg. ابدأ بتحية واختم بعبارة وداع.',
+  'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Wochenende. Füllen Sie die Anmeldung für einen Sportkurs aus.': 'انضمت Lena Brandt حديثًا إلى دورة رياضية. هوايتها السباحة، والدورة في عطلة نهاية الأسبوع. املأ استمارة التسجيل في الدورة بهذه المعلومات.',
+  'Ihr Termin mit Lena ist am Montag um acht Uhr, aber am Montag geht es nicht. Schreiben Sie Lena eine Nachricht und nennen Sie einen neuen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'موعدك مع Lena يوم الاثنين الساعة الثامنة، لكن يوم الاثنين لا يناسبك. اكتب إليها رسالة واقترح موعدًا جديدًا. ابدأ بتحية واختم بعبارة وداع.',
+  'Ana Chakiri ist im Café. Sie reserviert einen Tisch am Montag um 15 Uhr, für zwei Personen. Ihre Telefonnummer ist 0176 22 44 88. Füllen Sie die Reservierungskarte im Café aus.': 'تريد Ana Chakiri حجز طاولة في المقهى يوم الاثنين الساعة 15 لشخصين. رقم هاتفها 0176 22 44 88. املأ بطاقة الحجز بهذه المعلومات.',
+  'Schreiben Sie Ihrer Kollegin Frau Ramos: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'اكتب إلى زميلتك Frau Ramos أنك ستصل متأخرًا. استخدم صيغة المخاطبة الرسمية Sie. ابدأ بتحية واختم بعبارة وداع.',
+  'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 12. Füllen Sie den Wochenplan für den Kurs aus.': 'يستيقظ Tim Berger مبكرًا كل يوم. دورته يوم الخميس من الساعة 9 إلى الساعة 12 في الغرفة 12. املأ الجدول الأسبوعي للدورة بهذه المعلومات.',
+  'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Sie feiern im Café. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.': 'اكتب دعوة إلى حفلة عيد ميلادك. ستحتفل في المقهى؛ اذكر المكان. ابدأ بتحية واختم بعبارة وداع.',
+};
+
+export const WRITING_POINTS_AR = {
+  Familienname: 'اسم العائلة', Vorname: 'الاسم الشخصي', Nachname: 'اسم العائلة',
+  Land: 'البلد', Sprache: 'اللغة', Sprachen: 'اللغات', Unterschrift: 'التوقيع',
+  Familienstand: 'الحالة الاجتماعية', Name: 'الاسم', Kurs: 'الدورة', Zimmer: 'الغرفة',
+  Material: 'الأدوات', Farbe: 'اللون', Hobby: 'الهواية', 'Kurs am': 'يوم الدورة',
+  Tag: 'اليوم', Uhrzeit: 'الساعة', Personen: 'عدد الأشخاص', Telefonnummer: 'رقم الهاتف',
+  'Kurs von': 'ساعة بداية الدورة', 'Kurs bis': 'ساعة نهاية الدورة',
+  'Ihr Name und Ihr Geburtsdatum': 'اسمك وتاريخ ميلادك',
+  'Ihr Land und Ihre Staatsangehörigkeit': 'بلدك وجنسيتك',
+  'Ihr Familienstand: ledig oder verheiratet': 'حالتك الاجتماعية: أعزب أم متزوج',
+  'Was Sie kaufen': 'ما الذي تشتريه', 'Was es kostet': 'كم ثمنه', 'Wann Sie kommen': 'متى ستصل',
+  'Was Sie brauchen': 'ما الذي تحتاجه', 'Ihre Telefonnummer': 'رقم هاتفك',
+  'Wann Sie im Büro sind': 'متى ستكون في المكتب', 'Warum Sie schreiben': 'سبب كتابتك للرسالة',
+  'Neuer Tag und neue Uhrzeit': 'اليوم والساعة للموعد الجديد', 'Eine Frage an Lena': 'سؤال تطرحه على Lena',
+  'Was die Kollegin bis dahin machen soll': 'ما الذي تطلب من زميلتك أن تفعله إلى حين وصولك',
+  'Warum Sie feiern': 'سبب الاحتفال', 'Tag und Uhrzeit': 'يوم الاحتفال وساعته',
+  'Was die Gäste mitbringen sollen': 'ما الذي تطلب من الضيوف إحضاره',
+  'Was Lena mitbringen soll': 'ما الذي تطلب من Lena إحضاره',
+};

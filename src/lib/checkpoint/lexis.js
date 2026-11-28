@@ -224,6 +224,9 @@ export const ITEM_FORMULAS = [
   // The operation a correction names (DaF review #7, A1.2 B1) — longest first, or „Korrigieren Sie"
   // would match and leave „nur den Fehler" to be counted as item lexis.
   'Korrigieren Sie nur den Fehler in der Frage', 'Korrigieren Sie nur den Fehler',
+  // The named token stays in the lexical scan; only the complete task formula
+  // is removed. A content sentence containing „das Wort“ is never exempted.
+  'Korrigieren Sie das Wort(?= [A-Za-zÄÖÜäöüß]+:)',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
   // The register frame of a du-prompt (DaF review #4, A1.2 minor): the course speaks Sie, so a bare
   // „___ wohnst du?" is framed as partner speech. Without the formula here `Fragen` counted as item
@@ -244,8 +247,41 @@ function seedVocabulary(spec, priorCurriculum) {
   for (const l of priorCurriculum.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
   }
   return known;
+}
+
+/**
+ * THE CLOSED SERIES A LEKTION SHOWS AND SAYS IN FULL (`guided.read.series`: the numbers in L2 and L4, the
+ * months in L12) — taught from that Lektion on, like its notice. The number series of L4 gives the rule of
+ * the compounds („45 ist fünf-und-vierzig") and four examples, so every compound from 21 to 99 is taught.
+ */
+const UNITS = ['ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+export function seriesWords(lektion) {
+  const words = (lektion?.guided?.read?.series?.items || []).map((i) => String(i.de).toLowerCase());
+  if (words.some((w) => UNITS.some((u) => TENS.some((t) => w === `${u}und${t}`)))) for (const u of UNITS) for (const t of TENS) words.push(`${u}und${t}`);
+  return words;
+}
+
+/**
+ * THE NUMBERS ARE TAUGHT WHERE THEIR SERIES STANDS, never from Lektion 1 (Codex score of fd8f8dba, MAJOR): they are in the closed list
+ * a dialogue may use, so checkpoint 1 asked for „achtzehn“ and „sechzehn“ before Lektion 4 shows the numbers from 11. A number a
+ * dialogue, a notice or an example says is met there („zwanzig“ in Lektion 3).
+ */
+export const SERIES_NUMBERS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn',
+  'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', ...TENS, 'hundert'];
+/** The numbers a learner has met by the end of Lektion `lastNr`: its series, and what a dialogue, a notice or an example says. */
+export function numbersMet(curriculum, lastNr) {
+  const met = new Set();
+  for (const l of curriculum?.lektionen || []) {
+    if (!(l.nr <= lastNr)) continue;
+    for (const w of seriesWords(l)) met.add(w);
+    const said = [...(l.dialog?.lines || []).map((x) => x.de), l.notice?.bodyDe, ...(l.notice?.examples || []), ...(l.wortfeld || []).map((w) => w.exampleDe)];
+    for (const t of said.flatMap((s) => tokenise(s || ''))) if (SERIES_NUMBERS.includes(t.toLowerCase())) met.add(t.toLowerCase());
+  }
+  return met;
 }
 
 /**
@@ -268,7 +304,10 @@ export function knownUpTo(curriculum, lastNr, priorCurriculum = null) {
     // The Notice card is input the learner reads in this very Lektion, on the
     // screen before the practice items, so what it teaches counts as taught.
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
   }
+  // (A level that follows another has every number of the level before it.)
+  if (!spec.seedFrom) { const met = numbersMet(curriculum, lastNr); for (const w of SERIES_NUMBERS) if (!met.has(w)) known.delete(w); }
   return known;
 }
 

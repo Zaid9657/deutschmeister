@@ -54,7 +54,7 @@ export default function Navbar() {
       : <Link to="/login" state={{ from: location }}>{isGerman ? 'Anmelden' : 'Log in'}</Link>}
     {user ? <Link to={continueHref} className="c4-button">{isGerman ? 'Weiterlernen' : 'Continue learning'}</Link> : <Link to="/course/a1.1" className="c4-button">{isGerman ? 'A1.1 Lektion 1 gratis testen' : 'Try A1.1 Lektion 1 free'}</Link>}
   </>;
-  return <nav className="c4-site-nav" data-ground="paper" aria-label="Main"><div className="c4-wrap c4-nav-inner">
+  return <nav className="c4-site-nav print:hidden" data-ground="paper" aria-label="Main"><div className="c4-wrap c4-nav-inner">
     <Logo face="chrome" size={38} />
     <div className="c4-desktop-nav"><details className="c4-nav-dropdown"><summary>{isGerman ? 'Kurse' : 'Courses'} <span aria-hidden="true">⌄</span></summary><div className="c4-dropdown-panel">{others.map((item) => <NavItem key={item.key} item={item}>{label(item)}</NavItem>)}</div></details>{promoted.map((item) => <NavItem key={item.key} item={item}>{label(item)}</NavItem>)}</div>
     <div className="c4-nav-account">{account}</div>

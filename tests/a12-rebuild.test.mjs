@@ -1,5 +1,6 @@
 // The A1.2 rebuild on the A1.1 standard (owner: "start now", 2026-10-15). One file for the rules the
 // rebuild adds, so each finding class it closes keeps a test that fails on the old code.
+import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -309,7 +310,8 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   assert.deepEqual(report('Mit meiner Mutter gehe ich ins Kino.'), [], 'the speaker\'s own world in the opening');
   assert.deepEqual(report('Wo darf ich parken?'), [], 'a question reports nothing');
 
-  // Every Lesen item the four papers print, over four seeds — on A1.1, because the report engine writes
+  // Retained generator path: live A1.1 is now covered by a11-lesen.test.mjs.
+  // Every Lesen item the four legacy papers print, over four seeds — on A1.1, because the report engine writes
   // only A1.1's statements since round 12; A1.2 reads authored units (the round-12 tests below).
   assertAuthoredA12(buildCheckpoint);
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
@@ -326,7 +328,7 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   let items = 0;
   for (const checkpoint of CURRICULUM_A11.checkpoints) {
     for (const seed of [undefined, 1, 2, 3]) {
-      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed })) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: generatedCheckpoint(checkpoint), pool, seed })) {
         if (it.section !== 'lesen') continue;
         items += 1;
         const at = `${checkpoint.id}/${seed} „${it.statement}"`;
@@ -1011,14 +1013,14 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   };
   const problems = [];
   let checked = 0;
-  // Since round 12 the generator writes A1.1's papers only; A1.2's are authored (assertAuthoredA12).
+  // Retained generator regression (live A1.1 now uses a11-lesen.test.mjs). Since round 12 the generator wrote A1.1's papers only; A1.2's are authored (assertAuthoredA12).
   assertAuthoredA12(buildCheckpoint);
   for (const [curriculum, file] of [[CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       const cpSpec = reportSpecFor(curriculum, checkpoint);
       for (let round = 0; round < 3; round += 1) {
-        for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
+        for (const it of buildCheckpoint({ curriculum, checkpoint: generatedCheckpoint(checkpoint), pool, seed: paperSeed(checkpoint, round) })) {
           if (it.section !== 'lesen' || !it.transform) continue;
           checked += 1;
           const at = `${checkpoint.id}/${round} „${it.statement}"`;
@@ -1141,7 +1143,7 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
-        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint: generatedCheckpoint(checkpoint), pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
         const negated = { Richtig: 0, Falsch: 0 };
         for (const it of lesen) {
           // A two-option item (A1.2, round 11b) prints its Richtig and its Falsch side by side.
@@ -1455,22 +1457,16 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
 
 test('DaF review #7 MAJOR 8: legacy binary reading preserves its negation gates, and a time bound gives no Falsch', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
-  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   // Balancing the statement count and the text count APART left Falsch {text only, statement only}
   // against Richtig {both, neither}, and „statement and text agree → Richtig" solved six regular
   // papers (review #7). The pairs are read off the printed fields here, not from the builder: on
   // every A1.2 paper, rounds 0–3, both sides carry the same multiset of (statement negated, text
   // negated), so each of the sixteen functions of those two features scores exactly half a paper.
   const NEG = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
-  const pair = (it) => `${NEG.test(it.statement) ? 1 : 0}${NEG.test(it.text) ? 1 : 0}`;
   const papers = (curriculum, pool, rounds) => curriculum.checkpoints.flatMap((checkpoint) => Array.from({ length: rounds }, (_, round) => ({
     id: `${checkpoint.id}/${round}`,
     lesen: B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen'),
   })));
-  const unbalanced = (list) => list.filter(({ lesen }) => {
-    const side = (key) => lesen.filter((it) => it.answer === key).map(pair).sort().join(',');
-    return side('Richtig') !== side('Falsch');
-  }).map((p) => p.id);
   // Since round 11b A1.2 prints two options, and what a reader sees is (option A negated, option B negated,
   // text negated). The best function of that triple takes, per triple, the place where more keys stand; on
   // every paper, the stress round included, it scores exactly half.
@@ -1489,10 +1485,14 @@ test('DaF review #7 MAJOR 8: legacy binary reading preserves its negation gates,
     assert.ok(lesen.length === 4 && lesen.every((it) => it.kind === 'choice'), `${id}: four two-option items`);
     assert.equal(bestPlace(lesen), 2, `${id}: a negation strategy scores ${bestPlace(lesen)} of 4`);
   }
-  // A1.1 is live and recorded: its checkpoint 2 chapter has no negative first-person line, so three
-  // papers keep one added negation (the follow-up in the handoff). A ratchet: it only goes down.
-  const a11 = papers(CURRICULUM_A11, JSON.parse(read('src/data/lessonPools/a11.json')), 3);
-  assert.ok(unbalanced(a11).length <= 3, `A1.1: ${unbalanced(a11)}`);
+  // A1.1 prints two statements and two questions per paper since 2026-11-25. Its gate reads the same feature as a
+  // declared strategy over the whole bank (scripts/a11-lesen-check.mjs): negated in both or in neither says nothing.
+  const { auditDeclaredStrategies, TF_LIMIT } = await import('../scripts/a11-lesen-check.mjs');
+  const { LESEN_A11 } = await import('../src/data/curricula/a11.lesen.js');
+  const { totals } = auditDeclaredStrategies(Object.values(LESEN_A11).flatMap((c) => c.papers));
+  for (const name of ['negation → Falsch', 'negation in text → Falsch', 'negation in both or in neither → Richtig']) {
+    for (const key of [name, `${name} (inverse)`]) assert.ok(totals.get(key) <= TF_LIMIT, `A1.1 ${key}: ${totals.get(key)}`);
+  }
 
   // ANNOTATED BY HAND: a time a preposition makes a bound or the end of an interval is not refuted by
   // another number — an arrival at seven makes „vor zehn" and „vor acht" both true (review #7).
@@ -1696,7 +1696,7 @@ test('DaF review #7 B1: the task formulas are one list — the checkpoint draw a
   // untaught lexis to the checkpoint draw while the validator stamped it servable.
   const { ITEM_FORMULAS } = await import('../src/lib/checkpoint/lexis.js');
   const src = read('scripts/validate-curriculum.mjs');
-  assert.match(src, /import \{ ITEM_FORMULAS \} from '\.\.\/src\/lib\/checkpoint\/lexis\.js';/);
+  assert.match(src, /import \{ ITEM_FORMULAS, seriesWords \} from '\.\.\/src\/lib\/checkpoint\/lexis\.js';/);
   assert.doesNotMatch(src, /const ITEM_FORMULA_RE = new RegExp\(\[/, 'no second copy of the list');
   // Longest first: a shorter formula listed earlier would match and leave the rest counted as lexis.
   ITEM_FORMULAS.forEach((formula, i) => {

@@ -68,8 +68,9 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
   return (
     <StageShell
       eyebrow={t('stage.writing.eyebrow', lang)}
+      part={stage.part}
       title={schreiben.taskDe}
-      lead={schreiben.taskEn || null}
+      lead={(lang !== 'de' && schreiben.taskEn) || null}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       onPrimary={next}
@@ -81,6 +82,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
           taskKey: schreiben.taskKey,
           kind: schreiben.kind,
           taskDe: schreiben.taskDe,
+          taskEn: schreiben.taskEn,
           fields: schreiben.fields,
           leitpunkte: schreiben.leitpunkte,
           minWords: schreiben.minWords,

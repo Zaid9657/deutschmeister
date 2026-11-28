@@ -24,7 +24,7 @@ const item = (id) => pool.items.find((it) => it.id === id);
 const grade = (id, input) => {
   const it = item(id);
   // Exactly the fields the page sends to the browser (FirstStop.astro `grade`).
-  const sent = { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, caseSensitive: it.caseSensitive === true };
+  const sent = { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, questionDe: it.questionDe, caseSensitive: it.caseSensitive === true };
   return checkAnswer(input, sent.accepted, checkOptionsFor(sent)).result;
 };
 
@@ -40,7 +40,7 @@ test('the demo plays three real Lektion 1 items with English explanations', () =
 test('the page sends the checker the same options the lesson player derives', () => {
   for (const id of DEMO_ITEM_IDS) {
     const it = item(id);
-    const sent = { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, caseSensitive: it.caseSensitive === true };
+    const sent = { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, questionDe: it.questionDe, caseSensitive: it.caseSensitive === true };
     assert.deepEqual(checkOptionsFor(sent), checkOptionsFor(it), `${id}: options match the player's`);
   }
 });

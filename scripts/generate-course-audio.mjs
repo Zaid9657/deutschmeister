@@ -14,9 +14,10 @@
 //   manifest: src/data/curricula/<level>.audio.js
 //             { level, generatedAt, voices, lektionen: { [id]: { [key]: {url, sha1, voice} } } }
 //
-// The checkpoint Hören items dictate the SAME dialogue lines the Lektion does
-// (src/lib/checkpoint/buildCheckpoint.js → dialogLines()), so the `line-<i>`
-// keys already cover them — there is deliberately no separate `cp<n>-…` render.
+// A checkpoint with a listening bank (A1.1: src/data/curricula/a11.hoeren.js) speaks new sentences: its
+// dictations, heard texts and read-aloud models are planned under the checkpoint's own id, found by their
+// words (`a1.1-cp1` / `t-<hash>`, planCheckpoint below). A checkpoint without one dictates dialogue lines,
+// which the `line-<i>` keys cover.
 //
 // ONE VOICE PER CHARACTER (SPEAKER_VOICES), so every dialogue is audibly two
 // people. It used to be two voices — every woman Katja, every man Conrad — and
@@ -56,7 +57,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 // implementation; re-exported here so this script (and its `--dry` planner)
 // and tests/course-audio.test.mjs, which imports it FROM this module, keep
 // working unchanged.
-import { phonetikSpeechText } from '../src/lib/lesson/speech.js';
+import { phonetikSpeechText, textKey } from '../src/lib/lesson/speech.js';
+// The guided Lektion's own builders, so the plan says exactly what the player will ask for.
+import { buildSoundItems, nounsOf } from '../src/lib/lesson/guidedSound.js';
+import { seriesText } from '../src/lib/lesson/guidedRead.js';
+import { checkTurns, modelAnswer, ownAnswer } from '../src/lib/lesson/finalCheck.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -132,7 +137,8 @@ export function slugify(text) {
  *
  * kinds: 'line' (dialogue turn, covers the checkpoint dictation too),
  * 'pretest' (the model answer), 'phonetik' (one drill item), 'word' (a Wortfeld
- * entry the `words` table does not carry yet — wordId null).
+ * entry the `words` table does not carry yet — wordId null), and for a guided
+ * Lektion 'say' and 'alias' (planGuided below).
  */
 export function planRenders(curriculum) {
   const level = String((curriculum && curriculum.level) || '').toLowerCase();
@@ -185,6 +191,8 @@ export function planRenders(curriculum) {
       });
     });
 
+    out.push(...planGuided(curriculum, lektion, out.filter((e) => e.lektionId === lektionId), base));
+
     for (const entry of lektion.wortfeld || []) {
       if (entry.wordId) continue; // the row exists and generate-example-audio.mjs owns its audio
       const german = (entry.word || entry.de || '').trim();
@@ -205,12 +213,111 @@ export function planRenders(curriculum) {
     }
   }
 
+  for (const checkpoint of (curriculum && curriculum.checkpoints) || []) out.push(...planCheckpoint(level, checkpoint));
   return out;
 }
 
-/** US cents the whole plan would cost at Azure's neural list price. */
+/** What a checkpoint's own papers say (authoredHoeren, authoredSprechen): a heard text in its speaker's voice. */
+export function planCheckpoint(level, checkpoint) {
+  const spoken = (checkpoint.hoeren?.papers || []).flatMap((paper) => [
+    ...paper.say.map((u) => [u.de, VOICE_DEFAULT]),
+    ...paper.hear.map((u) => [u.text, u.voice === 'm' ? VOICE_MALE : VOICE_FEMALE]),
+    ...paper.read.map((u) => [u.de, VOICE_DEFAULT]),
+  ]);
+  return spoken.map(([text, voice]) => ({
+    kind: 'say', lektionId: checkpoint.id, lektionNr: checkpoint.afterLektion, key: textKey(text), text, display: text, voice,
+    path: `course/${level}/${checkpoint.id}/${textKey(text)}.mp3`,
+  }));
+}
+
+/** Slower than RATE: a number or a time the learner writes down, and a name spelled letter by letter. */
+export const RATE_LISTEN = '-20%';
+export const RATE_SPELL = '-30%';
+
+/**
+ * What a guided Lektion speaks beyond its dialogue lines: the sound step's models, and the final
+ * check's cues, heard numbers and times, spelled names and model answers, for EVERY sitting (a retake
+ * takes each turn's next variant). These lines have no fixed place, so the player finds them by the
+ * words they say (speech.js `textKey`); the manifest key is `t-<hash>`.
+ *
+ *   'say'    a text nothing above renders: one clip, at `<base>/t-<hash>.mp3`.
+ *   'alias'  a text an earlier clip of this Lektion already says (the scene's and the fluency round's
+ *            "say it" line IS a dialogue line): no render, the manifest entry repeats that clip.
+ *
+ * A line with the learner's own name in it is never recorded: its text is not known here.
+ */
+export function planGuided(curriculum, lektion, planned, base) {
+  const guided = lektion.guided;
+  if (lektion.flow !== 'guided' || !guided) return [];
+  const out = [];
+  const byText = new Map(planned.map((e) => [e.text, e]));
+  const keys = new Set();
+  const say = (text, voice, rate) => {
+    const spoken = String(text || '').trim();
+    const key = textKey(spoken);
+    if (!spoken || spoken.includes('…') || keys.has(key)) return;
+    keys.add(key);
+    const source = byText.get(spoken);
+    const common = { lektionId: lektion.id, lektionNr: lektion.nr, key, text: spoken, display: spoken };
+    if (source) out.push({ ...common, kind: 'alias', aliasOf: source.key, voice: source.voice, path: source.path });
+    else {
+      const entry = { ...common, kind: 'say', voice, path: `${base}/${key}.mp3`, ...(rate ? { rate } : {}) };
+      out.push(entry);
+      byText.set(spoken, entry);
+    }
+  };
+
+  for (const chunk of guided.chunks || []) say(lektion.dialog?.lines?.[chunk.say?.line]?.de, VOICE_DEFAULT);
+  for (const item of buildSoundItems(lektion, nounsOf(curriculum.lektionen || [lektion]))) say(item.text, VOICE_DEFAULT);
+  if (guided.read?.series) say(seriesText(guided.read.series), VOICE_DEFAULT);
+
+  const check = guided.check;
+  if (check) {
+    const partner = voiceForSpeaker(check.partner);
+    const sittings = Math.max(1, ...(check.turns || []).map((t) => Math.max(t.variants?.length || 1, t.spell?.length || 1)));
+    for (let retake = 0; retake < sittings; retake += 1) {
+      for (const turn of checkTurns(check, retake)) {
+        if (turn.cue?.de) say(turn.cue.de, partner);
+        if (turn.listen) say(turn.spoken, partner, RATE_LISTEN);
+        if (turn.spell) say(turn.spoken, VOICE_DEFAULT, RATE_SPELL);
+        // CheckStage plays the model answer after a miss under exactly this condition.
+        if ((turn.example || !ownAnswer(turn)) && !turn.listen) say(modelAnswer(turn), VOICE_DEFAULT);
+      }
+    }
+  }
+  return out;
+}
+
+/** US cents the whole plan would cost at Azure's neural list price (an alias is no render). */
 export const estimateCents = (entries) =>
-  Math.round(entries.reduce((n, e) => n + e.text.length, 0) * (USD_PER_MILLION_CHARS / 1e6) * 100 * 100) / 100;
+  Math.round(entries.filter((e) => e.kind !== 'alias').reduce((n, e) => n + e.text.length, 0) * (USD_PER_MILLION_CHARS / 1e6) * 100 * 100) / 100;
+
+/**
+ * After the renders, make the manifest say what the plan says and nothing else. Mutates `lektionen`.
+ *
+ * - A key that repeats a clip ('alias') gets that clip's entry, when the clip is there and was rendered
+ *   from these words; else the key stays out (the render failed: the player uses the computer voice).
+ * - A key the plan no longer names is a clip no screen can ask for: a `t-` key of a sentence that was
+ *   rewritten, a `line-` key past the end of a shortened dialogue. It leaves the manifest (the file
+ *   stays in storage), so the manifest never claims a recording of words the course no longer says.
+ *
+ * → the number of keys dropped.
+ */
+export function settleManifest(lektionen, entries) {
+  for (const entry of entries.filter((e) => e.kind === 'alias')) {
+    const clips = lektionen[entry.lektionId];
+    const source = clips?.[entry.aliasOf];
+    if (source && source.sha1 === sha1(entry.text)) clips[entry.key] = { ...source };
+    else if (clips) delete clips[entry.key];
+  }
+  const planned = new Set(entries.filter((e) => e.lektionId).map((e) => `${e.lektionId}|${e.key}`));
+  let dropped = 0;
+  for (const [lektionId, clips] of Object.entries(lektionen)) {
+    for (const key of Object.keys(clips)) if (!planned.has(`${lektionId}|${key}`)) { delete clips[key]; dropped += 1; }
+    if (!Object.keys(clips).length) delete lektionen[lektionId];
+  }
+  return dropped;
+}
 
 /** Serialise the manifest module exactly as it is committed. */
 export function renderManifest({ level, generatedAt, voices, lektionen }) {
@@ -250,9 +357,9 @@ export const curriculumModuleFor = (level) =>
 const escapeXml = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
-export const ssml = (text, voice) =>
+export const ssml = (text, voice, rate = RATE) =>
   `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE">` +
-  `<voice name="${voice}"><prosody rate="${RATE}">${escapeXml(text)}</prosody></voice></speak>`;
+  `<voice name="${voice}"><prosody rate="${rate}">${escapeXml(text)}</prosody></voice></speak>`;
 
 async function main() {
   const args = process.argv.slice(2);
@@ -271,10 +378,12 @@ async function main() {
   const pretests = entries.filter((e) => e.kind === 'pretest').length;
   const phonetik = entries.filter((e) => e.kind === 'phonetik').length;
   const words = entries.filter((e) => e.kind === 'word').length;
-  const chars = entries.reduce((n, e) => n + e.text.length, 0);
+  const says = entries.filter((e) => e.kind === 'say').length;
+  const aliases = entries.filter((e) => e.kind === 'alias').length;
+  const chars = entries.filter((e) => e.kind !== 'alias').reduce((n, e) => n + e.text.length, 0);
   const cents = estimateCents(entries);
 
-  console.log(`${level}: ${entries.length} clips — ${lines} dialogue lines, ${pretests} pretest models, ${phonetik} Phonetik items, ${words} Wortfeld words`);
+  console.log(`${level}: ${entries.length - aliases} clips — ${lines} dialogue lines, ${pretests} pretest models, ${phonetik} Phonetik items, ${words} Wortfeld words, ${says} guided and checkpoint lines (sound models, final-check cues and answers, the checkpoints' own texts); ${aliases} more keys reuse a clip`);
   console.log(`${level}: ${chars} characters ≈ ${cents} US cents at $${USD_PER_MILLION_CHARS}/1M`);
 
   // The previous manifest is the skip ledger: same sha1 → the MP3 is already up.
@@ -291,9 +400,9 @@ async function main() {
       console.log(`  ${e.path}  [${e.voice.replace('de-DE-', '').replace('Neural', '')}]  ${JSON.stringify(e.text).slice(0, 70)}`);
     }
     if (entries.length > 8) console.log(`  … ${entries.length - 8} more`);
-    const already = entries.filter((e) => e.lektionId && previous.lektionen?.[e.lektionId]?.[e.key]?.sha1 === sha1(e.text)).length;
+    const already = entries.filter((e) => e.kind !== 'alias' && e.lektionId && previous.lektionen?.[e.lektionId]?.[e.key]?.sha1 === sha1(e.text)).length;
     console.log(`Dry run: nothing called, nothing written. ${already} clip(s) already in the manifest with an unchanged text.`);
-    console.log(`Summary (dry): rendered 0 / skipped ${already} / failed 0 / ≈ ${cents} cents if all ${entries.length} are rendered.`);
+    console.log(`Summary (dry): rendered 0 / skipped ${already} / failed 0 / ≈ ${cents} cents if all ${entries.length - aliases} are rendered.`);
     return;
   }
 
@@ -311,7 +420,7 @@ async function main() {
   const supabase = createClient(supabaseUrl, serviceKey);
   const TTS_URL = `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`;
 
-  const synthesize = async (text, voice) => {
+  const synthesize = async (text, voice, rate) => {
     const res = await fetch(TTS_URL, {
       method: 'POST',
       headers: {
@@ -320,7 +429,7 @@ async function main() {
         'X-Microsoft-OutputFormat': OUTPUT_FORMAT,
         'User-Agent': 'deutsch-meister-course-audio',
       },
-      body: ssml(text, voice),
+      body: ssml(text, voice, rate),
     });
     if (!res.ok) throw new Error(`TTS ${res.status}: ${(await res.text()).slice(0, 200)}`);
     return Buffer.from(await res.arrayBuffer());
@@ -335,6 +444,7 @@ async function main() {
 
   for (const entry of entries) {
     const hash = sha1(entry.text);
+    if (entry.kind === 'alias') continue; // no render: settleManifest gives the key its clip
     voices[entry.voice] = (voices[entry.voice] || 0) + 1;
 
     if (entry.lektionId) {
@@ -364,7 +474,7 @@ async function main() {
         const { error: dbErr } = await supabase.from('words').update({ audio_url: pub.publicUrl }).eq('id', row.id);
         if (dbErr) throw dbErr;
       } else {
-        const mp3 = await synthesize(entry.text, entry.voice);
+        const mp3 = await synthesize(entry.text, entry.voice, entry.rate);
         const { error: upErr } = await supabase.storage.from(BUCKET).upload(entry.path, mp3, { contentType: 'audio/mpeg', upsert: true });
         if (upErr) throw upErr;
         const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(entry.path);
@@ -381,6 +491,9 @@ async function main() {
       if (failed > 10) { console.error('Too many failures — stopping. Re-run to resume.'); break; }
     }
   }
+
+  const dropped = settleManifest(lektionen, entries);
+  if (dropped) console.log(`Dropped ${dropped} manifest key(s) the course no longer asks for.`);
 
   writeFileSync(
     manifestPath,

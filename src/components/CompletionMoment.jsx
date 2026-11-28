@@ -56,7 +56,8 @@ const CompletionMoment = ({ headline, detail, nextLabel, nextHref, onNext, fullL
       className="animate-pop-in p-5 text-center"
     >
       <div className="flex items-center justify-center gap-2 mb-1.5">
-        <PartyPopper size={18} className={celebrate ? 'animate-wiggle text-accent-himbeer-ink' : 'text-siegel'} />
+        {/* A party icon over a result that was not a win reads as mockery: the calm strip has none. */}
+        {celebrate && <PartyPopper size={18} className="animate-wiggle text-accent-himbeer-ink" aria-hidden="true" />}
         <span className="font-display font-semibold text-ink">{headline}</span>
       </div>
       {detail && <p className="text-sm text-graphite mb-3">{detail}</p>}

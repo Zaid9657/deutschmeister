@@ -4,12 +4,66 @@
       "titleDe": "Eine Nachricht von Mama und Papa",
       "titleEn": "A message from Mum and Dad",
       "instructionDe": "Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.",
-      "instructionEn": "Read the message from Ana's parents. Tap a word for its meaning.",
-      "text": "Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer noch ein Kind!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa",
+      "instructionEn": "Read the message from Ana’s parents. Tap a word for its meaning.",
+      "series": {
+        "titleDe": "Die Monate",
+        "titleEn": "The months",
+        "items": [
+          {
+            "label": "1",
+            "de": "Januar"
+          },
+          {
+            "label": "2",
+            "de": "Februar"
+          },
+          {
+            "label": "3",
+            "de": "März"
+          },
+          {
+            "label": "4",
+            "de": "April"
+          },
+          {
+            "label": "5",
+            "de": "Mai"
+          },
+          {
+            "label": "6",
+            "de": "Juni"
+          },
+          {
+            "label": "7",
+            "de": "Juli"
+          },
+          {
+            "label": "8",
+            "de": "August"
+          },
+          {
+            "label": "9",
+            "de": "September"
+          },
+          {
+            "label": "10",
+            "de": "Oktober"
+          },
+          {
+            "label": "11",
+            "de": "November"
+          },
+          {
+            "label": "12",
+            "de": "Dezember"
+          }
+        ]
+      },
+      "text": "Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer jung!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa",
       "questions": [
         {
           "promptDe": "Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.",
-          "promptEn": "Are Ana's parents coming to the party? Choose the answer.",
+          "promptEn": "Are Ana’s parents coming to the party? Choose the answer.",
           "options": [
             "No, they have to work on Friday.",
             "They do not know yet; the date is bad.",
@@ -17,19 +71,29 @@
           ],
           "answer": "Yes, they have Friday off and are glad to come.",
           "explanationDe": "In der Nachricht steht: Wir kommen gern zum Fest. Am Freitag haben wir frei.",
-          "explanationEn": "The message says: we are glad to come to the party. We have Friday off."
+          "explanationEn": "The message says: we are glad to come to the party. We have Friday off.",
+          "optionsDe": [
+            "Nein, am Freitag arbeiten sie.",
+            "Vielleicht, das Datum ist nicht gut.",
+            "Ja, am Freitag haben sie frei und kommen gern."
+          ]
         },
         {
           "promptDe": "Was möchten Mama und Papa am Samstag machen? Wählen Sie die Antwort.",
           "promptEn": "What do Mum and Dad want to do on Saturday? Choose the answer.",
           "options": [
             "Invite Ana to the café as their guest.",
-            "Buy a present for Ana's brother.",
-            "Celebrate again at Ana's home."
+            "Buy a present for Ana’s brother.",
+            "Celebrate again at Ana’s home."
           ],
           "answer": "Invite Ana to the café as their guest.",
           "explanationDe": "In der Nachricht steht: Am Samstag möchten wir dich einladen. Du bist unser Gast im Café.",
-          "explanationEn": "The message says: on Saturday we would like to invite you. You are our guest at the café."
+          "explanationEn": "The message says: on Saturday we would like to invite you. You are our guest at the café.",
+          "optionsDe": [
+            "Ana ins Café einladen.",
+            "Ein Geschenk für Anas Bruder kaufen.",
+            "Noch einmal bei Ana feiern."
+          ]
         }
       ]
     },
@@ -37,6 +101,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "fb9bd034",
         "meaning": {
           "promptDe": "Was sagt Ana über ihren Geburtstag? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say about her birthday? Choose the meaning.",
@@ -45,7 +110,12 @@
             "It is in May, and the party is on Friday.",
             "It was last week, and there was no party."
           ],
-          "answer": "It is in May, and the party is on Friday."
+          "answer": "It is in May, and the party is on Friday.",
+          "optionsDe": [
+            "Er ist heute, und das Fest ist heute Abend.",
+            "Er ist im Mai, und das Fest ist am Freitag.",
+            "Er war letzte Woche, und es gab kein Fest."
+          ]
         },
         "say": {
           "line": 1
@@ -54,15 +124,21 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "580939fd",
         "meaning": {
           "promptDe": "Wer kommt zum Fest? Wählen Sie die Bedeutung.",
           "promptEn": "Who is coming to the party? Choose the meaning.",
           "options": [
-            "Only Ana's mum is coming.",
-            "Ana's parents cannot come.",
-            "Ana's mum and dad are coming."
+            "Only Ana’s mum is coming.",
+            "Ana’s parents cannot come.",
+            "Ana’s mum and dad are coming."
           ],
-          "answer": "Ana's mum and dad are coming."
+          "answer": "Ana’s mum and dad are coming.",
+          "optionsDe": [
+            "Nur Anas Mama kommt.",
+            "Anas Eltern kommen nicht.",
+            "Anas Mama und Papa kommen."
+          ]
         },
         "say": {
           "line": 3
@@ -71,6 +147,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "6faef2f1",
         "meaning": {
           "promptDe": "Was sagt Ana über die Gäste? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say about the guests? Choose the meaning.",
@@ -79,7 +156,12 @@
             "Her brother is coming alone, and Ana buys the cake.",
             "Her colleague cannot come, and nobody brings cake."
           ],
-          "answer": "Her colleague is invited too, and the guests bring cake."
+          "answer": "Her colleague is invited too, and the guests bring cake.",
+          "optionsDe": [
+            "Ana lädt auch ihre Kollegin ein, und die Gäste bringen Kuchen mit.",
+            "Ihr Bruder kommt allein, und Ana kauft den Kuchen.",
+            "Ihre Kollegin kommt nicht, und kein Gast bringt Kuchen mit."
+          ]
         },
         "say": {
           "line": 5
@@ -88,6 +170,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "d96558e5",
         "meaning": {
           "promptDe": "Was möchte Ana zum Geburtstag? Wählen Sie die Bedeutung.",
           "promptEn": "What would Ana like for her birthday? Choose the meaning.",
@@ -96,7 +179,12 @@
             "Maybe a book; her brother is buying the present.",
             "Nothing at all; she does not want a present."
           ],
-          "answer": "Maybe a book; her brother is buying the present."
+          "answer": "Maybe a book; her brother is buying the present.",
+          "optionsDe": [
+            "Vielleicht eine Tasche, Lena kauft das Geschenk.",
+            "Vielleicht ein Buch, ihr Bruder kauft das Geschenk.",
+            "Nichts, sie möchte kein Geschenk."
+          ]
         },
         "say": {
           "line": 7
@@ -105,6 +193,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "cfdd87ff",
         "meaning": {
           "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say as they part? Choose the meaning.",
@@ -113,7 +202,12 @@
             "Thank you, Lena. See you on Friday!",
             "Take care, Lena. See you soon!"
           ],
-          "answer": "Take care, Lena. See you soon!"
+          "answer": "Take care, Lena. See you soon!",
+          "optionsDe": [
+            "Gute Nacht, Lena. Bis morgen!",
+            "Danke, Lena. Bis Freitag!",
+            "Tschüss, Lena. Bis bald!"
+          ]
         },
         "say": {
           "line": 9

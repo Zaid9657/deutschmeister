@@ -17,7 +17,12 @@
           ],
           "answer": "Next week, on Monday.",
           "explanationDe": "In der Information steht: Österreich – der Bus fährt nächste Woche am Montag. Heute und morgen fährt er nach Berlin.",
-          "explanationEn": "The notice says the bus to Austria runs next week, on Monday. Today and tomorrow it goes to Berlin."
+          "explanationEn": "The notice says the bus to Austria runs next week, on Monday. Today and tomorrow it goes to Berlin.",
+          "optionsDe": [
+            "Heute und morgen.",
+            "Nächste Woche am Montag.",
+            "Nächste Woche am Freitag."
+          ]
         },
         {
           "promptDe": "Wo kaufen Sie die Fahrkarte für den Bus? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "From the driver of the bus.",
           "explanationDe": "In der Information steht: Die Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.",
-          "explanationEn": "The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin)."
+          "explanationEn": "The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin).",
+          "optionsDe": [
+            "Am Schalter im Bahnhof.",
+            "Am Automaten am Gleis.",
+            "Beim Busfahrer."
+          ]
         }
       ]
     },
@@ -37,6 +47,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "18bcb9cb",
         "meaning": {
           "promptDe": "Wann und wo fährt der Zug nach Österreich? Wählen Sie die Antwort.",
           "promptEn": "When and where does the train to Austria leave? Choose the answer.",
@@ -45,7 +56,12 @@
             "At nine o’clock from platform five.",
             "At nine o’clock from platform four."
           ],
-          "answer": "At nine o’clock from platform four."
+          "answer": "At nine o’clock from platform four.",
+          "optionsDe": [
+            "Um vier Uhr von Gleis neun.",
+            "Um neun Uhr von Gleis fünf.",
+            "Um neun Uhr von Gleis vier."
+          ]
         },
         "say": {
           "line": 0
@@ -54,6 +70,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "7b992c57",
         "meaning": {
           "promptDe": "Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Schmidt say about the train? Choose the meaning.",
@@ -62,7 +79,12 @@
             "The train is delayed.",
             "The train is full."
           ],
-          "answer": "The train is on time."
+          "answer": "The train is on time.",
+          "optionsDe": [
+            "Der Zug ist pünktlich.",
+            "Der Zug hat Verspätung.",
+            "Der Zug ist voll."
+          ]
         },
         "say": {
           "line": 2
@@ -71,15 +93,21 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "f6ddabb0",
         "meaning": {
           "promptDe": "Was kostet die Fahrkarte? Wählen Sie die Antwort.",
           "promptEn": "How much is the ticket? Choose the answer.",
           "options": [
-            "Twenty euros.",
-            "Fifteen euros.",
-            "Fifty euros."
+            "A hundred euros.",
+            "Ninety euros.",
+            "Nineteen euros."
           ],
-          "answer": "Fifteen euros."
+          "answer": "Ninety euros.",
+          "optionsDe": [
+            "Hundert Euro.",
+            "Neunzig Euro.",
+            "Neunzehn Euro."
+          ]
         },
         "say": {
           "line": 4
@@ -88,15 +116,21 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "1e572b9d",
         "meaning": {
-          "promptDe": "Ist das Gleis weit? Wählen Sie die Bedeutung.",
-          "promptEn": "Is the platform far? Choose the meaning.",
+          "promptDe": "Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.",
+          "promptEn": "Does the train go to Switzerland? Choose the meaning.",
           "options": [
-            "No, the train leaves right here, from platform four.",
-            "Yes, platform four is at the other end of the station.",
-            "No, but Ana has to take the bus to get there."
+            "Yes, it leaves from platform four.",
+            "No, you have to change in Cologne.",
+            "No, only the bus goes to Switzerland."
           ],
-          "answer": "No, the train leaves right here, from platform four."
+          "answer": "No, you have to change in Cologne.",
+          "optionsDe": [
+            "Ja, er fährt von Gleis vier.",
+            "Nein, man steigt in Köln um.",
+            "Nein, in die Schweiz fährt nur der Bus."
+          ]
         },
         "say": {
           "line": 6
@@ -105,15 +139,21 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "2a40e3d7",
         "meaning": {
           "promptDe": "Was sagt die Durchsage? Wählen Sie die Bedeutung.",
           "promptEn": "What does the announcement say? Choose the meaning.",
           "options": [
-            "The train is on time; please board at platform four.",
-            "The train is cancelled; please take the bus.",
-            "The train is delayed; please change at platform five."
+            "The train is on time.",
+            "The train is cancelled.",
+            "The train is delayed."
           ],
-          "answer": "The train is delayed; please change at platform five."
+          "answer": "The train is delayed.",
+          "optionsDe": [
+            "Der Zug ist pünktlich.",
+            "Heute fährt kein Zug.",
+            "Der Zug hat Verspätung."
+          ]
         },
         "say": {
           "line": 8

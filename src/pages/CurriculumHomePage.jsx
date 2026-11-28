@@ -4,7 +4,8 @@ import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } f
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
-import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
+import { A11_META, checkpointMinutesEstimate, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
@@ -18,7 +19,8 @@ import { clearReturnPath } from '../lib/returnPath.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import KannIch from '../components/course/KannIch.jsx';
-import { canDoList } from '../lib/course/canDo.js';
+import { canDoLines, canDoList } from '../lib/course/canDo.js';
+import { checksShown } from '../lib/course/checkShown.js';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import SEO from '../components/SEO';
@@ -27,6 +29,7 @@ import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import { useLessonLang } from '../lib/lesson/strings.js';
+import { useScreenTitle } from '../hooks/useScreenTitle.js';
 import LangToggle from '../components/lesson/LangToggle.jsx';
 import SituationScene from '../components/illustrations/SituationScene.jsx';
 import CoursePrice from '../components/CoursePrice.jsx';
@@ -100,8 +103,12 @@ const hrefFor = (level, node) => {
 // Say so on the node and in the footer, so the last step of the free course
 // never reads like an unmarked paywall (Wave 0 front door).
 // …unless the course is free only up to its first Lektion (Lektion gate): then the test is part of the paid rest.
-const finalTestLabel = (level) => (isLevelFree(level) && !freeLektionen(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
-const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
+const finalTestLabel = (level, lang) => {
+  const free = isLevelFree(level) && !freeLektionen(level);
+  if (lang === 'de') return free ? 'Abschlusstest · frei' : 'Abschlusstest';
+  return free ? 'Final test · free' : 'Final test';
+};
+const kindLabelFor = (level, lang) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level, lang) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
 // The path's sideways sway, as a share of `--sway-amp` (set on the <ol>): 24px on a phone, 72px from
 // `sm` up. A fixed ±72px on full-width rows pushed the document to 416px at a 360px viewport
@@ -111,6 +118,7 @@ const SWAY = [0, 0.6, 1, 0.6, 0, -0.6, -1, -0.6];
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
+  useScreenTitle(null, lang); // SEO below carries the title
   const de = lang === 'de';
   const { profile, hasFullCourse, loading: subLoading } = useSubscription() || {};
   const [searchParams] = useSearchParams();
@@ -123,7 +131,9 @@ export default function CurriculumHomePage({ curriculum }) {
   const nextLesson = `/course/${level}/l/${freeNr + 1}`;
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
-  const KIND_LABEL = kindLabelFor(level);
+  const KIND_LABEL = kindLabelFor(level, lang);
+  // A Lektion's situation in the chrome language; English exists for the level with a meta module.
+  const situationOf = (l) => (!de && meta?.lektionIntro?.[l.id]?.situationEn) || l.situation;
   // A visitor's progress is synchronous (localStorage), so their FIRST render is already final.
   // It used to wait for an effect: the 2,585 px welcome panel then appeared after first paint and
   // pushed the whole path down — CLS 0.365 on a cold mobile load (2026-10 measurement).
@@ -136,10 +146,11 @@ export default function CurriculumHomePage({ curriculum }) {
   const [showWelcome, setShowWelcome] = useState(false);
 
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
-  // A Lektion's time as the estimated range (a11.meta.js), a checkpoint's as its own minutes.
+  // A Lektion's and a checkpoint's time as the range their own steps give (a11.meta.js), the final test's as its own minutes.
   const timeOf = (node) => {
     const l = node.kind === 'lektion' ? curriculum.lektionen.find((x) => x.id === node.id) : null;
     if (l) { const e = lektionMinutesEstimate(l); return ` · ≈${e.lo}–${e.hi} min`; }
+    if (node.kind === 'checkpoint') { const e = checkpointMinutesEstimate(); return ` · ≈${e.lo}–${e.hi} min`; }
     return node.minutes ? ` · ${node.minutes} min` : '';
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
@@ -255,7 +266,9 @@ export default function CurriculumHomePage({ curriculum }) {
               {de ? 'Deutsch' : 'German'} {curriculum.code}
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
+              {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words`}
+              {/* The open welcome ends with the same description: said once on a screen. */}
+              {!(meta && welcomeOpen) && <> · {courseTestDescription(curriculum.testSlug, lang)}</>}
             </Reveal>
 
             {payNotice && (
@@ -278,7 +291,7 @@ export default function CurriculumHomePage({ curriculum }) {
             {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
               <Reveal delay={140} className="mt-5">
                 <KannIch
-                  items={canDoList(curriculum, done)}
+                  items={canDoList(curriculum, done, checksShown())}
                   checkpointsPassed={curriculum.checkpoints.filter((cp) => done.has(cp.id)).length}
                   checkpointsTotal={curriculum.checkpoints.length}
                   streak={streak}
@@ -295,7 +308,7 @@ export default function CurriculumHomePage({ curriculum }) {
               {endowed && (
                 <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-white/80 px-3 py-1 font-data text-[0.6875rem] font-bold text-siegel-deep ring-1 ring-rule" data-endowed>
                   <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {de ? `Ihr Test deutet auf ein Niveau über ${curriculum.code} hin. Alle Schritte sind offen. Wählen Sie Ihren Einstieg.` : `Your test suggests a level above ${curriculum.code} — everything here is open; start where you like.`}
+                  {de ? `Ihr Test deutet auf ein Niveau über ${curriculum.code} hin.${payNotice ? '' : ' Alle Schritte sind offen. Wählen Sie Ihren Einstieg.'}` : `Your test suggests a level above ${curriculum.code}${payNotice ? '.' : ' — everything here is open; start where you like.'}`}
                 </p>
               )}
               {reviewDue > 0 && !complete && (
@@ -307,7 +320,12 @@ export default function CurriculumHomePage({ curriculum }) {
                   <Button to={`/course/${level}/review`} variant="secondary" className="shrink-0">{de ? 'Wiederholen' : 'Review'} →</Button>
                 </div>
               )}
-              {complete ? (
+              {/* Until the account's progress is in, no step is named: the first Lektion flashed as „Start here". */}
+              {user && !loaded ? (
+                <p role="status" className="mt-4 flex min-h-[5.25rem] items-center rounded-clay border border-rule bg-white p-4 text-[0.9375rem] text-graphite">
+                  {de ? 'Ihr Fortschritt wird geladen …' : 'Loading your progress …'}
+                </p>
+              ) : complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">{de ? 'Kurs abgeschlossen · zum Ergebnis' : 'Course complete · see your result'} →</Button></div>
               ) : current ? (
                 <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
@@ -362,13 +380,13 @@ export default function CurriculumHomePage({ curriculum }) {
                 {!isFinal && lektionen[0] && (
                   <SituationScene
                     lektionId={lektionen[0].id}
-                    className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
+                    className="mb-3 aspect-[3/1] w-full rounded-clay object-cover object-[50%_20%] opacity-90"
                   />
                 )}
                 <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white">{de ? 'Kapitel' : 'Chapter'} {ci + 1}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
                 {chapterMeta && (
-                  <p className="font-data text-[0.75rem] text-white" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
+                  <p className="font-data text-[0.75rem] text-white" lang="de">{!de && `${chapterMeta.titleDe} · `}Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
                 )}
                 {chapterMeta ? (
                   <p className="mt-2 text-[0.8125rem] leading-snug text-white">{de ? lektionen.map((l) => l.situation).join(' · ') : chapterMeta.storyEn}</p>
@@ -379,15 +397,15 @@ export default function CurriculumHomePage({ curriculum }) {
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
                     className="mt-3 inline-flex min-h-11 items-center gap-1 rounded-pill bg-siegel-deep px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white ring-1 ring-white/40 hover:bg-siegel-edge">
-                    Lehrplan <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+                    {de ? 'Lehrplan' : 'Syllabus'} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
                   </button>
                 )}
               </div>
               {open && (
                 <div className="mt-2 rounded-clay border border-rule bg-white p-4 text-[0.875rem]">
-                  <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">Das kann ich danach</p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-ink">{canDos.map((c) => <li key={c}>{c}</li>)}</ul>
-                  {teile.length > 0 && <p className="mt-3 text-graphite"><span className="font-bold text-ink">Prüfungsteile:</span> {teile.join(' · ')}</p>}
+                  <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{de ? 'Das kann ich danach' : 'What I can do afterwards'}</p>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-ink">{lektionen.flatMap((l) => canDoLines(l, lang)).map((c) => <li key={c}>{c}</li>)}</ul>
+                  {teile.length > 0 && <p className="mt-3 text-graphite"><span className="font-bold text-ink">{de ? 'Prüfungsteile:' : 'Exam parts:'}</span> <span lang="de">{teile.join(' · ')}</span></p>}
                 </div>
               )}
 
@@ -396,7 +414,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
                   const unlocked = (!user || loaded) && (endowed || node.index === 0 || done.has(path[node.index - 1].id));
-                  const isCurrent = current && current.id === node.id;
+                  const isCurrent = (!user || loaded) && current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
@@ -412,7 +430,7 @@ export default function CurriculumHomePage({ curriculum }) {
                       </LessonRing>
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
                       <p className="max-w-[14rem] text-center font-data text-[0.6875rem] text-graphite">
-                        {KIND_LABEL[node.kind]}{timeOf(node)}{lektion?.situation ? ` · ${lektion.situation}` : ''}
+                        {KIND_LABEL[node.kind]}{timeOf(node)}{lektion?.situation ? ` · ${situationOf(lektion)}` : ''}
                       </p>
                     </li>
                   );
@@ -424,15 +442,15 @@ export default function CurriculumHomePage({ curriculum }) {
         </div>
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
-          {de ? (endowed ? 'Alle Lektionen sind für Sie offen. Ihr Fortschritt wird nach jedem Schritt gespeichert.' : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.')}
+          {de ? (endowed ? `${payNotice ? '' : 'Alle Lektionen sind für Sie offen. '}Ihr Fortschritt wird nach jedem Schritt gespeichert.` : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? `${payNotice ? 'Your progress saves' : 'Every Lektion is open for you and saves'} on every step.` : 'Lektionen open in order and save on every step.')}
           {de ? (user ? ' Auf jedem Gerät.' : ' Bis zur Anmeldung bleibt Ihr Fortschritt auf diesem Gerät.') : (user ? ' On any device.' : ' Your progress saves on this device until you sign in.')}{' '}
-          <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">Wiederholen</Link> ·{' '}
-          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level)}</Link> ·{' '}
-          <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>Lehrplan</Link> ·{' '}
+          <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">{de ? 'Wiederholen' : 'Review'}</Link> ·{' '}
+          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level, lang)}</Link> ·{' '}
+          <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{de ? 'Lehrplan' : 'Syllabus'}</Link> ·{' '}
           <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{de ? 'Alle Kurse' : 'All courses'}</Link> ·{' '}
           {/* The course home drops the site footer (src/lib/chrome.js), so the
               way to reach a human has to live in this one-line footer too. */}
-          <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{SUPPORT_LINK.labelDe}</Link>
+          <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{de ? SUPPORT_LINK.labelDe : SUPPORT_LINK.labelEn}</Link>
         </footer>
       </div>
     </div>

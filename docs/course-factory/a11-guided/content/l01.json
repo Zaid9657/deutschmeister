@@ -5,7 +5,7 @@
       "titleEn": "Welcome!",
       "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the card. Tap a word for its meaning.",
-      "text": "Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.",
+      "text": "Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\nTschüss! Bis morgen!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.",
       "questions": [
         {
           "promptDe": "Was ist „Guten Tag“? Wählen Sie die Bedeutung.",
@@ -17,7 +17,12 @@
           ],
           "answer": "A greeting.",
           "explanationDe": "Auf der Karte steht: „Guten Tag“ ist ein Gruß.",
-          "explanationEn": "The card says that “Guten Tag” is a greeting."
+          "explanationEn": "The card says that “Guten Tag” is a greeting.",
+          "optionsDe": [
+            "Ein Gruß.",
+            "Ein Buchstabe.",
+            "Ein Name."
+          ]
         },
         {
           "promptDe": "Was ist A? Wählen Sie die Bedeutung.",
@@ -29,7 +34,12 @@
           ],
           "answer": "A letter.",
           "explanationDe": "Auf der Karte steht: A ist ein Buchstabe.",
-          "explanationEn": "The card says that A is a letter."
+          "explanationEn": "The card says that A is a letter.",
+          "optionsDe": [
+            "Ein Abschied.",
+            "Ein Buchstabe.",
+            "Ein Gruß."
+          ]
         }
       ]
     },
@@ -45,7 +55,12 @@
             "She asks for a room.",
             "She says goodbye."
           ],
-          "answer": "She greets Frau Kaya and gives her name."
+          "answer": "She greets Frau Kaya and gives her name.",
+          "optionsDe": [
+            "Sie grüßt Frau Kaya und sagt ihren Namen.",
+            "Sie möchte ein Zimmer.",
+            "Sie sagt auf Wiedersehen."
+          ]
         },
         "say": {
           "line": 1,
@@ -63,7 +78,12 @@
             "She asks Ana to spell her name.",
             "She asks how Ana feels."
           ],
-          "answer": "She asks Ana to spell her name."
+          "answer": "She asks Ana to spell her name.",
+          "optionsDe": [
+            "Sie fragt: Wo wohnt Ana?",
+            "Sie fragt: Wie buchstabiert man Ana?",
+            "Sie fragt: Wie geht es Ana?"
+          ]
         },
         "say": {
           "line": 3,
@@ -81,7 +101,12 @@
             "She is leaving tomorrow.",
             "She is fine and says thank you."
           ],
-          "answer": "She is fine and says thank you."
+          "answer": "She is fine and says thank you.",
+          "optionsDe": [
+            "Ana ist müde.",
+            "Ana geht morgen.",
+            "Es geht ihr gut, und sie sagt danke."
+          ]
         },
         "say": {
           "line": 7
@@ -94,11 +119,16 @@
           "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say as she leaves? Choose the meaning.",
           "options": [
-            "Bye! See you tomorrow.",
+            "Goodbye!",
             "Good morning!",
             "Nice to meet you."
           ],
-          "answer": "Bye! See you tomorrow."
+          "answer": "Goodbye!",
+          "optionsDe": [
+            "Auf Wiedersehen!",
+            "Guten Morgen!",
+            "Freut mich!"
+          ]
         },
         "say": {
           "line": 9

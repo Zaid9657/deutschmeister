@@ -8,7 +8,7 @@ import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
 import { ORGANIZATION, SITE_PUBLISHED } from '../../../lib/siteMeta.js';
 import { onsiteHref } from '../../../lib/onsiteLinks.js';
-import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../../../data/marketing.js';
+import { FREE_LEKTION_LABEL, FREE_LEVEL_LABEL, TRIAL_DAYS } from '../../../data/marketing.js';
 import { stationFor, stationStatusLine, planLine } from '../../../data/offers.js';
 import { curriculumFor } from '../../../data/curricula/index.js';
 import '../../../styles/global.css';
@@ -698,7 +698,7 @@ const courseOffer = station?.status === 'ticket'
             <span class="relative z-10">Get started free — {TRIAL_DAYS} days of AI Practice included</span>
           </a>
           {offerFreeCourse && (
-            <a href={onsiteHref('freeCourse', 'grammar', slug)} class={BTN_SECONDARY}>Start the free {FREE_LEVEL_LABEL} course</a>
+            <a href={onsiteHref('freeCourse', 'grammar', slug)} class={BTN_SECONDARY}>Start {FREE_LEVEL_LABEL}: {FREE_LEKTION_LABEL} free</a>
           )}
         </div>
       </div>

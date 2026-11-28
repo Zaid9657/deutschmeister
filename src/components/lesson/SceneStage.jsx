@@ -6,11 +6,13 @@ import { GlossLine } from './DialogStage.jsx';
 import PlayButton from './PlayButton.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import LangToggle from './LangToggle.jsx';
+import CommandHelp from './CommandHelp.jsx';
+import { FeedbackArabicHelp } from './ArabicHelp.jsx';
 import { buildLexicon, parseLektionId } from '../../lib/lesson/gloss.js';
 import CheckedChoice from './CheckedChoice.jsx';
 import { SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { sayText } from '../../lib/lesson/scene.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { speechLine, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /** A checked response between every 2–3 lines. Position is owned/saved by the player. */
 export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, results, onSayResult, onResult, onBack, onDone, names = {}, onNamesChange }) {
@@ -43,6 +45,8 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
     <section className="text-nacht-text">
       <SituationScene lektionId={lektionId} className="w-full rounded-3xl border border-rule object-cover" />
       <div className="my-3 flex items-center justify-between gap-3"><p className="font-data text-xs text-nacht-muted">{t('scene.chunk', lang, { n: index + 1, total: stage.chunks.length })}</p><LangToggle /></div>
+      <CommandHelp />
+      <FeedbackArabicHelp keys={['scene.hear', 'scene.meaning', 'scene.say', 'scene.name', 'scene.surname', 'scene.enterName']} />
       {phase === 'hear' && <h1 className="mb-3 font-display text-2xl font-semibold text-siegel">{t('scene.hear', lang)}</h1>}
       {shown.length > 0 && <ol className="space-y-3">
         {shown.map((line) => <li key={line.index}>
@@ -61,8 +65,8 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
           {t(chunk.say.ownName === 'surname' ? 'scene.surname' : 'scene.name', lang)}
           <input value={ownName} maxLength={80} autoComplete="off" onChange={(e) => { onNamesChange?.({ ...names, [chunk.say.ownName]: e.target.value }); onSayResult(index, null); }} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white px-3 py-2 text-ink" />
         </label>}
-        {spoken ? <ReadAloudLine key={`${index}:${spoken}`} guided lektionId={lektionId} lineKey={`scene-${index + 1}-say`} text={spoken} onResult={(r) => onSayResult(index, r)} /> : <Card className="p-5"><p>{t('scene.enterName', lang)}</p></Card>}
-        {done && <p className="mt-3 text-sm font-bold" role="status">{results[index].usedMic && typeof results[index].pct === 'number' ? t('speaking.intelligibility', lang, { pct: Math.round(results[index].pct * 100) }) : t('speaking.said', lang)}</p>}
+        {spoken ? <ReadAloudLine key={`${index}:${spoken}`} guided lektionId={lektionId} lineKey={`scene-${index + 1}-say`} text={spoken} keepVoice onResult={(r) => onSayResult(index, r)} /> : <Card className="p-5"><p>{t('scene.enterName', lang)}</p></Card>}
+        {done && <p className="mt-3 text-sm font-bold" role="status">{results[index].usedMic && typeof results[index].pct === 'number' ? speechLine(results[index].pct, lang) : t('speaking.said', lang)}</p>}
         <Button variant="coral" className="mt-5 w-full" disabled={!done} onClick={next}>{t('action.next', lang)}</Button>
       </div>}
       {phase === 'hear' && <Button variant="coral" className="mt-5 w-full" onClick={next}>{t('scene.meaning', lang)}</Button>}

@@ -121,7 +121,6 @@ const RULE_CARD_OVERRIDES = {
       'Die Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,',
       'K ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
       'Die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.',
-      'Vorsicht bei E und I, G und J, V und W.',
       'Man fragt: Wie buchstabiert man das?',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
       'Beispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?',
@@ -137,7 +136,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'V und W haben denselben Namen.',
         correct: 'V heißt Vau, W heißt We.',
-        explanationDe: 'Zwei Buchstaben, zwei Namen. So heißen die Buchstaben V und W.',
+        explanationDe: 'Der Buchstabe V heißt Vau, der Buchstabe W heißt We.',
       },
       {
         wrong: 'Ich buchstabiere Tschüss: T-S-C-H-U-S-S.',
@@ -171,7 +170,7 @@ const RULE_CARD_OVERRIDES = {
       // (Ana, feminine) and its comment claimed this card said „Er ist Marokkaner.“ — it did not,
       // and neither did the notice. The masculine is now on both, in the same sentence, and the
       // commonMistakes entry below corrects the swapped gender for the learner who is not Ana.
-      'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
+      'Die Staatsangehörigkeit ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
       'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       'In der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
@@ -180,7 +179,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ana bin Studentin.',
         correct: 'Ana ist Studentin.',
-        explanationDe: 'bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin.',
+        explanationDe: 'bin gehört zu ich. Ana = sie, und zu sie gehört ist: Ana ist Studentin.',
       },
       {
         wrong: 'Wie sind Sie von Beruf?',
@@ -190,7 +189,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich bin marokkanisch.',
         correct: 'Ich bin Marokkanerin.',
-        explanationDe: 'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
+        explanationDe: 'Die Staatsangehörigkeit ist im Satz ein Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       },
       {
         wrong: 'Ali ist Marokkanerin.',
@@ -204,19 +203,20 @@ const RULE_CARD_OVERRIDES = {
   'personal-pronouns': {
     titleDe: 'er, sie, es – die Personalpronomen',
     content: [
-      'Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Das Pronomen richtet sich normalerweise nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Bei bekannten Personen ist auch er oder sie möglich. Beispiel: Das Kind heißt Paul. Er ist zwei.',
       'Für mehrere Personen stehen die Formen wir, ihr, sie.',
       'Sie mit großem S ist die höfliche Form.',
       'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
-      'English: the pronoun follows the article of the noun: das Kind → es.',
+      'English: normally follow the noun’s article (das Kind → es); for a known person, er/sie is also possible.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Das Kind ist jung. Er ist zwei.',
+        wrong: 'Das Kind ist jung. Es bist zwei.',
         correct: 'Das Kind ist jung. Es ist zwei.',
-        explanationDe: 'das Kind → es. Der Artikel entscheidet, nicht die Person.',
+        explanationDe: 'das Kind → normalerweise es. Bei bekannten Personen ist auch er oder sie möglich. Nach es steht ist, nicht bist.',
       },
       {
         wrong: 'Die Mutter kommt aus Marokko. Es spricht Arabisch.',
@@ -242,7 +242,7 @@ const RULE_CARD_OVERRIDES = {
       '-chen, -lein → das: das Mädchen, das Brötchen.',
       '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.',
       'Nach kaufen wird der zu den: Ich kaufe den Stuhl.',
-      'Lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.',
+      'Lernen Sie jedes Nomen mit Artikel und Plural: der Tisch, die Tische.',
       'English: learn every noun together with its article; the endings above are reliable groups, not a complete system.',
     ].join('\n'),
     commonMistakes: [
@@ -329,10 +329,11 @@ const RULE_CARD_OVERRIDES = {
       'Regelmäßige Verben haben feste Endungen am Stamm:',
       'ich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.',
       'So bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.',
+      'Endet der Stamm auf s, ß, x oder z, steht in der du-Form nur -t (ich tanze → du tanzt).',
       'Endet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.',
       'Achtung: einige Verben wechseln den Vokal: sprechen → er spricht.',
       'gern steht nach dem Verb: Ich höre gern Musik.',
-      'English: add the ending to the stem; stems on -t take an extra e (arbeitest).',
+      'English: Add endings; -t stems add e (arbeitest); s/ß/x/z stems take -t in the du-form (du tanzt).',
     ].join('\n'),
     commonMistakes: [
       {
@@ -357,7 +358,8 @@ const RULE_CARD_OVERRIDES = {
   'time-and-dates': {
     titleDe: 'um, am – die Uhrzeit sagen',
     content: [
-      'Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.',
+      // am + Tageszeit is drilled in Lektion 8 („___ Abend habe ich Zeit.“), so the card shows it (2026-11-23 screen walk).
+      'Uhrzeit mit um: um acht Uhr. Wochentag und Tageszeit mit am: am Montag, am Abend.',
       'Aber: Es ist acht Uhr (ohne um).',
       'Umgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).',
       'Die Uhrzeit halb neun ist 8.30 und nicht 9.30.',
@@ -389,11 +391,11 @@ const RULE_CARD_OVERRIDES = {
 
   // ── Lektion 9 · Im Café (Essen und Trinken: etwas bestellen)
   'verb-haben': {
-    titleDe: 'haben und der Chunk „Ich möchte …“',
+    titleDe: 'haben und der feste Ausdruck „Ich möchte …“',
     content: [
       'Das Verb haben ist unregelmäßig:',
       'ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.',
-      'Mit haben sagt man Hunger, Durst oder Zeit.',
+      'Auch so: ich habe Hunger, ich habe Durst, ich habe Zeit.',
       'Beispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?',
       'Im Café: Wir haben Suppe, Salat und Kuchen.',
       'Ich möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.',
@@ -423,19 +425,20 @@ const RULE_CARD_OVERRIDES = {
   'yes-no-questions': {
     titleDe: 'Ja/Nein-Fragen: das Verb steht vorn',
     content: [
-      'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
+      'Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
+      'Eine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.',
       'Das Subjekt steht meist direkt nach dem Verb.',
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
-      'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
-      'Ist das Gleis weit? Hat der Zug Verspätung?',
-      'English: in a written yes/no question the verb comes first and the subject second.',
+      'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte hundert Euro?',
+      'Fährt der Zug auch in die Schweiz? Hat der Zug Verspätung?',
+      'English: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Sie kommen aus Österreich?',
+        wrong: 'Sie aus Österreich kommen?',
         correct: 'Kommen Sie aus Österreich?',
-        explanationDe: 'In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1.',
+        explanationDe: 'Neutrale Ja/Nein-Frage: In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen und geschrieben gibt es auch die Bestätigungsfrage mit der Wortfolge der Aussage.',
       },
       {
         wrong: 'Kommen aus Österreich Sie?',
@@ -456,8 +459,8 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.',
       'Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.',
-      'Beispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.',
-      'Ich rufe dich an ist eine feste Wendung. Rufst du mich an?',
+      'Beispiele: Ich stehe um sechs auf. Ich bringe eine Tasche mit. Ja, ich komme mit.',
+      'Ich rufe dich an ist eine feste Wendung. Rufst du nach acht an?',
       'schlafen wechselt den Vokal: er schläft.',
       'Gemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.',
       'English: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.',
@@ -499,8 +502,8 @@ const RULE_CARD_OVERRIDES = {
         explanationDe: 'Vor femininen Nomen kommt -e dazu: meine Mama, meine Schwester, meine Karte.',
       },
       {
-        wrong: 'Ist das ihr Geschenk, Frau Kaya?',
-        correct: 'Ist das Ihr Geschenk, Frau Kaya?',
+        wrong: 'Ist das ihr Geschenk, Frau Ramos?',
+        correct: 'Ist das Ihr Geschenk, Frau Ramos?',
         explanationDe: 'Die höfliche Form schreibt man immer mit großem I: Ihr Geschenk, Ihr Büro.',
       },
       {
@@ -666,11 +669,12 @@ const RULE_CARD_OVERRIDES = {
       'kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:',
       'eine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.',
       'nicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.',
-      'nicht steht am Satzende oder direkt vor dem Wort.',
+      'Satznegation: nicht steht meist spät, vor dem letzten Verbteil (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende.',
+      'Wortnegation: nicht steht direkt vor dem Wort: nicht heute, sondern morgen.',
       'Im Hotel: Hier ist keine Lampe und kein Spiegel.',
       'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.',
       'Die Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?',
-      'English: kein negates a noun that has ein or no article; nicht negates everything else.',
+      'English: kein replaces ein/no article; nicht ends clauses or precedes their final prefix/infinitive/participle; for contrast, nicht precedes the contrasted word.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -798,7 +802,7 @@ const RULE_CARD_OVERRIDES = {
       'Der Imperativ steht auf Position 1.',
       'Bei Sie bleibt das Pronomen stehen: Helfen Sie bitte!',
       'Die zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!',
-      'Das Pronomen fällt weg, die Endung -st fällt mit.',
+      'Das Pronomen fällt meist weg; betont bleibt es stehen. Die Endung -st fällt weg.',
       'Aus ä wird wieder a: ich fahre, du fährst → Fahr!',
       'Endet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!',
       'Bei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!',
@@ -806,7 +810,7 @@ const RULE_CARD_OVERRIDES = {
       'Das Wort bitte macht jede Aufforderung höflich.',
       'Im Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.',
       'Der Teppich ist auf der Terrasse. Hol ihn!',
-      'English: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.',
+      'English: Keep polite Sie; du drops -st. Familiar pronouns are usually omitted but possible for emphasis.',
     ].join('\n'),
     commonMistakes: [
       {

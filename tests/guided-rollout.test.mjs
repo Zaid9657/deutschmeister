@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { CURRICULUM_A11 as c } from '../src/data/curricula/a11.js';
 import buildLesson from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A12 as c12 } from '../src/data/curricula/a12.js';
@@ -55,23 +56,105 @@ test('all 36 original sound items derive unique checked answers and fair bilingu
       for (const option of item.options) assert.equal(checkAnswer(option, item.accepted, checkOptionsFor(item)).result, option === item.answer ? RESULT.CORRECT : RESULT.WRONG);
       const shape = classifySound(item.marked);
       if (['word-stress', 'prefixed-stress'].includes(shape.kind)) {
-        assert.equal(item.answer, [...shape.prefix, shape.syllables.map((s, i) => i === shape.stress ? s.toLocaleUpperCase('de') : s.toLocaleLowerCase('de')).join('-')].join(' '));
+        assert.equal(item.answer, item.marked, 'the right option is the model on screen');
         assert.ok(item.options.every((o) => /\p{Lu}/u.test(o) && o.includes('-')));
       } else if (shape.kind === 'sentence-stress') {
-        assert.equal(item.answer.toLocaleLowerCase('de'), shape.stress.toLocaleLowerCase('de'));
+        assert.equal(item.answer, item.marked);
         assert.match(item.modelEn, /computer voice may stress it differently/);
       } else if (shape.kind === 'melody') {
         assert.equal(item.answer, shape.direction);
         assert.match(item.modelEn, /computer voice may not follow/);
       } else {
         assert.equal(item.answer, item.text);
-        for (const option of item.options) assert.ok(lesson.phonetik.items.some((original) => original.toLocaleLowerCase('de').replace(/-/g, '').split(' – ').includes(option.toLocaleLowerCase('de'))));
+        const own = (option) => lesson.phonetik.items.some((original) => original.toLocaleLowerCase('de').replace(/-/g, '').split(' – ').includes(option.toLocaleLowerCase('de')));
+        // The Lektion's own sound strings; one Wortfeld word may join them when the answer would stand out by its spelling.
+        const joined = item.options.filter((option) => !own(option));
+        assert.ok(joined.length <= 1 && joined.every((option) => lesson.wortfeld.some((w) => w.word === option)), `L${lesson.nr} ${item.options}`);
       }
     }
   }
   assert.equal(count, 36);
   assert.match(read('src/lib/lesson/buildGuided.js'), /buildSoundItems\(lektion, nounsOf\(/);
   assert.match(read('scripts/lib/guided-content.mjs'), /classifySound\(marked\)/);
+});
+
+test('no sound option is a misspelled German word, and spelling never gives the answer away (browser walk 2026-11-25: „EUro / TEUer / neun")', () => {
+  const nouns = nounsOf(c.lektionen);
+  const big = (s) => /^\p{Lu}/u.test(s);
+  // A course noun or name has its capital letter, every other word is written small; „Sie" is the polite form.
+  const spelledRight = (word) => word === 'Sie' || word === (nouns.has(word[0].toLocaleUpperCase('de') + word.slice(1)) ? word[0].toLocaleUpperCase('de') + word.slice(1) : word.toLocaleLowerCase('de'));
+  let listening = 0;
+  for (const lesson of c.lektionen) for (const item of buildSoundItems(lesson, nouns)) {
+    const where = `L${lesson.nr} ${item.marked}: ${item.options.join(' / ')}`;
+    if (item.soundKind === 'melody') continue; // two arrows
+    if (['word-stress', 'prefixed-stress', 'sentence-stress'].includes(item.soundKind)) {
+      // Each option is the line in its real spelling with exactly one syllable (or word) in capitals, a different one each time.
+      const sentence = item.soundKind === 'sentence-stress';
+      const pieces = (s) => (sentence ? s.replace('?', '').split(' ') : s.split(' ').at(-1).split('-'));
+      const real = sentence ? pieces(item.text) : (() => {
+        const word = item.text.split(' ').at(-1);
+        let at = 0;
+        return pieces(item.marked).map((s) => word.slice(at, (at += s.length)));
+      })();
+      item.options.forEach((option, position) => {
+        assert.deepEqual(pieces(option), real.map((s, i) => (i === position ? s.toLocaleUpperCase('de') : s)), where);
+        assert.equal(option.replace(/-/g, '').toLocaleLowerCase('de'), item.text.toLocaleLowerCase('de'), where);
+      });
+      assert.equal(item.options.length, real.length, where);
+    } else {
+      listening += 1;
+      for (const option of item.options) {
+        for (const word of option.split(' ')) {
+          assert.doesNotMatch(word.slice(1), /\p{Lu}/u, `${where}: capitals inside a word`);
+          assert.ok(spelledRight(word), `${where}: „${word}"`);
+        }
+      }
+      // The answer is never the only option written small, nor the only one with a capital.
+      assert.ok(item.options.filter((o) => big(o) === big(item.answer)).length > 1, where);
+    }
+  }
+  assert.ok(listening >= 12, 'the listening items are really checked');
+});
+
+test('the order of the options never points at the answer: match and listening sounds (browser walk 2026-11-25: 48 of 48)', async () => {
+  const { optionOrder } = await import('../src/lib/lesson/optionOrder.js');
+  // Deterministic: the same question shows the same order on a resume and on a retake; another question its own.
+  assert.deepEqual(optionOrder(['a', 'b', 'c', 'd'], 'q1'), optionOrder(['a', 'b', 'c', 'd'], 'q1'));
+  assert.deepEqual([...optionOrder(['a', 'b', 'c', 'd'], 'q1')].sort(), ['a', 'b', 'c', 'd'], 'the same options');
+  const options = ['a', 'b', 'c', 'd'];
+  assert.ok(new Set(Array.from({ length: 40 }, (_, i) => optionOrder(options, `q${i}`).join(''))).size > 10);
+  const places = [0, 0, 0, 0];
+  let own = 0; let total = 0;
+  for (const lesson of c.lektionen) for (const attempt of [1, 2, 3]) {
+    const match = buildLesson({ curriculum: c, lektion: lesson, pool, attempt }).stages.find((s) => s.kind === 'derived').items.find((i) => i.type === 'match');
+    const at = match.pairs.map((pair, i) => optionOrder(match.pairs.map((p) => p.en), `${match.id}:${i}`).indexOf(pair.en));
+    assert.ok(at.some((place, i) => place !== i), `L${lesson.nr}: the answer is always at the question's own number`);
+    assert.ok(new Set(at).size > 1, `L${lesson.nr}: the answer is always at the same place`);
+    at.forEach((place, i) => { places[place] += 1; own += Number(place === i); total += 1; });
+  }
+  assert.equal(total, 144);
+  assert.ok(own < total * 0.4, `${own} of ${total} answers stand at the question's own number`);
+  for (const n of places) assert.ok(n > total * 0.15, `every place holds the answer sometimes: ${places}`);
+  assert.match(read('src/components/lesson/GuidedMatchItem.jsx'), /options: optionOrder\(item\.pairs\.map\(\(p\) => p\.en\), `\$\{item\.id\}:\$\{pairIndex\}`\)/);
+  // The listening sounds listed the Lektion's lines in order too: the answer of item 3 was the third line.
+  let ownLine = 0; let lines = 0;
+  for (const lesson of c.lektionen) buildSoundItems(lesson, nounsOf(c.lektionen)).forEach((item, i) => {
+    if (!['pair', 'phrase', 'sound-word'].includes(item.soundKind)) return;
+    lines += 1; ownLine += Number(item.options.indexOf(item.answer) === i);
+  });
+  assert.ok(ownLine < lines * 0.6, `${ownLine} of ${lines}`);
+});
+
+test('every sound item shows its model, the marked line, and no text it shows ends in two end marks', () => {
+  // 2026-11-23 screen walk: L7 item 3, L9 item 3 and all of L12 said „read the model“ with no model
+  // on screen, and L8/L10 read „Wie SPÄT ist es?.“ and „Fährt der ZUG?↗.“.
+  const nouns = nounsOf(c.lektionen);
+  for (const lesson of c.lektionen) for (const item of buildSoundItems(lesson, nouns)) {
+    for (const text of [item.modelDe, item.modelEn]) assert.ok(text.includes(item.marked), `L${lesson.nr} ${item.id}: no model in „${text}“`);
+    for (const text of [item.modelDe, item.modelEn, item.promptDe, item.promptEn, item.explanationDe, item.explanationEn]) {
+      assert.doesNotMatch(text, /[.!?][↗↘]?\s*[.!?]/u, `L${lesson.nr} ${item.id}: ${text}`);
+    }
+  }
 });
 
 test('only explicit meta headings are exempt from guided read coverage; other guided rules still apply', () => {
@@ -95,19 +178,22 @@ test('only explicit meta headings are exempt from guided read coverage; other gu
 
 test('all twelve guided lessons preserve the original dialogue, draws, scoring stages and pauses', () => {
   assert.equal(c.lektionen.length, 12);
-  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
+  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency', 'check'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
   for (const lesson of c.lektionen) {
     assert.equal(lesson.flow, 'guided');
     if (lesson.nr > 1) {
       const draft = draftLesson(lesson);
-      assert.deepEqual(lesson.guided, draft.guided);
+      // The final check arrives Lektion by Lektion with the rollout (docs/course-factory/a11-lektion-rollout/);
+      // final-check.test.mjs holds it. Everything else is the draft.
+      const { check: _check, ...guided } = lesson.guided;
+      assert.deepEqual(guided, draft.guided);
       assert.deepEqual(lesson.nextHook, draft.nextHook);
     }
     for (const attempt of [1, 2, 3]) {
       const run = build(lesson, attempt), legacy = build({ ...lesson, flow: undefined }, attempt);
       assert.deepEqual(unchanged(run), unchanged(legacy), `${lesson.id} draw ${attempt}`);
       assert.equal(run.flow, 'guided');
-      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
+      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', ...(lesson.guided.check ? ['check'] : []), 'recap']);
       const scene = run.stages.find((s) => s.kind === 'scene');
       assert.deepEqual(scene.chunks.flatMap((chunk) => chunk.lines).map(({ index: _i, ...line }) => line), lesson.dialog.lines);
       assert.deepEqual(run.stages.slice(1).map((s, i) => sessionCompleted(run.stages[i], s)).filter(Boolean), [1, 2]);
@@ -124,16 +210,87 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
   }
 });
 
+// Browser walk L, 30 (2026-11-25): with "Deutsch" chosen every comprehension question still had English options.
+test('every comprehension question has German options beside the English ones, in the same order', () => {
+  let n = 0;
+  for (const lesson of c.lektionen) {
+    for (const q of [...lesson.guided.chunks.map((x) => x.meaning), ...lesson.guided.read.questions]) {
+      n += 1;
+      assert.equal(q.optionsDe?.length, q.options.length, `${lesson.id}: ${q.promptDe}`);
+      assert.equal(new Set(q.optionsDe).size, q.optionsDe.length, `${lesson.id}: ${q.promptDe}`);
+      // A number or a price is the same in both: the order can be checked.
+      q.options.forEach((en, i) => { for (const d of en.match(/\d+/g) || []) assert.ok(q.optionsDe[i].includes(d), `${lesson.id}: ${en} / ${q.optionsDe[i]}`); });
+      assert.doesNotMatch(q.optionsDe.join(' '), /\b(?:the|and|she|he|is|are|her|his|they|with)\b/i, `${lesson.id}: ${q.promptDe}`);
+    }
+  }
+  assert.equal(n, 82);
+  const choice = read('src/components/lesson/CheckedChoice.jsx');
+  assert.match(choice, /lang === 'de' && item\.optionsDe\?\.length === item\.options\.length \? item\.optionsDe : item\.options/);
+  assert.match(choice, /\{label\(option\)\}/);
+  assert.equal((choice.match(/label\(item\.answer\)/g) || []).length, 2);
+});
+
+// Independent score of 2026-11-25: the checks dictated numbers and asked for months that no screen had shown.
+test('a closed series is shown and can be heard before a check asks for it: the numbers of Lektion 2 and 4, the months of Lektion 12', async () => {
+  const { seriesText } = await import('../src/lib/lesson/guidedRead.js');
+  const { checkTurns } = await import('../src/lib/lesson/finalCheck.js');
+  const series = (nr) => new Map((c.lektionen.find((l) => l.nr === nr).guided.read.series?.items || []).map((x) => [x.label, x.de]));
+  assert.deepEqual([...series(2).keys()], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+  assert.equal(series(12).size, 12);
+  const numbers = new Map([...series(2), ...series(4)]);
+  for (const nr of [2, 4]) {
+    const lesson = c.lektionen.find((l) => l.nr === nr);
+    for (let retake = 0; retake < 4; retake += 1) {
+      for (const turn of checkTurns(lesson.guided.check, retake).filter((x) => x.listen)) {
+        // Up to twenty each number is shown; above it the tens are shown with the rule of the compounds („45 ist fünf-und-vierzig“),
+        // and a compound the list prints is never dictated: that would measure the list, not the rule.
+        for (const d of turn.listen.match(/\d+/g) || []) {
+          const n = Number(d);
+          if (n <= 20 || n % 10 === 0) assert.ok(numbers.has(d), `Lektion ${nr}: „${turn.listen}“ asks for ${d}, which no list shows`);
+          else {
+            assert.ok(numbers.has(String(n - (n % 10))) && [...numbers.keys()].some((k) => Number(k) > 20 && Number(k) % 10), `Lektion ${nr}: ${d} has no tens and no rule shown`);
+            assert.ok(!numbers.has(d), `Lektion ${nr}: ${d} is printed in the list, so the check measures the list`);
+          }
+        }
+        if (nr === 2) for (const w of turn.listen.split(/[\s,]+/).filter(Boolean)) assert.ok([...numbers.values()].includes(w), `Lektion 2: „${w}“`);
+      }
+    }
+  }
+  for (const nr of [2, 4, 12]) {
+    const { series: s } = c.lektionen.find((l) => l.nr === nr).guided.read;
+    assert.equal(seriesText(s), `${s.items.map((x) => x.de).join(', ')}.`);
+  }
+  const stage = readFileSync(new URL('../src/components/lesson/ReadStage.jsx', import.meta.url), 'utf8');
+  assert.match(stage, /stage\.series && <Series/);
+  assert.match(stage, /text=\{seriesText\(series\)\}/);
+});
+
+test('a rewritten scene line never leaves its meaning question behind: each part is pinned to its lines (2026-11-23)', () => {
+  // Lektion 11's keys described lines that no longer existed (the screen walk, F1 and F2). `meaningLines` is a short hash
+  // of the part's lines; a changed line fails here until its meaning question has been read again and the pin renewed.
+  const pin = (lines) => createHash('sha1').update(lines.map((l) => `${l.speaker}: ${l.de}`).join('\n')).digest('hex').slice(0, 8);
+  for (const lesson of c.lektionen) {
+    lesson.guided.chunks.forEach((chunk, i) => {
+      const now = pin(lesson.dialog.lines.slice(chunk.from, chunk.to));
+      assert.equal(chunk.meaningLines, now, `Lektion ${lesson.nr} part ${i + 1}: its lines changed; re-read „${chunk.meaning.promptDe}“ and its answer, then set meaningLines: '${now}'`);
+      assert.ok(chunk.meaning.options.includes(chunk.meaning.answer), `Lektion ${lesson.nr} part ${i + 1}`);
+    });
+  }
+});
+
 test('say cues come from the immediately preceding original dialogue line across chunk boundaries', async () => {
   for (const lesson of c.lektionen) {
     const run = build(lesson), scene = run.stages.find((s) => s.kind === 'scene'), fluency = run.stages.find((s) => s.kind === 'fluency');
     for (const [i, chunk] of scene.chunks.entries()) {
       const expected = chunk.say.line ? { ...lesson.dialog.lines[chunk.say.line - 1], index: chunk.say.line - 1 } : undefined;
       assert.deepEqual(chunk.cue, expected);
-      assert.deepEqual(fluency.lines[i].cue, expected);
+      // Said from memory, every line has a cue: an opening line has the situation (the screen walk, Lektionen 4, 6, 10).
+      assert.deepEqual(fluency.lines[i].cue, expected || { de: lesson.dialog.setting, en: lesson.dialog.settingEn });
+      assert.ok(fluency.lines[i].cue.de && fluency.lines[i].cue.en, `Lektion ${lesson.nr} line ${chunk.say.line + 1}: a fluency line without a cue`);
     }
   }
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {
+    './CommandHelp.jsx': { default: 'CommandHelp' }, './ArabicHelp.jsx': { FeedbackArabicHelp: 'FeedbackArabicHelp' },
     react: { useState: (v) => [v, () => {}], useMemo: (fn) => fn(), useEffect() {} },
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },
@@ -205,16 +362,22 @@ test('estimates and content-free funnel steps follow every lesson’s actual gui
   }
 });
 
-test('L2–12 scenes use complete inline illustrations and L12’s cross-level story preview is grounded in live A1.2', async () => {
+test('L2–12 scenes use complete illustrations, drawn or inline, and L12’s cross-level story preview is grounded in live A1.2', async () => {
   const { default: Scene } = await loadJsxModule('src/components/illustrations/SituationScene.jsx', {
     '../../data/design-tokens.js': tokens, '../../data/curricula/a11.art.js': { A11_ART },
   });
   for (const lesson of c.lektionen.slice(1)) {
     const tree = Scene({ lektionId: lesson.id, className: 'w-full rounded-3xl border border-rule object-cover' });
+    const art = A11_ART.situations[lesson.id];
+    // The rollout (2026-11-19) draws a Lektion's scene batch by batch; until then it is the inline SVG.
+    if (art.src) {
+      assert.equal(tree.type, 'img', lesson.id);
+      assert.equal(tree.props.alt, art.alt);
+      continue;
+    }
     assert.equal(tree.type, 'svg'); assert.equal(tree.props.viewBox, '0 0 160 100');
     assert.equal(tree.props.role, 'img'); assert.ok(tree.props['aria-label']);
-    assert.equal(A11_ART.situations[lesson.id].src, null);
-    assert.equal(A11_ART.situations[lesson.id].srcSmall, null);
+    assert.equal(art.srcSmall, null);
   }
   assert.match(c.lektionen.at(-1).nextHook.de, /In A1.2.*Ana.*Rathaus/);
   assert.match(c12.lektionen[0].dialog.setting, /Ana.*Rathaus/);
@@ -225,16 +388,18 @@ test('L2–12 scenes use complete inline illustrations and L12’s cross-level s
 test('a stress mark never costs a German noun its capital letter, and unmarked words keep their spelling', () => {
   const nouns = nounsOf(c.lektionen);
   const shown = (nr) => buildSoundItems(c.lektionen[nr - 1], nouns);
-  assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Kommst du mit?']);
+  assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Ist das Gleis vier?']);
   assert.deepEqual(shown(3).map((i) => i.text), ['der Bruder', 'die Brüder', 'die Mütter']);
   assert.equal(shown(8)[2].text, 'Wie viel Uhr ist es?');
-  assert.equal(shown(8)[2].answer, 'Uhr');
-  assert.ok(shown(8)[2].options.includes('Uhr') && !shown(8)[2].options.includes('uhr'));
+  assert.equal(shown(8)[2].answer, 'Wie viel UHR ist es?');
+  // Verbs, adjectives and names keep their real spelling too (2026-11-25): no „Möchte", „Hören", „Teuer", „Aufstehen", „ana".
+  assert.deepEqual([4, 9, 11].flatMap((nr) => shown(nr).map((i) => i.text)), ['Euro', 'teuer', 'neun', 'möchte', 'hören', 'schön', 'aufstehen', 'einkaufen', 'anrufen']);
+  assert.deepEqual(shown(1).map((i) => i.text), ['Hallo', 'Danke', 'Ana']);
   assert.equal(shown(2)[2].text, 'Sie sind');
   assert.equal(shown(7)[0].text, 'ich höre');
   // By class: no word shown to the learner is a course noun written small.
   for (const lesson of c.lektionen) for (const item of shown(lesson.nr)) {
-    for (const text of [item.text, ...(item.soundKind === 'sentence-stress' ? item.options : [])]) {
+    for (const text of [item.text, ...(['pair', 'phrase', 'sound-word'].includes(item.soundKind) ? item.options : [])]) {
       for (const token of text.split(/[^\p{L}]+/u).filter(Boolean)) {
         const noun = token.charAt(0).toLocaleUpperCase('de') + token.slice(1);
         assert.ok(token === noun || !nouns.has(noun), `L${lesson.nr} „${text}“: ${token} is a noun`);

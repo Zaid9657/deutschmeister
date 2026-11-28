@@ -81,10 +81,11 @@ test('the free finish line: the last node of every live curriculum links to a co
 
 test('the course home labels the free finish line as free, on the node and in the footer', () => {
   const src = read('src/pages/CurriculumHomePage.jsx');
-  assert.match(src, /'Abschlusstest · frei'/);
-  assert.match(src, /isLevelFree\(level\)/, 'the label must be derived from FREE_LEVELS, never hard-coded');
+  assert.match(src, /free \? 'Abschlusstest · frei' : 'Abschlusstest'/);
+  assert.match(src, /free \? 'Final test · free' : 'Final test'/, 'and the same in English chrome');
+  assert.match(src, /const free = isLevelFree\(level\)/, 'the label must be derived from FREE_LEVELS, never hard-coded');
   assert.ok(!/leveltest: 'Final test'/.test(src), 'the unmarked "Final test" label is back');
-  assert.match(src, /\{finalTestLabel\(level\)\}<\/Link>/, 'the footer link must carry the same label');
+  assert.match(src, /\{finalTestLabel\(level, lang\)\}<\/Link>/, 'the footer link must carry the same label');
 });
 
 test('the rival A1.1 pages point at the guided course and do not call themselves the course', () => {

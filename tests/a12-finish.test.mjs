@@ -1,9 +1,11 @@
 import test from 'node:test';
+import { generatedCurriculum } from './helpers/generatedCheckpoint.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { CURRICULUM_A12 as curriculum } from '../src/data/curricula/a12.js';
 import { anyCurriculumFor, curriculumPath } from '../src/data/curricula/index.js';
+import { courseTestDescription } from '../src/data/courseTests/index.js';
 import { buildLesson, planPractice } from '../src/lib/lesson/buildLesson.js';
 import * as checkpoint from '../src/lib/checkpoint/buildCheckpoint.js';
 import * as feedback from '../src/lib/checkpoint/feedback.js';
@@ -42,6 +44,10 @@ function stubsFor(path, state, lang) {
   }
   stubs.react = state.react;
   for (const key of Object.keys(stubs)) if (key.endsWith('/lesson/strings.js')) stubs[key] = { useLessonLang: () => [lang], t };
+  for (const key of Object.keys(stubs)) if (key.endsWith('/useScreenTitle.js')) stubs[key] = { useScreenTitle: () => {} };
+  // The checkpoint renders explanations through NoticeStage's inline() (bold marks, 2026-11-19); the
+  // text is what this test reads, so the stub passes it through.
+  for (const key of Object.keys(stubs)) if (key.endsWith('/NoticeStage.jsx')) stubs[key] = { ...stubs[key], inline: (text) => text };
   return stubs;
 }
 
@@ -121,8 +127,11 @@ test('all listening option sets are disjoint and graded feedback waits for the f
     for (const cp of c.checkpoints) for (let round = 0; round < 4; round++) {
       const items = checkpoint.buildCheckpoint({ curriculum: c, checkpoint: cp, pool: p, seed: checkpoint.paperSeed(cp, round) });
       const listening = items.filter((it) => it.section === 'hoeren'), choices = listening.filter((it) => it.kind === 'wordChoice');
-      assert.equal(choices.length, 2);
-      assert.equal(new Set(choices.flatMap((it) => it.options)).size, 8, `${cp.id}/${round}: overlapping listening options`);
+      // A1.1 asks about a heard text since 2026-11-25 (a11.hoeren.js), three options each; A1.2 still has its two word choices.
+      const asks = listening.filter((it) => it.kind === (level === 'a1.1' ? 'listenChoice' : 'wordChoice'));
+      assert.equal(choices.length, level === 'a1.1' ? 0 : 2);
+      assert.equal(asks.length, level === 'a1.1' ? 3 : 2);
+      assert.equal(new Set(asks.flatMap((it) => it.options)).size, asks.reduce((n, it) => n + it.options.length, 0), `${cp.id}/${round}: overlapping listening options`);
       const answers = {};
       for (const item of listening) {
         assert.deepEqual(feedback.checkpointFeedback(item, item.answer, { graded: true }), { answer: item.answer });
@@ -211,7 +220,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../contexts/AuthContext'] = { useAuth: () => ({ user: null }) };
     stubs['../contexts/SubscriptionContext'] = { useSubscription: () => ({}) };
     stubs['react-router-dom'] = { Link: 'Link', useSearchParams: () => [new URLSearchParams()] };
-    stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
+    stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, checkpointMinutesEstimate: () => ({ lo: 10, hi: 30 }), lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
     stubs['../data/curricula/index.js'] = { curriculumPath };
     stubs['../config/levels.js'] = { LEVEL_ORDER: ['A1.1', 'A1.2', 'A2.1'] };
     stubs['../config/freeTier.js'] = { isLevelFree: () => false, freeLektionen: () => 0 };
@@ -219,6 +228,8 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../lib/course/localProgress.js'] = { localDoneIds: () => new Set(complete ? curriculumPath(curriculum).map((n) => n.id) : []) };
     stubs['../lib/lesson/runState.js'] = { latestRun: () => null };
     stubs['../lib/course/canDo.js'] = { canDoList: () => [] };
+    stubs['../lib/course/checkShown.js'] = { checksShown: () => ({}) };
+    stubs['../data/courseTests/index.js'] = { courseTestDescription };
     // The purchase notice reads the real catalogue; no checkout id is configured here, so no Buy button renders.
     stubs['../data/pricing.js'] = { courseForLevel };
     stubs['../config/lemonsqueezy.js'] = { LEMONSQUEEZY_CONFIG: { levelCourses: {} } };
@@ -244,7 +255,8 @@ test('every served A1.2 practice key is accepted and delayed inventory stays out
 });
 
 test('generated checkpoints keep new seeds beyond the first bank without recursive lifetime work', () => {
-  const c = anyCurriculumFor('a1.1'), cp = c.checkpoints[0];
+  // A1.1 reads an authored bank since the re-landed live fixes; its generated stand-in keeps this guard.
+  const c = generatedCurriculum(anyCurriculumFor('a1.1')), cp = c.checkpoints[0];
   const p = JSON.parse(read('src/data/lessonPools/a11.json'));
   const first = checkpoint.buildCheckpoint({ curriculum: c, checkpoint: cp, pool: p });
   for (const round of [4, 4003]) {

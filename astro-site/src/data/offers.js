@@ -22,7 +22,7 @@ import {
 } from './pricing.js';
 import {
   LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
-  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, PLACEMENT_TEST_MINUTES,
+  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, FREE_LEKTION_LABEL, READING_LESSON_COUNTS_BY_LEVEL, PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 import { COURSE_CONTENTS, GUIDED_PLANS, LEVEL_OUTCOME_EN, levelToSlug } from './courseContents.js';
 
@@ -79,7 +79,7 @@ export const stationStatusLine = (station) => {
 export const planLine = (station) => {
   if (!station.plan) return null;
   const c = station.contents;
-  const test = c && c.finalTest ? `, ending in a final test in ${c.finalTest.format} format` : '';
+  const test = c && c.finalTest ? ', ending in an adapted course assessment (scope and course pass rule on the course page)' : '';
   return `A ${station.plan.days}-day guided plan: ${station.plan.steps} steps, about ${hours(station.plan.minutes)} hours of practice${test}.`;
 };
 
@@ -200,7 +200,7 @@ export const EXAM_ROUTE = {
 
 /** What the free first stop includes (no account). */
 export const FREE_STOP_LINES = [
-  `Lektion 1 of ${STATIONS[0].code} is free, with no account`,
+  `${FREE_LEKTION_LABEL} of ${STATIONS[0].code} is free, with no account`,
   `Sentence X-Ray: ${ANON_DAILY_LIMIT} free analysis a day`,
   `The grammar explanations of all ${LEVEL_COUNT} levels, to read`,
 ];

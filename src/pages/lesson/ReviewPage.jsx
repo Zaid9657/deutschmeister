@@ -13,6 +13,7 @@ import Card from '../../components/ui/Card.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
 import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { useScreenTitle } from '../../hooks/useScreenTitle.js';
 
 // The Wiederholen screen (standard §3, "Spaced review"): the cards that are due
 // today, in four modes — flashcard reveal, listening, typed, and "say it"
@@ -69,6 +70,7 @@ function ReviewSession() {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
+  useScreenTitle(curriculum && `${t('review.title', lang)} · ${curriculum.code}`, lang);
 
   const [cards, setCards] = useState(null);
   const [index, setIndex] = useState(0);
@@ -187,7 +189,7 @@ function ReviewSession() {
   };
 
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
+    <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
       <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
         <div className="mb-6 flex items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
@@ -218,7 +220,10 @@ function ReviewSession() {
                 {nextOn ? t('review.nextOn', lang, { date: nextOn }) : t('review.newCards', lang)}
               </p>
             )}
-            <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {!user && <Button to="/login" state={{ from: { pathname: `/course/${curriculum.level}/review` } }}>{t('review.signInLink', lang)}</Button>}
+              <Button variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
+            </div>
           </Card>
         )}
 

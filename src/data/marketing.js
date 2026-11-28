@@ -173,6 +173,12 @@ export const READING_LESSON_COUNT = 74;
 export const FREE_LEVEL_LABEL = 'A1.1';
 
 /**
+ * What of the guided A1.1 COURSE is open without paying (its grammar, listening and reading library is free whole).
+ * Source: FREE_LEKTIONEN, src/config/freeTier.js (tests/free-claims.test.mjs holds them together).
+ */
+export const FREE_LEKTION_LABEL = 'Lektion 1';
+
+/**
  * The CEFR ladder the product is built on, in order. Codes match the DB's
  * uppercase `sub_level` values; URLs use the lowercase form (see CLAUDE.md).
  * Subtitles are the ones already shipped in src/utils/listeningHelpers.js and
@@ -215,8 +221,8 @@ export const XRAY_LINE = `${PRO_DAILY_LIMIT} Sentence X-Ray analyses per day`;
 export const XRAY_LINE_DE = `${PRO_DAILY_LIMIT} Satz-Röntgen-Analysen pro Tag`;
 
 /** The free offer, stated with what it actually includes. */
-export const FREE_OFFER_LINE = `Lektion 1 of ${FREE_LEVEL_LABEL} is free, no account needed`;
-export const FREE_OFFER_LINE_DE = `Lektion 1 von ${FREE_LEVEL_LABEL} kostenlos, ohne Konto`;
+export const FREE_OFFER_LINE = `${FREE_LEKTION_LABEL} of ${FREE_LEVEL_LABEL} is free, no account needed`;
+export const FREE_OFFER_LINE_DE = `${FREE_LEKTION_LABEL} von ${FREE_LEVEL_LABEL} kostenlos, ohne Konto`;
 
 /**
  * The founder-experience line — the site's "Who", told anonymously. It asserts

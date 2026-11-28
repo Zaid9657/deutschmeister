@@ -77,7 +77,7 @@ const TrialBanner = () => {
   // the bar at every scroll position, clicks landed on the nav, and the band
   // left only a blank 64 px gap. Its in-flow box is now that gap.
   return (
-    <div className={`sticky top-16 z-40 w-full ${bandClass}`} data-urgency={urgency}>
+    <div className={`sticky top-16 z-40 w-full print:hidden ${bandClass}`} data-urgency={urgency}>
       <div className="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm font-semibold min-w-0">
           {icon}

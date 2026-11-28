@@ -40,9 +40,13 @@ import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, track
 import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
+import { rememberCheck } from '../../lib/course/checkShown.js';
 import SessionBreak from '../../components/lesson/SessionBreak.jsx';
+import OtterSays from '../../components/illustrations/OtterSays.jsx';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
+import useKeepFocus from '../../hooks/useKeepFocus.js';
+import { useScreenTitle } from '../../hooks/useScreenTitle.js';
 
 import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
@@ -51,6 +55,7 @@ const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
 const SoundStage = lazy(() => import('../../components/lesson/SoundStage.jsx'));
 const ReadStage = lazy(() => import('../../components/lesson/ReadStage.jsx'));
 const FluencyStage = lazy(() => import('../../components/lesson/FluencyStage.jsx'));
+const CheckStage = lazy(() => import('../../components/lesson/CheckStage.jsx'));
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -257,6 +262,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
     : 0));
   const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
+  // The otter's welcome after two days or more away: shown on the saved place, gone with the first step on.
+  const [awayAt] = useState(() => (resumed && Date.now() - resumed.savedAt >= 2 * 24 * 60 * 60 * 1000 ? `${stageIndex}:${itemIndex}` : null));
   const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
   const [misses, setMisses] = useState(() => (resumed ? resumed.misses : []));
   // Consecutive first-try corrects across practice + dictation items, reset on
@@ -275,6 +282,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
+  // Where the final check stands, so a reload does not start its turns again (runState.js, `check`).
+  const [checkRun, setCheckRun] = useState(() => resumed?.check || null);
+  // The final check's verdict per can-do (CheckStage); the recap ticks only what it shows.
+  const [checkShown, setCheckShown] = useState(null);
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
   // What the recap tells the learner about saving: 'local' (signed out) · 'syncing' · 'synced' · 'failed'.
@@ -293,7 +304,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     () => buildLesson({ curriculum, lektion, pool, dueCards, attempt }),
     [curriculum, lektion, pool, attempt, dueCards],
   );
-  const stages = lesson.stages;
+  // Every stage carries its part (sessions.js), in both flows: the stage headers number by part only.
+  const stages = useMemo(() => lesson.stages.map((s) => ({ ...s, part: sessionOf(s) })), [lesson]);
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
   const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
@@ -376,13 +388,15 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
 
   // FOCUS ON EVERY NEW SCREEN (2026-10 review): a new item or stage moves keyboard and screen-reader
   // focus to its heading, so a learner hears where they are instead of staying on a button that no
-  // longer exists. An item that focused its own answer field already (typed items do) keeps it.
+  // longer exists. An item that focused its own answer field already (typed items do) keeps it, and so
+  // does the Wortfeld's group heading (an h3).
   const bodyRef = useRef(null);
+  useKeepFocus(bodyRef);
   useEffect(() => {
     const root = bodyRef.current;
     if (!root) return;
     const active = typeof document !== 'undefined' ? document.activeElement : null;
-    if (active && root.contains(active) && /^(INPUT|TEXTAREA)$/.test(active.tagName)) return;
+    if (active && root.contains(active) && /^(INPUT|TEXTAREA|H3)$/.test(active.tagName)) return;
     const heading = root.querySelector('h1, h2');
     if (!heading) return;
     if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
@@ -430,9 +444,9 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
       flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
-      runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
+      runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, check: checkRun,
     }), owner);
-  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, checkRun, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -513,7 +527,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   switch (stage.kind) {
     case 'warmup':
       body = warmupCard ? (
-        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} title={t('stage.warmup.title', lang)} onBack={back}>
+        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} part={stage.part} title={t('stage.warmup.title', lang)} onBack={back}>
           <ReviewCard
             content={warmupCard}
             mode={warmupMode}
@@ -564,7 +578,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
-      body = <WortfeldStage key={stage.key} lektionId={lektion.flow === 'guided' ? lektion.id : undefined} stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
+      body = <WortfeldStage key={stage.key} lektionId={lektion.flow === 'guided' ? lektion.id : undefined} stage={{ ...stage, words: wortfeld }} group={itemIndex} onGroup={setItemIndex} onBack={back} onDone={advance} />;
       break;
     case 'notice':
       body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
@@ -586,6 +600,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         item,
         index: itemIndex,
         total: items.length,
+        part: stage.part,
         lektionId: lektion.id,
         onResult: resultFor(stage.kind),
         onNext: onItemNext,
@@ -606,6 +621,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
             index={itemIndex}
             total={items.length}
             eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}
+            part={stage.part}
             hintFirst={lektion.flow === 'guided' && !retry}
             allowReveal={retry}
             onResult={resultFor(stage.kind)}
@@ -618,7 +634,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'dictation': {
       const line = items[itemIndex];
       body = line ? (
-        <DictationItem hintFirst={lektion.flow === 'guided'} key={line.index} line={line} index={itemIndex} total={items.length} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
+        <DictationItem hintFirst={lektion.flow === 'guided'} key={line.index} line={line} index={itemIndex} total={items.length} part={stage.part} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
       ) : null;
       break;
     }
@@ -640,9 +656,16 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'writing':
       body = <WritingStage stage={stage} lektionId={lektion.id} onResult={resultFor('writing')} onReport={reportSkill('writing')} onBack={back} onDone={advance} />;
       break;
+    case 'check':
+      body = <Suspense fallback={<PlayerLoading />}><CheckStage stage={stage} lektion={lektion} onBack={back} resume={checkRun} onProgress={setCheckRun}
+        onDone={(shown) => { setCheckShown(shown); rememberCheck(lektion.id, shown); advance(); }} /></Suspense>;
+      break;
     case 'recap':
+      // No Back: the run is finished, saved and cleared. Back used to start the final check again at
+      // its first turn (a writing task at an empty text), and a refresh there lost the Lektion.
       body = (
         <RecapStage
+          checkShown={checkShown}
           stage={stage}
           level={curriculum.level}
           accuracy={accuracy}
@@ -652,8 +675,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
           sync={sync}
           onRetrySync={flush}
           nextLabel={nextTarget.label}
-          onBack={back}
-          onNext={() => navigate(nextTarget.to)}
+          onNext={() => {
+            // The next page opens at its top, not at the scroll position of this recap.
+            if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+            navigate(nextTarget.to);
+          }}
         />
       );
       break;
@@ -664,7 +690,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.
   if (pause) {
-    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
+    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} lektionId={lektion.id} onContinue={() => setPause(null)} />;
   }
   if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause?.done, stageKind: stage.kind })) {
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
@@ -702,9 +728,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
             label={t('player.lesson', lang, { nr: lektion.nr })}
             stepLabel={t('player.stepOf', lang, { n: stageIndex + 1, total: stages.length })}
           />
-          <ComboChip combo={combo} />
           <LangToggle />
+          {/* Last in the row: at phone width it is the chip that wraps, never the language switch. */}
+          <ComboChip combo={combo} />
         </div>}
+        {awayAt === `${stageIndex}:${itemIndex}` && <OtterSays lektionId={lektion.id} className="mb-4">{t('otter.back', lang)}</OtterSays>}
         <div ref={bodyRef}>{body}</div>
       </div>
     </div>
@@ -732,6 +760,8 @@ export default function LessonPlayerPage() {
   const [poolError, setPoolError] = useState(null);
   const lektionNr = Number(nr);
   const lektion = curriculum ? (curriculum.lektionen || []).find((l) => l.nr === lektionNr) : null;
+  const [lang] = useLessonLang();
+  useScreenTitle(lektion && `${t('player.lesson', lang, { nr: lektion.nr })}: ${lektion.title} · ${curriculum.code}`, lang);
 
   useEffect(() => {
     if (!curriculum) return undefined;

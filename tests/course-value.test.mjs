@@ -168,11 +168,11 @@ test('progress shows ability, not activity: the home leads with the can-dos, the
   assert.equal(all[0].id, canDoId('a1.1-l01', 0));
   assert.equal(all[0].id, 'a1.1-l01#1');
   assert.ok(all.every((c) => c.state === 'open' && c.en && c.de.startsWith('Ich kann')), 'English for every A1.1 line, nothing shown yet');
-  // Shown = the Lektion is finished; again = its chapter checkpoint is passed too.
+  // Completion and a chapter pass alone prove no individual can-do.
   const done = new Set(['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-cp1', 'a1.1-l04']);
   const states = canDoList(CURRICULUM_A11, done);
   const stateOf = (nr) => [...new Set(states.filter((c) => c.nr === nr).map((c) => c.state))];
-  assert.deepEqual([1, 2, 3, 4, 5].map(stateOf), [['again'], ['again'], ['again'], ['shown'], ['open']]);
+  assert.deepEqual([1, 2, 3, 4, 5].map(stateOf), [['practise'], ['practise'], ['practise'], ['practise'], ['open']]);
   assert.deepEqual([1, 3, 4, 12].map((nr) => checkpointFor(CURRICULUM_A11, nr)?.id), ['a1.1-cp1', 'a1.1-cp1', 'a1.1-cp2', 'a1.1-cp4']);
   const l1 = CURRICULUM_A11.lektionen[0];
   assert.deepEqual(canDoLines(l1, 'en'), A11_META.lektionIntro['a1.1-l01'].canDoEn);
@@ -182,7 +182,13 @@ test('progress shows ability, not activity: the home leads with the can-dos, the
   const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
   const home = read('src/pages/CurriculumHomePage.jsx');
   assert.doesNotMatch(home, /label="XP"|\bconst xp\b/, 'no XP on the course home');
-  assert.match(home, /<KannIch\s+items=\{canDoList\(curriculum, done\)\}/);
+  assert.match(home, /<KannIch\s+items=\{canDoList\(curriculum, done, checksShown\(\)\)\}/);
+  // A can-do the final check did not show is never ticked (Claude score of fd8f8dba, MAJOR 5).
+  const checked = canDoList(CURRICULUM_A11, new Set(['a1.1-l01']), { 'a1.1-l01': [true, false, true, true] });
+  assert.deepEqual(checked.filter((c) => c.nr === 1).map((c) => c.state), ['shown', 'practise', 'shown', 'shown']);
+  assert.ok(canDoList(CURRICULUM_A11, done, { 'a1.1-l01': [false, false, false, false] }).filter((c) => c.nr === 1).every((c) => c.state === 'practise'), 'a chapter pass never overrides missing individual evidence');
+  assert.match(read('src/pages/lesson/LessonPlayerPage.jsx'), /rememberCheck\(lektion\.id, shown\)/);
+  assert.match(read('src/components/course/KannIch.jsx'), /c\.state !== 'open' && c\.state !== 'practise'/);
   assert.match(home, /loaded && curriculum\.lektionen\.some\(\(l\) => done\.has\(l\.id\)\) && \(/, 'only once a Lektion is finished: a newcomer sees Start, not a row of zeros');
   const recap = read('src/components/lesson/RecapStage.jsx');
   const canDoAt = recap.indexOf("t('recap.canDo.title', lang)");
@@ -262,4 +268,17 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   // LessonStages mounts after the intro (2026-10-25), so "the intro is done" is no longer a condition there.
   assert.match(player, /if \(preview \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(reachStep\)\) return;/);
   assert.match(player, /\}, \[preview, pause, stage, curriculum\.level, lektion\.id, runId, reachStep, reachSteps, user, startWrite\]\);/);
+});
+
+test('Phase 2b: checkpoint passes cannot manufacture or double-tick individual can-dos', async () => {
+  const { canDoList } = await import('../src/lib/course/canDo.js');
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const lessons = CURRICULUM_A11.lektionen.filter((l) => l.nr <= cp.afterLektion);
+    const done = new Set(lessons.map((l) => l.id));
+    const evidence = Object.fromEntries(lessons.map((l) => [l.id, l.canDo.map((_, i) => i % 2 === 0)]));
+    const before = canDoList(CURRICULUM_A11, done, evidence);
+    done.add(cp.id);
+    assert.deepEqual(canDoList(CURRICULUM_A11, done, evidence), before, 'the saved pass contains no per-skill evidence');
+    assert.ok(canDoList(CURRICULUM_A11, done).filter((c) => done.has(c.lektionId)).every((c) => c.state === 'practise'));
+  }
 });

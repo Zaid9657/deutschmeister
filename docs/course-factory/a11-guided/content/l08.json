@@ -17,7 +17,12 @@
           ],
           "answer": "At half past nine.",
           "explanationDe": "In der Nachricht steht: Der Termin beim Arzt ist um halb zehn. Halb zehn ist 9.30 Uhr.",
-          "explanationEn": "The message says the appointment is at “halb zehn”. That is 9.30: half an hour before ten."
+          "explanationEn": "The message says the appointment is at “halb zehn”. That is 9.30: half an hour before ten.",
+          "optionsDe": [
+            "Um halb elf.",
+            "Um halb zehn.",
+            "Um Viertel nach neun."
+          ]
         },
         {
           "promptDe": "Wann hat Lena am Donnerstag Zeit? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "In the afternoon, at a quarter past four.",
           "explanationDe": "In der Nachricht steht: Nachmittags um Viertel nach vier ist Lena frei. Das ist 16.15 Uhr.",
-          "explanationEn": "The message says Lena is free in the afternoon at “Viertel nach vier”: a quarter past four."
+          "explanationEn": "The message says Lena is free in the afternoon at “Viertel nach vier”: a quarter past four.",
+          "optionsDe": [
+            "Nachmittags um Viertel nach vier.",
+            "Nachmittags um Viertel vor vier.",
+            "Abends um Viertel nach acht."
+          ]
         }
       ]
     },
@@ -37,6 +47,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "700c60b2",
         "meaning": {
           "promptDe": "Was macht Lena um sechs Uhr? Wählen Sie die Antwort.",
           "promptEn": "What does Lena do at six o’clock? Choose the answer.",
@@ -45,7 +56,12 @@
             "She has breakfast.",
             "She goes to work."
           ],
-          "answer": "She gets up."
+          "answer": "She gets up.",
+          "optionsDe": [
+            "Sie steht auf.",
+            "Sie frühstückt.",
+            "Sie geht zur Arbeit."
+          ]
         },
         "say": {
           "line": 1
@@ -54,6 +70,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "8690b3ec",
         "meaning": {
           "promptDe": "Wann ist der Termin von Lena? Wählen Sie die Antwort.",
           "promptEn": "When is Lena’s appointment? Choose the answer.",
@@ -62,7 +79,12 @@
             "On Tuesday at a quarter to eight.",
             "On Monday at a quarter to eight."
           ],
-          "answer": "On Monday at a quarter to eight."
+          "answer": "On Monday at a quarter to eight.",
+          "optionsDe": [
+            "Am Montag um Viertel nach acht.",
+            "Am Dienstag um Viertel vor acht.",
+            "Am Montag um Viertel vor acht."
+          ]
         },
         "say": {
           "line": 2
@@ -71,6 +93,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "0028ab0d",
         "meaning": {
           "promptDe": "Kommt Lena heute pünktlich? Wählen Sie die Bedeutung.",
           "promptEn": "Will Lena be on time today? Choose the meaning.",
@@ -79,7 +102,12 @@
             "Yes, she is always on time.",
             "No, her alarm clock is broken."
           ],
-          "answer": "Yes, she is always on time."
+          "answer": "Yes, she is always on time.",
+          "optionsDe": [
+            "Nein, sie kommt heute zu spät.",
+            "Ja, sie ist immer pünktlich.",
+            "Nein, ihr Wecker ist nicht gut."
+          ]
         },
         "say": {
           "line": 5
@@ -88,6 +116,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "a185840b",
         "meaning": {
           "promptDe": "Wann ist Lena am Dienstag frei? Wählen Sie die Antwort.",
           "promptEn": "When is Lena free on Tuesday? Choose the answer.",
@@ -96,7 +125,12 @@
             "In the afternoon.",
             "In the evening."
           ],
-          "answer": "In the evening."
+          "answer": "In the evening.",
+          "optionsDe": [
+            "Morgens.",
+            "Nachmittags.",
+            "Abends."
+          ]
         },
         "say": {
           "line": 6
@@ -105,15 +139,21 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "485a3023",
         "meaning": {
           "promptDe": "Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say about Wednesday? Choose the meaning.",
           "options": [
-            "She is at the doctor’s.",
+            "She has no time.",
             "She is free all day.",
-            "She is at work."
+            "She is free in the evening."
           ],
-          "answer": "She is at the doctor’s."
+          "answer": "She has no time.",
+          "optionsDe": [
+            "Sie hat keine Zeit.",
+            "Sie ist frei.",
+            "Sie ist abends frei."
+          ]
         },
         "say": {
           "line": 9

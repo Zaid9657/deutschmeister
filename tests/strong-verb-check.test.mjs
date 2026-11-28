@@ -151,7 +151,9 @@ test('a slip inside a participle that changes no form keeps its allowance', () =
   }
   // A plural noun that looks like a participle is not one.
   assert.equal(checkAnswer('Ich habe viele Gedanken.', ['Ich habe viele Gedanken.']).result, RESULT.CORRECT);
-  assert.equal(checkAnswer('Ich habe viele Gedenken.', ['Ich habe viele Gedanken.']).result, RESULT.TYPO, 'a capitalised word is no participle');
+  assert.equal(checkAnswer('Ich habe viele Gedamken.', ['Ich habe viele Gedanken.']).result, RESULT.TYPO, 'a capitalised word is no participle');
+  // „Gedenken“ is a vowel for a vowel, and another word: no slip since 2026-11-20 (realWordSlip).
+  assert.equal(checkAnswer('Ich habe viele Gedenken.', ['Ich habe viele Gedanken.']).result, RESULT.WRONG);
   // Present-tense forms keep the rules of the first test.
   assert.equal(checkAnswer('Er hielft heute.', ['Er hilft heute.']).result, RESULT.TYPO);
 });

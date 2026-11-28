@@ -15,6 +15,7 @@ import { nameFromIntroduction, sayText } from '../src/lib/lesson/scene.js';
 import { readLexicon } from '../src/lib/lesson/guidedRead.js';
 import { glossTokens } from '../src/lib/lesson/gloss.js';
 import { packRun } from '../src/lib/lesson/runState.js';
+import { optionOrder } from '../src/lib/lesson/optionOrder.js';
 import { practiceScore } from '../src/lib/lesson/mastery.js';
 import { loadJsxModule } from './helpers/renderJsx.mjs';
 
@@ -23,7 +24,8 @@ const pool = JSON.parse(read('src/data/lessonPools/a11.json'));
 const lesson = c.lektionen[0];
 const stages = buildLesson({ curriculum: c, lektion: lesson, pool }).stages;
 const stage = (kind) => stages.find((s) => s.kind === kind);
-const strings = { useLessonLang: () => ['en'], t: (key, _lang, vars) => `${key}${vars ? JSON.stringify(vars) : ''}` };
+// partEyebrow (the stage's part before its name) is pinned by tests/lesson-screens.test.mjs; here the name alone.
+const strings = { useLessonLang: () => ['en'], t: (key, _lang, vars) => `${key}${vars ? JSON.stringify(vars) : ''}`, partEyebrow: (_part, name) => name };
 function elements(tree, type) {
   if (Array.isArray(tree)) return tree.flatMap((x) => elements(x, type));
   if (!tree || typeof tree !== 'object') return [];
@@ -45,13 +47,14 @@ function hooks() {
 async function mount(name, props, extra = {}) {
   const state = hooks();
   const stubs = {
+    './CommandHelp.jsx': { default: 'CommandHelp' }, './ArabicHelp.jsx': { FeedbackArabicHelp: 'FeedbackArabicHelp' },
     react: state.react, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     './StageShell.jsx': { default: 'StageShell' }, './PlayButton.jsx': { default: 'PlayButton' },
     './ReadAloudLine.jsx': { default: 'ReadAloudLine' }, './CheckedChoice.jsx': { default: 'CheckedChoice' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
     '../../lib/lesson/check.js': checker, '../../lib/lesson/guidedFeedback.js': feedback,
-    '../../lib/lesson/strings.js': strings, '../../lib/lesson/scene.js': { sayText },
+    '../../lib/lesson/strings.js': strings, '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/optionOrder.js': { optionOrder },
     '../../lib/lesson/buildLesson.js': { isTypedItem }, '../../data/lessonPools/quality.js': { politeCaseItem },
     ...extra,
   };
@@ -181,12 +184,63 @@ test('guided recaps carry their story hooks after can-dos; legacy A1.2 has none'
   const recap = read('src/components/lesson/RecapStage.jsx'); assert.ok(recap.indexOf('canDo.map') < recap.indexOf('stage.nextHook')); assert.ok(recap.indexOf('stage.nextHook') < recap.indexOf('<details className'));
 });
 
-test('teacher identity is separate from the cast, has real portrait files, and never collides with a story surname', () => {
-  assert.equal(A11_META.teacher, A11_ART.teacher); assert.equal(A11_META.teacher.name, 'Frau Hoffmann'); assert.equal(A11_META.teacher.isAI, true);
-  for (const path of [A11_ART.teacher.src, A11_ART.teacher.srcSmall]) assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)));
-  assert.ok(A11_ART.teacher.alt);
-  for (const curriculum of [c, c12]) for (const l of curriculum.lektionen) for (const line of l.dialog.lines) assert.notEqual(line.speaker.split(' ').at(-1), A11_META.teacher.name.split(' ').at(-1));
-  assert.ok(!Object.hasOwn(A11_ART.characters, A11_META.teacher.name));
+test('the course guide is separate from the cast, has real pose files, and has no name until the owner approves one', () => {
+  assert.equal(A11_META.guide, A11_ART.guide); assert.equal(A11_META.guide.name, null);
+  for (const pose of Object.values(A11_ART.guide.poses)) {
+    for (const path of [pose.src, pose.srcSmall]) assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)), path);
+    assert.ok(pose.alt?.trim());
+    assert.ok(!Object.values(A11_ART.characters).includes(pose));
+  }
+  assert.ok(!A11_META.characters.includes(A11_META.guide));
+  assert.ok(!Object.hasOwn(A11_ART.characters, A11_META.guide.name));
+});
+
+test('the bilingual lesson map appears only for guided lessons and agrees with the engine parts', async () => {
+  const extra = {
+    'react-router-dom': { Link: 'Link' },
+    '../illustrations/CharacterAvatar.jsx': { default: 'CharacterAvatar' },
+    '../illustrations/SituationScene.jsx': { default: 'SituationScene' },
+    '../illustrations/OtterSays.jsx': { default: 'OtterSays' },
+    '../../data/curricula/a11.meta.js': { A11_META, lektionMinutesEstimate, lektionPartEstimate },
+    '../../data/curricula/a11.art.js': { A11_ART },
+    '../../lib/courseFlow.js': { courseHome: () => '/course/a1.1' },
+  };
+  const expected = {
+    en: ['Your path through this Lektion', 'Listen, say and read', 'The rule and practice', 'Speak and write'],
+    de: ['Ihr Weg durch diese Lektion', 'Hören, sprechen und lesen', 'Die Regel und Übungen', 'Sprechen und schreiben'],
+  };
+  // A Lektion with a final check names it in part 3 (2026-11-18).
+  const withCheck = { en: 'Speak, write and the final check', de: 'Sprechen, schreiben und der Abschlusscheck' };
+  for (const lang of ['en', 'de']) {
+    const { INTRO_STRINGS } = await loadJsxModule('src/components/lesson/IntroStage.jsx', {
+      ...extra, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
+      './StageShell.jsx': { default: 'StageShell' }, '../../lib/lesson/strings.js': { useLessonLang: () => [lang] },
+    });
+    assert.deepEqual(['intro.map', 'intro.part1', 'intro.part2', 'intro.part3'].map((key) => INTRO_STRINGS[lang][key]), expected[lang]);
+    for (const flow of ['guided', undefined]) {
+      const h = await mount('IntroStage', { curriculum: c, lektion: { ...lesson, flow } }, {
+        ...extra, '../../lib/lesson/strings.js': { useLessonLang: () => [lang] },
+      });
+      const map = elements(h.render(), 'section').filter((s) => s.props['aria-labelledby'] === 'dm-intro-map');
+      assert.equal(map.length, flow === 'guided' ? 1 : 0);
+      if (map.length) {
+        assert.equal(textOf(elements(map, 'h2')[0]), expected[lang][0]);
+        const rows = elements(elements(map, 'ol'), 'li');
+        assert.equal(rows.length, 3);
+        rows.forEach((row, i) => {
+          const spans = elements(row, 'span');
+          assert.equal(spans[0].props.children[0], i + 1);
+          assert.equal(textOf(spans[1]), i === 2 && lesson.guided?.check ? withCheck[lang] : expected[lang][i + 1]);
+        });
+      }
+    }
+  }
+  for (const l of c.lektionen) {
+    const built = buildLesson({ curriculum: c, lektion: l, pool }).stages;
+    for (const [part, kinds] of [[1, ['scene', 'read']], [2, ['notice', 'practice']], [3, ['speaking', 'writing']]]) {
+      for (const kind of kinds) assert.equal(built.find((s) => s.kind === kind)?.part, part, `${l.id}: ${kind}`);
+    }
+  }
 });
 
 test('intro divides the same count-based estimate among the saved parts; new content affects the estimate', () => {
@@ -305,4 +359,38 @@ test('audio failure text is present once, in a persistent live region, with a wo
   assert.doesNotMatch(live.props.className, /sr-only/);
   elements(h.render(), 'button').find((b) => textOf(b) === 'audio.showText').props.onClick();
   assert.equal(fallback, 1);
+});
+
+test('the otter speaks in both languages and a spoken line never shows a percentage', async () => {
+  const { STRINGS, speechLine, t, UNCLEAR_BELOW } = await import('../src/lib/lesson/strings.js');
+  const keys = ['otter.retry', 'otter.unclear', 'otter.pause.1', 'otter.pause.2', 'otter.end', 'otter.back'];
+  for (const lang of ['en', 'de']) {
+    for (const key of keys) assert.ok(STRINGS[lang][key], `${lang} ${key}`);
+    for (const pct of [0, UNCLEAR_BELOW - 0.01, UNCLEAR_BELOW, 1]) assert.doesNotMatch(speechLine(pct, lang), /%|\d/);
+    assert.equal(speechLine(UNCLEAR_BELOW - 0.01, lang), t('otter.unclear', lang));
+    assert.equal(speechLine(UNCLEAR_BELOW, lang), t('speaking.said', lang));
+    assert.match(t('otter.end', lang, { nr: 1 }), lang === 'de' ? /Lektion 1/ : /lesson 1/);
+    assert.ok(c.lektionen[0].guided.opening[lang]);
+  }
+  // German chrome speaks Sie (course rule): no du-forms in the otter's lines.
+  for (const key of keys) assert.doesNotMatch(STRINGS.de[key], /\b(du|dir|dich|dein\w*)\b/i);
+  // The scene ends with the question returned and the farewell the can-do names; no name in the last line.
+  const lines = c.lektionen[0].dialog.lines.map((l) => l.de);
+  assert.match(lines[7], /Und wie geht es Ihnen\?$/);
+  assert.equal(lines[9], 'Auf Wiedersehen!');
+  for (const file of ['ReadAloudLine', 'SceneStage', 'SpeakingStage']) {
+    assert.doesNotMatch(readFileSync(`src/components/lesson/${file}.jsx`, 'utf8'), /speaking\.intelligibility/);
+  }
+});
+
+test('Lektion 1 explains its rule in Arabic, right to left, with the German kept in Latin letters', () => {
+  const ar = c.lektionen[0].notice.bodyAr;
+  assert.match(ar, /[\u0600-\u06FF]/, 'the Arabic help is Arabic');
+  for (const name of ['Jot', 'Vau', 'We', 'Ypsilon', 'Zett', 'Eszett', 'Wie buchstabiert man das?']) assert.ok(ar.includes(name), name);
+  const stage = readFileSync('src/components/lesson/NoticeStage.jsx', 'utf8');
+  assert.match(stage, /text=\{notice\.bodyAr\}[^>]*textLang="ar"/);
+  assert.match(stage, /dir=\{textLang === 'ar' \? 'rtl' : undefined\}/);
+  // Each German run is isolated left-to-right inside the Arabic, so brackets and "?" stay in place.
+  assert.match(stage, /textLang === 'ar' \? isolateLatin\(text\)/);
+  assert.match(stage, /<bdi key=\{m\.index\} dir="ltr" lang="de"/);
 });

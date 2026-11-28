@@ -95,6 +95,23 @@ test('on a case task a typo does not buy back the lost polite capital', () => {
   assert.equal(checkAnswer('Wie geht es ihnenn?', live.accepted, checkOptionsFor(live)).result, RESULT.WRONG);
 });
 
+test('on a case task a sentence’s small first letter is a slip, the capital inside it is the task (independent score, 2026-11-25)', () => {
+  const grade = (a, typed) => checkAnswer(typed, [a], { caseSensitive: true }).result;
+  assert.equal(grade('Fahren Sie morgen nach Deutschland?', 'fahren Sie morgen nach Deutschland?'), RESULT.TYPO);
+  assert.equal(grade('Fahren Sie morgen nach Deutschland?', 'Fahren sie morgen nach Deutschland?'), RESULT.WRONG);
+  assert.equal(grade('Wie geht es Ihnen?', 'wie geht es Ihnen?'), RESULT.TYPO);
+  assert.equal(grade('Wie geht es Ihnen?', 'wie geht es ihnen?'), RESULT.WRONG);
+  assert.equal(grade('Ihr', 'ihr'), RESULT.WRONG, 'a word alone is the task');
+});
+
+test('a spelled word with one letter left out may be spelled whole', () => {
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const item = pool.items.find((i) => i.id === 'extra-a11-l01-05');
+  const grade = (typed) => checkAnswer(typed, item.accepted, checkOptionsFor(item)).result;
+  for (const typed of ['Ü', 'ü', 'T-S-C-H-Ü-S-S', 't s c h ü s s']) assert.equal(grade(typed), RESULT.CORRECT, typed);
+  for (const typed of ['U', 'T-S-C-H-U-S-S', 'T-S-C-H-Ü-S', 'Tschuss']) assert.equal(grade(typed), RESULT.WRONG, typed);
+});
+
 test('spelling is detected from the expected answer, and can be forced', () => {
   assert.equal(spellingApplies(['H-A-L-L-O']), true);
   assert.equal(spellingApplies(['Ich bin Lehrer.']), false);

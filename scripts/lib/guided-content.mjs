@@ -2,7 +2,7 @@ import { classifySound } from '../../src/lib/lesson/guidedSound.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../../src/lib/lesson/check.js';
 import { readLexicon } from '../../src/lib/lesson/guidedRead.js';
 import { glossTokens } from '../../src/lib/lesson/gloss.js';
-import { lineFor } from '../../src/lib/lesson/wortfeldPacing.js';
+import { metIn } from '../../src/lib/lesson/wortfeldPacing.js';
 import { LEARNER_CAST } from '../../src/data/curricula/a11.js';
 
 /** Validate every guided field by class, so later guided lessons inherit the same contract. */
@@ -29,11 +29,18 @@ export function guidedFindings(curriculum) {
       if (['promptDe', 'promptEn', 'explanationDe', 'explanationEn'].some((k) => typeof q?.[k] !== 'string' || !q[k].trim()) || !/\bSie\b/.test(q?.promptDe || '')) fail(`guided.read question ${i + 1} needs bilingual Sie prompts and reasons`);
       if (!Array.isArray(q?.options) || q.options.length < 2 || q.options.length > 4 || new Set(q.options).size !== q.options.length || q.options.some((v) => typeof v !== 'string' || !v.trim()) || q.options.filter((v) => checkAnswer(v, [q.answer], checkOptionsFor({ type: 'multiple_choice' })).result !== RESULT.WRONG).length !== 1 || !q.options.includes(q.answer)) fail(`guided.read question ${i + 1} needs distinct choices and exactly one checked answer`);
     }
+    // A closed series: bilingual title, distinct members (a word of its own each); a note comes in both languages or not at all.
+    const series = read?.series;
+    if (series) {
+      if (['titleDe', 'titleEn'].some((k) => typeof series[k] !== 'string' || !series[k].trim())) fail('guided.read.series needs both titles');
+      if (Boolean(series.noteDe) !== Boolean(series.noteEn)) fail('guided.read.series note needs both languages');
+      if (!Array.isArray(series.items) || series.items.length < 5 || series.items.some((x) => !x?.label || !/^\p{L}+$/u.test(x?.de || '')) || new Set(series.items.map((x) => x.de)).size !== series.items.length) fail('guided.read.series needs five or more distinct words');
+    }
     const dialogue = lines.map((l) => l.de);
     const readGlosses = new Set(glossTokens(read?.text || '', readLexicon(lesson.wortfeld || [])).filter((s) => s.type === 'gloss').map((s) => s.entry.de));
     for (const w of lesson.wortfeld || []) {
       if (w.meta === true) continue; // A number-set heading is not a word in a natural text.
-      if (!lineFor(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
+      if (!metIn(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
     }
     for (const marked of lesson.phonetik?.items || []) {
       if (!classifySound(marked)) fail(`guided sound items have an unsupported marking: ${marked}`);

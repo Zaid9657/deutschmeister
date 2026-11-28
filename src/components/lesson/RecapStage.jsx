@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
+import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check, Circle } from 'lucide-react';
 import Card from '../ui/Card.jsx';
+import GuideOtter from '../illustrations/GuideOtter.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
@@ -12,8 +13,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { canDoLines } from '../../lib/course/canDo.js';
+import { shownLines } from '../../lib/course/canDo.js';
+import { clearVoices, readVoices } from '../../lib/lesson/voiceKeep.js';
 import { supabase } from '../../utils/supabase.js';
+import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { SOCIAL_LINKS } from '../../data/navigation.js';
 import { SOCIAL_ICONS } from '../socialIcons.js';
 import { trackSocialClicked } from '../../lib/funnelTracking.js';
@@ -43,7 +46,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ checkShown = null, stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -113,31 +116,52 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
   const missionOrder = lektion?.sprechen?.open?.missionOrder;
   const speakingHref = missionOrder != null ? `/speaking/?level=${encodeURIComponent(level)}&mission=${missionOrder}` : null;
 
+  // A guided Lektion has its own reading text in part 1, so it never says it has none.
+  const noReading = Boolean(lektion) && lektion.links?.readingOrder == null && !lektion.guided?.read;
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
-  const canDo = lektion ? canDoLines(lektion, lang) : [];
+  // After a final check the can-dos stand in two lists (2026-11-25): the ones the check showed, with how
+  // (a guest, or a browser without a microphone, writes every turn), and the ones still to practise. A
+  // missed can-do never stands under „What you can do now“. Without a check there is one list, as before.
+  const canDo = lektion ? shownLines(lektion, lang) : [];
+  const rows = canDo.map((line, i) => ({ line, shown: !checkShown || checkShown[i] === true }));
+  const [canSpeak] = useState(() => Boolean(user) && checkSpeakingSupport().supported);
+  const canDoLists = [
+    { title: t('recap.canDo.title', lang), how: checkShown && `recap.canDo.inCheck.${canSpeak ? 'spoken' : 'written'}`, rows: rows.filter((r) => r.shown) },
+    { title: t('recap.canDo.notYet', lang), how: 'recap.canDo.notInCheck', rows: rows.filter((r) => !r.shown) },
+  ].filter((list) => list.rows.length > 0);
+  const [voicesGone, setVoicesGone] = useState(false);
+  const voiceOwner = user?.id;
+  const voices = useMemo(() => (voicesGone ? {} : readVoices(lektion?.id, voiceOwner)), [voicesGone, lektion, voiceOwner]);
 
   return (
     <StageShell
       eyebrow={t('stage.recap.eyebrow', lang)}
+      part={stage.part}
       title={t('stage.recap.title', lang)}
-      onBack={onBack}
       primaryLabel={nextLabel || t('action.next', lang)}
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
-        {canDo.length > 0 && (
-          <>
-            <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
+        <GuideOtter lektionId={lektion?.id} pose="satisfied" size={112} className="mx-auto mb-3 h-28 w-28" />
+        {lektion && <p className="mb-4 text-center text-[0.9375rem] leading-snug text-ink" data-otter-says>{t('otter.end', lang, { nr: lektion.nr })}</p>}
+        {canDoLists.map((list, n) => (
+          <div key={list.title} className={n > 0 ? 'mt-5' : undefined}>
+            <h3 className="font-display text-lg text-ink">{list.title}</h3>
+            {list.how && <p className="mt-1 text-[0.8125rem] text-graphite">{t(list.how, lang)}</p>}
             <ul className="mt-3 space-y-2">
-              {canDo.map((line) => (
+              {list.rows.map(({ line, shown }) => (
                 <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                  {shown
+                    ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
+                    : <Circle className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
+                  {/* The icons are hidden from screen readers: after a check, each can-do says its state in words. */}
+                  <span>{line}{checkShown && <span className="sr-only">, {t(shown ? 'check.shown' : 'recap.canDo.notYet', lang)}</span>}</span>
                 </li>
               ))}
             </ul>
-          </>
-        )}
+          </div>
+        ))}
         {stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
         <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
           <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t(`recap.canDo.${review.state}`, lang, { date: review.date ? date.format(review.date) : '' })}
@@ -153,6 +177,27 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
           )}
         </p>
       </Card>
+
+      {/* The first and latest recording, kept only on this device (voiceKeep.js, founder 2026-11-18). */}
+      {voices.first && voices.latest && (
+        <Card className="mt-5 p-5">
+          <p className="font-display text-lg leading-snug text-ink">{t('recap.voices.title', lang)}</p>
+          {[['first', voices.first], ['latest', voices.latest]].map(([kind, take]) => (
+            <div key={kind} className="mt-4">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t(`recap.voices.${kind}`, lang)}</p>
+              {take.text && <p className="mt-1 text-[0.9375rem] text-ink" lang="de">{take.text}</p>}
+              <audio controls preload="metadata" src={take.src} aria-label={t(`recap.voices.${kind}`, lang)} className="mt-2 w-full" />
+            </div>
+          ))}
+          <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
+            {t('recap.voices.device', lang)}{' '}
+            <button type="button" className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink"
+              onClick={() => { clearVoices(lektion?.id, voiceOwner); setVoicesGone(true); }}>
+              {t('recap.voices.delete', lang)}
+            </button>
+          </p>
+        </Card>
+      )}
 
       {!user && level ? <SaveProgressCard level={level} /> : null}
 
@@ -238,11 +283,11 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
 
           {/* Coverage said plainly (2026-10 review): a Lektion without a linked listening exercise or
               reading text says so instead of silently showing fewer links. */}
-          {lektion && (lektion.links?.listeningExercise == null || lektion.links?.readingOrder == null) && (
+          {lektion && (lektion.links?.listeningExercise == null || noReading) && (
             <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
               {[
                 lektion.links?.listeningExercise == null && t('recap.coverage.noListening', lang),
-                lektion.links?.readingOrder == null && t('recap.coverage.noReading', lang),
+                noReading && t('recap.coverage.noReading', lang),
               ].filter(Boolean).join(' ')}
             </p>
           )}

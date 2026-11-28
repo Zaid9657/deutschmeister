@@ -61,7 +61,9 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
 import { constructionHits, deferredConstructionHits } from '../src/data/curricula/constructions.js';
-import { writingTaskByKey } from '../src/data/writingTasks.js';
+import { writingTaskByKey, WRITING_TASKS } from '../src/data/writingTasks.js';
+import { LESEN_A11 } from '../src/data/curricula/a11.lesen.js';
+import { LESEN_A12 } from '../src/data/curricula/a12.lesen.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
 // `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
 // from the server's own task bank above, never from a number retyped here.
@@ -75,7 +77,7 @@ import { COUNTRY_STEMS } from '../src/lib/lesson/countries.js';
 // writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
 import { planPractice } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
-import { ITEM_FORMULAS } from '../src/lib/checkpoint/lexis.js';
+import { ITEM_FORMULAS, seriesWords } from '../src/lib/checkpoint/lexis.js';
 import { shortReadingFindings, reservedAssessmentFindings, finalTestContentFindings } from './lib/assessment-content.mjs';
 import { abschlusstestA12 } from '../src/data/courseTests/abschlusstestA12.js';
 
@@ -94,6 +96,8 @@ export const EXAM_TEILE = [
 
 // The 12 situations of the standard (§2.2), in order. Each entry is the set of keywords the
 // Lektion's `situation` must contain, so the order cannot silently drift.
+// What each Lektion is about, as the learner reads it. The invitation stands where it is taught (Lektion 12); a label never carries a
+// note of the builders („die Einladung kommt in Lektion 12“; browser walk and independent score, 2026-11-25).
 export const SITUATION_KEYWORDS = [
   ['Begrüßung', 'Alphabet'],
   ['Person', 'Beruf', 'Zahlen'],
@@ -103,10 +107,10 @@ export const SITUATION_KEYWORDS = [
   ['Büro', 'Technik', 'Telefon'],
   ['Freizeit', 'Hobbys'],
   ['Verabredungen', 'Uhrzeit', 'Tagesablauf'],
-  ['Essen', 'Trinken', 'Einladung'],
+  ['Essen', 'Trinken'],
   ['Verkehrsmittel', 'Reisen'],
   ['Gestern', 'Tagesablauf'],
-  ['Feste', 'Wiederholung'],
+  ['Feste', 'Einladung'],
 ];
 
 // Order of `primarySlug` across the 12 Lektionen; the reasoning is in the module header.
@@ -844,11 +848,8 @@ export const FUNCTION_WORDS_FREE = [
   'ja', 'nein', 'bitte', 'danke', 'doch', 'und', 'oder', 'aber', 'auch', 'nicht', 'noch',
   'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern',
   'wer', 'was', 'wo', 'wann', 'warum', 'wie', 'wohin', 'woher', 'welche', 'welcher', 'welches',
-  // 1 — die Zahlen 0–100
-  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
-  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
-  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
-  'neunzig', 'hundert',
+  // (1 — die Zahlen 0–100 stood here until 2026-11-25: they are taught by their series, 0–10 in L2 and 11–100 in L4,
+  // `seriesWords`, and by the line that says one: checkpoint 1 asked for „achtzehn“ before any Lektion showed it.)
 ];
 
 const FUNCTION_FREE_SET = lowerSet(FUNCTION_WORDS_FREE);
@@ -1198,6 +1199,7 @@ function seedVocabulary(spec, freeOnly = false) {
   for (const l of prior.curriculum.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     // …and, on the item side, every function word the finished level actually SAID. An A1.2 learner
     // has met `dem` and `einen` in A1.1's dialogues; they are taught for that reason and not because
     // they are on a list. Measured against the PRIOR level's own function-word list, which is the
@@ -1406,6 +1408,7 @@ export function taughtUpTo(c, spec) {
     // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
     // scharfes S in L1) counts as taught from here on (DaF review #4).
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     // The function words this Lektion says out loud (DaF review #10, MAJOR 3). Outside
     // FUNCTION_WORDS_FREE a function word is taught where it is first met, not at Lektion 1 —
     // otherwise `minLektion` calls `von meiner Schwester` servable in Lektion 1 and the whole
@@ -1922,6 +1925,7 @@ export function producedBeforeTaught(c, extraKnown) {
     // Grow the known set exactly as RULE 5 does, so „taught by this Lektion“ means the same thing.
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     for (const { i, de } of productionLines(l)) {
       for (const t of tokenise(de)) {
         const low = t.toLowerCase();
@@ -2057,7 +2061,13 @@ export function examTeileBacked(c) {
       const family = String(teil).split(' ')[0];
       const covers = EXAM_TEIL_COVERS[family];
       let why = null;
-      if (covers && !covers(l)) {
+      if (c.level === 'a1.1' && /^Hören Teil/u.test(teil) && l.hoeren?.kind === 'dictation') {
+        why = 'dictation is general listening practice, not an exam-part format';
+      } else if (c.level === 'a1.1' && /^Lesen Teil/u.test(teil) && !l.lesen) {
+        why = 'reading a dialogue or following a link is general practice, not an in-lesson exam item';
+      } else if (c.level === 'a1.1' && teil === 'Sprechen Teil 3' && !/^Bitten Sie .* und reagieren/u.test(open.promptDe || '')) {
+        why = 'Teil 3 needs a request and a response, not an information question or an invitation';
+      } else if (covers && !covers(l)) {
         why = EXAM_TEIL_SURFACE_WHY[family];
       } else if (teil === 'Sprechen Teil 1'
         && !SELF_INTRO_RE.test(open.promptDe || '')
@@ -2931,7 +2941,7 @@ export function modelTextsMatchDialogue(c) {
 // and the Mitteilung of Lektion 2 both say **ledig**. „Der Widerspruch ist sonst nur mit dem Auge
 // zu finden“, so this is the table that finds it.
 //
-// The facts below are READ OFF a11.js (dialogues, settings, schreiben tasks, samples and fields),
+// The facts below are READ OFF the lesson dialogues/writing and checkpoint writingTasks.js,
 // not invented; `null` means the course never states that fact about the person, and then there is
 // nothing to contradict and the check stays silent. This is a hard gate, not a ratchet: a
 // contradiction is never older debt, it is always something a repair round just wrote.
@@ -2965,16 +2975,19 @@ const PROFESSIONS = [
  *                 das ist ein Arbeitsplatz, kein zweiter Beruf, deshalb bleibt `beruf` Studentin.
  *   Lena Brandt   L3, L5, L7, L8, L11, L12 — Kursteilnehmerin (Kurs A1, Zimmer 12), Hobby Sport
  *                 und Schwimmen. Familienstand, Herkunft und Beruf sagt der Kurs nie: null.
- *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer (Kurs am Donnerstag). Ebenfalls nichts gesagt.
+ *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer; CP1 Formular: verheiratet, aus Österreich,
+ *                 spricht Englisch und Deutsch. A1.2 CP3 states his home Berlin; Ana's home Bremen
+ *                 is already stated in A1.1 L2.
  *   Herr Weber    L2, L6 — „vom Amt“, Schalter im Bürgerbüro; kein Berufswort genannt.
  *   Frau Kaya     L1 — Rezeption im Hostel; kein Berufswort genannt.
  *   Paul          L9 — Kellner im Café (dialog.setting).
  *   Frau Wolf     L4 — verkauft auf dem Flohmarkt.  Herr Schmidt  L10 — Auskunft am Bahnhof.
  */
 export const PERSONAS_A11 = {
-  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'], nachname: 'Chakiri' },
+  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'], nachname: 'Chakiri', stadt: 'Bremen' },
   Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null, nachname: 'Brandt' },
-  Tim: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  // CP1 supplies the form facts; the later A1.2 CP3 fixes his home as Berlin across the shared cast.
+  Tim: { familienstand: 'verheiratet', herkunft: 'Österreich', beruf: null, sprachen: ['Englisch', 'Deutsch'], nachname: 'Berger', stadt: 'Berlin' },
   Paul: { familienstand: null, herkunft: null, beruf: ['Kellner'], sprachen: null },
   'Herr Weber': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
   'Frau Kaya': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
@@ -2996,7 +3009,7 @@ export const PERSONAS_A11 = {
  *                 Steckbrief of L7 („Lena Brandt ist 24 Jahre alt und kommt aus Köln“). Familienstand,
  *                 Herkunftsland, Beruf and Sprachen: A1.2 never says, so they stay A1.1's nulls.
  *   Tim           L5, L8, L11 — the Ausflug-Formular of L5 files him travelling TO Köln, which is a
- *                 destination and not a Wohnort, so `stadt` stays null and the line cannot collide.
+ *                 destination and not a Wohnort. CP3's travel registration states his home Berlin.
  *   Frau Berger   L6 — Ärztin (`dialog.setting`: „Frau Berger ist Ärztin.“).
  *   Frau Fischer  L1 — „wohnt in der Stadt“; no city and no Berufswort is ever named.
  *   Herr Berg     L2 — the Vermieter of the Wohnungsanzeige; „Vermieter“ is not a Berufswort the
@@ -3007,7 +3020,7 @@ export const PERSONAS_A12 = {
   ...PERSONAS_A11,
   Ana: { ...PERSONAS_A11.Ana, stadt: 'Bremen', alter: null },
   Lena: { ...PERSONAS_A11.Lena, stadt: 'Köln', alter: 24 },
-  Tim: { ...PERSONAS_A11.Tim, stadt: null, alter: null },
+  Tim: { ...PERSONAS_A11.Tim, alter: null },
   'Frau Berger': { familienstand: null, herkunft: null, beruf: ['Ärztin'], sprachen: null, stadt: null, alter: null },
   'Frau Fischer': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
   'Herr Berg': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
@@ -3072,10 +3085,14 @@ function aboutSpan(text, name, allNames) {
 }
 
 /**
- * RULE 14: no dialogue line and no Schreiben text may state a fact about a recurring character
- * that contradicts the PERSONAS table. Returns one entry per contradiction.
+ * RULE 14: lesson input, every reading paper and checkpoint writing must preserve the cast.
+ * Assessment banks are injectable for planted-contradiction tests; defaults are the served sources.
+ * False reading statements/distractors are intentionally not biography claims.
  */
-export function personaConsistency(c) {
+export function personaConsistency(c, {
+  readingBank = c?.level === 'a1.2' ? LESEN_A12 : LESEN_A11,
+  writingTasks = WRITING_TASKS,
+} = {}) {
   const spec = levelSpec(c?.level) || LEVELS['a1.1'];
   const personas = PERSONA_TABLES[spec.personaSource] || {};
   const names = Object.keys(personas);
@@ -3160,6 +3177,63 @@ export function personaConsistency(c) {
     // A Mitteilung is written in the first person by whoever signs it.
     const author = signatureName(w.sample);
     if (author && personas[author]) check(l.nr, 'schreiben.sample', author, w.sample, SELF_PATTERNS);
+  }
+
+  // Reading messages can name a recipient, a subject, relatives and a signing author. Bind
+  // facts to grammatical subjects, not every name in the same sentence ("Die Familie von Tim"
+  // is not Tim). Carry only an immediately following singular pronoun back to that subject.
+  const assessmentText = (nr, where, text) => {
+    const s = String(text || '').replace(/[„“»«"]/g, '');
+    let subject = null;
+    const namePattern = names.map((name) => name.replace(' ', '\\s+')).join('|');
+    const clauses = s.split(new RegExp(`[.?!\\n]+|\\bund\\s+(?=(?:${namePattern})\\b)`, 'g'));
+    for (const clause of clauses) {
+      const exchange = clause.match(new RegExp(`^\\s*(${namePattern})\\s*:\\s*(.*)$`));
+      if (exchange) check(nr, where, exchange[1].replace(/\s+/g, ' '), exchange[2], SELF_PATTERNS);
+      const named = clause.match(new RegExp(`(?:^|[,!:]\\s*)\\s*(${namePattern})(?:\\s+[A-ZÄÖÜ][a-zäöüß]+)?\\s+(?=(?:ist|kommt|wohnt|spricht|arbeitet)\\b)(.*)$`));
+      if (named) {
+        subject = named[1].replace(/\s+/g, ' ');
+        check(nr, where, subject, named[0], ABOUT_PATTERNS);
+      } else if (subject && /^\s*(?:Er|Sie|er|sie)\s+(?:ist|kommt|wohnt|spricht|arbeitet)\b/.test(clause)) {
+        check(nr, where, subject, clause, ABOUT_PATTERNS);
+      } else {
+        subject = null;
+      }
+    }
+    // Some bank messages sign on their own line, without a closing formula.
+    const author = signatureName(s) || names.find((name) => s.trim().endsWith(`\n${name}`));
+    if (author && personas[author]) check(nr, where, author, s, SELF_PATTERNS);
+  };
+  for (const cp of c.checkpoints || []) {
+    for (const paper of readingBank[cp.id]?.papers || []) {
+      for (const unit of paper) {
+        assessmentText(cp.afterLektion, `lesen ${unit.id}`, unit.text);
+        // The evidence and feedback are affirmative teaching text, unlike a false statement.
+        assessmentText(cp.afterLektion, `lesen ${unit.id} explanation`, unit.explanationDe);
+      }
+    }
+  }
+  for (const task of writingTasks.filter((t) => t.course === c.level && t.checkpoint)) {
+    const cp = (c.checkpoints || []).find((entry) => entry.nr === task.checkpoint || entry.id === `${c.level}-cp${task.checkpoint}`);
+    const nr = cp?.afterLektion ?? task.checkpoint * 3;
+    const where = `checkpoint schreiben ${task.taskKey}`;
+    assessmentText(nr, `${where} task`, task.task);
+    assessmentText(nr, `${where} sample`, task.sample);
+    if (task.register !== 'formular') continue;
+    const named = names.filter((name) => namesPersona(task.task, name));
+    if (named.length !== 1) continue;
+    const name = named[0];
+    // "Land" in a travel registration is a destination, not a country of origin. Only the
+    // task's explicit Herkunft frame licenses interpreting this ambiguous form-field label.
+    // Prose was attributed above. Here only labelled fields belong to the form's owner;
+    // a following sentence about Ana must not give her country to Tim.
+    const patterns = ABOUT_PATTERNS.filter(([fact, re]) => re.source.includes('\\s*:')
+      && (fact !== 'herkunft' || !re.source.includes('Land') || /kommt\s+aus\b/.test(task.task)));
+    check(nr, `${where} fields`, name, task.sample, patterns);
+    const family = task.sample?.match(/\b(?:Familienname|Nachname):\s*([A-ZÄÖÜ][a-zäöüß]+)/)?.[1];
+    if (family && personas[name].nachname && family !== personas[name].nachname) {
+      report(nr, `${where} Familienname`, name, 'nachname', family, personas[name].nachname);
+    }
   }
   return offenders;
 }
@@ -3273,6 +3347,32 @@ export function guidedReadVocabulary(c, spec = levelSpec(c?.level)) {
   return findings;
 }
 
+/**
+ * RULE 35 (2026-11-19): a final check speaks and models only German the learner has met — every
+ * partner line, every heard number, every model answer (`accepted[0]`, the spoken target) and every
+ * example shown after a miss, in every retake variant. The other accepted answers are what a learner may write and are not lexis.
+ * Words only: a form the course has not taught from known words (Lektion 1's first draft asked „Wie
+ * geht es ihr?") is for the DaF review of each check to catch.
+ */
+export function guidedCheckVocabulary(c, spec = levelSpec(c?.level)) {
+  const known = seedVocabulary(spec);
+  const findings = [];
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const turn of l.guided?.check?.turns || []) {
+      for (const t of [turn, ...(turn.variants || [])]) {
+        const model = t.accepted?.[0];
+        for (const text of [t.cue?.de, t.listen, typeof model === 'object' ? model?.frame : model, t.example]) {
+          for (const token of tokenise(String(text || '').replaceAll('…', ' '))) {
+            if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: final check uses untaught word "${token}"`);
+          }
+        }
+      }
+    }
+  }
+  return findings;
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3303,6 +3403,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
     } catch { fail(`RULE 33: no safe bilingual hint (${item.id})`); }
   }
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
+  for (const finding of guidedCheckVocabulary(c, spec)) fail(`RULE 35: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
@@ -3353,7 +3454,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
       teileSeen.add(t);
     }
   });
-  for (const t of EXAM_TEILE) if (!teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
+  for (const t of EXAM_TEILE) if (c.level !== 'a1.1' && !teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
 
   // ---- RULE 3 (grammar slugs) ---------------------------------------------------------------
   const primaryCount = new Map();
@@ -3466,8 +3567,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
     if (new Set(s.readAloud || []).size !== (s.readAloud || []).length) fail(`Lektion ${l.nr}: readAloud lines must differ`);
     for (const i of s.readAloud || []) if (!Number.isInteger(i) || i < 0 || i >= lineCount) fail(`Lektion ${l.nr}: readAloud index ${i} out of range`);
     const open = s.open || {};
-    if (!EXAM_TEILE.includes(open.teil) || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
-    if (!(l.examTeile || []).includes(open.teil)) fail(`Lektion ${l.nr}: sprechen.open.teil "${open.teil}" is not in examTeile`);
+    if ((!EXAM_TEILE.includes(open.teil) && open.teil !== 'Sprechen üben') || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
+    if (!(l.examTeile || []).includes(open.teil) && open.teil !== 'Sprechen üben') fail(`Lektion ${l.nr}: sprechen.open.teil "${open.teil}" is not in examTeile`);
     if (!open.promptDe) fail(`Lektion ${l.nr}: sprechen.open needs a promptDe`);
     if ((open.hintWords || []).length !== 3) fail(`Lektion ${l.nr}: sprechen.open needs exactly 3 hintWords`);
     if (open.missionOrder !== null) {
@@ -3537,9 +3638,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
     const pr = l.practiceRule || {};
     if (!(pr.topics || []).length) fail(`Lektion ${l.nr}: practiceRule needs topics`);
     const practiceOnly = spec.practiceOnlyTopics || [];
+    // A grammar slug comes back in the practice once it has been taught (spiral review): a topic of this
+    // Lektion or of an earlier one. A later Lektion's topic, or no topic at all, still fails.
+    const taughtByNow = new Set(c.lektionen.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs || []));
     for (const t of pr.topics || []) {
-      if ((l.grammarSlugs || []).includes(t) || practiceOnly.includes(t)) continue;
-      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is in neither grammarSlugs nor practiceOnlyTopics`);
+      if (taughtByNow.has(t) || practiceOnly.includes(t)) continue;
+      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is neither taught by now (grammarSlugs of this or an earlier Lektion) nor practice-only`);
     }
     if (!(pr.typedMin >= 3)) fail(`Lektion ${l.nr}: practiceRule.typedMin must be ≥ 3`);
   });

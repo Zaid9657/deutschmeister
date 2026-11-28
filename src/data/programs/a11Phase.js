@@ -29,6 +29,7 @@
 // as startDeutsch1.js.
 
 import { getTopicsForLevel } from '../grammarTopics.js';
+import { courseTestMinutes } from '../courseTests/index.js';
 
 export const PROGRAM_KEY = 'a11_phase';
 
@@ -162,7 +163,8 @@ const speakingRepeat = (id, order, minutes = 15) => ({
 // Listening — first pass (weeks 1–2), then a reuse/dictation pass (weeks 3–4)
 // -----------------------------------------------------------------------
 // A1.1 has 6 listening exercises (docs/research/audit-a1-content-2026-09-03.md
-// §3) and deep-links via the real SPA route /listening/:level/:exerciseNumber
+// §3). Number 3 is the final test's Hören, so the plan never opens it (Tag 5 and Tag 21 did until
+// 2026-11-25: the test would have measured memory). The plan deep-links via the real SPA route /listening/:level/:exerciseNumber
 // — no trailing slash, case 3 of the trailing-slash rule (a dynamic route
 // with params).
 const listening = (id, n, minutes = 15) => ({
@@ -321,7 +323,8 @@ const schreiben = (id, taskNumber, minutes = 25) => ({
   href: '/schreiben/start-deutsch-1',
 });
 
-// The rehearsal (ungraded) and the final (graded) half-length mock. UNVERIFIED
+// The final (graded) course test, once, on Tag 28: the rehearsal before it is not this paper (`checkpointProbe`).
+// Its minutes are the test's own (`courseTestMinutes`). UNVERIFIED
 // DEPENDENCY: the route /modelltest/abschlusstest-a1-1 names a mock-exam
 // module + EXAM_TRACKS entry that does not exist in this repo as of
 // 2026-09-05 (grepped: no "abschlusstest" hit anywhere). The brief states it
@@ -337,6 +340,17 @@ const modelltest = (id, title, minutes) => ({
   title,
   minutes,
   href: '/modelltest/abschlusstest-a1-1',
+});
+
+// The rehearsal on Tag 26: a checkpoint again. A retake is a new paper (seeded tasks), so this rehearses the
+// course's own check under the same conditions without showing the final test's tasks; the final test's Hören
+// is listening exercise 3, which is why it is not a rehearsal either (courses session, 2026-11-22).
+const checkpointProbe = (id, nr) => ({
+  id,
+  type: 'exam',
+  title: `Probe: Checkpoint ${nr} noch einmal (neue Aufgaben)`,
+  minutes: 12,
+  href: `/course/a1.1/checkpoint/${nr}`,
 });
 
 // Hand-off to the next course, Tag 28 only — a real, clickable exit rather
@@ -406,7 +420,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 5',
-        items: [gLesson('verb-sein'), listening('d5-listening', 3), speaking('d5-speaking', 2), vocab('d5-vocab', A11_VOCAB_CATEGORIES.TIME)],
+        items: [gLesson('verb-sein'), listening('d5-listening', 6), speaking('d5-speaking', 2), vocab('d5-vocab', A11_VOCAB_CATEGORIES.TIME)],
       },
       {
         label: 'Tag 6',
@@ -435,7 +449,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 10',
-        items: [gReview('alphabet-pronunciation'), gReview('yes-no-questions'), reading('d10-reading', 5), listening('d10-listening', 6)],
+        items: [gReview('alphabet-pronunciation'), gReview('yes-no-questions'), reading('d10-reading', 5), listeningReuse('d10-listening', 1)],
       },
       {
         label: 'Tag 11',
@@ -473,7 +487,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 17',
-        items: [gReview('possessive-articles'), gReview('present-tense-regular'), listeningReuse('d17-listening', 1), speaking('d17-speaking', 8)],
+        items: [gReview('possessive-articles'), gReview('present-tense-regular'), listeningReuse('d17-listening', 2), speaking('d17-speaking', 8)],
       },
       {
         label: 'Tag 18',
@@ -481,7 +495,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 19',
-        items: [gLesson('time-and-dates'), listeningReuse('d19-listening', 2), vocab('d19-vocab', A11_VOCAB_CATEGORIES.COLORS), xray('d19-xray')],
+        items: [gLesson('time-and-dates'), listeningReuse('d19-listening', 4), vocab('d19-vocab', A11_VOCAB_CATEGORIES.COLORS), xray('d19-xray')],
       },
       {
         label: 'Tag 20',
@@ -489,7 +503,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 21',
-        items: [listeningReuse('d21-listening', 3, 20), vocab('d21-vocab', A11_VOCAB_CATEGORIES.DAYS, 20), xray('d21-xray', 20)],
+        items: [listeningReuse('d21-listening', 5, 20), vocab('d21-vocab', A11_VOCAB_CATEGORIES.DAYS, 20), xray('d21-xray', 20)],
       },
     ],
   },
@@ -498,21 +512,22 @@ const WEEKS = [
     intro:
       'Kein neues Grammatikthema mehr — stattdessen die zwei Lesen-Aufgabenformate, die die echte Prüfung ' +
       'tatsächlich stellt (Anzeigen, Schilder), die Hörübungen 4–6 noch einmal mit Zahlen und Uhrzeiten, zwei ' +
-      'deiner Sprechmissionen noch einmal, deine dritte Schreibaufgabe, ein Probe-Abschlusstest und zuletzt der ' +
+      'deiner Sprechmissionen noch einmal, deine dritte Schreibaufgabe, eine Probe mit den drei Checkpoints (neue ' +
+      'Aufgaben, nicht die des Abschlusstests) und zuletzt der ' +
       'gewertete Abschlusstest A1.1. Fertig, wenn der Abschlusstest absolviert ist. Dein Ergebnis zeigt dir, ' +
       'welche Themen du vor A1.2 noch einmal ansehen solltest. Weiter geht es mit der A1.2-Phase.',
     days: [
       {
         label: 'Tag 22',
-        items: [listeningReuse('d22-listening', 4), vocab('d22-vocab', A11_VOCAB_CATEGORIES.PRONOUNS), xray('d22-xray'), speakingRepeat('d22-speaking', 1)],
+        items: [listeningReuse('d22-listening', 6), vocab('d22-vocab', A11_VOCAB_CATEGORIES.PRONOUNS), xray('d22-xray'), speakingRepeat('d22-speaking', 1)],
       },
       {
         label: 'Tag 23',
-        items: [readingAnzeigen('d23-reading'), listeningReuse('d23-listening', 5), vocab('d23-vocab', A11_VOCAB_CATEGORIES.YESNO), xray('d23-xray')],
+        items: [readingAnzeigen('d23-reading'), listeningReuse('d23-listening', 1), vocab('d23-vocab', A11_VOCAB_CATEGORIES.YESNO), xray('d23-xray')],
       },
       {
         label: 'Tag 24',
-        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 6), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 6)],
+        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 2), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 6)],
       },
       {
         label: 'Tag 25',
@@ -520,7 +535,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 26',
-        items: [schreiben('d26-schreiben', 5), modelltest('d26-probe', 'Probe-Abschlusstest A1.1 (ungewertet, halbe Länge)', 40)],
+        items: [schreiben('d26-schreiben', 5), ...[1, 2, 3].map((nr) => checkpointProbe(`d26-probe-cp${nr}`, nr))],
       },
       {
         label: 'Tag 27 — Puffertag',
@@ -530,7 +545,7 @@ const WEEKS = [
         label: 'Tag 28',
         items: [
           xray('d28-xray', 20, 'X-Ray: letztes Aufwärmen vor der Prüfung'),
-          modelltest('d28-abschlusstest', 'Abschlusstest A1.1 (gewertet, halbe Länge, Start-Deutsch-1-Format)', 50),
+          modelltest('d28-abschlusstest', 'Abschlusstest A1.1 (gewertet)', courseTestMinutes('abschlusstest-a1-1')),
           nextCourse('d28-next'),
         ],
       },
@@ -548,7 +563,9 @@ const WEEKS = [
 // inside the 28–32 h band and the 30–40 h A1.1 budget the A1-guide's
 // 60–80-h-to-A1 total implies. Every day is 55–75 min except the two
 // Puffertage (Tag 14: 35 min, Tag 27: 40 min) — see a11Phase.notes.md for the
-// full per-day verification transcript.
+// full per-day verification transcript. 2026-11-22: Tag 26 rehearses with three
+// checkpoints (61 min) and Tag 28 takes the test's own 40 minutes (65 min):
+// 1786 minutes, still "ca. 30 Stunden".
 export const PROGRAM_MINUTES = WEEKS.reduce(
   (sum, w) => sum + w.days.reduce((daySum, d) => daySum + d.items.reduce((s, i) => s + i.minutes, 0), 0),
   0

@@ -294,6 +294,11 @@ test('a11_phase program item ids are unique and grammar hrefs resolve to real a1
   }
   assert.equal(A11_PROGRAM.key, A11_PROGRAM_KEY);
   assert.equal(A11_PROGRAM.weeks.length, 4, 'the plan promises 4 study weeks (28 days)');
+  // The final paper comes once, last; the rehearsal before it is another paper, and no label claims an exam's format.
+  const items = A11_PROGRAM.weeks.flatMap((w) => w.days.flatMap((d) => d.items.map((i) => ({ ...i, day: d.label }))));
+  assert.deepEqual(items.filter((i) => i.href === '/modelltest/abschlusstest-a1-1').map((i) => i.day), ['Tag 28']);
+  assert.ok(items.some((i) => i.day === 'Tag 26' && i.title.startsWith('Probe')), 'a rehearsal on Tag 26');
+  assert.deepEqual(items.filter((i) => /Format/.test(i.title)).map((i) => i.title), []);
 });
 
 test('the a11_phase course route exists in both App.jsx and the netlify.toml allow-list', () => {
@@ -334,6 +339,7 @@ const KNOWN_SPA_ROUTES = [
   /^\/listening\/[ab][12]\.[12]$/, /^\/listening\/[ab][12]\.[12]\/[1-6]$/,
   /^\/schreiben\/[a-z0-9-]+$/, /^\/modelltest\/[a-z0-9-]+$/,
   /^\/start-deutsch-1-kurs$/, /^\/goethe-a2-kurs$/, /^\/a1-[12]-phase$/, /^\/a2-[12]-phase$/,
+  /^\/course\/[ab][12]\.[12]\/checkpoint\/[1-9]$/,
 ];
 const KNOWN_SLASH_ROUTES = [/^\/speaking\/$/, /^\/analyze\/$/]; // prerendered SPA routes (case 2)
 const KNOWN_ASTRO = [/^\/grammar\/[ab][12]\.[12]\/(?:[a-z0-9-]+\/)?$/, /^\/leitfaden\/[a-z0-9-]+\/$/]; // case 1

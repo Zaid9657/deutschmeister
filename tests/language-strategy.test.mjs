@@ -74,7 +74,7 @@ test('the lesson chrome defaults to English and only the learner switches it to 
   assert.equal(LESSON_LANG_KEY, 'dm_lesson_lang');
   assert.deepEqual(LESSON_LANGS, ['en', 'de']);
   assert.equal(readLessonLang(), 'en', 'no window, no flag → English');
-  assert.equal(t('stage.pretest.eyebrow'), 'Step 1 · Try first');
+  assert.equal(t('stage.pretest.eyebrow'), 'Try first');
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.match(player, /useLessonLang\(\)/, 'the player reads the chrome language');
   assert.ok(!/useLessonLang\('de'\)|DEFAULT_LESSON_LANG = 'de'/.test(read('src/lib/lesson/strings.js')));
@@ -84,4 +84,25 @@ test('a guide is German unless it says otherwise', async () => {
   const { GUIDES, guideLang } = await import('../astro-site/src/data/guides/index.js');
   assert.equal(guideLang({}), 'de');
   for (const g of GUIDES) if (!g.lang) assert.equal(guideLang(g), 'de', g.slug);
+});
+
+// Both walks of 2026-11-25: every course screen had the site's title, `lang` stayed "en" in Deutsch-Modus and the skip link was English.
+test('a course screen names itself in the tab, says its language, and its skip link follows Deutsch-Modus', () => {
+  const titled = {
+    'src/pages/lesson/LessonPlayerPage.jsx': /useScreenTitle\(lektion && /,
+    'src/pages/lesson/CheckpointPage.jsx': /useScreenTitle\(checkpoint && /,
+    'src/pages/lesson/ReviewPage.jsx': /useScreenTitle\(curriculum && /,
+    'src/pages/CourseCompletePage.jsx': /useScreenTitle\(`/,
+    'src/pages/CourseCertificatePage.jsx': /useScreenTitle\(`/,
+    'src/pages/CurriculumHomePage.jsx': /useScreenTitle\(null, lang\)/,
+  };
+  for (const [file, call] of Object.entries(titled)) assert.match(read(file), call, file);
+  const hook = read('src/hooks/useScreenTitle.js');
+  assert.match(hook, /document\.title = `\$\{title\} \| DeutschMeister`/);
+  assert.match(hook, /document\.documentElement\.lang = lang/);
+  assert.equal(hook.match(/return \(\) => \{/g).length, 2, 'both are put back when the screen goes');
+  const app = read('src/App.jsx');
+  assert.match(app, /const de = lessonLang === 'de' && pathname\.startsWith\('\/course\/'\);/);
+  assert.match(app, /\{de \? 'Zum Inhalt springen' : 'Skip to content'\}/);
+  assert.doesNotMatch(app, /lesson\/strings\.js/, 'the shell loads the flag, not the string table');
 });

@@ -32,7 +32,7 @@ import { trackFirstSentence } from '../../lib/funnelTracking.js';
  * order is reversed — see and hear the model, write it with your own name while it is in view,
  * then once more with it hidden. Never blocking: a miss shows how to start and lets them go on.
  */
-function ModelFirstPretest({ pretest, id, onBack, onDone, onName }) {
+function ModelFirstPretest({ pretest, id, part, onBack, onDone, onName }) {
   const recorded = !!audioFor(id, 'pretest');
   const [step, setStep] = useState('supported'); // supported → recall
   const [values, setValues] = useState({ supported: '', recall: '' });
@@ -51,13 +51,14 @@ function ModelFirstPretest({ pretest, id, onBack, onDone, onName }) {
       if (step === 'recall') trackFirstSentence(id, hit);
       return;
     }
-    if (step === 'supported') { setStep('recall'); setChecked(null); return; }
+    if (step === 'supported') { setStep('recall'); setChecked(null); setAudioFail(null); return; }
     onDone();
   };
 
   return (
     <StageShell
       eyebrow={t('pretest.first.eyebrow', lang)}
+      part={part}
       title={pretest.promptDe}
       lead={lang === 'de' ? null : pretest.promptEn}
       onBack={onBack}
@@ -102,7 +103,8 @@ function ModelFirstPretest({ pretest, id, onBack, onDone, onName }) {
             : <span className="text-graphite">{t('pretest.first.hint', lang, { start: openings[0] || '' })}</span>)}
         </p>
       </Card>
-      <AudioFailureNotice reason={audioFail} />
+      {/* Only the first step has sound; the recall step has none to fail. */}
+      {step === 'supported' && <AudioFailureNotice reason={audioFail} />}
     </StageShell>
   );
 }
@@ -110,12 +112,12 @@ function ModelFirstPretest({ pretest, id, onBack, onDone, onName }) {
 export default function PretestStage({ stage, lektionId, onBack, onDone, onName }) {
   const pretest = stage.pretest || {};
   const id = lektionId || stage.lektionId || null;
-  if (pretest.modelFirst) return <ModelFirstPretest onName={onName} pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
-  return <RetrievalPretest pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
+  if (pretest.modelFirst) return <ModelFirstPretest onName={onName} pretest={pretest} id={id} part={stage.part} onBack={onBack} onDone={onDone} />;
+  return <RetrievalPretest pretest={pretest} id={id} part={stage.part} onBack={onBack} onDone={onDone} />;
 }
 
 /** Every later Lektion: one attempt before anything is taught, then the model (the file header). */
-function RetrievalPretest({ pretest, id, onBack, onDone }) {
+function RetrievalPretest({ pretest, id, part, onBack, onDone }) {
   const recorded = !!audioFor(id, 'pretest');
   const [value, setValue] = useState('');
   const [audioFail, setAudioFail] = useState(null);
@@ -130,6 +132,7 @@ function RetrievalPretest({ pretest, id, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('stage.pretest.eyebrow', lang)}
+      part={part}
       title={pretest.promptDe}
       lead={lang === 'de' ? null : pretest.promptEn}
       onBack={onBack}

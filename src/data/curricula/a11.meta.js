@@ -24,6 +24,7 @@
 import { CURRICULUM_A11 } from './a11.js';
 import { A11_ART } from './a11.art.js';
 import { SESSION_COUNT } from '../../lib/lesson/sessions.js';
+import { courseTestDescription, courseTestMinutes } from '../courseTests/index.js';
 import { curriculumPath } from './index.js';
 import { SUSTAINABLE_PER_WEEK } from '../../lib/course/plan.js';
 
@@ -104,14 +105,26 @@ const CHARACTER_ROLES = {
   'Herr Schmidt': 'Gives train information at the station.',
 };
 
-/** `{ name, roleEn, firstLektion, appearsIn }` for every distinct dialogue speaker, in order of first appearance. */
-export function charactersOf(curriculum, roles = CHARACTER_ROLES) {
+/** The same lines for Deutsch-Modus: each renders the English one above, no fact added. */
+const CHARACTER_ROLES_DE = {
+  Ana: 'Eine Studentin aus Marokko, neu in Bremen – der Kurs begleitet ihre ersten Wochen.',
+  'Frau Kaya': 'Arbeitet am Empfang des Hostels, in dem Ana ankommt.',
+  'Herr Weber': 'Vom Bürgerbüro: Dort meldet Ana sich an, und dort fängt sie später an zu arbeiten.',
+  Lena: 'Lernt im selben Deutschkurs wie Ana; ihr Hobby ist Sport.',
+  Tim: 'Lernt im selben Kurs und richtet sein Zimmer ein.',
+  'Frau Wolf': 'Verkauft Möbel auf dem Flohmarkt.',
+  Paul: 'Der Kellner im Café.',
+  'Herr Schmidt': 'Gibt am Bahnhof Auskunft über die Züge.',
+};
+
+/** `{ name, roleEn, roleDe, firstLektion, appearsIn }` for every distinct dialogue speaker, in order of first appearance. */
+export function charactersOf(curriculum, roles = CHARACTER_ROLES, rolesDe = CHARACTER_ROLES_DE) {
   const byName = new Map();
   for (const l of curriculum.lektionen) {
     for (const line of l.dialog?.lines ?? []) {
       const name = String(line.speaker || '').trim();
       if (!name) continue;
-      const entry = byName.get(name) ?? { name, roleEn: roles[name] ?? `Appears in Lektion ${l.nr}.`, firstLektion: l.nr, appearsIn: [] };
+      const entry = byName.get(name) ?? { name, roleEn: roles[name] ?? `Appears in Lektion ${l.nr}.`, roleDe: rolesDe[name] ?? `Kommt in Lektion ${l.nr} vor.`, firstLektion: l.nr, appearsIn: [] };
       if (!entry.appearsIn.includes(l.nr)) entry.appearsIn.push(l.nr);
       byName.set(name, entry);
     }
@@ -146,7 +159,7 @@ const lektionIntro = {
       'I can say where I come from and what my job is.',
       'I can ask what someone’s job is.',
       'I can understand and say the numbers from zero to ten.',
-      'I can give my phone number and my address.',
+      'I can give my phone number and say where I live.',
       'I can give personal details in a short message.',
     ],
   },
@@ -205,7 +218,7 @@ const lektionIntro = {
     ],
   },
   'a1.1-l09': {
-    situationEn: 'Food and drink: ordering something (the invitation comes in Lektion 12)',
+    situationEn: 'Food and drink: ordering something in a café',
     canDoEn: [
       'I can order something in a café.',
       'I can say that I am hungry or thirsty.',
@@ -232,7 +245,7 @@ const lektionIntro = {
     ],
   },
   'a1.1-l12': {
-    situationEn: 'Celebrations and the past (as fixed chunks), plus revision',
+    situationEn: 'Celebrations: a birthday, an invitation and the guests',
     canDoEn: [
       'I can invite someone to a celebration.',
       'I can say in which month my birthday is.',
@@ -261,11 +274,13 @@ const OUTCOME_SOURCES = [
   ['a1.1-l10', 2],
 ];
 
-const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => {
-  const line = lektionIntro[id].canDoEn[i];
-  // "I can order something in a café." → "order something in a café"
-  return line.replace(/^I can /, '').replace(/\.$/, '');
-});
+/** "I can say where I come from." → "say where you come from": the list continues „… you can". */
+export const outcomeLineEn = (line) => line.replace(/^I can /, '').replace(/\.$/, '')
+  .replace(/\bI am\b/g, 'you are').replace(/\bI\b/g, 'you').replace(/\bmy\b/g, 'your').replace(/\bme\b/g, 'you');
+
+const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => outcomeLineEn(lektionIntro[id].canDoEn[i]));
+/** Deutsch-Modus shows the same can-dos as the course words them („Ich kann …"). */
+const outcomesDe = OUTCOME_SOURCES.map(([id, i]) => CURRICULUM_A11.lektionen.find((l) => l.id === id).canDo[i]);
 
 // ---------------------------------------------------------------------------
 // Time — derived from the path, never typed
@@ -288,7 +303,7 @@ const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => {
  * @param {number} [perWeek]      units per week; defaults to SUSTAINABLE_PER_WEEK
  */
 export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABLE_PER_WEEK) {
-  const path = curriculumPath(curriculum);
+  const path = curriculumPath(curriculum, { testMinutes: courseTestMinutes(curriculum.testSlug) });
   const sum = (kind) => path.filter((n) => n.kind === kind).reduce((acc, n) => acc + (Number(n.minutes) || 0), 0);
   const lektionMinutes = sum('lektion');
   const checkpointMinutes = sum('checkpoint');
@@ -333,7 +348,7 @@ export const STEP_SECONDS = {
   pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
   sceneMeaning: [20, 40], sceneSay: [40, 80],
-  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40],
+  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40], readSeries: [20, 60], checkTurn: [20, 50], checkpointText: [20, 45],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
 };
 /** The player's fixed stage sizes (buildLesson.js PRACTICE_SIZE and the three derived exercises); a test pins them. */
@@ -355,10 +370,22 @@ export function lektionMinutesEstimate(l) {
     n.fluencyLine = l.guided.chunks.length;
     n.sceneMeaning = l.guided.chunks.length;
     n.sceneSay = l.guided.chunks.length;
+    // The final check and a shown series are part of the Lektion the learner sits through (independent score, 2026-11-25).
+    n.checkTurn = l.guided.check?.turns?.length || 0;
+    n.readSeries = l.guided.read?.series ? 1 : 0;
   }
   const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
   const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
   return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(hi / 300) * 5 };
+}
+
+/** What every checkpoint puts in front of the learner (buildCheckpoint.js); a test pins it to a built paper. */
+export const CHECKPOINT_COUNTS = { dictationLine: 2, readQuestion: 7, checkpointText: 4, practiceItem: 6, derivedItem: 2, writing: 1, readAloudLine: 2 };
+
+/** A checkpoint's time from its own steps, as a range. The 12 minutes of the path are the design target the plan counts with. */
+export function checkpointMinutesEstimate() {
+  const total = (side) => Object.entries(CHECKPOINT_COUNTS).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
+  return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(total(1) / 300) * 5 };
 }
 
 /** Same count-based range, divided across the saved parts; rounded outwards. */
@@ -378,23 +405,30 @@ export function courseMinutesEstimate(curriculum = CURRICULUM_A11) {
 // ---------------------------------------------------------------------------
 
 /**
- * The stage keys are `buildLesson.js`'s (warmup, pretest, dialog, wortfeld, notice, practice,
- * dictation, speaking, writing, recap); the labels are the English names for the course home. The
- * warm-up appears only once review cards are due, and a Lektion without a listening or speaking
- * part skips that stage — the row shows the full shape, the player shows what this Lektion has.
+ * The stage keys are the guided Lektion's stage kinds (`buildGuided.js`), in the order the player
+ * runs them; the labels are the English names for the course home. The warm-up appears only once
+ * review cards are due and „Try again“ only after a miss — the row shows the full shape, the player
+ * shows what this run has. (Until 2026-11-23 the row listed the ten legacy stages, without the
+ * scene, sounds, reading, from-memory and final-check steps the learner actually meets.)
  * `minutesPerLektion` comes from `lektion.minutes`, not from a typed number.
  */
 const HOW_STEPS = [
-  { key: 'warmup', label: 'Warm-up', descriptionEn: 'A few review cards that are due today.' },
-  { key: 'pretest', label: 'Try first', descriptionEn: 'Guess before you learn; wrong is fine here.' },
-  { key: 'dialog', label: 'Dialogue', descriptionEn: 'Listen to the situation, with English under each line.' },
-  { key: 'wortfeld', label: 'Words', descriptionEn: 'The words of the situation, with article and audio.' },
-  { key: 'notice', label: 'Rule', descriptionEn: 'One grammar point, explained in a short card.' },
-  { key: 'practice', label: 'Practice', descriptionEn: 'Short typed and tapped exercises, checked instantly.' },
-  { key: 'dictation', label: 'Listen', descriptionEn: 'Hear a line from the dialogue and write it down.' },
-  { key: 'speaking', label: 'Speak', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.' },
-  { key: 'writing', label: 'Write', descriptionEn: 'A short real-life text, checked by AI.' },
-  { key: 'recap', label: 'Recap', descriptionEn: 'What you can do now, and what comes next.' },
+  { key: 'warmup', label: 'Warm-up', labelDe: 'Wiederholung', descriptionEn: 'A few review cards that are due today.', descriptionDe: 'Einige Karten, die heute fällig sind.' },
+  { key: 'pretest', label: 'Try first', labelDe: 'Probieren', descriptionEn: 'Guess before you learn; wrong is fine here.', descriptionDe: 'Vor dem Lernen raten; Fehler sind hier in Ordnung.' },
+  { key: 'scene', label: 'Scene', labelDe: 'Szene', descriptionEn: 'Hear the dialogue in parts, check the meaning, say it.', descriptionDe: 'Den Dialog in Teilen hören, die Bedeutung prüfen, sprechen.' },
+  { key: 'wortfeld', label: 'Words', labelDe: 'Wörter', descriptionEn: 'The words of the situation, with article and audio.', descriptionDe: 'Die Wörter der Situation, mit Artikel und Ton.' },
+  { key: 'sound', label: 'Sounds', labelDe: 'Laute', descriptionEn: 'Listen for stress and sounds, then say the line.', descriptionDe: 'Auf Betonung und Laute hören, dann die Zeile sprechen.' },
+  { key: 'read', label: 'Read', labelDe: 'Lesen', descriptionEn: 'A short text with more words, and questions on it.', descriptionDe: 'Ein kurzer Text mit weiteren Wörtern und Fragen dazu.' },
+  { key: 'notice', label: 'Rule', labelDe: 'Regel', descriptionEn: 'One grammar point, explained in a short card.', descriptionDe: 'Ein Grammatikpunkt, auf einer kurzen Karte erklärt.' },
+  { key: 'practice', label: 'Practice', labelDe: 'Üben', descriptionEn: 'Short typed and tapped exercises, checked instantly.', descriptionDe: 'Kurze Aufgaben zum Tippen und Antippen, sofort geprüft.' },
+  { key: 'derived', label: 'More tasks', labelDe: 'Mehr üben', descriptionEn: 'Match words, build a sentence, pick what you heard.', descriptionDe: 'Wörter zuordnen, einen Satz bauen, Gehörtes auswählen.' },
+  { key: 'dictation', label: 'Listen', labelDe: 'Hören', descriptionEn: 'Hear a line from the dialogue and write it down.', descriptionDe: 'Eine Zeile aus dem Dialog hören und aufschreiben.' },
+  { key: 'fluency', label: 'From memory', labelDe: 'Auswendig', descriptionEn: 'Say the scene lines again, without reading them.', descriptionDe: 'Die Zeilen der Szene noch einmal sprechen, ohne Text.' },
+  { key: 'speaking', label: 'Speak', labelDe: 'Sprechen', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.', descriptionDe: 'Vorlesen; die Spracherkennung prüft Wörter, nicht die Aussprache.' },
+  { key: 'writing', label: 'Write', labelDe: 'Schreiben', descriptionEn: 'A form or a short message, checked by AI.', descriptionDe: 'Ein Formular oder eine kurze Nachricht, von der KI geprüft.' },
+  { key: 'requeue', label: 'Try again', labelDe: 'Noch einmal', descriptionEn: 'Anything you missed comes back once more.', descriptionDe: 'Was falsch war, kommt noch einmal.' },
+  { key: 'check', label: 'Final check', labelDe: 'Abschluss\u00ADcheck', descriptionEn: 'Show what you can do in a short conversation.', descriptionDe: 'In einem kurzen Gespräch zeigen, was Sie können.' },
+  { key: 'recap', label: 'Recap', labelDe: 'Rückblick', descriptionEn: 'What you can do now, and what comes next.', descriptionDe: 'Was Sie jetzt können und was als Nächstes kommt.' },
 ];
 
 const howItWorksEn = {
@@ -411,19 +445,28 @@ const aboutEn =
   `${CURRICULUM_A11.code} is the first half of level A1: ${CURRICULUM_A11.lektionen.length} short lessons ` +
   `(Lektionen), each built around one everyday situation — arriving, registering, shopping, making an ` +
   `appointment, ordering in a café — with the grammar as one step inside it. Every ${chapters[0]?.lektionen.length ?? 3} ` +
-  `Lektionen a checkpoint shows you what stuck, and the course ends with a shortened practice test in the ` +
-  `${CURRICULUM_A11.examName} format — our own, not an official exam. No account is needed to start; you need ` +
+  `Lektionen an adapted checkpoint shows you what stuck. ${courseTestDescription(CURRICULUM_A11.testSlug, 'en')} No account is needed to start; you need ` +
   `one to save your progress and for the AI feedback on your writing and speaking.`;
 
+/** The same paragraph in Deutsch-Modus. */
+const aboutDe =
+  `${CURRICULUM_A11.code} ist die erste Hälfte der Stufe A1: ${CURRICULUM_A11.lektionen.length} kurze Lektionen, jede zu einer ` +
+  `Alltagssituation – ankommen, sich anmelden, einkaufen, einen Termin machen, im Café bestellen –, und die Grammatik ist ein ` +
+  `Schritt darin. Nach je ${chapters[0]?.lektionen.length ?? 3} Lektionen zeigt Ihnen ein Checkpoint, was Sie behalten haben. ` +
+  `${courseTestDescription(CURRICULUM_A11.testSlug, 'de')} Zum Anfangen brauchen Sie kein Konto; Sie brauchen eins, um Ihren ` +
+  `Fortschritt zu speichern, und für die KI-Rückmeldung zum Schreiben und Sprechen.`;
+
 export const A11_META = {
-  teacher: A11_ART.teacher,
+  guide: A11_ART.guide,
   level: CURRICULUM_A11.level,
   code: CURRICULUM_A11.code,
   aboutEn,
+  aboutDe,
   chapters,
   characters,
   lektionIntro,
   outcomesEn,
+  outcomesDe,
   weeklyEstimate,
   howItWorksEn,
 };
@@ -511,7 +554,7 @@ export const WORTFELD_ICONS = {
   Arabisch: 'Languages',
   Marokko: 'Globe',
   sprechen: 'MessageCircle',
-  Tisch: 'Table2',
+  Tisch: 'FurnitureTable',
   Stuhl: 'Armchair',
   Lampe: 'Lamp',
   Uhr: 'Clock',
@@ -716,17 +759,21 @@ export const WORTFELD_ICON_FALLBACK = 'Sparkle';
 // ---------------------------------------------------------------------------
 
 /**
- * Four notes, `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes
- * a chapter, and `chapters[].nr` and `checkpoint.nr` are the same numbers
- * (one checkpoint per chapter), so the checkpoint result screen can key
- * straight off `checkpoint.nr`. Facts only: no stereotypes, no exam-fee
+ * `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes a chapter, and
+ * `chapters[].nr` and `checkpoint.nr` are the same numbers (one checkpoint per
+ * chapter), so the checkpoint result screen can key straight off `checkpoint.nr`.
+ * Every note sits with the chapter whose Lektionen it is about (`lektion`, pinned
+ * by tests/course-meta.test.mjs): the registration note stood one chapter late, at
+ * the shopping checkpoint, and the flea market at the free-time one (2026-11-25).
+ * Chapter 1 has two. Facts only: no stereotypes, no exam-fee
  * figures, no outcome promises (the a11.js header's rule extends here). Each
  * `source` is a real, checkable URL, or the literal string "allgemein
  * bekannt" for a norm with no single citable page. `bodyEn`/`bodyDe` stay at
  * or under 90 words; `bodyDe` speaks Sie, like the rest of the course.
  */
 export const LANDESKUNDE = {
-  1: {
+  1: [{
+    lektion: 1,
     titleDe: 'Begrüßung: Sie oder du?',
     titleEn: 'Greeting people: Sie or du?',
     bodyEn:
@@ -737,7 +784,7 @@ export const LANDESKUNDE = {
       'or higher-ranked person’s call, though this is loosening among younger people. When unsure, ' +
       'Sie is the safe default — nobody is offended by too much respect.',
     bodyDe:
-      'Im Deutschen gibt es zwei Formen von „Sie“: die formelle „Sie“-Form und die informelle ' +
+      'Im Deutschen gibt es zwei Formen der Anrede: die formelle „Sie“-Form und die informelle ' +
       '„du“-Form. Erwachsene, die sich nicht kennen, verwenden meist „Sie“ — bei Ämtern, im ' +
       'Geschäft, mit Nachbarn oder neuen Kolleginnen und Kollegen. „Du“ ist für Familie, Freunde, ' +
       'Kinder und für Menschen, die es ausdrücklich anbieten („Wir können du sagen“). Wer den ' +
@@ -745,7 +792,8 @@ export const LANDESKUNDE = {
       'Leuten und in manchen Firmen lockerer gehandhabt wird. Im Zweifel ist „Sie“ die sichere Wahl.',
     source: 'allgemein bekannt',
   },
-  2: {
+  {
+    lektion: 2,
     titleDe: 'Anmelden: das Bürgerbüro und die Meldebescheinigung',
     titleEn: 'Registering: the Bürgerbüro and the Meldebescheinigung',
     bodyEn:
@@ -763,8 +811,9 @@ export const LANDESKUNDE = {
       'Bringen Sie Ihren Pass, den Mietvertrag und die Wohnungsgeberbestätigung mit; oft ist vorher ' +
       'ein Termin nötig.',
     source: 'https://www.gesetze-im-internet.de/bmg/__17.html',
-  },
-  3: {
+  }],
+  2: [{
+    lektion: 4,
     titleDe: 'Flohmarkt: gebraucht kaufen, bar bezahlen',
     titleEn: 'Flohmarkt culture: buying secondhand, paying cash',
     bodyEn:
@@ -780,26 +829,35 @@ export const LANDESKUNDE = {
       'ist üblich, nicht unhöflich. Die meisten Verkaufenden sind Privatpersonen ohne Kartenlesegerät, ' +
       'deshalb zahlt man meist bar, am besten mit kleinen Scheinen und Münzen. Bringen Sie eine eigene Tasche mit.',
     source: 'allgemein bekannt',
-  },
-  4: {
-    titleDe: 'Pünktlichkeit und die Bahn',
-    titleEn: 'Punctuality and the train',
+  }],
+  3: [{
+    lektion: 8,
+    titleDe: 'Pünktlichkeit bei einem Termin',
+    titleEn: 'Being on time for an appointment',
     bodyEn:
       'Arriving on time for an appointment (Termin) is expected in Germany; if you will be even a ' +
-      'few minutes late, a short call or message ahead is considered polite. Deutsche Bahn, the ' +
-      'national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
+      'few minutes late, a short call or message ahead is considered polite.',
+    bodyDe:
+      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
+      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben.',
+    source: 'allgemein bekannt',
+  }],
+  4: [{
+    lektion: 10,
+    titleDe: 'Pünktlichkeit bei der Bahn',
+    titleEn: 'Punctuality and the train',
+    bodyEn:
+      'Deutsche Bahn, the national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
       'arrives less than six minutes after the scheduled time — its own definition, published with ' +
       'its punctuality reporting. A delay is called "Verspätung"; announcements at the Bahnhof name ' +
       'the platform (Gleis) and any delay together.',
     bodyDe:
-      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
-      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben. Die Deutsche Bahn, ' +
-      'der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
+      'Die Deutsche Bahn, der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
       'weniger als sechs Minuten nach der planmäßigen Zeit ankommt — das ist ihre eigene Definition, ' +
       'veröffentlicht in ihrer Pünktlichkeitsstatistik. Eine Verspätung heißt „Verspätung“; ' +
       'Durchsagen am Bahnhof nennen Gleis und eventuelle Verspätung zusammen.',
     source: 'https://www.deutschebahn.com/de/presse/konzernthemen/puenktlichkeit',
-  },
+  }],
 };
 
 export default A11_META;

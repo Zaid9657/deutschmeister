@@ -160,13 +160,45 @@ const REGISTER_EXEMPT = [
     line: "anrede: ctx.anrede === 'du' ? 'du' : 'Sie',",
     reason: "normalises a stored anrede VALUE ('du'/'Sie') from the course context into the speaking task sent to the coach — not learner-facing chrome text.",
   },
+  {
+    file: 'src/components/lesson/NoticeStage.jsx',
+    line: `<p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={textLang} dir={textLang === 'ar' ? 'rtl' : undefined}>`,
+    reason: 'the HTML text-direction attribute for the Arabic rule help, not the German pronoun.',
+  },
+  {
+    file: 'src/components/lesson/NoticeStage.jsx',
+    line: `out.push(<bdi key={m.index} dir="ltr" lang="de" className={m.run.length > 24 ? undefined : 'whitespace-nowrap'}>{m.run}</bdi>);`,
+    reason: 'the HTML text-direction attribute that keeps a German run left-to-right inside the Arabic help.',
+  },
+  {
+    file: 'src/components/lesson/CommandHelp.jsx',
+    line: `<dl lang="ar" dir="rtl" className="mt-2 space-y-2 leading-relaxed">`,
+    reason: 'the HTML text-direction attribute for Arabic command help, not the German pronoun.',
+  },
+  {
+    file: 'src/components/lesson/CommandHelp.jsx',
+    line: `<dt lang="de" dir="ltr" className="font-bold text-ink">{command}</dt>`,
+    reason: 'the HTML text-direction attribute that isolates a German command inside Arabic help.',
+  },
 ];
+
+// An HTML direction attribute is code, never a German form of address.
+const registerSurface = (line) => line.replace(/(<[A-Za-z][^>]*\s)dir(?=\s*=)/g, '$1');
+
+test('direction attributes are not informal German, while learner-facing pronouns still are', () => {
+  for (const line of ['<details lang="ar" dir="rtl">', '<bdi dir="ltr" lang="de">', '<p dir={textLang === "ar" ? "rtl" : undefined}>']) {
+    assert.equal(DU_TOKENS.test(registerSurface(line)), false, line);
+  }
+  for (const line of ['<p dir="rtl">Prüfe deine Antwort.</p>', '<span aria-label="Sag es dir">', 'Bitte prüfe, was du schreibst.']) {
+    assert.equal(DU_TOKENS.test(registerSurface(line)), true, line);
+  }
+});
 
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
   const offenders = [];
   for (const f of CHROME_FILES) {
     read(f).split('\n').forEach((line, i) => {
-      if (!DU_TOKENS.test(line)) return;
+      if (!DU_TOKENS.test(registerSurface(line))) return;
       const trimmed = line.trim();
       if (REGISTER_EXEMPT.some((ex) => ex.file === f && ex.line === trimmed)) return;
       offenders.push(`${f}:${i + 1}  ${trimmed}`);
@@ -339,8 +371,8 @@ test('STRINGS.en and STRINGS.de carry exactly the same keys and no empty value',
   assert.equal(t('action.next', 'de'), 'Weiter');
   assert.equal(t('action.next', 'xx'), 'Continue', 'an unknown lang falls back to en');
   assert.equal(t('no.such.key', 'de'), 'no.such.key', 'a missing key shows the key, never a blank');
-  assert.equal(t('stage.practice.eyebrow', 'en', { n: 3, total: 7 }), 'Step 4 · Practice 3/7');
-  assert.equal(t('stage.requeue.eyebrow', 'de', { n: 1, total: 2 }), 'Schritt 7 · Noch einmal 1/2', 'the requeue has its own eyebrow');
+  assert.equal(t('stage.practice.eyebrow', 'en', { n: 3, total: 7 }), 'Practice 3/7');
+  assert.equal(t('stage.requeue.eyebrow', 'de', { n: 1, total: 2 }), 'Noch einmal 1/2', 'the requeue has its own eyebrow');
 });
 
 test('no owned lesson chrome file carries a banned German chrome literal outside strings.js', () => {
@@ -369,14 +401,15 @@ test('every stage screen the player renders reads its chrome through useLessonLa
 
 // The requeue stage used to reuse PracticeItem's "Step 4 · Practice n/N"
 // eyebrow AFTER "Step 6 · Writing", so the lesson appeared to go backwards.
-test('the requeue stage has its own eyebrow (Step 7 · Try again)', () => {
+// Since 2026-11-23 the numbering is the part (tests/lesson-screens.test.mjs).
+test('the requeue stage has its own eyebrow (Part 3 of 3 · Try again)', () => {
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.ok(player.includes("const retry = stage.kind === 'requeue';"), 'the player must know when it is in the requeue stage');
   assert.ok(player.includes("eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}"), 'the player must pass the requeue eyebrow key');
   assert.ok(player.includes("...(retry ? { eyebrowKey: 'stage.requeue.eyebrow' } : {})"), 'a retried match/word order/listen item/dictation carries the requeue eyebrow too');
   const item = read('src/components/lesson/PracticeItem.jsx');
   assert.ok(item.includes("eyebrowKey = 'stage.practice.eyebrow'"), 'PracticeItem defaults to the practice eyebrow');
-  assert.ok(item.includes('{t(eyebrowKey, lang, { n: index + 1, total })}'), 'PracticeItem renders the eyebrow it is given');
+  assert.ok(item.includes('{partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}'), 'PracticeItem renders the eyebrow it is given, after its part');
 });
 
 // The speaking stage trap: the primary is disabled until every read-aloud line
@@ -451,7 +484,11 @@ test('the option chips are full-width and stacked on mobile, at least 44px tall,
   const src = read('src/components/lesson/PracticeItem.jsx');
   assert.ok(src.includes('min-h-11'), 'option chips must be at least 44px tall');
   assert.ok(src.includes('flex-col gap-2 sm:flex-row'), 'option chips must stack full-width on mobile');
-  assert.ok(src.includes('{on && <Check'), 'the selected chip must carry a check icon, not colour alone');
+  assert.ok(src.includes('{on && !state?.revealed && <Mark'), 'the selected chip must carry an icon, not colour alone');
+  // A wrong choice never carries the check mark (browser walk 2026-11-25).
+  for (const f of ['PracticeItem', 'ListenSelectItem']) {
+    assert.ok(read(`src/components/lesson/${f}.jsx`).includes('const Mark = state?.result === RESULT.WRONG ? X : Check;'), `${f}: a wrong choice shows a cross`);
+  }
 });
 
 test('the primary Continue label key exists, non-empty, in both chrome tables', async () => {
@@ -632,7 +669,7 @@ test('parseLektionId derives level and Lektion number from the id alone', async 
 
 test('DialogStage renders the gloss as an accessible popover, one at a time, closable by Escape', () => {
   const src = read('src/components/lesson/DialogStage.jsx');
-  assert.ok(src.includes("import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';"), 'DialogStage must use the shared gloss helpers');
+  assert.ok(src.includes("import { buildLexicon, glossTokens, parseLektionId, popoverShift } from '../../lib/lesson/gloss.js';"), 'DialogStage must use the shared gloss helpers');
   assert.match(src, /aria-describedby=\{isOpen \? popoverId : undefined\}/, 'the gloss button wires aria-describedby to its popover');
   assert.match(src, /role="tooltip"/, 'the popover has an accessible role');
   assert.ok(src.includes("const [openGloss, setOpenGloss] = useState(null);"), 'exactly one gloss popover is open at a time, tracked in one piece of state');
@@ -758,4 +795,37 @@ test('second Codex review, accessibility: names match what is shown, focus lands
   const welcome = read('src/components/course/CourseWelcome.jsx');
   assert.doesNotMatch(welcome, /overflow-x-auto|role="region"/, 'the steps wrap instead of scrolling sideways');
   for (const lang of ['en', 'de']) assert.ok(read('src/lib/lesson/strings.js').includes("'wortfeld.flipHint': '{word}: {en}',"), lang);
+});
+
+test('optional Arabic command help is shared by lesson stages and isolates reading direction', async () => {
+  const { TASK_COMMANDS_AR, t } = await import('../src/lib/lesson/strings.js');
+  assert.deepEqual(TASK_COMMANDS_AR.map(x => x[0]), ['Weiter', 'Zurück', 'Lesen', 'Hören', 'Ergänzen', 'Satz bilden', 'Fragen', 'Sprechen', 'Schreiben', 'Prüfen']);
+  for (const [, text] of TASK_COMMANDS_AR) assert.match(text, /\p{Script=Arabic}/u);
+  for (const lang of ['en', 'de']) assert.notEqual(t('help.commandsArabic', lang), 'help.commandsArabic');
+  assert.match(read('src/components/lesson/StageShell.jsx'), /<CommandHelp \/>/u);
+  const help = read('src/components/lesson/CommandHelp.jsx');
+  assert.match(help, /<details/u);
+  assert.match(help, /lang="ar" dir="rtl"/u);
+  assert.match(help, /lang="de" dir="ltr"/u);
+});
+
+test('all four checkpoint exchanges hand personal turns to the existing coach and return to the same checkpoint', async () => {
+  const { checkpointExchange, checkpointSpeakingContext } = await import('../src/lib/checkpoint/speaking.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const task = checkpointExchange(cp.nr);
+    assert.ok(task.promptDe && task.promptEn);
+    assert.match(task.promptDe, /Fragen Sie/u);
+    const context = checkpointSpeakingContext(CURRICULUM_A11, cp, 'Back to checkpoint');
+    assert.equal(context.returnTo, '/course/a1.1/checkpoint/' + cp.nr + '#checkpoint-conversation');
+    assert.equal(context.openPrompt, task.promptDe);
+    assert.equal(context.openTeil, 'Gesprächsübung');
+    assert.equal(context.itemId, undefined, 'a checkpoint must not be marked as a finished legacy lesson');
+  }
+  const page = read('src/pages/lesson/CheckpointPage.jsx');
+  const stage = read('src/components/lesson/SpeakingStage.jsx');
+  assert.match(page, /<PersonalExchange/u);
+  assert.match(stage, /saveCourseContext\(context\)/u);
+  assert.match(stage, /type="checkbox" checked=\{reflected\}/u);
+  assert.match(stage, /checkpoint.exchange.honest/u);
 });

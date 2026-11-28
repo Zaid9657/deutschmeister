@@ -24,6 +24,7 @@
 import { courseFor } from '../data/courses/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import { courseForProduct } from '../data/pricing.js';
+import { courseTestMinutes } from '../data/courseTests/index.js';
 import { flattenCourse, currentItem, courseLesson } from './courseFlow.js';
 import { placedSublevel } from './firstRun.js';
 
@@ -78,7 +79,7 @@ export function courseNextStep(level, doneIds = new Set()) {
   if (!course) return null;
   const curriculum = curriculumFor(l);
   const nodes = curriculum
-    ? curriculumPath(curriculum).map((n) => ({ id: n.id, title: n.title, minutes: n.minutes ?? null, href: curriculumNodeHref(l, n) }))
+    ? curriculumPath(curriculum, { testMinutes: courseTestMinutes(curriculum.testSlug) }).map((n) => ({ id: n.id, title: n.title, minutes: n.minutes ?? null, href: curriculumNodeHref(l, n) }))
     : flattenCourse(course).map((it) => ({ id: it.id, title: it.title, minutes: it.minutes ?? null, href: courseLesson(l, it.id) }));
   const done = nodes.filter((n) => doneIds.has(n.id)).length;
   const position = curriculum

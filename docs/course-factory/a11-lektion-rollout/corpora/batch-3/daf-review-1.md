@@ -1,0 +1,21 @@
+1. **NOTE — Lektion 7, turns 1–5, all sittings:** No demonstrated blocker. Every turn has a taught answer route, including the changing du-questions in turn 4. Keep accepting personal hobbies, “Und du?” and answers whose weekend context comes from Lena’s question. “Am Wochenende schwimme ich” is a natural contextual answer; missing **gern** alone does not make it wrong. The repeat recommendations fit.
+
+2. **BLOCKER — Lektion 8, turn 5, all sittings:** The evidence marks **“Um Montag habe ich Zeit” correct**, although the weekday requires **am**. This also undermines the lesson’s explicit distinction between **am** and **um**. Fix the time-gap validation so weekday and clock expressions are checked together with their prepositions. Preserve correct answers such as “Am Montag habe ich Zeit” and “Um zehn habe ich Zeit.”
+
+3. **MAJOR — Lektion 8, turn 1 and turn 6, all sittings:** Morning versus evening is underspecified. In particular, the audio “Viertel nach vier” does not uniquely establish **16.15**. The recorded acceptance of “Es ist zwanzig Uhr dreißig” for a watch showing “8.30” is also defensible with a twelve-hour watch. Fix the watch cues to specify **morgens**, and add **morgens/nachmittags** to the appointment audio according to the intended answer. Continue accepting equivalent everyday and numerical forms.
+
+4. **MAJOR — Lektion 8, turns 4 and 6, can-do [1]:** Asking about availability and noting somebody’s appointment do not establish that the learner can **agree an appointment**. Add a short closing exchange after turn 4: Lena confirms availability at the proposed time, and the learner confirms the arrangement, for example with the already taught “Ja, gern.” Keep turn 6 as supporting listening evidence.
+
+5. **MINOR — Lektion 8, turns 1–2, all sittings:** The continuous situation first gives the learner a watch and immediately says they have none. Remove “You have no watch / Sie haben keine Uhr” from turn 2; simply ask the learner to ask Lena the time. Turn 3 is answerable through the taught “Ich stehe um … auf” chunk; a full separable-verb explanation is unnecessary here.
+
+6. **BLOCKER — Lektion 9, sitting 3, turn 3:** Every listed answer requires **“keinen Hunger”**, which the supplied teaching has not introduced. “Kein Handy” and the **ein → einen** examples do not provide an adequately taught route to this negative form for these learners. The recommended **haben, ich möchte** section does not remedy that gap either. Change this sitting’s cue to **“Sie haben Hunger. Antworten Sie.”** and use sitting 1’s positive answer set. Polite refusal remains tested in turn 6.
+
+7. **MINOR — Lektion 9, turns 2–3, all sittings:** Asking whether the learner is hungry after taking their food order is awkward; the original negative variant makes the sequence especially strained. Move the Hunger question before the food order. In the Durst sitting, place the thirst question before the drink order.
+
+8. **NOTE — Lektion 9, turns 1, 2 and 5:** The generic **thing** gaps need meaning checks, but the supplied evidence does **not** establish a defect here. Add explicit regression cases: “Ich möchte Kuchen” must not satisfy the drink task; “Ich möchte Wasser” must not satisfy the food task; “Ja, einen Kaffee, bitte” must not by itself demonstrate acceptance of offered water. These answers are **not in the evidence**. Preserve contextual acceptance such as the evidenced “Ja, ein Glas, bitte.”
+
+9. **NOTE — Lektion 9, turn 3:** The task requests an answer, not a full sentence. **“Ja”** correctly answers the positive Hunger/Durst questions. Its grade is **not in the evidence**, so a refusal cannot be asserted; explicitly include it in acceptance tests and accept it. This differs from turn 6, where bare “Nein” appropriately fails the explicit politeness requirement.
+
+10. **NOTE — Lektion 9, turns 1–2 and 4–6, all sittings:** The default answer routes are otherwise taught or straightforward combinations of taught language. “Haben Sie Tee?” is a fair transfer from “Haben Sie auch Hunger?”; neither **bitte** nor **Entschuldigung** must be compulsory. The Sie register fits Paul, and the scene supports accepting and politely declining offers. Keep these routes and their repeat recommendations.
+
+Overall verdict: **Lektion 7 — ship; Lektion 8 — fix first; Lektion 9 — fix first.**

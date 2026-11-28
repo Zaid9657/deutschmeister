@@ -1,3 +1,4 @@
+import CommandHelp from './CommandHelp.jsx';
 import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useRef, useState } from 'react';
 import Button from '../ui/Button.jsx';
@@ -6,7 +7,7 @@ import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
 import PlayButton from './PlayButton.jsx';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * The listening item of stage 4: a dialogue line is played, the learner types
@@ -20,7 +21,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * key the dialogue screen uses — a dictation line IS a dialogue line) and
  * browser speech otherwise; the badge says which.
  */
-export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow', hintFirst = false }) {
+export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow', part = null, hintFirst = false }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
   const [retried, setRetried] = useState(false);
@@ -71,8 +72,9 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
+      <CommandHelp />
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('dictation.lead', lang)}</p>

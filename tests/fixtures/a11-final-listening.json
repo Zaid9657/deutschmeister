@@ -1,0 +1,262 @@
+{
+ "note": "Snapshot of the 23 questions of A1.1 listening exercise 3 (listening_questions, read 2026-11-25 with the public key). The final test asks those whose question and options use only words the twelve Lektionen teach, names of places and trains excepted.",
+ "questions": [
+  {
+   "dialogue": 1,
+   "question_number": 1,
+   "question_type": "multiple_choice",
+   "question_text": "Was kostet die Fahrkarte nach Berlin hin und zurück?",
+   "options": [
+    "a) 69 €",
+    "b) 79 €",
+    "c) 59 €"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 2,
+   "question_number": 2,
+   "question_type": "multiple_choice",
+   "question_text": "Von welchem Gleis fährt der Zug nach München?",
+   "options": [
+    "a) Gleis 12",
+    "b) Gleis 2",
+    "c) Gleis 10"
+   ],
+   "correct_answer": "a"
+  },
+  {
+   "dialogue": 3,
+   "question_number": 3,
+   "question_type": "multiple_choice",
+   "question_text": "Wann kommt der Zug in Hamburg an?",
+   "options": [
+    "a) 15:45",
+    "b) 18:20",
+    "c) 18:45"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 4,
+   "question_number": 4,
+   "question_type": "multiple_choice",
+   "question_text": "Wie viel Verspätung hat der Zug nach Frankfurt?",
+   "options": [
+    "a) 10 Minuten",
+    "b) 20 Minuten",
+    "c) 30 Minuten"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 5,
+   "question_number": 5,
+   "question_type": "multiple_choice",
+   "question_text": "Wohin fährt der ICE auf Gleis 7?",
+   "options": [
+    "a) Nach Berlin",
+    "b) Nach Köln",
+    "c) Nach München"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 6,
+   "question_number": 6,
+   "question_type": "richtig_falsch",
+   "question_text": "Der Zug nach Stuttgart fährt von Gleis 3.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Falsch"
+  },
+  {
+   "dialogue": 7,
+   "question_number": 7,
+   "question_type": "multiple_choice",
+   "question_text": "Was kosten die Schließfächer pro Tag?",
+   "options": [
+    "a) 3 €",
+    "b) 4 €",
+    "c) 2 €"
+   ],
+   "correct_answer": "a"
+  },
+  {
+   "dialogue": 8,
+   "question_number": 8,
+   "question_type": "multiple_choice",
+   "question_text": "Wie lange dauert die Fahrt nach Düsseldorf noch?",
+   "options": [
+    "a) 20 Minuten",
+    "b) 30 Minuten",
+    "c) 40 Minuten"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 9,
+   "question_number": 9,
+   "question_type": "multiple_choice",
+   "question_text": "Wo muss die Frau umsteigen?",
+   "options": [
+    "a) In Erfurt",
+    "b) In Leipzig",
+    "c) In Dresden"
+   ],
+   "correct_answer": "a"
+  },
+  {
+   "dialogue": 10,
+   "question_number": 10,
+   "question_type": "richtig_falsch",
+   "question_text": "Dresden Hauptbahnhof ist Endstation.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Richtig"
+  },
+  {
+   "dialogue": 1,
+   "question_number": 11,
+   "question_type": "multiple_choice",
+   "question_text": "Wann fährt der nächste Zug nach Berlin?",
+   "options": [
+    "a) Um 14:13 Uhr",
+    "b) Um 14:30 Uhr",
+    "c) Um 4:30 Uhr"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 2,
+   "question_number": 12,
+   "question_type": "richtig_falsch",
+   "question_text": "Gleis zwölf ist am Ende des Bahnhofs.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Richtig"
+  },
+  {
+   "dialogue": 3,
+   "question_number": 13,
+   "question_type": "multiple_choice",
+   "question_text": "Wann fährt der nächste Zug nach Hamburg ab?",
+   "options": [
+    "a) Um 15:15 Uhr",
+    "b) Um 15:45 Uhr",
+    "c) Um 16:45 Uhr"
+   ],
+   "correct_answer": "b"
+  },
+  {
+   "dialogue": 4,
+   "question_number": 14,
+   "question_type": "richtig_falsch",
+   "question_text": "Der Zug nach Frankfurt kommt um zehn Uhr fünfzig an.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Richtig"
+  },
+  {
+   "dialogue": 5,
+   "question_number": 15,
+   "question_type": "multiple_choice",
+   "question_text": "Auf welchem Gleis fährt der ICE nach Köln ein?",
+   "options": [
+    "a) Gleis 5",
+    "b) Gleis 17",
+    "c) Gleis 7"
+   ],
+   "correct_answer": "c"
+  },
+  {
+   "dialogue": 6,
+   "question_number": 16,
+   "question_type": "richtig_falsch",
+   "question_text": "Die Durchsage zum Zug nach Stuttgart kommt nur einmal.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Falsch"
+  },
+  {
+   "dialogue": 7,
+   "question_number": 17,
+   "question_type": "multiple_choice",
+   "question_text": "Womit kann man die Schließfächer bezahlen?",
+   "options": [
+    "a) Nur mit Münzen",
+    "b) Nur mit Karte",
+    "c) Mit Karte oder Münzen"
+   ],
+   "correct_answer": "a"
+  },
+  {
+   "dialogue": 8,
+   "question_number": 18,
+   "question_type": "richtig_falsch",
+   "question_text": "Der nächste Halt ist Köln Hauptbahnhof.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Falsch"
+  },
+  {
+   "dialogue": 9,
+   "question_number": 19,
+   "question_type": "multiple_choice",
+   "question_text": "Von welchem Gleis fährt der Anschlusszug in Erfurt?",
+   "options": [
+    "a) Gleis 4",
+    "b) Gleis 14",
+    "c) Gleis 40"
+   ],
+   "correct_answer": "a"
+  },
+  {
+   "dialogue": 10,
+   "question_number": 20,
+   "question_type": "richtig_falsch",
+   "question_text": "Die Fahrgäste sollen nicht aussteigen.",
+   "options": [
+    "Richtig",
+    "Falsch"
+   ],
+   "correct_answer": "Falsch"
+  },
+  {
+   "dialogue": 5,
+   "question_number": 21,
+   "question_type": "dictation",
+   "question_text": "Welche ICE-Nummer wird in der Durchsage genannt? Schreiben Sie die Zahl.",
+   "options": null,
+   "correct_answer": "567"
+  },
+  {
+   "dialogue": 6,
+   "question_number": 22,
+   "question_type": "dictation",
+   "question_text": "Von welchem Gleis fährt der Zug nach Stuttgart wirklich? Schreiben Sie die Zahl.",
+   "options": null,
+   "correct_answer": "8"
+  },
+  {
+   "dialogue": 7,
+   "question_number": 23,
+   "question_type": "dictation",
+   "question_text": "Wie viele Stunden kann man ein Schließfach am Bahnhof nutzen? Schreiben Sie die Zahl.",
+   "options": null,
+   "correct_answer": "24"
+  }
+ ]
+}

@@ -1,0 +1,806 @@
+[
+ {
+  "id": "L1T0S0",
+  "lektion": 1,
+  "situation": "Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.",
+  "partner": "Frau Kaya",
+  "cueDe": {
+   "de": "Guten Tag!",
+   "en": "Good day!"
+  },
+  "taskEn": "Greet her back.",
+  "taskDe": "Antworten Sie Frau Kaya."
+ },
+ {
+  "id": "L1T1S0",
+  "lektion": 1,
+  "situation": "Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.",
+  "partner": "Frau Kaya",
+  "cueDe": {
+   "de": "Wie heißen Sie?",
+   "en": "What is your name?"
+  },
+  "taskEn": "Answer with your own name.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L1T3S0",
+  "lektion": 1,
+  "situation": "Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.",
+  "partner": "Frau Kaya",
+  "cueDe": {
+   "de": "Wie geht es Ihnen?",
+   "en": "How are you?"
+  },
+  "taskEn": "Answer her.",
+  "taskDe": "Antworten Sie."
+ },
+ {
+  "id": "L1T4S0",
+  "lektion": 1,
+  "situation": "Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.",
+  "partner": "Frau Kaya",
+  "cueDe": null,
+  "taskEn": "Now ask her how she is.",
+  "taskDe": "Und Frau Kaya? Fragen Sie."
+ },
+ {
+  "id": "L2T0S0",
+  "lektion": 2,
+  "situation": "Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.",
+  "partner": "Herr Weber",
+  "cueDe": {
+   "de": "Guten Tag! Woher kommen Sie?",
+   "en": "Good day! Where do you come from?"
+  },
+  "taskEn": "Say where you come from, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L2T3S0",
+  "lektion": 2,
+  "situation": "Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.",
+  "partner": "Herr Weber",
+  "cueDe": null,
+  "taskEn": "Now ask Herr Weber what his job is.",
+  "taskDe": "Und Herr Weber? Fragen Sie nach seinem Beruf."
+ },
+ {
+  "id": "L2T4S0",
+  "lektion": 2,
+  "situation": "Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.",
+  "partner": "Herr Weber",
+  "cueDe": {
+   "de": "Wie ist Ihre Telefonnummer?",
+   "en": "What is your phone number?"
+  },
+  "taskEn": "Give a phone number in one sentence. A made-up number is fine.",
+  "taskDe": "Antworten Sie mit einem Satz. Sie können eine Nummer erfinden."
+ },
+ {
+  "id": "L2T6S0",
+  "lektion": 2,
+  "situation": "Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.",
+  "partner": "Herr Weber",
+  "cueDe": null,
+  "taskEn": "Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.",
+  "taskDe": "Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden."
+ },
+ {
+  "id": "L3T0S0",
+  "lektion": 3,
+  "situation": "Lena sieht ein Foto auf Anas Handy.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ist das deine Mutter oder deine Schwester?",
+   "en": "Is that your mother or your sister?"
+  },
+  "taskEn": "Think of a photo of your mother or your sister. Lena is looking at it. Answer her. You can make up a family.",
+  "taskDe": "Denken Sie an ein Foto: Ihre Mutter oder Ihre Schwester. Lena sieht das Foto. Antworten Sie Lena. Sie können eine Familie erfinden."
+ },
+ {
+  "id": "L3T1S0",
+  "lektion": 3,
+  "situation": "Lena sieht ein Foto auf Anas Handy.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ist sie jung oder alt?",
+   "en": "Is she young or old?"
+  },
+  "taskEn": "Say whether she is young or old, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L3T5S0",
+  "lektion": 3,
+  "situation": "Lena sieht ein Foto auf Anas Handy.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena where her parents come from.",
+  "taskDe": "Und Lenas Eltern? Fragen Sie: woher?"
+ },
+ {
+  "id": "L3T0S1",
+  "lektion": 3,
+  "situation": "Lena sieht ein Foto auf Anas Handy.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ist das dein Vater oder dein Bruder?",
+   "en": "Is that your father or your brother?"
+  },
+  "taskEn": "Think of a photo of your father or your brother. Lena is looking at it. Answer her. You can make up a family.",
+  "taskDe": "Denken Sie an ein Foto: Ihr Vater oder Ihr Bruder. Lena sieht das Foto. Antworten Sie Lena. Sie können eine Familie erfinden."
+ },
+ {
+  "id": "L4T0S0",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": null,
+  "taskEn": "You see something at the stall. Ask Frau Wolf what it is.",
+  "taskDe": "Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist."
+ },
+ {
+  "id": "L4T1S0",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": {
+   "de": "Das ist eine Uhr.",
+   "en": "That is a clock."
+  },
+  "taskEn": "Ask what it costs.",
+  "taskDe": "Fragen Sie nach dem Preis."
+ },
+ {
+  "id": "L4T3S0",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": null,
+  "taskEn": "Chair (Stuhl): ask what it costs.",
+  "taskDe": "Stuhl: Fragen Sie nach dem Preis."
+ },
+ {
+  "id": "L4T5S0",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": {
+   "de": "Was kaufen Sie?",
+   "en": "What are you buying?"
+  },
+  "taskEn": "Say what you are buying, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L4T3S1",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": null,
+  "taskEn": "Lamp (Lampe): ask what it costs.",
+  "taskDe": "Lampe: Fragen Sie nach dem Preis."
+ },
+ {
+  "id": "L4T3S2",
+  "lektion": 4,
+  "situation": "Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.",
+  "partner": "Frau Wolf",
+  "cueDe": null,
+  "taskEn": "Table (Tisch): ask what it costs.",
+  "taskDe": "Tisch: Fragen Sie nach dem Preis."
+ },
+ {
+  "id": "L5T0S0",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Was ist das?",
+   "en": "What is that?"
+  },
+  "taskEn": "Choose something from your bag, one thing or more. Lena asks what it is. Answer in one sentence.",
+  "taskDe": "Wählen Sie etwas aus Ihrer Tasche. Lena fragt, was das ist. Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L5T1S0",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wo ist dein Wörterbuch?",
+   "en": "Where is your dictionary?"
+  },
+  "taskEn": "Answer with hier (here) or da (there).",
+  "taskDe": "Antworten Sie mit hier oder da."
+ },
+ {
+  "id": "L5T2S0",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "You are looking for your pen. Ask Lena where it is.",
+  "taskDe": "Sie suchen Ihren Stift. Fragen Sie Lena: wo?"
+ },
+ {
+  "id": "L5T3S0",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Welche Farbe hat dein Heft?",
+   "en": "What colour is your exercise book?"
+  },
+  "taskEn": "Say what colour your exercise book is, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L5T4S0",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena about the colour of her bag.",
+  "taskDe": "Und Lenas Tasche? Fragen Sie nach der Farbe."
+ },
+ {
+  "id": "L5T2S1",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "You are looking for your exercise book. Ask Lena where it is.",
+  "taskDe": "Sie suchen Ihr Heft. Fragen Sie Lena: wo?"
+ },
+ {
+  "id": "L5T4S1",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena about the colour of her pen.",
+  "taskDe": "Und Lenas Stift? Fragen Sie nach der Farbe."
+ },
+ {
+  "id": "L5T2S2",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "You are looking for your scissors. Ask Lena where they are.",
+  "taskDe": "Sie suchen Ihre Schere. Fragen Sie Lena: wo?"
+ },
+ {
+  "id": "L5T4S2",
+  "lektion": 5,
+  "situation": "Lena und Tim packen ihre Taschen aus.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena about the colour of her book.",
+  "taskDe": "Und Lenas Buch? Fragen Sie nach der Farbe."
+ },
+ {
+  "id": "L6T0S0",
+  "lektion": 6,
+  "situation": "Anas erster Arbeitstag im Amt. Herr Weber zeigt ihr den Arbeitsplatz.",
+  "partner": "Herr Weber",
+  "cueDe": {
+   "de": "Guten Morgen! Was brauchen Sie?",
+   "en": "Good morning! What do you need?"
+  },
+  "taskEn": "Say what you need, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L6T1S0",
+  "lektion": 6,
+  "situation": "Anas erster Arbeitstag im Amt. Herr Weber zeigt ihr den Arbeitsplatz.",
+  "partner": "Herr Weber",
+  "cueDe": null,
+  "taskEn": "Ask Herr Weber where your office is.",
+  "taskDe": "Sie suchen Ihr Büro. Fragen Sie Herrn Weber: wo?"
+ },
+ {
+  "id": "L6T2S0",
+  "lektion": 6,
+  "situation": "Anas erster Arbeitstag im Amt. Herr Weber zeigt ihr den Arbeitsplatz.",
+  "partner": "Herr Weber",
+  "cueDe": null,
+  "taskEn": "Ask when the break is.",
+  "taskDe": "Und die Pause? Fragen Sie: wann?"
+ },
+ {
+  "id": "L6T3S0",
+  "lektion": 6,
+  "situation": "Anas erster Arbeitstag im Amt. Herr Weber zeigt ihr den Arbeitsplatz.",
+  "partner": "Herr Weber",
+  "cueDe": {
+   "de": "Weber, guten Tag!",
+   "en": "Weber, good day!"
+  },
+  "taskEn": "Herr Weber is calling you. Say your name on the phone.",
+  "taskDe": "Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen."
+ },
+ {
+  "id": "L7T0S0",
+  "lektion": 7,
+  "situation": "Lena und Tim nach dem Kurs.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Was ist dein Hobby?",
+   "en": "What is your hobby?"
+  },
+  "taskEn": "Say what your hobby is, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L7T2S0",
+  "lektion": 7,
+  "situation": "Lena und Tim nach dem Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena about her hobby.",
+  "taskDe": "Und Lena? Fragen Sie nach ihrem Hobby."
+ },
+ {
+  "id": "L7T3S0",
+  "lektion": 7,
+  "situation": "Lena und Tim nach dem Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Dancing (tanzen): ask Lena if she likes doing it.",
+  "taskDe": "Tanzen: Fragen Sie Lena, ob sie das gern macht."
+ },
+ {
+  "id": "L7T3S1",
+  "lektion": 7,
+  "situation": "Lena und Tim nach dem Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Cooking (kochen): ask Lena if she likes doing it.",
+  "taskDe": "Kochen: Fragen Sie Lena, ob sie das gern macht."
+ },
+ {
+  "id": "L7T3S2",
+  "lektion": 7,
+  "situation": "Lena und Tim nach dem Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Swimming (schwimmen): ask Lena if she likes doing it.",
+  "taskDe": "Schwimmen: Fragen Sie Lena, ob sie das gern macht."
+ },
+ {
+  "id": "L8T0S0",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wie spät ist es?",
+   "en": "What time is it?"
+  },
+  "taskEn": "It is morning. Your watch shows 8.30. Tell Lena the time.",
+  "taskDe": "Es ist Morgen. Ihre Uhr zeigt 8.30. Sagen Sie Lena die Uhrzeit."
+ },
+ {
+  "id": "L8T1S0",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Later in the day: ask Lena the time.",
+  "taskDe": "Später am Tag: Fragen Sie Lena nach der Uhrzeit."
+ },
+ {
+  "id": "L8T2S0",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wann stehst du morgens auf?",
+   "en": "When do you get up in the morning?"
+  },
+  "taskEn": "Say when you get up, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L8T3S0",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Friday, 10 o’clock: ask Lena if she has time then.",
+  "taskDe": "Freitag, 10 Uhr: Fragen Sie Lena, ob sie dann Zeit hat."
+ },
+ {
+  "id": "L8T4S0",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ja, am Freitag um zehn bin ich frei.",
+   "en": "Yes, I am free on Friday at ten."
+  },
+  "taskEn": "Lena is free then. Agree to the time.",
+  "taskDe": "Lena hat Zeit. Sagen Sie ja zu dem Termin."
+ },
+ {
+  "id": "L8T0S1",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wie spät ist es?",
+   "en": "What time is it?"
+  },
+  "taskEn": "It is morning. Your watch shows 7.15. Tell Lena the time.",
+  "taskDe": "Es ist Morgen. Ihre Uhr zeigt 7.15. Sagen Sie Lena die Uhrzeit."
+ },
+ {
+  "id": "L8T3S1",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Thursday, 4.15 pm: ask Lena if she has time then.",
+  "taskDe": "Donnerstag, 16.15 Uhr: Fragen Sie Lena, ob sie dann Zeit hat."
+ },
+ {
+  "id": "L8T0S2",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wie spät ist es?",
+   "en": "What time is it?"
+  },
+  "taskEn": "It is morning. Your watch shows 9.45. Tell Lena the time.",
+  "taskDe": "Es ist Morgen. Ihre Uhr zeigt 9.45. Sagen Sie Lena die Uhrzeit."
+ },
+ {
+  "id": "L8T3S2",
+  "lektion": 8,
+  "situation": "Ana und Lena suchen einen Termin.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Monday, 9.30 am: ask Lena if she has time then.",
+  "taskDe": "Montag, 9.30 Uhr: Fragen Sie Lena, ob sie dann Zeit hat."
+ },
+ {
+  "id": "L9T0S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Guten Tag! Haben Sie Hunger?",
+   "en": "Hello! Are you hungry?"
+  },
+  "taskEn": "You are hungry. Answer in one sentence.",
+  "taskDe": "Sie haben Hunger. Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L9T1S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Was möchten Sie trinken?",
+   "en": "What would you like to drink?"
+  },
+  "taskEn": "Order something to drink.",
+  "taskDe": "Bestellen Sie etwas zu trinken."
+ },
+ {
+  "id": "L9T2S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Und was möchten Sie essen?",
+   "en": "And what would you like to eat?"
+  },
+  "taskEn": "Order something to eat.",
+  "taskDe": "Bestellen Sie etwas zu essen."
+ },
+ {
+  "id": "L9T3S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": null,
+  "taskEn": "Tea (Tee): ask Paul politely if they have it.",
+  "taskDe": "Tee: Fragen Sie Paul höflich, ob es das gibt."
+ },
+ {
+  "id": "L9T4S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Möchten Sie auch Wasser?",
+   "en": "Would you like some water too?"
+  },
+  "taskEn": "Accept the offer.",
+  "taskDe": "Nehmen Sie das Angebot an."
+ },
+ {
+  "id": "L9T5S0",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Möchten Sie auch Kuchen?",
+   "en": "Would you like some cake too?"
+  },
+  "taskEn": "Say no politely.",
+  "taskDe": "Lehnen Sie höflich ab."
+ },
+ {
+  "id": "L9T0S1",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Guten Tag! Haben Sie Durst?",
+   "en": "Hello! Are you thirsty?"
+  },
+  "taskEn": "You are thirsty. Answer in one sentence.",
+  "taskDe": "Sie haben Durst. Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L9T3S1",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": null,
+  "taskEn": "Soup (Suppe): ask Paul politely if they have it.",
+  "taskDe": "Suppe: Fragen Sie Paul höflich, ob es das gibt."
+ },
+ {
+  "id": "L9T0S2",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": {
+   "de": "Guten Tag! Haben Sie Hunger und Durst?",
+   "en": "Hello! Are you hungry and thirsty?"
+  },
+  "taskEn": "You are hungry and thirsty. Answer in one sentence.",
+  "taskDe": "Sie haben Hunger und Durst. Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L9T3S2",
+  "lektion": 9,
+  "situation": "Ana sitzt im Café. Paul ist Kellner.",
+  "partner": "Paul",
+  "cueDe": null,
+  "taskEn": "Orange juice (Orangensaft): ask Paul politely if they have it.",
+  "taskDe": "Orangensaft: Fragen Sie Paul höflich, ob es das gibt."
+ },
+ {
+  "id": "L10T0S0",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": {
+   "de": "Guten Tag! Wohin fahren Sie?",
+   "en": "Hello! Where are you going?"
+  },
+  "taskEn": "Say where you are going.",
+  "taskDe": "Nennen Sie Ihr Ziel."
+ },
+ {
+  "id": "L10T1S0",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": null,
+  "taskEn": "Now another trip, to Berlin: ask Herr Schmidt with a yes/no question whether the train goes there.",
+  "taskDe": "Jetzt eine andere Reise, Ziel: Berlin. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt."
+ },
+ {
+  "id": "L10T2S0",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": {
+   "de": "Ja, der Zug fährt heute.",
+   "en": "Yes, the train goes today."
+  },
+  "taskEn": "Ask when the train leaves.",
+  "taskDe": "Sie brauchen die Uhrzeit für Ihren Zug. Fragen Sie Herrn Schmidt."
+ },
+ {
+  "id": "L10T3S0",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": null,
+  "taskEn": "Ask what the ticket costs.",
+  "taskDe": "Sie brauchen den Preis für Ihre Fahrkarte. Fragen Sie Herrn Schmidt."
+ },
+ {
+  "id": "L10T1S1",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": null,
+  "taskEn": "Now another trip, to Austria (Österreich): ask Herr Schmidt with a yes/no question whether the train goes there.",
+  "taskDe": "Jetzt eine andere Reise, Ziel: Österreich. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt."
+ },
+ {
+  "id": "L10T1S2",
+  "lektion": 10,
+  "situation": "Ana fragt am Bahnhof nach dem Zug.",
+  "partner": "Herr Schmidt",
+  "cueDe": null,
+  "taskEn": "Now another trip, to Cologne (Köln): ask Herr Schmidt with a yes/no question whether the train goes there.",
+  "taskDe": "Jetzt eine andere Reise, Ziel: Köln. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt."
+ },
+ {
+  "id": "L11T0S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Hallo! Was hast du gestern gemacht?",
+   "en": "Hi! What did you do yesterday?"
+  },
+  "taskEn": "Say it in one sentence with „Ich habe …“.",
+  "taskDe": "Antworten Sie mit „Ich habe …“ in einem Satz."
+ },
+ {
+  "id": "L11T1S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena what she did yesterday.",
+  "taskDe": "Jetzt Lena: Fragen Sie nach ihrem Tag gestern."
+ },
+ {
+  "id": "L11T2S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Und was machst du morgens?",
+   "en": "And what do you do in the morning?"
+  },
+  "taskEn": "Say what you do in the morning, in one sentence.",
+  "taskDe": "Antworten Sie mit einem Satz."
+ },
+ {
+  "id": "L11T3S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Um wie viel Uhr stehst du auf?",
+   "en": "What time do you get up?"
+  },
+  "taskEn": "Say what time you get up, in one sentence.",
+  "taskDe": "Sagen Sie, um wie viel Uhr Sie aufstehen."
+ },
+ {
+  "id": "L11T5S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Saturday: ask Lena if she is going shopping then.",
+  "taskDe": "Einkaufen am Samstag: Stellen Sie Lena eine Ja/Nein-Frage."
+ },
+ {
+  "id": "L11T6S0",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ja, dann kaufe ich ein. Kommst du mit?",
+   "en": "Yes, I’m going shopping then. Are you coming along?"
+  },
+  "taskEn": "Say that you are coming along, in one sentence.",
+  "taskDe": "Sagen Sie, dass Sie mitkommen, mit einem Satz."
+ },
+ {
+  "id": "L11T5S1",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Friday: ask Lena if she is going shopping then.",
+  "taskDe": "Einkaufen am Freitag: Stellen Sie Lena eine Ja/Nein-Frage."
+ },
+ {
+  "id": "L11T5S2",
+  "lektion": 11,
+  "situation": "Tim und Lena am Donnerstag im Kurs.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Monday: ask Lena if she is going shopping then.",
+  "taskDe": "Einkaufen am Montag: Stellen Sie Lena eine Ja/Nein-Frage."
+ },
+ {
+  "id": "L12T0S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Hallo! Was machst du am Samstag?",
+   "en": "Hi! What are you doing on Saturday?"
+  },
+  "taskEn": "You are having a party on Saturday. Invite Lena.",
+  "taskDe": "Sie feiern am Samstag ein Fest. Laden Sie Lena ein."
+ },
+ {
+  "id": "L12T1S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ja, ich komme gern! Wann ist dein Geburtstag?",
+   "en": "Yes, I’d love to come! When is your birthday?"
+  },
+  "taskEn": "Say when your birthday is. A date in numbers is fine.",
+  "taskDe": "Sagen Sie, wann Sie Geburtstag haben. Ein Datum mit Zahlen geht auch."
+ },
+ {
+  "id": "L12T2S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": null,
+  "taskEn": "Now ask Lena when her birthday is.",
+  "taskDe": "Fragen Sie Lena nach ihrem Geburtstag."
+ },
+ {
+  "id": "L12T3S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Wer kommt noch?",
+   "en": "Who else is coming?"
+  },
+  "taskEn": "Say who is coming to your party, in one sentence.",
+  "taskDe": "Sagen Sie mit einem Satz, wer zu Ihrem Fest kommt."
+ },
+ {
+  "id": "L12T4S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Und was möchtest du zum Geburtstag?",
+   "en": "And what would you like for your birthday?"
+  },
+  "taskEn": "Say what you would like as a present.",
+  "taskDe": "Sagen Sie, was Sie sich wünschen."
+ },
+ {
+  "id": "L12T5S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Ich gehe einkaufen.",
+   "en": "I’m going shopping."
+  },
+  "taskEn": "Wish Lena a nice day.",
+  "taskDe": "Wünschen Sie Lena einen schönen Tag."
+ },
+ {
+  "id": "L12T6S0",
+  "lektion": 12,
+  "situation": "Lena und Ana planen Anas Geburtstag.",
+  "partner": "Lena",
+  "cueDe": {
+   "de": "Danke! Tschüss!",
+   "en": "Thanks! Bye!"
+  },
+  "taskEn": "Say goodbye to Lena.",
+  "taskDe": "Verabschieden Sie sich von Lena."
+ }
+]

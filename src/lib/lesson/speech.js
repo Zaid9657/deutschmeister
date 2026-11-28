@@ -56,10 +56,36 @@ import a11Audio from '../../data/curricula/a11.audio.js';
 
 const MANIFESTS = { 'a1.1': a11Audio };
 
-export function audioFor(lektionId, key) {
+/**
+ * The manifest key of a clip that is found by the words it says (`t-<hash>`), not by a place in the
+ * Lektion. The guided stages speak lines whose place moves: a final-check turn has another cue on a
+ * retake, and the scene's "now you say it" line is a dialogue line under another key. A key by place
+ * would play the recording of another sentence; a key by text plays this sentence or nothing.
+ * Synchronous on purpose (cyrb53): the play button needs it while it renders.
+ */
+export function textKey(text) {
+  const s = String(text || '').trim().replace(/\s+/g, ' ');
+  let h1 = 0xdeadbeef;
+  let h2 = 0x41c6ce57;
+  for (let i = 0; i < s.length; i += 1) {
+    const ch = s.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return `t-${(4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36)}`;
+}
+
+/** The recording under this key, else (when the caller says what is spoken) the recording of exactly these words. */
+export function audioFor(lektionId, key, text) {
   const level = String(lektionId || '').split('-')[0];
-  const m = MANIFESTS[level];
-  const entry = m?.lektionen?.[lektionId]?.[key];
+  return clipFor(MANIFESTS[level]?.lektionen?.[lektionId], key, text);
+}
+
+/** One Lektion's clips → the URL under `key`, else the URL of exactly these words, else null. */
+export function clipFor(clips, key, text) {
+  const entry = clips?.[key] || (text ? clips?.[textKey(text)] : null);
   return entry?.url || null;
 }
 
@@ -200,7 +226,7 @@ export function playRecordingChecked(url, text, { rate = 1 } = {}) {
  * resolve once sound has started (or why not). `slow` plays at a beginner pace.
  */
 export function playChecked(lektionId, key, text, { rate = 0.92, slow = false } = {}) {
-  const url = audioFor(lektionId, key);
+  const url = audioFor(lektionId, key, text);
   if (url) return playRecordingChecked(url, text, { rate: slow ? 0.75 : 1 });
   return speakGermanChecked(text, { rate: slow ? 0.75 : rate });
 }

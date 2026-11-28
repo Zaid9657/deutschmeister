@@ -83,5 +83,5 @@ test('an AI-graded claim always says it needs an account', () => {
       if (/AI-graded/i.test(line)) assert.match(line, /free account|with an account/i, `${render.name}: "${line}"`);
     }
   }
-  assert.match(renderFull(), /AI-graded with a free account, a form checklist without one/);
+  assert.match(renderFull(), /AI-graded with an account that has the lesson open \(Lektion 1 with a free account\), a form checklist without one/);
 });

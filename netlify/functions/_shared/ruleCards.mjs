@@ -30,7 +30,7 @@ export const RULE_CARDS = {
   },
   "alphabet-pronunciation": {
     "titleDe": "Das Alphabet: buchstabieren",
-    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDie Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.\nVorsicht bei E und I, G und J, V und W.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
+    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDie Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
     "commonMistakes": [
       {
         "wrong": "Wie heißt der Buchstabe Z? — Zed.",
@@ -40,7 +40,7 @@ export const RULE_CARDS = {
       {
         "wrong": "V und W haben denselben Namen.",
         "correct": "V heißt Vau, W heißt We.",
-        "explanationDe": "Zwei Buchstaben, zwei Namen. So heißen die Buchstaben V und W."
+        "explanationDe": "Der Buchstabe V heißt Vau, der Buchstabe W heißt We."
       },
       {
         "wrong": "Ich buchstabiere Tschüss: T-S-C-H-U-S-S.",
@@ -114,7 +114,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt meist weg; betont bleibt es stehen. Die Endung -st fällt weg.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: Keep polite Sie; du drops -st. Familiar pronouns are usually omitted but possible for emphasis.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -172,7 +172,7 @@ export const RULE_CARDS = {
   },
   "negation": {
     "titleDe": "nicht oder kein?",
-    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
+    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nSatznegation: nicht steht meist spät, vor dem letzten Verbteil (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende.\nWortnegation: nicht steht direkt vor dem Wort: nicht heute, sondern morgen.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein replaces ein/no article; nicht ends clauses or precedes their final prefix/infinitive/participle; for contrast, nicht precedes the contrasted word.",
     "commonMistakes": [
       {
         "wrong": "Im Flur ist nicht Lampe.",
@@ -214,7 +214,7 @@ export const RULE_CARDS = {
   },
   "nouns-gender": {
     "titleDe": "Jedes Nomen hat ein Genus",
-    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDie Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDie Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit Artikel und Plural: der Tisch, die Tische.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
     "commonMistakes": [
       {
         "wrong": "das Entschuldigung",
@@ -287,12 +287,12 @@ export const RULE_CARDS = {
   },
   "personal-pronouns": {
     "titleDe": "er, sie, es – die Personalpronomen",
-    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun: das Kind → es.",
+    "content": "Das Pronomen richtet sich normalerweise nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nBei bekannten Personen ist auch er oder sie möglich. Beispiel: Das Kind heißt Paul. Er ist zwei.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: normally follow the noun’s article (das Kind → es); for a known person, er/sie is also possible.",
     "commonMistakes": [
       {
-        "wrong": "Das Kind ist jung. Er ist zwei.",
+        "wrong": "Das Kind ist jung. Es bist zwei.",
         "correct": "Das Kind ist jung. Es ist zwei.",
-        "explanationDe": "das Kind → es. Der Artikel entscheidet, nicht die Person."
+        "explanationDe": "das Kind → normalerweise es. Bei bekannten Personen ist auch er oder sie möglich. Nach es steht ist, nicht bist."
       },
       {
         "wrong": "Die Mutter kommt aus Marokko. Es spricht Arabisch.",
@@ -316,8 +316,8 @@ export const RULE_CARDS = {
         "explanationDe": "Vor femininen Nomen kommt -e dazu: meine Mama, meine Schwester, meine Karte."
       },
       {
-        "wrong": "Ist das ihr Geschenk, Frau Kaya?",
-        "correct": "Ist das Ihr Geschenk, Frau Kaya?",
+        "wrong": "Ist das ihr Geschenk, Frau Ramos?",
+        "correct": "Ist das Ihr Geschenk, Frau Ramos?",
         "explanationDe": "Die höfliche Form schreibt man immer mit großem I: Ihr Geschenk, Ihr Büro."
       },
       {
@@ -350,7 +350,7 @@ export const RULE_CARDS = {
   },
   "present-tense-regular": {
     "titleDe": "Präsens: regelmäßige Verben",
-    "content": "Regelmäßige Verben haben feste Endungen am Stamm:\nich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.\nSo bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.\nEndet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.\nAchtung: einige Verben wechseln den Vokal: sprechen → er spricht.\ngern steht nach dem Verb: Ich höre gern Musik.\nEnglish: add the ending to the stem; stems on -t take an extra e (arbeitest).",
+    "content": "Regelmäßige Verben haben feste Endungen am Stamm:\nich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.\nSo bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.\nEndet der Stamm auf s, ß, x oder z, steht in der du-Form nur -t (ich tanze → du tanzt).\nEndet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.\nAchtung: einige Verben wechseln den Vokal: sprechen → er spricht.\ngern steht nach dem Verb: Ich höre gern Musik.\nEnglish: Add endings; -t stems add e (arbeitest); s/ß/x/z stems take -t in the du-form (du tanzt).",
     "commonMistakes": [
       {
         "wrong": "Ich spielen Fußball.",
@@ -392,7 +392,7 @@ export const RULE_CARDS = {
   },
   "separable-verbs-intro": {
     "titleDe": "Trennbare Verben: die Satzklammer",
-    "content": "Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.\nDas Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.\nBeispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.\nIch rufe dich an ist eine feste Wendung. Rufst du mich an?\nschlafen wechselt den Vokal: er schläft.\nGemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.\nEnglish: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.",
+    "content": "Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.\nDas Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.\nBeispiele: Ich stehe um sechs auf. Ich bringe eine Tasche mit. Ja, ich komme mit.\nIch rufe dich an ist eine feste Wendung. Rufst du nach acht an?\nschlafen wechselt den Vokal: er schläft.\nGemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.\nEnglish: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.",
     "commonMistakes": [
       {
         "wrong": "Ich einkaufe am Freitag.",
@@ -434,7 +434,7 @@ export const RULE_CARDS = {
   },
   "time-and-dates": {
     "titleDe": "um, am – die Uhrzeit sagen",
-    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag bin ich abends frei.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.",
+    "content": "Uhrzeit mit um: um acht Uhr. Wochentag und Tageszeit mit am: am Montag, am Abend.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag bin ich abends frei.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.",
     "commonMistakes": [
       {
         "wrong": "halb neun ist 9:30.",
@@ -454,8 +454,8 @@ export const RULE_CARDS = {
     ]
   },
   "verb-haben": {
-    "titleDe": "haben und der Chunk „Ich möchte …“",
-    "content": "Das Verb haben ist unregelmäßig:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nMit haben sagt man Hunger, Durst oder Zeit.\nBeispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?\nIm Café: Wir haben Suppe, Salat und Kuchen.\nIch möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.\nSo bestellt man: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
+    "titleDe": "haben und der feste Ausdruck „Ich möchte …“",
+    "content": "Das Verb haben ist unregelmäßig:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nAuch so: ich habe Hunger, ich habe Durst, ich habe Zeit.\nBeispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?\nIm Café: Wir haben Suppe, Salat und Kuchen.\nIch möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.\nSo bestellt man: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
     "commonMistakes": [
       {
         "wrong": "Ich bin Hunger.",
@@ -476,12 +476,12 @@ export const RULE_CARDS = {
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nBei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nDie Staatsangehörigkeit ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
       {
         "wrong": "Ana bin Studentin.",
         "correct": "Ana ist Studentin.",
-        "explanationDe": "bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin."
+        "explanationDe": "bin gehört zu ich. Ana = sie, und zu sie gehört ist: Ana ist Studentin."
       },
       {
         "wrong": "Wie sind Sie von Beruf?",
@@ -491,7 +491,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich bin marokkanisch.",
         "correct": "Ich bin Marokkanerin.",
-        "explanationDe": "Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
+        "explanationDe": "Die Staatsangehörigkeit ist im Satz ein Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
       },
       {
         "wrong": "Ali ist Marokkanerin.",
@@ -502,12 +502,12 @@ export const RULE_CARDS = {
   },
   "yes-no-questions": {
     "titleDe": "Ja/Nein-Fragen: das Verb steht vorn",
-    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
+    "content": "Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nEine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte hundert Euro?\nFährt der Zug auch in die Schweiz? Hat der Zug Verspätung?\nEnglish: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.",
     "commonMistakes": [
       {
-        "wrong": "Sie kommen aus Österreich?",
+        "wrong": "Sie aus Österreich kommen?",
         "correct": "Kommen Sie aus Österreich?",
-        "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1."
+        "explanationDe": "Neutrale Ja/Nein-Frage: In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen und geschrieben gibt es auch die Bestätigungsfrage mit der Wortfolge der Aussage."
       },
       {
         "wrong": "Kommen aus Österreich Sie?",

@@ -78,7 +78,7 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
   }, [result]);
   const tone = result ? (revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG])) : null;
   const announcement = tone
-    ? [t(tone.key, lang), !hintOnly && (result !== RESULT.CORRECT || showAnswer) && expected ? `${t('feedback.correctIs', lang)} ${expected}` : '', hint || ''].filter(Boolean).join(' ')
+    ? [t(hintOnly ? 'otter.retry' : tone.key, lang), !hintOnly && (result !== RESULT.CORRECT || showAnswer) && expected ? `${t('feedback.correctIs', lang)} ${expected}` : '', hint || ''].filter(Boolean).join(' ')
     : '';
   return (
     <>
@@ -98,7 +98,7 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
           <div className="mx-auto max-w-2xl">
             <p className="flex items-center gap-2 font-bold">
               <tone.Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              {t(tone.key, lang)}
+              {t(hintOnly ? 'otter.retry' : tone.key, lang)}
             </p>
             {!hintOnly && (result !== RESULT.CORRECT || showAnswer) && expected && (
               <p className="mt-2 text-[0.9375rem]">

@@ -15,8 +15,10 @@ import buildLesson, {
   answerKey, taskShape, answerWords, promptWords, leaksAnswer, derivedItems,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
   MAX_SAME_TASK_SHAPE, attemptFromCompletions, ATTEMPT_CYCLE, SITUATION_MIN, wortfeldTerms, relevanceScore,
-  DERIVED_MATCH_PAIRS, DERIVED_WORD_ORDER_MAX_TOKENS, DERIVED_LISTEN_SELECT_OPTIONS,
+  DERIVED_MATCH_PAIRS, DERIVED_WORD_ORDER_MAX_TOKENS, DERIVED_LISTEN_SELECT_OPTIONS, sameDrill,
 } from '../src/lib/lesson/buildLesson.js';
+import { WORD_ORDER_MIN_WORDS } from '../src/lib/lesson/wordOrder.js';
+import { RULE_CARDS } from '../netlify/functions/_shared/ruleCards.mjs';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
@@ -131,10 +133,12 @@ test('the derived stage never moves the pool draw: L1 of the shipped a1.1 curric
   // Re-pinned 2026-10-05: five L1 spelling items stopped being copy tasks (the word is no longer
   // on screen — the learner supplies the missing letter), which changes their task shape and so
   // the seeded draw. RULE 11b still measures 0 (validator), i.e. nothing untaught moved in.
+  // Re-pinned 2026-11-23: a word bag needs four words (`ordersEnough`), so the three-word
+  // „Ich buchstabiere Chakiri/Ana.“ (l01-18, l01-23) left attempts 2 and 3; l01-11/12/13 took the seats.
   const PINNED = {
     1: ['2488cb0f-ea25-5dae-85d8-fea6ed13b2f3', 'extra-a11-l01-04', 'extra-a11-l01-05', '2df8b952-57b5-54ef-8c10-4a0d965d9115', 'extra-a11-l01-17', 'extra-a11-l01-01', 'extra-a11-l01-06'],
-    2: ['extra-a11-l01-16', '61b961a8-1c5a-59b9-8b63-430a94714181', 'extra-a11-l01-18', 'extra-a11-l01-19', 'extra-a11-l01-14', 'extra-a11-l01-03', 'extra-a11-l01-21'],
-    3: ['extra-a11-l01-08', 'extra-a11-l01-11', 'extra-a11-l01-02', 'extra-a11-l01-24', 'extra-a11-l01-23', '448a9516-9d53-5c58-8f77-9ae1e60d9363', 'extra-a11-l01-20'],
+    2: ['extra-a11-l01-16', '61b961a8-1c5a-59b9-8b63-430a94714181', 'extra-a11-l01-11', 'extra-a11-l01-19', 'extra-a11-l01-14', 'extra-a11-l01-03', 'extra-a11-l01-21'],
+    3: ['extra-a11-l01-08', 'extra-a11-l01-12', 'extra-a11-l01-13', 'extra-a11-l01-24', 'extra-a11-l01-02', '448a9516-9d53-5c58-8f77-9ae1e60d9363', 'extra-a11-l01-20'],
   };
   for (const attempt of [1, 2, 3]) {
     const ids = planPractice(CURRICULUM_A11, POOL, attempt).get(1).map((i) => i.id);
@@ -184,6 +188,103 @@ test('derivedItems is deterministic per (lektion, attempt), and a later attempt 
 test('a lektion whose own data is too thin for a shape simply omits it, never pads with off-lektion content', () => {
   const thin = { ...FIXTURE_LEKTION, wortfeld: FIXTURE_LEKTION.wortfeld.slice(0, 2), dialog: { lines: [] } };
   assert.deepEqual(derivedItems(thin, 1), []);
+});
+
+// --- the 2026-11-23 screen walk of Lektionen 7–12 ---------------------------
+
+/** Both live levels with their pools: the rules below are engine rules, not A1.1 content. */
+const LEVELS = [[CURRICULUM_A11, POOL], [CURRICULUM_A12, POOL_A12]];
+const wordsOf = (text) => String(text || '').trim().split(/\s+/).filter(Boolean).length;
+
+test('a word-order task has something to order: four words or more, in every derived tile task and drawn word bag', () => {
+  assert.equal(WORD_ORDER_MIN_WORDS, 4);
+  const short = [];
+  for (const [curriculum, pool] of LEVELS) {
+    for (const attempt of ATTEMPTS) {
+      const plan = planPractice(curriculum, pool, attempt);
+      for (const lektion of curriculum.lektionen) {
+        const where = `${curriculum.level} L${lektion.nr} attempt ${attempt}`;
+        // L9 „Guten Tag!“ and L7 „Ich bin frei.“ were the walked tiles; the slot falls back to matching.
+        for (const it of derivedItems(lektion, attempt)) {
+          if (it.type === 'word_order' && it.tokens.length < WORD_ORDER_MIN_WORDS) short.push(`${where} tiles: ${it.answer}`);
+        }
+        for (const it of plan.get(lektion.nr)) {
+          if (it.type === 'sentence_building' && wordsOf(it.answer) < WORD_ORDER_MIN_WORDS) short.push(`${where} word bag: ${it.answer}`);
+        }
+      }
+    }
+  }
+  assert.deepEqual(short, []);
+  // The retry draw takes the same rule: with every other item of its topic seen, a short word bag
+  // is not served — the miss comes back as itself.
+  const bag = POOL.items.find((it) => it.type === 'sentence_building' && !it.assessment && wordsOf(it.answer) < WORD_ORDER_MIN_WORDS
+    && isUsableItem(it, { level: 'a1.1' }));
+  assert.ok(bag, 'the pool still holds a short word bag, so the requeue half of this test bites');
+  const others = POOL.items.filter((it) => it.topic === bag.topic && it.id !== bag.id);
+  const [retry] = requeueFor([others[0]], POOL, others.map((it) => it.id), { level: 'a1.1' });
+  assert.notEqual(retry.id, bag.id);
+});
+
+test('no seven asks the same drill twice — one answer from one stem — in every Lektion and attempt of both levels', () => {
+  const gap = (questionDe, answer) => ({ type: 'fill_blank', questionDe, answer });
+  // The walked pairs are one drill each (L8 „___ Abend“ → Am, L12 „(ich)“ → Mein and „(er)“ → sein) …
+  assert.ok(sameDrill(gap('___ Abend höre ich Musik. (Präposition für Tageszeit)', 'Am'), gap('___ Abend habe ich Zeit.', 'Am')));
+  assert.ok(sameDrill(gap('___ Papa kauft die Karten. (ich)', 'Mein'), gap('___ Geburtstag ist im Mai. (ich)', 'Mein')));
+  assert.ok(sameDrill(gap('Im Mai ist ___ Geburtstag. (er)', 'sein'), gap('___ Geschenk ist schön. (er)', 'Sein')));
+  // … while the noun that decides an article, a task category and a different answer keep two items apart.
+  assert.ok(!sameDrill(gap('Ich kaufe ___ Lampe. (der, die oder das?)', 'die'), gap('___ Tasche ist teuer. (der, die oder das?)', 'Die')));
+  assert.ok(!sameDrill(gap('___ Abend habe ich Zeit.', 'Am'), gap('___ Freitag habe ich Zeit.', 'Am')));
+  assert.ok(!sameDrill(gap('___ Geburtstag ist im Mai. (ich)', 'Mein'), gap('___ Gäste kommen um acht. (ich)', 'Meine')));
+  const twice = [];
+  for (const [curriculum, pool] of LEVELS) {
+    for (const attempt of ATTEMPTS) {
+      const plan = planPractice(curriculum, pool, attempt);
+      for (const lektion of curriculum.lektionen) {
+        const items = plan.get(lektion.nr);
+        items.forEach((a, i) => items.slice(i + 1).forEach((b) => {
+          if (sameDrill(a, b)) twice.push(`${curriculum.level} L${lektion.nr} attempt ${attempt}: ${a.questionDe} → ${a.answer} | ${b.questionDe} → ${b.answer}`);
+        }));
+      }
+    }
+  }
+  assert.deepEqual(twice, []);
+});
+
+test('the rule card teaches the time frame every drawn gap asks for: am, um or im before the kind of word that follows', () => {
+  // L8 drew „___ Abend“ → Am while its card taught am only before a weekday (2026-11-23 screen walk).
+  const KINDS = {
+    weekday: /^(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)$/,
+    daytime: /^(?:morgen|vormittag|mittag|nachmittag|abend|nacht)$/,
+    month: /^(?:januar|februar|märz|april|mai|juni|juli|august|september|oktober|november|dezember)$/,
+    clock: /^(?:\d+|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|halb|viertel)$/,
+  };
+  const kindOf = (word) => Object.keys(KINDS).find((k) => KINDS[k].test(word || ''));
+  const words = (text) => String(text || '').toLowerCase().replace(/\([^()]*\)/g, ' ').replace(/_+/g, ' _ ')
+    .split(/[^a-zäöüß0-9_]+/).filter(Boolean);
+  const untaught = new Set();
+  let checked = 0;
+  for (const [curriculum, pool] of LEVELS) {
+    for (const attempt of ATTEMPTS) {
+      const plan = planPractice(curriculum, pool, attempt);
+      for (const lektion of curriculum.lektionen) {
+        for (const it of plan.get(lektion.nr)) {
+          const answer = String(it.answer || '').trim().toLowerCase();
+          if (it.type !== 'fill_blank' || !['am', 'um', 'im'].includes(answer)) continue;
+          const prompt = words(it.questionDe);
+          const kind = kindOf(prompt[prompt.indexOf('_') + 1]);
+          if (!kind) continue;
+          checked += 1;
+          const card = RULE_CARDS[it.topic];
+          const text = words(`${card.content} ${card.commonMistakes.map((m) => m.correct).join(' ')}`);
+          if (!text.some((w, i) => w === answer && kindOf(text[i + 1]) === kind)) {
+            untaught.add(`${it.topic}: ${answer} + ${kind} („${it.questionDe}“)`);
+          }
+        }
+      }
+    }
+  }
+  assert.ok(checked > 0, 'no drawn time gap was checked — the guard reads nothing');
+  assert.deepEqual([...untaught], []);
 });
 
 // --- pool quality: what a learner may never be shown ----------------------
@@ -846,9 +947,13 @@ test('the situation fill pass bites — remove it and a block drops below the fl
   writeFileSync(file, mutated);
   const withoutFloor = await import(pathToFileURL(file).href);
 
+  // (The pool of loop round 3 is situational enough for `SITUATION_MIN` 4 without the pass, so the pass is measured on the pool
+  // without that round's 60-odd items: there a block drops below the floor.)
+  const thinner = { ...POOL, items: POOL.items.filter((it) => !(/^extra-a11-/.test(it.id) && it.order >= 200)) };
+  assert.ok(thinner.items.length < POOL.items.length - 50);
   const dropped = [];
   for (const attempt of ATTEMPTS) {
-    const plan = withoutFloor.planPractice(CURRICULUM_A11, POOL, attempt);
+    const plan = withoutFloor.planPractice(CURRICULUM_A11, thinner, attempt);
     for (const lektion of LEKTIONEN) {
       const counted = situationalIn(plan.get(lektion.nr), lektion);
       if (counted < SITUATION_MIN) dropped.push(`attempt ${attempt} L${lektion.nr}: ${counted}`);
@@ -1086,7 +1191,11 @@ test('L8 makes the learner produce „halb" and the official time — in every a
   // and over twelve Lektionen à seven plus four checkpoints the learner produced
   // NEITHER. A ceiling on repetition cannot reserve a seat — `mustCover` does.
   const l8 = LEKTIONEN.find((l) => l.nr === 8);
-  assert.deepEqual(l8.practiceRule.mustCover, ['halb', 'vierzehn Uhr dreißig'], 'L8 lost its mustCover keys');
+  assert.deepEqual(l8.practiceRule.mustCover, ['halb', ['vierzehn Uhr dreißig', 'zwanzig Uhr fünfundvierzig', 'achtzehn Uhr fünfzehn']], 'L8 lost its mustCover keys');
+  // A seat of several answers rotates: no item of the two seats stands in every draw (round 4 of the loop).
+  const drawn = ATTEMPTS.map((attempt) => new Set(planPractice(CURRICULUM_A11, POOL, attempt).get(8).map((it) => it.id)));
+  const everywhere = [...drawn[0]].filter((id) => drawn.every((d) => d.has(id)));
+  assert.deepEqual(everywhere, [], `L8 serves the same item in every draw: ${everywhere.join(', ')}`);
   for (const attempt of ATTEMPTS) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(8);
     const answers = items.map((it) => String(it.answer || '').toLowerCase());

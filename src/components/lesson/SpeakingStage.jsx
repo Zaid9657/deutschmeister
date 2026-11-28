@@ -7,7 +7,7 @@ import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
 import { speakingSummary } from '../../lib/lesson/skillStatus.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { speechLine, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 5 — Sprechen. Two halves:
@@ -77,7 +77,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
   // /speaking is a prerendered route, so the hand-off carries its slash (CLAUDE.md trailing-slash
   // rule): the slashless form paid a canonical redirect on this full page load.
   const speakingHref = open
-    ? `/speaking/?level=${encodeURIComponent(level)}${open.missionOrder ? `&mission=${open.missionOrder}` : ''}`
+    ? `/speaking/?level=${encodeURIComponent(level)}${open.missionOrder && open.teil !== 'Sprechen üben' ? `&mission=${open.missionOrder}` : ''}`
     : `/speaking/?level=${encodeURIComponent(level)}`;
 
   const goSpeak = () => {
@@ -102,6 +102,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
   return (
     <StageShell
       eyebrow={t('stage.speaking.eyebrow', lang)}
+      part={stage.part}
       title={t('stage.speaking.title', lang)}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
@@ -127,13 +128,14 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
               lineKey={`line-${l.index}`}
               text={l.de}
               speaker={l.speaker}
+              keepVoice
               onResult={(result) => recordResult(l.index, result)}
             />
             {results[l.index] && !recordedNow.has(l.index) && (
               <p className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-bold text-siegel-deep">
                 <Check className="h-4 w-4" aria-hidden="true" />
                 {results[l.index].usedMic && typeof results[l.index].pct === 'number'
-                  ? t('speaking.intelligibility', lang, { pct: Math.round(results[l.index].pct * 100) })
+                  ? speechLine(results[l.index].pct, lang)
                   : t('speaking.said', lang)}
               </p>
             )}
@@ -146,7 +148,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
           <div className="flex flex-wrap items-center gap-2">
             <Chip tone="label">{open.teil || t('speaking.teilDefault', lang)}</Chip>
             {(open.hintWords || []).map((w) => (
-              <Chip key={w} tone="quiet">{w}</Chip>
+              <Chip key={w} tone="quiet" className="normal-case" lang="de">{w}</Chip>
             ))}
           </div>
           <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>
@@ -162,5 +164,36 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
         </Card>
       )}
     </StageShell>
+  );
+}
+
+/** Shared optional exchange: the coach owns speaking, this card only self-reflection. */
+export function PersonalExchange({ task, context, storageKey }) {
+  const [lang] = useLessonLang();
+  const [reflected, setReflected] = useState(() => {
+    try { return sessionStorage.getItem(storageKey) === 'yes'; } catch { return false; }
+  });
+  const reflect = value => {
+    setReflected(value);
+    try { sessionStorage.setItem(storageKey, value ? 'yes' : 'no'); } catch { /* Optional self-check stays local to this visit. */ }
+  };
+  const openCoach = () => {
+    saveCourseContext(context);
+    window.location.assign('/speaking/?level=' + encodeURIComponent(context.level));
+  };
+  return (
+    <Card className="mb-6 mt-6 p-5 sm:p-6" id="checkpoint-conversation">
+      <h2 className="font-display text-xl text-ink">{t('checkpoint.exchange.title', lang)}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-graphite">{t('checkpoint.exchange.lead', lang)}</p>
+      <p className="mt-3 font-semibold text-ink" lang="de">{task.promptDe}</p>
+      {lang !== 'de' && <p className="mt-1 text-sm leading-relaxed text-graphite">{task.promptEn}</p>}
+      <Button variant="secondary" className="mt-4" onClick={openCoach}><Mic className="h-4 w-4" aria-hidden="true" />{t('checkpoint.exchange.open', lang)}</Button>
+      <p className="mt-2 text-sm text-graphite">{t('checkpoint.exchange.return', lang)}</p>
+      <label className="mt-4 flex min-h-11 cursor-pointer items-start gap-3 text-sm text-ink">
+        <input className="mt-1 h-4 w-4 shrink-0 accent-siegel" type="checkbox" checked={reflected} onChange={event => reflect(event.target.checked)} />
+        <span>{t('checkpoint.exchange.self', lang)}</span>
+      </label>
+      <p className="mt-2 text-sm text-graphite">{t('checkpoint.exchange.honest', lang)}</p>
+    </Card>
   );
 }

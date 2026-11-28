@@ -27,10 +27,10 @@
 // Only one Hören part, deliberately: each A1.1 listening exercise is one
 // combined ~4-minute MP3 of 10 short dialogues (10 scorable items), so a
 // second exercise would roughly double the section's audio time against a
-// 15-minute timer built for one exercise, and 10 Hören points against this
-// test's 8 Lesen items is already the section weighting the full mock's
-// two-exercise Hören section holds relative to its 15 Lesen items — adding
-// a second exercise here would overweight Hören well past that ratio.
+// 15-minute timer built for one exercise. 2026-11-25: of its 23 questions the
+// test asks the eight whose words the twelve Lektionen teach (names of places
+// and trains excepted, `questionNumbers`): „Schließfächer", „Endstation", „hin und
+// zurück" and „dauert" were never taught. Eight points against eight in Lesen.
 // Lesen and Schreiben are freshly written for this half-length test at 8
 // Lesen items / 1 Schreiben part (vs. the full mock's 15 items / 2 parts).
 //
@@ -54,13 +54,14 @@ export const abschlusstestA11 = {
   examKey: 'a1_1_abschluss',
   courseLevel: 'a1.1',
   formatOf: 'goethe_a1',
-  title: 'Abschlusstest A1.1 (Kurzversion im Start-Deutsch-1-Format)',
+  title: 'Abschlusstest A1.1 (Kurzversion)',
   intro:
-    'Das ist der Abschlusstest Ihres A1.1-Kurses. Er hat den Aufbau der Prüfung Start Deutsch 1, aber nur ' +
-    'die halbe Länge, damit Sie das Prüfungsformat schon früh kennenlernen. Dieser Test ist eigenes Übungsmaterial ' +
-    'von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. Wie bei der echten Prüfung ' +
-    'bestehen Sie ab 60 % der bewerteten Aufgaben. Sprechen üben Sie im Speaking-Missions-Trainer, nicht hier. Wenn Sie bestehen, geht ' +
-    'es weiter mit A1.2 und später mit der vollständigen Übungsprüfung im Start-Deutsch-1-Format.',
+    'Das ist der Abschlusstest Ihres A1.1-Kurses. Hören und Lesen werden automatisch bewertet; ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 6 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
+    'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Eine freie Mitteilung und Sprechen sind nicht enthalten. ' +
+    'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
+    'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +
+    'Danach können Sie mit A1.2 weiterlernen.',
   passPercent: 60,
   // The result page shares its verdict copy with the exam mocks, which duzen; the course says Sie,
   // and names the two parts the score covers (Codex score review, 2026-10-08).
@@ -84,7 +85,12 @@ export const abschlusstestA11 = {
       key: 'hoeren',
       title: 'Hören',
       minutes: 15,
-      instructions: 'Eine Hörübung mit 10 kurzen Dialogen und Durchsagen; Sie dürfen die Aufnahme zweimal abspielen.',
+      // Its keys come from the database, so its mark is written here. One answer throughout („b“) takes 4 of the 8, and one
+      // place throughout (always the second option, as the runner shows them in stored order) takes 5
+      // (tests/fixtures/a11-final-listening.json): the section needs one more than either, 6 (Claude score of fd8f8dba, 2026-11-25).
+      passMark: 6,
+      instructions: 'Eine Aufnahme mit kurzen Dialogen und Durchsagen am Bahnhof. Sie hören sie zweimal. Die acht Fragen gehören zu den ersten sechs Teilen der Aufnahme.',
+      instructionsEn: 'A recording with short conversations and announcements at a station. You hear it twice. The eight questions belong to the first six parts of the recording.',
       parts: [
         {
           key: 'hoeren-1',
@@ -92,12 +98,10 @@ export const abschlusstestA11 = {
           label: 'Hörtext · Am Bahnhof',
           level: 'A1.1',
           exerciseNumber: 3,
-          // Written when the exercise had 10 questions; since Wave 2 PR C it
-          // carries 23 (+13 incl. dictation). The runner keeps only
-          // question_number <= questionMax (src/data/courseTests/
-          // listeningQuestions.js), so the 10 : 8 Hören/Lesen weighting the
-          // header argues for stays true.
-          questionMax: 10,
+          // The questions in taught words, in the order of the recording (dialogues 1–6); the
+          // snapshot they were chosen from is tests/fixtures/a11-final-listening.json.
+          questionNumbers: [11, 2, 3, 13, 4, 14, 15, 6],
+          questionMax: 15,
         },
       ],
     },
@@ -108,14 +112,20 @@ export const abschlusstestA11 = {
       instructions:
         'Teil 1: Lesen Sie die Notiz und entscheiden Sie: richtig oder falsch? Teil 2: Lesen Sie die Situation und ' +
         'die zwei Anzeigen. Welche Anzeige passt? Teil 3: Lesen Sie die Schilder und entscheiden Sie: richtig oder falsch?',
+      instructionsEn:
+        'Part 1: read the note and decide: true (richtig) or false (falsch)? Part 2: read the situation and the two ads. ' +
+        'Which ad fits? Part 3: read the signs and decide: true or false?',
       parts: [
         {
           key: 'lesen-1',
           type: 'mc-group',
           label: 'Teil 1 · Notiz',
+          // No item is answered by finding the same day, number or word (walk and scores of 2026-11-25:
+          // seven of eight were): the rival stands in the text, the answer is worked out.
           text:
-            'Liebe Lena, am Samstag ist meine Party. Sie ist um 15 Uhr bei mir zu Hause. Bring bitte ' +
-            'deine Schwester mit. Wir haben Kuchen und Tee. Ruf mich bitte an. Bis Samstag! Deine Freundin Mia',
+            'Liebe Sara, am Samstag habe ich Geburtstag, aber am Samstag arbeite ich leider. Wir feiern am Sonntag ' +
+            'um 15 Uhr bei mir zu Hause. Meine Mama macht Kuchen, Wein habe ich schon. Bring bitte Musik mit! ' +
+            'Bis Sonntag! Deine Mia',
           items: [
             {
               id: 'l1-1',
@@ -124,11 +134,11 @@ export const abschlusstestA11 = {
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
               ],
-              answer: 'r',
+              answer: 'f',
             },
             {
               id: 'l1-2',
-              prompt: 'Die Party ist um 16 Uhr.',
+              prompt: 'Mia macht den Kuchen für das Fest.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -137,7 +147,7 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l1-3',
-              prompt: 'Mia lädt auch die Schwester von Lena ein.',
+              prompt: 'Die Gäste kommen zu Mia nach Hause.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -151,9 +161,9 @@ export const abschlusstestA11 = {
           type: 'mc-group',
           label: 'Teil 2 · Situation 1',
           text:
-            'Frau Kaya hat nur am Dienstag und Donnerstag Zeit. Sie möchte Deutsch lernen.\n' +
-            'Anzeige a) Deutsch lernen — Montag und Mittwoch, 18 Uhr, Berlin.\n' +
-            'Anzeige b) Deutsch lernen — Dienstag und Donnerstag, 18 Uhr, Berlin.',
+            'Ana arbeitet jeden Tag bis 17 Uhr. Sie möchte Deutsch lernen.\n' +
+            'Anzeige a) Deutsch lernen — Montag und Mittwoch, 15 bis 17 Uhr, Bremen.\n' +
+            'Anzeige b) Deutsch lernen — Dienstag und Donnerstag, 18 bis 20 Uhr, Bremen.',
           items: [
             {
               id: 'l2a-1',
@@ -171,9 +181,9 @@ export const abschlusstestA11 = {
           type: 'mc-group',
           label: 'Teil 2 · Situation 2',
           text:
-            'Herr Weber möchte einen Tisch. Er hat nur 30 Euro.\n' +
-            'Anzeige a) Tisch, 25 Euro.\n' +
-            'Anzeige b) Tisch, 35 Euro.',
+            'Herr Weber möchte einen Tisch und zwei Stühle. Er hat 40 Euro.\n' +
+            'Anzeige a) Tisch: 20 Euro. Stuhl: 10 Euro.\n' +
+            'Anzeige b) Tisch und zwei Stühle, zusammen 45 Euro.',
           items: [
             {
               id: 'l2b-1',
@@ -193,7 +203,7 @@ export const abschlusstestA11 = {
           items: [
             {
               id: 'l3-1',
-              prompt: 'Schild im Büro: „Pause: 12 bis 13 Uhr.“ — Die Pause ist um 14 Uhr.',
+              prompt: 'Schild im Büro: „Frau Novak hat von 12 bis 13 Uhr Pause.“ — Um halb eins arbeitet Frau Novak.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -202,7 +212,7 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l3-2',
-              prompt: 'Schild am Bahnhof: „Bitte an Gleis fünf umsteigen!“ — Man steigt an Gleis fünf um.',
+              prompt: 'Schild am Bahnhof: „Der Zug nach Köln hat 20 Minuten Verspätung.“ — Der Zug kommt zu spät.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -211,12 +221,12 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l3-3',
-              prompt: 'Schild am Bahnhof: „Der Zug nach Berlin kommt um 10:20 Uhr.“ — Der Zug kommt um 10 Uhr.',
+              prompt: 'Schild im Café: „Frühstück bis 11 Uhr. Suppe und Salat von 12 bis 18 Uhr.“ — Um 14 Uhr haben wir Suppe.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
               ],
-              answer: 'f',
+              answer: 'r',
             },
           ],
         },
@@ -229,6 +239,9 @@ export const abschlusstestA11 = {
       instructions:
         'Formular ausfüllen: Schreiben Sie die fünf Angaben untereinander in das Textfeld. Diese Aufgabe wird nicht ' +
         'automatisch bewertet — nutzen Sie den Selbstcheck.',
+      instructionsEn:
+        'Fill in a form: write the five details one under the other in the text field. This task is not marked ' +
+        'automatically — use the self-check.',
       parts: [
         {
           key: 'schreiben-1',
@@ -240,6 +253,11 @@ export const abschlusstestA11 = {
             'Die Telefonnummer ist 030 4455667. Füllen Sie das Formular für Elif aus. Schreiben Sie die fünf Zeilen ' +
             'untereinander in das Textfeld: Familienname, Vorname, Geburtsdatum, Straße und Hausnummer, ' +
             'Telefonnummer. Zum Beispiel: „Familienname: Demir“.',
+          taskEn:
+            'Your friend is called Aylin Demir. Her daughter Elif would like to learn to swim. The family name is Demir, ' +
+            'the first name is Elif. The date of birth is 12 May 2016. The address is Rosenweg 9. The phone number is ' +
+            '030 4455667. Fill in the form for Elif. Write the five lines one under the other: family name, first name, ' +
+            'date of birth, street and house number, phone number.',
           criteria: [
             'Alle 5 Felder sind ausgefüllt.',
             'Jede Antwort steht beim richtigen Feld.',

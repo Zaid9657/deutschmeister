@@ -10,15 +10,17 @@
 // wording in GradedWriting.jsx — because an unchecked promise of feedback is
 // exactly what FernUSG forbids.
 
-// THE ONE IMPORT, and why it is allowed: `countries.js` is a fact about the world (the stems and
+// Shared language facts only (countries and keyboard digits), never a curriculum.
+// The world list is allowed because: `countries.js` is a fact about the world (the stems and
 // names of countries), not a rule and not a level's Wortfeld. The dependency-freedom this file
 // keeps — one function, the screen and RULE 17 grading with the same code, nothing handed in from a
 // curriculum — is about RULES and LEXIS; a world list has one source or it drifts, and it drifted
 // (DaF review #17, Minor 17: two lists, two sizes, „aus England“ red). `tests/writing-course.test.mjs`
-// pins that this stays the only import and that it never reaches into `src/data/`.
+// pins these shared language facts and that it never reaches into `src/data/`.
+import { westernDigits } from './digits.js';
 import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from './countries.js';
 
-const nfc = (text) => String(text || '').normalize('NFC');
+const nfc = (text) => westernDigits(text).normalize('NFC');
 const words = (text) => nfc(text).trim().split(/\s+/).filter(Boolean);
 
 export const countWords = (text) => words(text).length;
@@ -1058,7 +1060,7 @@ export function leitpunktSatisfied(leitpunkt, text, opts = {}) {
  */
 export function formularText(fields = [], values = {}) {
   return (fields || [])
-    .map((field) => `${field}: ${String(values?.[field] ?? '').trim()}`)
+    .map((field) => `${field}: ${nfc(values?.[field]).trim()}`)
     .join('\n');
 }
 

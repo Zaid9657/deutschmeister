@@ -161,12 +161,17 @@ Storage with the service-role key. Agent sessions have neither secret (checked b
 and neither `*.supabase.co` nor Azure is reachable through the agent proxy, so the run happens on
 your machine. It takes a couple of minutes and costs single-digit cents.
 
-**What it renders — 168 clips** (counted from `planRenders()` on 2026-10-06, not retyped):
-120 dialogue lines (these also serve the dictations and the checkpoint listening items, which
-dictate the same lines), 12 pretest models and 36 Phonetik items; 5,194 characters, about 8.3 US
-cents at $16 per million. There are no word clips in this plan any more: every Wortfeld entry
-carries a `wordId`, and word audio is `generate-example-audio.mjs`'s job (second command below).
-The dry run prints the exact figures; if they differ from these, the curriculum changed since.
+**What it renders — 352 clips** (counted from `planRenders()` on 2026-11-23 on the rollout branch,
+not retyped): 120 dialogue lines (these also serve the dictations and the checkpoint listening items,
+which dictate the same lines), 12 pretest models, 36 Phonetik items and 184 lines only the guided
+Lektion speaks (the sound step's models, and the final check's cues, heard numbers and times, spelled
+names and model answers, for every sitting); 10,275 characters, about 16.4 US cents at $16 per
+million, inside Azure's free monthly allowance. 81 more keys reuse a clip (the "now you say it" line
+is a dialogue line). The guided lines are filed under the words they say (`t-<hash>`), so a retake or
+a rewritten sentence never plays the recording of another one: it plays the computer voice until the
+next run. There are no word clips in this plan any more: every Wortfeld entry carries a `wordId`, and
+word audio is `generate-example-audio.mjs`'s job (second command below). The dry run prints the exact
+figures; if they differ from these, the curriculum changed since.
 
 **Environment** (four variables, nothing else):
 

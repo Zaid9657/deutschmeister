@@ -78,7 +78,7 @@ test('register and Leitpunkte match the kind of task the Lektion sets', () => {
 
 test('the six Mitteilungen carry the register their addressee implies', () => {
   // Sie/Herr/Chefin → formell; a Freundin or Lena → informell. The grader marks Anrede and
-  // Gruß against this. L10's colleague Frau Kaya is gesiezt (owner decision, 2026-10-07): the
+  // Gruß against this. L10's colleague Frau Ramos is gesiezt (owner decision, 2026-10-07): the
   // task, the model text and the bank now agree — before, the bank said informell under a Sie text.
   const expected = { 2: 'formell', 4: 'informell', 6: 'formell', 8: 'informell', 10: 'formell', 12: 'informell' };
   for (const [nr, register] of Object.entries(expected)) {
@@ -386,7 +386,7 @@ test('the Formcheck is one function: the screen and RULE 17 grade with the same 
   // (a level's Wortfeld, a curriculum) may ever be handed in: that is the dependency-freedom this
   // test has always pinned, and it still holds.
   const imports = [...writing.matchAll(/^import .* from '([^']+)';$/gm)].map((m) => m[1]);
-  assert.deepEqual(imports, ['./countries.js'], 'writing.js imports the world list and nothing else');
+  assert.deepEqual(imports.sort(), ['./countries.js', './digits.js'], 'writing.js imports shared language facts, never a curriculum or practice bank');
   assert.ok(!/from '[^']*\/data\//.test(writing), 'writing.js never imports a course');
 });
 
@@ -1136,7 +1136,7 @@ test('Minor 18 (round 19): a question that echoes the verb answers a shape-less 
 test('recipient questions never supply the writer’s factual arrival or availability', () => {
   for (const [nr, statement, question] of [
     [4, 'Wir kommen morgen.', 'Kommst du morgen?'],
-    [6, 'Ich bin um neun Uhr im Büro.', 'Sind Sie um neun Uhr im Büro?'],
+    [6, 'Ich bin um neun im Büro.', 'Sind Sie um neun im Büro?'],
   ]) {
     const task = LEKTIONEN[nr - 1].schreiben;
     assert.ok(task.sample.includes(statement), `L${nr}: regression replaces the writer's factual answer`);
