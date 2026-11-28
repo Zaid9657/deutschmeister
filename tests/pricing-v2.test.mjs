@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import vm from 'node:vm';
 import * as pricing from '../src/data/pricing.js';
 import {
@@ -102,6 +102,30 @@ test('static prices use a durable no-JS fallback and date-aware enhancement, wit
   for (const file of ['astro-site/src/pages/pricing.astro', 'astro-site/src/components/concept/Ladder.astro', 'astro-site/src/pages/courses/[level].astro', 'src/components/LockedContentOverlay.jsx']) {
     assert.doesNotMatch(read(file).replace(/Lektion 1 of A1\.1 is free/g, ''), /<s[ >]|<del[ >]|\bstatt\s+\d|\bwas\s+[€$]|A1\.1 (?:is |completely )?free/i, file);
   }
+});
+
+// Found live on 2026-11-28: the sign-up side panel, the About page and the trial-return card still
+// called A1.1 "the free first course". Only Lektion 1 is free. The rule covers every screen, not
+// the three lines: no rendered text may call a course free.
+test('no screen calls a course free: only Lektion 1 of A1.1 is', () => {
+  const FREE_COURSE = /free (?:first |A1\.1 |German )?course|whole course without|course (?:is|stays|remains) free|kostenlose[nr]? (?:ersten? )?Kurs|A1\.1 (?:is |stays |remains |completely |komplett )?(?:free|kostenlos)|free A1\.1/i;
+  const strip = (source) => source
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/^\s*\/\/.*$/gm, '')
+    .replace(/\s\/\/ .*$/gm, '')
+    .replace(/Lektion 1 of (?:the )?(?:A1\.1|\$\{[^}]+\})(?: course)? is free/gi, '');
+  const found = [];
+  for (const root of ['src/components', 'src/pages', 'astro-site/src/components', 'astro-site/src/pages', 'astro-site/src/layouts']) {
+    for (const entry of readdirSync(new URL(`../${root}/`, import.meta.url), { recursive: true })) {
+      const file = String(entry).replaceAll('\\', '/');
+      if (!/\.(?:jsx|astro)$/.test(file)) continue;
+      const text = strip(readFileSync(new URL(`../${root}/${file}`, import.meta.url), 'utf8'));
+      const hit = text.match(FREE_COURSE);
+      if (hit) found.push(`${root}/${file}: "${hit[0]}"`);
+    }
+  }
+  assert.deepEqual(found, []);
 });
 
 test('checkout uses launch codes only in their window, preserves identity and refuses retired products', () => {
